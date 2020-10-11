@@ -2,8 +2,8 @@ from pyspark.sql import SparkSession, Column, DataFrame
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import expr
 
-from spark_auto_mapper.automapper import AutoMapper
-from spark_auto_mapper.automapper_helpers import AutoMapperHelpers as A
+from spark_auto_mapper.automappers.automapper import AutoMapper
+from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 
 def test_auto_mapper_with_column_expression(spark_session: SparkSession):

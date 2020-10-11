@@ -2,13 +2,13 @@ from datetime import date, datetime
 from typing import Union, Dict, Any, List
 
 from spark_auto_mapper.data_types.automapper_data_type_base import AutoMapperDataTypeBase
+from spark_auto_mapper.data_types.automapper_defined_types import AutoMapperAnyDataType
 
 
 class AutoMapperValueParser:
     @staticmethod
     def parse_value(value: Union[
-        str, Dict[str, Any], List[Any], int, float, date, datetime,
-        AutoMapperDataTypeBase]
+        Dict[str, Any], List[Any], AutoMapperAnyDataType]
                     ) -> AutoMapperDataTypeBase:
         # convert any short syntax to long syntax
         # if value is a dict then wrap with struct

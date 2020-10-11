@@ -1,19 +1,20 @@
-from typing import Union, List, Any
+from typing import List
 
 from pyspark.sql import Column, DataFrame
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import col
 
-from spark_auto_mapper.automapper_base import AutoMapperBase
-from spark_auto_mapper.automapper_value_parser import AutoMapperValueParser
+from spark_auto_mapper.automappers.automapper_base import AutoMapperBase
 from spark_auto_mapper.data_types.automapper_data_type_base import AutoMapperDataTypeBase
+from spark_auto_mapper.data_types.automapper_defined_types import AutoMapperAnyDataType
+from spark_auto_mapper.helpers.automapper_value_parser import AutoMapperValueParser
 
 
 class AutoMapperWithColumn(AutoMapperBase):
     def __init__(self,
                  parent: AutoMapperBase,
                  dst_column: str,
-                 value: Union[str, List[Any], AutoMapperDataTypeBase]
+                 value: AutoMapperAnyDataType
                  ) -> None:
         super().__init__(parent=parent)
         self.dst_column: str = dst_column
@@ -52,10 +53,3 @@ class AutoMapperWithColumn(AutoMapperBase):
             ]
         )
         return result_df
-
-    # noinspection PyMethodMayBeStatic,PyPep8Naming
-    def withColumn(self,
-                   dst_column: str,
-                   value: Union[str, List[Any], AutoMapperDataTypeBase]
-                   ) -> 'AutoMapperWithColumn':
-        return AutoMapperWithColumn(parent=self, dst_column=dst_column, value=value)

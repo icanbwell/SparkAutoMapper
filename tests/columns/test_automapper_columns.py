@@ -1,9 +1,15 @@
+from typing import Dict
+
 from pyspark.sql import SparkSession, Column, DataFrame
+from pyspark.sql.functions import array, lit, struct
+# noinspection PyUnresolvedReferences
+from pyspark.sql.functions import col
+
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 
-def test_auto_mapper_multiple_columns(spark_session: SparkSession):
+def test_auto_mapper_columns(spark_session: SparkSession):
     # Arrange
     spark_session.createDataFrame(
         [
@@ -23,31 +29,38 @@ def test_auto_mapper_multiple_columns(spark_session: SparkSession):
         view="members",
         source_view="patients",
         keys=["member_id"]
-    ).withColumn(
-        dst_column="dst1",
-        value="src1"
-    ).withColumn(
-        dst_column="dst2",
-        value=A.list(
+    ).columns(
+        dst1="src1",
+        dst2=A.list(
             "address1"
-        )
-    ).withColumn(
-        dst_column="dst3",
-        value=A.list(
+        ),
+        dst3=A.list(
             ["address1", "address2"]
-        )
-    ).withColumn(
-        dst_column="dst4",
-        value=A.list(
-            value=A.complex(
+        ),
+        dst4=A.list(
+            A.complex(
                 use="usual",
                 family=A.column("last_name")
             )
         )
     )
 
-    sql_expression: Column = mapper.get_column_spec()
-    print(sql_expression)
+    sql_expressions: Dict[str, Column] = mapper.get_column_specs()
+    for column_name, sql_expression in sql_expressions.items():
+        print(f"{column_name}: {sql_expression}")
+
+    # Assert
+    assert len(sql_expressions) == 4
+    assert str(sql_expressions["dst1"]) == str(lit("src1").alias("dst1"))
+    assert str(sql_expressions["dst2"]) == str(array(lit("address1")).alias("dst2"))
+    assert str(sql_expressions["dst3"]) == str(array(lit("address1"), lit("address2")).alias("dst3"))
+    assert str(sql_expressions["dst4"]) == str(
+        array(
+            struct(
+                lit("usual").alias("use"),
+                col("last_name").alias("family")
+            )
+        ).alias("dst4"))
 
     result_df: DataFrame = mapper.transform(df=df)
 

@@ -3,8 +3,8 @@ from pyspark.sql.functions import array, struct
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import lit
 
-from spark_auto_mapper.automapper import AutoMapper
-from spark_auto_mapper.automapper_helpers import AutoMapperHelpers as A
+from spark_auto_mapper.automappers.automapper import AutoMapper
+from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 
 def test_auto_mapper_array_single_item_with_mapper(spark_session: SparkSession):

@@ -1,6 +1,6 @@
 from pyspark.sql import SparkSession, Column, DataFrame
 
-from spark_auto_mapper.automapper import AutoMapper
+from spark_auto_mapper.automappers.automapper import AutoMapper
 
 
 def test_auto_mapper_multiple_columns_simpler_syntax(spark_session: SparkSession):

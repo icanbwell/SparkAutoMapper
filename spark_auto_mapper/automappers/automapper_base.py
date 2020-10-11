@@ -2,6 +2,8 @@ from typing import List, Optional
 
 from pyspark.sql import DataFrame
 
+from spark_auto_mapper.data_types.automapper_defined_types import AutoMapperAnyDataType
+
 
 class AutoMapperBase:
     def __init__(self,
@@ -29,3 +31,16 @@ class AutoMapperBase:
         source_df: DataFrame = df.sql_ctx.table(auto_mapper.source_view)
         destination_df: DataFrame = source_df.select(auto_mapper.keys)
         return self.transform_with_data_frame(df=destination_df, source_df=source_df, keys=auto_mapper.keys)
+
+    # noinspection PyMethodMayBeStatic,PyPep8Naming
+    def withColumn(self,
+                   dst_column: str,
+                   value: AutoMapperAnyDataType
+                   ) -> 'AutoMapperBase':
+        from spark_auto_mapper.automappers.automapper_with_column import AutoMapperWithColumn
+        return AutoMapperWithColumn(parent=self, dst_column=dst_column, value=value)
+
+    # noinspection PyMethodMayBeStatic,PyPep8Naming
+    def columns(self, **kwargs: AutoMapperAnyDataType) -> 'AutoMapperBase':
+        from spark_auto_mapper.automappers.automapper_columns import AutoMapperColumns
+        return AutoMapperColumns(parent=self, **kwargs)
