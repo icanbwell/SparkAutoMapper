@@ -53,10 +53,3 @@ class AutoMapperWithColumn(AutoMapperBase):
             ]
         )
         return result_df
-
-    # noinspection PyMethodMayBeStatic,PyPep8Naming
-    def withColumn(self,
-                   dst_column: str,
-                   value: AutoMapperAnyDataType
-                   ) -> 'AutoMapperWithColumn':
-        return AutoMapperWithColumn(parent=self, dst_column=dst_column, value=value)
