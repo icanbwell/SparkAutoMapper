@@ -1,4 +1,4 @@
-from typing import Union, List, Any, Optional
+from typing import Union, List, Any
 
 from pyspark.sql import Column, DataFrame
 # noinspection PyUnresolvedReferences
@@ -52,18 +52,6 @@ class AutoMapperWithColumn(AutoMapperBase):
             ]
         )
         return result_df
-
-    def transform(self, df: DataFrame) -> DataFrame:
-        # find the top most AutoMapper which has the information we need
-        auto_mapper: Optional[AutoMapperBase] = self
-        while auto_mapper and auto_mapper.parent:
-            auto_mapper = auto_mapper.parent
-
-        assert auto_mapper
-        assert auto_mapper.keys
-        source_df: DataFrame = df.sql_ctx.table(auto_mapper.source_view)
-        destination_df: DataFrame = source_df.select(auto_mapper.keys)
-        return self.transform_with_data_frame(df=destination_df, source_df=source_df, keys=auto_mapper.keys)
 
     # noinspection PyMethodMayBeStatic,PyPep8Naming
     def withColumn(self,
