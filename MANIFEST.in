@@ -1,0 +1,9 @@
+include README.md
+include requirements.txt
+include requirements-test.txt
+include VERSION
+include Makefile
+include spark_auto_mapper/Makefile.spark
+include spark_auto_mapper/Makefile.docker
+include spark_auto_mapper/docker-compose.yml
+include spark_auto_mapper/py.typed

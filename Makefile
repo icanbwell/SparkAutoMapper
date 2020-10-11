@@ -9,9 +9,9 @@ GIT_HASH=${CIRCLE_SHA1}
 SPARK_VER=3.0.1
 HADOOP_VER=3.2
 
-include spark_pipeline_framework/Makefile.spark
-include spark_pipeline_framework/Makefile.docker
-include spark_pipeline_framework/Makefile.python
+include spark_auto_mapper/Makefile.spark
+include spark_auto_mapper/Makefile.docker
+include spark_auto_mapper/Makefile.python
 
 .PHONY:devsetup
 devsetup:venv
@@ -26,8 +26,8 @@ devsetup:venv
 checks:venv
 	source $(VENV_NAME)/bin/activate && \
     pip install --upgrade -r requirements.txt && \
-    flake8 spark_pipeline_framework && \
-    mypy spark_pipeline_framework && \
+    flake8 spark_auto_mapper && \
+    mypy spark_auto_mapper && \
     flake8 tests && \
     mypy tests
 
@@ -70,4 +70,4 @@ init: installspark docker up devsetup proxies tests
 
 .PHONY:proxies
 proxies:
-	python3 spark_pipeline_framework/proxy_generator/generate_proxies.py
+	python3 spark_auto_mapper/proxy_generator/generate_proxies.py
