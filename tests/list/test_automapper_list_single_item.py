@@ -1,15 +1,13 @@
 from typing import Dict
 
 from pyspark.sql import SparkSession, Column, DataFrame
-# noinspection PyUnresolvedReferences
-# from pyspark.sql.functions import col
 from pyspark.sql.functions import array, expr
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 
-def test_auto_mapper_array_single_item(spark_session: SparkSession):
+def test_auto_mapper_array_single_item(spark_session: SparkSession) -> None:
     # Arrange
     spark_session.createDataFrame(
         [

@@ -9,7 +9,7 @@ from spark_auto_mapper.data_types.automapper_data_type_complex_base import AutoM
 
 
 class AutoMapperDataTypeStruct(AutoMapperDataTypeComplexBase):
-    def __init__(self, value: Dict[str, Any]):
+    def __init__(self, value: Dict[str, Any]) -> None:
         super().__init__()
         assert isinstance(value, dict)
         self.value: Dict[str, AutoMapperDataTypeBase] = {

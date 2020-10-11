@@ -5,7 +5,7 @@ from pyspark.sql import SparkSession, Column, DataFrame
 from spark_auto_mapper.automappers.automapper import AutoMapper
 
 
-def test_auto_mapper_multiple_columns_simpler_syntax(spark_session: SparkSession):
+def test_auto_mapper_multiple_columns_simpler_syntax(spark_session: SparkSession) -> None:
     # Arrange
     spark_session.createDataFrame(
         [

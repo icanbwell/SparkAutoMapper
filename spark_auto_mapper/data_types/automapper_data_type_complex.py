@@ -3,13 +3,14 @@ from typing import Dict
 from pyspark.sql import Column
 from pyspark.sql.functions import struct
 
+from spark_auto_mapper.data_types.automapper_defined_types import AutoMapperAnyDataType
 from spark_auto_mapper.helpers.automapper_value_parser import AutoMapperValueParser
 from spark_auto_mapper.data_types.automapper_data_type_base import AutoMapperDataTypeBase
 from spark_auto_mapper.data_types.automapper_data_type_complex_base import AutoMapperDataTypeComplexBase
 
 
 class AutoMapperDataTypeComplex(AutoMapperDataTypeComplexBase):
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs: AutoMapperAnyDataType) -> None:
         super().__init__()
         self.value: Dict[str, AutoMapperDataTypeBase] = {
             key: AutoMapperValueParser.parse_value(value) for key, value in kwargs.items()

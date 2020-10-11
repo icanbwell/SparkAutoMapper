@@ -4,6 +4,7 @@ import shutil
 from os import path
 
 import pytest
+from _pytest.fixtures import FixtureRequest
 from pyspark.sql import SparkSession
 
 # make sure env variables are set correctly
@@ -50,7 +51,7 @@ def clean_spark_session(session: SparkSession) -> None:
     session.catalog.clearCache()
 
 
-def clean_close(session) -> None:
+def clean_close(session: SparkSession) -> None:
     """
 
     :param session:
@@ -62,7 +63,7 @@ def clean_close(session) -> None:
 
 
 @pytest.fixture(scope="session")
-def spark_session(request) -> SparkSession:
+def spark_session(request: FixtureRequest) -> SparkSession:
     # make sure env variables are set correctly
     if 'SPARK_HOME' not in os.environ:
         os.environ['SPARK_HOME'] = '/usr/local/opt/spark'
@@ -91,7 +92,7 @@ def spark_session(request) -> SparkSession:
 
 
 @pytest.fixture(scope="function")
-def spark_session_per_function(request) -> SparkSession:
+def spark_session_per_function(request: FixtureRequest) -> SparkSession:
     # make sure env variables are set correctly
     if 'SPARK_HOME' not in os.environ:
         os.environ['SPARK_HOME'] = '/usr/local/opt/spark'

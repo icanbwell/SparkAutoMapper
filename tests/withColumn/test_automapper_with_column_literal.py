@@ -7,7 +7,7 @@ from pyspark.sql.functions import lit
 from spark_auto_mapper.automappers.automapper import AutoMapper
 
 
-def test_auto_mapper_with_column_literal(spark_session: SparkSession):
+def test_auto_mapper_with_column_literal(spark_session: SparkSession) -> None:
     # Arrange
     spark_session.createDataFrame(
         [

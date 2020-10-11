@@ -7,7 +7,7 @@ class AutoMapperDataTypeBase:
         raise NotImplementedError  # base classes should implement this
 
     # noinspection PyMethodMayBeStatic
-    def get_value(self, value: 'AutoMapperDataTypeBase'):
+    def get_value(self, value: 'AutoMapperDataTypeBase') -> Column:
         assert isinstance(value, AutoMapperDataTypeBase)
         child: AutoMapperDataTypeBase = value
         return child.get_column_spec()

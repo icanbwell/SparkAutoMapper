@@ -5,7 +5,7 @@ from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 
-def test_auto_mapper_full(spark_session_per_function: SparkSession):
+def test_auto_mapper_full(spark_session_per_function: SparkSession) -> None:
     spark_session: SparkSession = spark_session_per_function
     # Arrange
     spark_session.createDataFrame(

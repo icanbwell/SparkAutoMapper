@@ -4,7 +4,7 @@ from spark_auto_mapper.data_types.automapper_data_type_base import AutoMapperDat
 
 
 class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
     def get_column_spec(self) -> Column:
