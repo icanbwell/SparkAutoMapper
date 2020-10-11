@@ -2,7 +2,7 @@ from pyspark.sql import SparkSession, Column, DataFrame
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import lit
 
-from spark_auto_mapper.automapper import AutoMapper
+from spark_auto_mapper.automappers.automapper import AutoMapper
 
 
 def test_auto_mapper_with_column_literal(spark_session: SparkSession):

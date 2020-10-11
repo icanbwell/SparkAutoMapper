@@ -2,8 +2,8 @@ from typing import List, Union, Any
 
 from pyspark.sql import DataFrame
 
-from spark_auto_mapper.automapper_base import AutoMapperBase
-from spark_auto_mapper.automapper_with_column import AutoMapperWithColumn
+from spark_auto_mapper.automappers.automapper_base import AutoMapperBase
+from spark_auto_mapper.automappers.automapper_with_column import AutoMapperWithColumn
 from spark_auto_mapper.data_types.automapper_data_type_base import AutoMapperDataTypeBase
 
 

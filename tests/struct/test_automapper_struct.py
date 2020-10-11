@@ -1,8 +1,8 @@
 from pyspark.sql import SparkSession, Column, DataFrame
 from pyspark.sql.functions import lit, struct
 
-from spark_auto_mapper.automapper import AutoMapper
-from spark_auto_mapper.automapper_helpers import AutoMapperHelpers as A
+from spark_auto_mapper.automappers.automapper import AutoMapper
+from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 
 def test_auto_mapper_struct(spark_session: SparkSession):

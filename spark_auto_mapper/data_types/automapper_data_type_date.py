@@ -4,7 +4,7 @@ from typing import Union
 from pyspark.sql import Column
 from pyspark.sql.functions import coalesce, to_date
 
-from spark_auto_mapper.automapper_value_parser import AutoMapperValueParser
+from spark_auto_mapper.helpers.automapper_value_parser import AutoMapperValueParser
 from spark_auto_mapper.data_types.automapper_data_type_base import AutoMapperDataTypeBase
 from spark_auto_mapper.data_types.automapper_data_type_column import AutoMapperDataTypeColumn
 from spark_auto_mapper.data_types.automapper_data_type_expression import AutoMapperDataTypeExpression

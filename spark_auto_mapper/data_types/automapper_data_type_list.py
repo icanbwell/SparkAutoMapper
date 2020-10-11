@@ -4,7 +4,7 @@ from pyspark.sql import Column
 from pyspark.sql.functions import array
 from pyspark.sql.functions import lit
 
-from spark_auto_mapper.automapper_value_parser import AutoMapperValueParser
+from spark_auto_mapper.helpers.automapper_value_parser import AutoMapperValueParser
 from spark_auto_mapper.data_types.automapper_data_type_base import AutoMapperDataTypeBase
 from spark_auto_mapper.data_types.automapper_data_type_complex_base import AutoMapperDataTypeComplexBase
 
