@@ -1,28 +1,28 @@
 from datetime import date, datetime
-from typing import Union, List, Dict, Any
+from typing import Union, Dict, Any, Optional
 
 from spark_auto_mapper.data_types.automapper_data_type_column import AutoMapperDataTypeColumn
 from spark_auto_mapper.data_types.automapper_data_type_complex import AutoMapperDataTypeComplex
-from spark_auto_mapper.data_types.automapper_data_type_complex_base import AutoMapperDataTypeComplexBase
 from spark_auto_mapper.data_types.automapper_data_type_date import AutoMapperDataTypeDate
 from spark_auto_mapper.data_types.automapper_data_type_expression import AutoMapperDataTypeExpression
 from spark_auto_mapper.data_types.automapper_data_type_list import AutoMapperDataTypeList
 from spark_auto_mapper.data_types.automapper_data_type_literal import AutoMapperDataTypeLiteral
 from spark_auto_mapper.data_types.automapper_data_type_struct import AutoMapperDataTypeStruct
+from spark_auto_mapper.data_types.automapper_defined_types import AutoMapperAnyDataType
 
 
 class AutoMapperHelpers:
     @staticmethod
-    def list(value: Union[str, List[str], AutoMapperDataTypeComplexBase] = None
+    def list(value: Optional[AutoMapperAnyDataType] = None
              ) -> AutoMapperDataTypeList:
-        return AutoMapperDataTypeList(value=value or [])
+        return AutoMapperDataTypeList(value=value)
 
     @staticmethod
     def struct(value: Dict[str, Any]) -> AutoMapperDataTypeStruct:
         return AutoMapperDataTypeStruct(value=value)
 
     @staticmethod
-    def complex(**kwargs) -> AutoMapperDataTypeComplex:
+    def complex(**kwargs: AutoMapperAnyDataType) -> AutoMapperDataTypeComplex:
         return AutoMapperDataTypeComplex(**kwargs)
 
     @staticmethod

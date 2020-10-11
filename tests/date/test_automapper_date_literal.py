@@ -10,7 +10,7 @@ from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 
-def test_auto_mapper_date_literal(spark_session: SparkSession):
+def test_auto_mapper_date_literal(spark_session: SparkSession) -> None:
     # Arrange
     spark_session.createDataFrame(
         [

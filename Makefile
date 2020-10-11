@@ -27,9 +27,9 @@ checks:venv
 	source $(VENV_NAME)/bin/activate && \
     pip install --upgrade -r requirements.txt && \
     flake8 spark_auto_mapper && \
-    mypy spark_auto_mapper && \
+    mypy spark_auto_mapper --strict && \
     flake8 tests && \
-    mypy tests
+    mypy tests --strict
 
 .PHONY:update
 update:

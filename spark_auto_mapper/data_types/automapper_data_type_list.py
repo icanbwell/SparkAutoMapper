@@ -1,4 +1,4 @@
-from typing import Union, List
+from typing import Union, List, Optional
 
 from pyspark.sql import Column
 from pyspark.sql.functions import array
@@ -10,10 +10,12 @@ from spark_auto_mapper.helpers.automapper_value_parser import AutoMapperValuePar
 
 
 class AutoMapperDataTypeList(AutoMapperDataTypeBase):
-    def __init__(self, value: AutoMapperAnyDataType):
+    def __init__(self, value: Optional[AutoMapperAnyDataType]) -> None:
         super().__init__()
         # can a single mapper or a list of mappers
         self.value: Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]
+        if not value:
+            self.value = []
         if isinstance(value, str):
             self.value = AutoMapperValueParser.parse_value(value=value)
         elif isinstance(value, AutoMapperDataTypeBase):
