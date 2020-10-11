@@ -4,13 +4,13 @@ from pyspark.sql import Column
 from pyspark.sql.functions import array
 from pyspark.sql.functions import lit
 
-from spark_auto_mapper.helpers.automapper_value_parser import AutoMapperValueParser
 from spark_auto_mapper.data_types.automapper_data_type_base import AutoMapperDataTypeBase
-from spark_auto_mapper.data_types.automapper_data_type_complex_base import AutoMapperDataTypeComplexBase
+from spark_auto_mapper.data_types.automapper_defined_types import AutoMapperAnyDataType
+from spark_auto_mapper.helpers.automapper_value_parser import AutoMapperValueParser
 
 
 class AutoMapperDataTypeList(AutoMapperDataTypeBase):
-    def __init__(self, value: Union[str, List[str], AutoMapperDataTypeComplexBase]):
+    def __init__(self, value: AutoMapperAnyDataType):
         super().__init__()
         # can a single mapper or a list of mappers
         self.value: Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]

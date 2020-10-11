@@ -45,6 +45,7 @@ def test_auto_mapper_columns(spark_session: SparkSession):
         )
     )
 
+    assert isinstance(mapper, AutoMapper)
     sql_expressions: Dict[str, Column] = mapper.get_column_specs()
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")

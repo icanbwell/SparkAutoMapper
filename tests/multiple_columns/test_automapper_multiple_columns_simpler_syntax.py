@@ -1,3 +1,5 @@
+from typing import Dict
+
 from pyspark.sql import SparkSession, Column, DataFrame
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
@@ -24,31 +26,29 @@ def test_auto_mapper_multiple_columns_simpler_syntax(spark_session: SparkSession
         source_view="patients",
         keys=["member_id"]
     ).withColumn(
-        dst_column="dst1",
-        value="src1"
+        dst1="src1"
     ).withColumn(
-        dst_column="dst2",
-        value=[
+        dst2=[
             "address1"
         ]
     ).withColumn(
-        dst_column="dst3",
-        value=[
+        dst3=[
             "address1",
             "address2"
         ]
     ).withColumn(
-        dst_column="dst4",
-        value=[
-            {
-                "use": "usual",
-                "family": "[last_name]"
-            }
+        dst4=[
+            dict(
+                use="usual",
+                family="[last_name]"
+            )
         ]
     )
 
-    sql_expression: Column = mapper.get_column_spec()
-    print(sql_expression)
+    assert isinstance(mapper, AutoMapper)
+    sql_expressions: Dict[str, Column] = mapper.get_column_specs()
+    for column_name, sql_expression in sql_expressions.items():
+        print(f"{column_name}: {sql_expression}")
 
     result_df: DataFrame = mapper.transform(df=df)
 

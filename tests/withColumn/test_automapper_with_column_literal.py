@@ -1,3 +1,5 @@
+from typing import Dict
+
 from pyspark.sql import SparkSession, Column, DataFrame
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import lit
@@ -26,14 +28,15 @@ def test_auto_mapper_with_column_literal(spark_session: SparkSession):
         source_view="patients",
         keys=["member_id"]
     ).withColumn(
-        dst_column="lname",
-        value="last_name"
+        lname="last_name"
     )
 
-    sql_expression: Column = mapper.get_column_spec()
-    print(sql_expression)
+    assert isinstance(mapper, AutoMapper)
+    sql_expressions: Dict[str, Column] = mapper.get_column_specs()
+    for column_name, sql_expression in sql_expressions.items():
+        print(f"{column_name}: {sql_expression}")
 
-    assert str(sql_expression) == str(lit("last_name").alias("lname"))
+    assert str(sql_expressions["lname"]) == str(lit("last_name").alias("lname"))
 
     result_df: DataFrame = mapper.transform(df=df)
 
