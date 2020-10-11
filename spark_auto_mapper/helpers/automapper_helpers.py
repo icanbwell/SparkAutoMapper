@@ -13,9 +13,9 @@ from spark_auto_mapper.data_types.automapper_data_type_struct import AutoMapperD
 
 class AutoMapperHelpers:
     @staticmethod
-    def list(value: Union[str, List[str], AutoMapperDataTypeComplexBase]
+    def list(value: Union[str, List[str], AutoMapperDataTypeComplexBase] = None
              ) -> AutoMapperDataTypeList:
-        return AutoMapperDataTypeList(value=value)
+        return AutoMapperDataTypeList(value=value or [])
 
     @staticmethod
     def struct(value: Dict[str, Any]) -> AutoMapperDataTypeStruct:

@@ -1,13 +1,13 @@
 from spark_auto_mapper.automappers.automapper_base import AutoMapperBase
 from spark_auto_mapper.automappers.automapper_container import AutoMapperContainer
+from spark_auto_mapper.data_types.automapper_defined_types import AutoMapperAnyDataType
 
 
 class AutoMapperColumns(AutoMapperContainer):
     def __init__(self,
                  parent: AutoMapperBase,
-                 **kwargs
+                 **kwargs: AutoMapperAnyDataType
                  ) -> None:
         super().__init__(parent=parent)
 
-        # set up a bunch of withColumn for each parameter to AutoMapperFhirDataTypeComplexBase
-        self.generate_mappers(kwargs)
+        self.generate_mappers(mappers_dict=kwargs)

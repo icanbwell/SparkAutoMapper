@@ -1,10 +1,11 @@
-from typing import List, Union, Any
+from typing import List
 
 from pyspark.sql import DataFrame
 
 from spark_auto_mapper.automappers.automapper_base import AutoMapperBase
+from spark_auto_mapper.automappers.automapper_columns import AutoMapperColumns
 from spark_auto_mapper.automappers.automapper_with_column import AutoMapperWithColumn
-from spark_auto_mapper.data_types.automapper_data_type_base import AutoMapperDataTypeBase
+from spark_auto_mapper.data_types.automapper_defined_types import AutoMapperAnyDataType
 
 
 class AutoMapper(AutoMapperBase):
@@ -21,6 +22,10 @@ class AutoMapper(AutoMapperBase):
     # noinspection PyMethodMayBeStatic,PyPep8Naming
     def withColumn(self,
                    dst_column: str,
-                   value: Union[str, List[Any], AutoMapperDataTypeBase]
+                   value: AutoMapperAnyDataType
                    ) -> AutoMapperWithColumn:
         return AutoMapperWithColumn(parent=self, dst_column=dst_column, value=value)
+
+    # noinspection PyMethodMayBeStatic,PyPep8Naming
+    def columns(self, **kwargs: AutoMapperAnyDataType) -> AutoMapperColumns:
+        return AutoMapperColumns(parent=self, **kwargs)
