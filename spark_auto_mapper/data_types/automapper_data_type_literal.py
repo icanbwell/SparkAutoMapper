@@ -1,16 +1,16 @@
 from datetime import date, datetime
-from typing import Union
 
 from pyspark.sql import Column
 from pyspark.sql.functions import lit
 
 from spark_auto_mapper.data_types.automapper_data_type_base import AutoMapperDataTypeBase
+from spark_auto_mapper.data_types.automapper_native_types import AutoMapperSimpleType
 
 
 class AutoMapperDataTypeLiteral(AutoMapperDataTypeBase):
-    def __init__(self, value: Union[str, int, float, date, datetime]):
+    def __init__(self, value: AutoMapperSimpleType):
         super().__init__()
-        self.value: Union[str, int, float, date, datetime] = value
+        self.value: AutoMapperSimpleType = value
 
     def get_column_spec(self) -> Column:
         if isinstance(self.value, str) or isinstance(self.value, int) \

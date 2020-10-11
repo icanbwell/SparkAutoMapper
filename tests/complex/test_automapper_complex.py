@@ -1,3 +1,5 @@
+from typing import Dict
+
 from pyspark.sql import SparkSession, Column, DataFrame
 from pyspark.sql.functions import lit, struct
 
@@ -26,20 +28,21 @@ def test_auto_mapper_complex(spark_session: SparkSession):
         source_view="patients",
         keys=["member_id"]
     ).withColumn(
-        dst_column="dst2",
-        value=A.complex(
+        dst2=A.complex(
             use="usual",
             family="imran"
         )
     )
 
-    sql_expression: Column = mapper.get_column_spec()
-    print(sql_expression)
+    assert isinstance(mapper, AutoMapper)
+    sql_expressions: Dict[str, Column] = mapper.get_column_specs()
+    for column_name, sql_expression in sql_expressions.items():
+        print(f"{column_name}: {sql_expression}")
 
     result_df: DataFrame = mapper.transform(df=df)
 
     # Assert
-    assert str(sql_expression) == str(
+    assert str(sql_expressions["dst2"]) == str(
         struct(
             lit("usual").alias("use"),
             lit("imran").alias("family")
