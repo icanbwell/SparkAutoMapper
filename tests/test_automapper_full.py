@@ -29,22 +29,16 @@ def test_auto_mapper_full(spark_session_per_function: SparkSession):
         view="members",
         source_view="patients",
         keys=["member_id"]
-    ).withColumn(
-        dst1="src1"
-    ).withColumn(
-        dst2=A.list(
-            client_address_variable
-        )
-    ).withColumn(
-        dst3=A.list(
-            [client_address_variable, "address2"]
-        )
+    ).columns(
+        dst1="src1",
+        dst2=A.list(client_address_variable),
+        dst3=A.list([client_address_variable, "address2"])
     )
 
     company_name: str = "Microsoft"
 
     if company_name == "Microsoft":
-        mapper = mapper.withColumn(
+        mapper = mapper.columns(
             dst4=A.list(
                 A.complex(
                     use="usual",
