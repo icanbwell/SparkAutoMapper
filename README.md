@@ -10,8 +10,25 @@ Since this is just Python, you can use any Python editor.  Since everything is t
 pip install sparkautomapper
 ```
 
+## SparkAutoMapper input and output
+You can pass either a dataframe to SparkAutoMapper or specify the name of a Spark view to read from.
+
+You can receive the result as a dataframe or (optionally) pass in the name of a view where you want the result.
+
 ## Dynamic Typing Examples
-#### Set a column in destination to a text value
+#### Set a column in destination to a text value (read from pass in data frame and return the result in a new dataframe)
+Set a column in destination to a text value
+```python
+from spark_auto_mapper.automappers.automapper import AutoMapper
+
+mapper = AutoMapper(
+    keys=["member_id"]
+).columns(
+    dst1="hello"
+)
+```
+
+#### Set a column in destination to a text value (read from a Spark view and put result in another Spark view)
 Set a column in destination to a text value
 ```python
 from spark_auto_mapper.automappers.automapper import AutoMapper
@@ -55,7 +72,6 @@ mapper = AutoMapper(
 Or you can use the shortcut for specifying a column (wrap column name in [])
 ```python
 from spark_auto_mapper.automappers.automapper import AutoMapper
-from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 mapper = AutoMapper(
     view="members",
@@ -244,20 +260,20 @@ To improve the auto-complete and syntax checking even more, you can define Compl
 
 Define a custom data type:
 ```python
-from spark_auto_mapper.data_types.automapper_defined_types import AutoMapperTextType
+from spark_auto_mapper.type_definitions.automapper_defined_types import AutoMapperTextInputType
 from spark_auto_mapper.helpers.automapper_value_parser import AutoMapperValueParser
-from spark_auto_mapper.data_types.automapper_data_type_date import AutoMapperDateDataType
-from spark_auto_mapper.data_types.automapper_data_type_list import AutoMapperDataTypeList
+from spark_auto_mapper.data_types.date import AutoMapperDateDataType
+from spark_auto_mapper.data_types.list import AutoMapperDataTypeList
 from spark_auto_mapper_fhir.fhir_types.automapper_fhir_data_type_complex_base import AutoMapperFhirDataTypeComplexBase
 
 
 class AutoMapperFhirDataTypePatient(AutoMapperFhirDataTypeComplexBase):
     # noinspection PyPep8Naming
     def __init__(self,
-                 id_: AutoMapperTextType,
+                 id_: AutoMapperTextInputType,
                  birthDate: AutoMapperDateDataType,
                  name: AutoMapperDataTypeList,
-                 gender: AutoMapperTextType
+                 gender: AutoMapperTextInputType
                  ) -> None:
         super().__init__()
         self.value = dict(

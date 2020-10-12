@@ -3,10 +3,10 @@ from typing import Dict
 from pyspark.sql import Column
 from pyspark.sql.functions import struct
 
-from spark_auto_mapper.data_types.automapper_defined_types import AutoMapperAnyDataType
-from spark_auto_mapper.helpers.automapper_value_parser import AutoMapperValueParser
-from spark_auto_mapper.data_types.automapper_data_type_base import AutoMapperDataTypeBase
-from spark_auto_mapper.data_types.automapper_data_type_complex_base import AutoMapperDataTypeComplexBase
+from spark_auto_mapper.type_definitions.defined_types import AutoMapperAnyDataType
+from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
+from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
+from spark_auto_mapper.data_types.complex.complex_base import AutoMapperDataTypeComplexBase
 
 
 class AutoMapperDataTypeComplex(AutoMapperDataTypeComplexBase):

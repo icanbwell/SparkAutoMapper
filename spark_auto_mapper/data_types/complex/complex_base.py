@@ -3,7 +3,7 @@ from typing import Dict
 from pyspark.sql import Column
 from pyspark.sql.functions import struct
 
-from spark_auto_mapper.data_types.automapper_data_type_base import AutoMapperDataTypeBase
+from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 
 
 class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):

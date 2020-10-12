@@ -1,21 +1,16 @@
-from datetime import date, datetime
-from typing import Union
-
 from pyspark.sql import Column
 from pyspark.sql.functions import coalesce, to_date
 
-from spark_auto_mapper.helpers.automapper_value_parser import AutoMapperValueParser
-from spark_auto_mapper.data_types.automapper_data_type_base import AutoMapperDataTypeBase
-from spark_auto_mapper.data_types.automapper_data_type_column import AutoMapperDataTypeColumn
-from spark_auto_mapper.data_types.automapper_data_type_expression import AutoMapperDataTypeExpression
-from spark_auto_mapper.data_types.automapper_data_type_literal import AutoMapperDataTypeLiteral
+from spark_auto_mapper.data_types.column import AutoMapperDataTypeColumn
+from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
+from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
+from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
+from spark_auto_mapper.type_definitions.defined_types import AutoMapperDateInputType
 
 
 class AutoMapperDateDataType(AutoMapperDataTypeBase):
     def __init__(self,
-                 value: Union[str, date, datetime,
-                              AutoMapperDataTypeLiteral, AutoMapperDataTypeColumn,
-                              AutoMapperDataTypeExpression]
+                 value: AutoMapperDateInputType
                  ):
         super().__init__()
         # keep string separate so we can parse it to date
