@@ -4,6 +4,8 @@ from pyspark.sql import DataFrame
 
 from spark_auto_mapper.automappers.automapper_base import AutoMapperBase
 from spark_auto_mapper.automappers.automapper_container import AutoMapperContainer
+from spark_auto_mapper.automappers.automapper_with_complex import AutoMapperWithComplex
+from spark_auto_mapper.data_types.automapper_data_type_complex_base import AutoMapperDataTypeComplexBase
 from spark_auto_mapper.data_types.automapper_defined_types import AutoMapperAnyDataType
 
 
@@ -52,5 +54,14 @@ class AutoMapper(AutoMapperContainer):
         from spark_auto_mapper.automappers.automapper_columns import AutoMapperColumns
         columns_mapper: AutoMapperColumns = AutoMapperColumns(**kwargs)
         for column_name, child_mapper in columns_mapper.mappers.items():
+            self.register_child(dst_column=column_name, child=child_mapper)
+        return self
+
+    # noinspection PyPep8Naming,PyMethodMayBeStatic
+    def complex(self,
+                entity: AutoMapperDataTypeComplexBase
+                ) -> 'AutoMapper':
+        resource_mapper: AutoMapperWithComplex = AutoMapperWithComplex(entity=entity)
+        for column_name, child_mapper in resource_mapper.mappers.items():
             self.register_child(dst_column=column_name, child=child_mapper)
         return self
