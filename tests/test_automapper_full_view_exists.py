@@ -18,6 +18,9 @@ def test_auto_mapper_full(spark_session_per_function: SparkSession) -> None:
 
     source_df: DataFrame = spark_session.table("patients")
 
+    df = source_df.select("member_id")
+    df.createOrReplaceTempView("members")
+
     # example of a variable
     client_address_variable: str = "address1"
 
@@ -48,7 +51,7 @@ def test_auto_mapper_full(spark_session_per_function: SparkSession) -> None:
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
-    mapper.transform(df=source_df)
+    mapper.transform(df=df)
     result_df: DataFrame = spark_session.table("members")
 
     # Assert
