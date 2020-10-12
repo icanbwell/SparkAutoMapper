@@ -5,29 +5,22 @@ from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 
-def test_auto_mapper_full(spark_session_per_function: SparkSession) -> None:
+def test_auto_mapper_full_no_views(spark_session_per_function: SparkSession) -> None:
     spark_session: SparkSession = spark_session_per_function
     # Arrange
-    spark_session.createDataFrame(
+    source_df = spark_session.createDataFrame(
         [
             (1, 'Qureshi', 'Imran'),
             (2, 'Vidal', 'Michael'),
         ],
         ['member_id', 'last_name', 'first_name']
-    ).createOrReplaceTempView("patients")
-
-    source_df: DataFrame = spark_session.table("patients")
-
-    df = source_df.select("member_id")
-    df.createOrReplaceTempView("members")
+    )
 
     # example of a variable
     client_address_variable: str = "address1"
 
     # Act
     mapper = AutoMapper(
-        view="members",
-        source_view="patients",
         keys=["member_id"]
     ).columns(
         dst1="src1",
@@ -51,8 +44,7 @@ def test_auto_mapper_full(spark_session_per_function: SparkSession) -> None:
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
-    mapper.transform(df=df)
-    result_df: DataFrame = spark_session.table("members")
+    result_df: DataFrame = mapper.transform(df=source_df)
 
     # Assert
     result_df.printSchema()

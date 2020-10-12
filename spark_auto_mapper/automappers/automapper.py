@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from pyspark.sql import DataFrame
 
@@ -6,17 +6,16 @@ from spark_auto_mapper.automappers.automapper_base import AutoMapperBase
 from spark_auto_mapper.automappers.container import AutoMapperContainer
 from spark_auto_mapper.automappers.complex import AutoMapperWithComplex
 from spark_auto_mapper.data_types.complex.complex_base import AutoMapperDataTypeComplexBase
+from spark_auto_mapper.helpers.spark_helpers import SparkHelpers
 from spark_auto_mapper.type_definitions.defined_types import AutoMapperAnyDataType
 
 
 class AutoMapper(AutoMapperContainer):
-    def __init__(self, view: str, source_view: str, keys: List[str]):
+    def __init__(self, keys: List[str], view: Optional[str] = None, source_view: Optional[str] = None):
         super().__init__()
-        assert view
-        assert source_view
         assert keys and len(keys) > 0
-        self.view: str = view
-        self.source_view: str = source_view
+        self.view: Optional[str] = view
+        self.source_view: Optional[str] = source_view
         self.keys: List[str] = keys
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
@@ -27,12 +26,19 @@ class AutoMapper(AutoMapperContainer):
         return df
 
     def transform(self, df: DataFrame) -> DataFrame:
-        assert self.view
-        assert self.source_view
-        assert self.keys
-        source_df: DataFrame = df.sql_ctx.table(self.source_view)
-        destination_df: DataFrame = source_df.select(self.keys)
-        return self.transform_with_data_frame(df=destination_df, source_df=source_df, keys=self.keys)
+        assert self.keys and len(self.keys) > 0
+        # if source_view is specified then load that else assume that df is the source view
+        source_df: DataFrame = df.sql_ctx.table(self.source_view) if self.source_view else df
+        # if view is specified then check if it exists
+        destination_df: DataFrame = df.sql_ctx.table(self.view) \
+            if self.view and SparkHelpers.spark_table_exists(sql_ctx=df.sql_ctx, view=self.view) \
+            else source_df.select(self.keys)
+        # run the mapper
+        result_df: DataFrame = self.transform_with_data_frame(df=destination_df, source_df=source_df, keys=self.keys)
+        # if view was specified then create that view
+        if self.view:
+            result_df.createOrReplaceTempView(self.view)
+        return result_df
 
     def register_child(self,
                        dst_column: str,

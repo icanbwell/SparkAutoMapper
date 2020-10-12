@@ -55,7 +55,6 @@ mapper = AutoMapper(
 Or you can use the shortcut for specifying a column (wrap column name in [])
 ```python
 from spark_auto_mapper.automappers.automapper import AutoMapper
-from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 mapper = AutoMapper(
     view="members",
