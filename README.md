@@ -10,8 +10,25 @@ Since this is just Python, you can use any Python editor.  Since everything is t
 pip install sparkautomapper
 ```
 
+## SparkAutoMapper input and output
+You can pass either a dataframe to SparkAutoMapper or specify the name of a Spark view to read from.
+
+You can receive the result as a dataframe or (optionally) pass in the name of a view where you want the result.
+
 ## Dynamic Typing Examples
-#### Set a column in destination to a text value
+#### Set a column in destination to a text value (read from pass in data frame and return the result in a new dataframe)
+Set a column in destination to a text value
+```python
+from spark_auto_mapper.automappers.automapper import AutoMapper
+
+mapper = AutoMapper(
+    keys=["member_id"]
+).columns(
+    dst1="hello"
+)
+```
+
+#### Set a column in destination to a text value (read from a Spark view and put result in another Spark view)
 Set a column in destination to a text value
 ```python
 from spark_auto_mapper.automappers.automapper import AutoMapper
