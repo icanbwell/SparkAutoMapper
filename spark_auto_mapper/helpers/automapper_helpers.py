@@ -3,7 +3,7 @@ from typing import Union, Dict, Any, Optional
 
 from spark_auto_mapper.data_types.automapper_data_type_column import AutoMapperDataTypeColumn
 from spark_auto_mapper.data_types.automapper_data_type_complex import AutoMapperDataTypeComplex
-from spark_auto_mapper.data_types.automapper_data_type_date import AutoMapperDataTypeDate
+from spark_auto_mapper.data_types.automapper_data_type_date import AutoMapperDateDataType
 from spark_auto_mapper.data_types.automapper_data_type_expression import AutoMapperDataTypeExpression
 from spark_auto_mapper.data_types.automapper_data_type_list import AutoMapperDataTypeList
 from spark_auto_mapper.data_types.automapper_data_type_literal import AutoMapperDataTypeLiteral
@@ -40,5 +40,6 @@ class AutoMapperHelpers:
     @staticmethod
     def date(value: Union[str, date, datetime,
                           AutoMapperDataTypeLiteral, AutoMapperDataTypeColumn, AutoMapperDataTypeExpression]
-             ) -> AutoMapperDataTypeDate:
-        return AutoMapperDataTypeDate(value)
+             ) -> AutoMapperDateDataType:
+        return AutoMapperDateDataType(value)
+

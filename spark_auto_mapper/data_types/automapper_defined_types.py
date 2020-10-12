@@ -8,4 +8,11 @@ from spark_auto_mapper.data_types.automapper_native_types import AutoMapperSimpl
 
 AutoMapperTextType = Union[str, AutoMapperDataTypeLiteral, AutoMapperDataTypeColumn, AutoMapperDataTypeExpression]
 
+AutoMapperNumberType = Union[int, AutoMapperDataTypeLiteral, AutoMapperDataTypeColumn, AutoMapperDataTypeExpression]
+
+AutoMapperBooleanType = Union[bool, AutoMapperDataTypeLiteral, AutoMapperDataTypeColumn, AutoMapperDataTypeExpression]
+
+AutoMapperAmountType = Union[
+    int, float, AutoMapperDataTypeLiteral, AutoMapperDataTypeColumn, AutoMapperDataTypeExpression]
+
 AutoMapperAnyDataType = Union[AutoMapperSimpleType, AutoMapperNativeListType, AutoMapperDataTypeBase]

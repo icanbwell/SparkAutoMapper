@@ -11,7 +11,7 @@ from spark_auto_mapper.data_types.automapper_data_type_expression import AutoMap
 from spark_auto_mapper.data_types.automapper_data_type_literal import AutoMapperDataTypeLiteral
 
 
-class AutoMapperDataTypeDate(AutoMapperDataTypeBase):
+class AutoMapperDateDataType(AutoMapperDataTypeBase):
     def __init__(self,
                  value: Union[str, date, datetime,
                               AutoMapperDataTypeLiteral, AutoMapperDataTypeColumn,
