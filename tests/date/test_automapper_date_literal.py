@@ -30,7 +30,7 @@ def test_auto_mapper_date_literal(spark_session: SparkSession) -> None:
         view="members",
         source_view="patients",
         keys=["member_id"]
-    ).withColumn(
+    ).columns(
         birthDate=A.date("1970-01-01")
     )
 

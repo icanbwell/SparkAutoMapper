@@ -27,7 +27,7 @@ def test_auto_mapper_struct_with_mappers(spark_session: SparkSession) -> None:
         view="members",
         source_view="patients",
         keys=["member_id"]
-    ).withColumn(
+    ).columns(
         dst2=A.complex(
             use="usual",
             family=A.struct(

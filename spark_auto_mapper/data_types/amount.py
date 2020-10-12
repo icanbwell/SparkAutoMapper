@@ -1,19 +1,15 @@
-from typing import Union
-
 from pyspark.sql import Column
 
-from spark_auto_mapper.data_types.automapper_data_type_base import AutoMapperDataTypeBase
-from spark_auto_mapper.data_types.automapper_data_type_column import AutoMapperDataTypeColumn
-from spark_auto_mapper.data_types.automapper_data_type_expression import AutoMapperDataTypeExpression
-from spark_auto_mapper.data_types.automapper_data_type_literal import AutoMapperDataTypeLiteral
-from spark_auto_mapper.helpers.automapper_value_parser import AutoMapperValueParser
+from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
+from spark_auto_mapper.data_types.column import AutoMapperDataTypeColumn
+from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
+from spark_auto_mapper.type_definitions.defined_types import AutoMapperAmountInputType
+from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
 
 
 class AutoMapperAmountDataType(AutoMapperDataTypeBase):
     def __init__(self,
-                 value: Union[str, float,
-                              AutoMapperDataTypeLiteral, AutoMapperDataTypeColumn,
-                              AutoMapperDataTypeExpression]
+                 value: AutoMapperAmountInputType
                  ):
         super().__init__()
         self.value: AutoMapperDataTypeBase = value \

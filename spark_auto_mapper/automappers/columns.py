@@ -1,5 +1,5 @@
-from spark_auto_mapper.automappers.automapper_container import AutoMapperContainer
-from spark_auto_mapper.data_types.automapper_defined_types import AutoMapperAnyDataType
+from spark_auto_mapper.automappers.container import AutoMapperContainer
+from spark_auto_mapper.type_definitions.defined_types import AutoMapperAnyDataType
 
 
 class AutoMapperColumns(AutoMapperContainer):

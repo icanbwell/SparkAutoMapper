@@ -25,17 +25,17 @@ def test_auto_mapper_multiple_columns(spark_session: SparkSession) -> None:
         view="members",
         source_view="patients",
         keys=["member_id"]
-    ).withColumn(
+    ).columns(
         dst1="src1"
-    ).withColumn(
+    ).columns(
         dst2=A.list(
             "address1"
         )
-    ).withColumn(
+    ).columns(
         dst3=A.list(
             ["address1", "address2"]
         )
-    ).withColumn(
+    ).columns(
         dst4=A.list(
             value=A.complex(
                 use="usual",

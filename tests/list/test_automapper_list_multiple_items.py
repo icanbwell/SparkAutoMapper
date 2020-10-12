@@ -29,7 +29,7 @@ def test_auto_mapper_array_multiple_items(spark_session: SparkSession) -> None:
         view="members",
         source_view="patients",
         keys=["member_id"]
-    ).withColumn(
+    ).columns(
         dst2=A.list(
             [
                 "address1",

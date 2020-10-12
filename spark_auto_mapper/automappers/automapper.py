@@ -3,10 +3,10 @@ from typing import List
 from pyspark.sql import DataFrame
 
 from spark_auto_mapper.automappers.automapper_base import AutoMapperBase
-from spark_auto_mapper.automappers.automapper_container import AutoMapperContainer
-from spark_auto_mapper.automappers.automapper_with_complex import AutoMapperWithComplex
-from spark_auto_mapper.data_types.automapper_data_type_complex_base import AutoMapperDataTypeComplexBase
-from spark_auto_mapper.data_types.automapper_defined_types import AutoMapperAnyDataType
+from spark_auto_mapper.automappers.container import AutoMapperContainer
+from spark_auto_mapper.automappers.complex import AutoMapperWithComplex
+from spark_auto_mapper.data_types.complex.complex_base import AutoMapperDataTypeComplexBase
+from spark_auto_mapper.type_definitions.defined_types import AutoMapperAnyDataType
 
 
 class AutoMapper(AutoMapperContainer):
@@ -41,17 +41,8 @@ class AutoMapper(AutoMapperContainer):
         self.mappers[dst_column] = child
 
     # noinspection PyMethodMayBeStatic,PyPep8Naming
-    def withColumn(self,
-                   **kwargs: AutoMapperAnyDataType
-                   ) -> 'AutoMapper':
-        from spark_auto_mapper.automappers.automapper_with_column import AutoMapperWithColumn
-        with_column_mapper: AutoMapperWithColumn = AutoMapperWithColumn(**kwargs)
-        self.register_child(dst_column=with_column_mapper.dst_column, child=with_column_mapper)
-        return self
-
-    # noinspection PyMethodMayBeStatic,PyPep8Naming
     def columns(self, **kwargs: AutoMapperAnyDataType) -> 'AutoMapper':
-        from spark_auto_mapper.automappers.automapper_columns import AutoMapperColumns
+        from spark_auto_mapper.automappers.columns import AutoMapperColumns
         columns_mapper: AutoMapperColumns = AutoMapperColumns(**kwargs)
         for column_name, child_mapper in columns_mapper.mappers.items():
             self.register_child(dst_column=column_name, child=child_mapper)

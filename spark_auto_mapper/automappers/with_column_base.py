@@ -5,9 +5,9 @@ from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import col
 
 from spark_auto_mapper.automappers.automapper_base import AutoMapperBase
-from spark_auto_mapper.data_types.automapper_data_type_base import AutoMapperDataTypeBase
-from spark_auto_mapper.data_types.automapper_defined_types import AutoMapperAnyDataType
-from spark_auto_mapper.helpers.automapper_value_parser import AutoMapperValueParser
+from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
+from spark_auto_mapper.type_definitions.defined_types import AutoMapperAnyDataType
+from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
 
 
 class AutoMapperWithColumnBase(AutoMapperBase):

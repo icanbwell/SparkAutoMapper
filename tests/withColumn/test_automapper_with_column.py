@@ -28,7 +28,7 @@ def test_auto_mapper_with_column(spark_session: SparkSession) -> None:
         view="members",
         source_view="patients",
         keys=["member_id"]
-    ).withColumn(
+    ).columns(
         lname=A.column("last_name")
     )
 

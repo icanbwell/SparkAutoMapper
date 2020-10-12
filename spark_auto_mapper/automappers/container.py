@@ -3,8 +3,8 @@ from typing import List, Dict
 from pyspark.sql import DataFrame, Column
 
 from spark_auto_mapper.automappers.automapper_base import AutoMapperBase
-from spark_auto_mapper.automappers.automapper_with_column_base import AutoMapperWithColumnBase
-from spark_auto_mapper.data_types.automapper_defined_types import AutoMapperAnyDataType
+from spark_auto_mapper.automappers.with_column_base import AutoMapperWithColumnBase
+from spark_auto_mapper.type_definitions.defined_types import AutoMapperAnyDataType
 
 
 class AutoMapperContainer(AutoMapperBase):

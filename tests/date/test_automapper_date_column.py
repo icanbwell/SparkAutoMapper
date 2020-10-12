@@ -30,7 +30,7 @@ def test_auto_mapper_date_column(spark_session: SparkSession) -> None:
         view="members",
         source_view="patients",
         keys=["member_id"]
-    ).withColumn(
+    ).columns(
         birthDate=A.date(
             A.column("date_of_birth")
         )
