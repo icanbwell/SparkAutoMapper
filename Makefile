@@ -66,8 +66,4 @@ tests:
 	pytest tests
 
 .PHONY:init
-init: installspark up devsetup proxies tests
-
-.PHONY:proxies
-proxies:
-	python3 spark_auto_mapper/proxy_generator/generate_proxies.py
+init: installspark up devsetup tests
