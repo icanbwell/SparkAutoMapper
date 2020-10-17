@@ -1,4 +1,4 @@
-from typing import Union, List, Optional
+from typing import Union, List, Optional, Generic, TypeVar
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import array
@@ -8,8 +8,10 @@ from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 from spark_auto_mapper.type_definitions.defined_types import AutoMapperAnyDataType
 from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
 
+_T = TypeVar("_T")
 
-class AutoMapperDataTypeList(AutoMapperDataTypeBase):
+
+class AutoMapperDataTypeList(AutoMapperDataTypeBase, Generic[_T]):
     def __init__(self, value: Optional[AutoMapperAnyDataType]) -> None:
         super().__init__()
         # can a single mapper or a list of mappers
