@@ -12,6 +12,12 @@ from spark_auto_mapper.type_definitions.defined_types import AutoMapperAnyDataTy
 
 class AutoMapper(AutoMapperContainer):
     def __init__(self, keys: List[str], view: Optional[str] = None, source_view: Optional[str] = None):
+        """
+        Defines an AutoMapper
+        :param keys: joining keys
+        :param view: view to return
+        :parameter source_view: where to load the data from
+        """
         super().__init__()
         assert keys and len(keys) > 0
         self.view: Optional[str] = view
