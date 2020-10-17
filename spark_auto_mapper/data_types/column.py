@@ -1,4 +1,4 @@
-from pyspark.sql import Column
+from pyspark.sql import Column, DataFrame
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import col
 
@@ -13,7 +13,7 @@ class AutoMapperDataTypeColumn(AutoMapperDataTypeBase):
         else:
             self.value = value
 
-    def get_column_spec(self) -> Column:
+    def get_column_spec(self, source_df: DataFrame) -> Column:
         if isinstance(self.value, str):  # if the src column is just string then consider it a sql expression
             return col(self.value)
 

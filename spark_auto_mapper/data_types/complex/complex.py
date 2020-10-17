@@ -1,6 +1,6 @@
 from typing import Dict
 
-from pyspark.sql import Column
+from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import struct
 
 from spark_auto_mapper.type_definitions.defined_types import AutoMapperAnyDataType
@@ -16,10 +16,10 @@ class AutoMapperDataTypeComplex(AutoMapperDataTypeComplexBase):
             key: AutoMapperValueParser.parse_value(value) for key, value in kwargs.items()
         }
 
-    def get_column_spec(self) -> Column:
+    def get_column_spec(self, source_df: DataFrame) -> Column:
         return struct(
             [
-                self.get_value(value).alias(key)
+                self.get_value(value=value, source_df=source_df).alias(key)
                 for key, value in self.value.items()
             ]
         )

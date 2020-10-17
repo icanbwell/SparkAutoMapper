@@ -22,22 +22,22 @@ class AutoMapperWithColumnBase(AutoMapperBase):
             if not isinstance(value, AutoMapperDataTypeBase) \
             else value
 
-    def get_column_spec(self) -> Column:
+    def get_column_spec(self, source_df: DataFrame) -> Column:
         # if value is an AutoMapper then ask it for its column spec
         if isinstance(self.value, AutoMapperDataTypeBase):
             child: AutoMapperDataTypeBase = self.value
-            column_spec = child.get_column_spec()
+            column_spec = child.get_column_spec(source_df=source_df)
             return column_spec.alias(self.dst_column)
 
         raise ValueError(f"{type(self.value)} is not supported for {self.value}")
 
-    def get_column_specs(self) -> Dict[str, Column]:
-        return {self.dst_column: self.get_column_spec()}
+    def get_column_specs(self, source_df: DataFrame) -> Dict[str, Column]:
+        return {self.dst_column: self.get_column_spec(source_df=source_df)}
 
     # noinspection PyMethodMayBeStatic
     def transform_with_data_frame(self, df: DataFrame, source_df: DataFrame, keys: List[str]) -> DataFrame:
         # now add on my stuff
-        column_spec: Column = self.get_column_spec()
+        column_spec: Column = self.get_column_spec(source_df=source_df)
 
         conditions = [col(f'b.{key}') == col(f'a.{key}') for key in keys]
 

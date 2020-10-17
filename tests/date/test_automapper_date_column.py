@@ -37,7 +37,7 @@ def test_auto_mapper_date_column(spark_session: SparkSession) -> None:
     )
 
     assert isinstance(mapper, AutoMapper)
-    sql_expressions: Dict[str, Column] = mapper.get_column_specs()
+    sql_expressions: Dict[str, Column] = mapper.get_column_specs(source_df=source_df)
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
@@ -56,3 +56,5 @@ def test_auto_mapper_date_column(spark_session: SparkSession) -> None:
 
     assert result_df.where("member_id == 1").select("birthDate").collect()[0][0] == date(1970, 1, 1)
     assert result_df.where("member_id == 2").select("birthDate").collect()[0][0] == date(1970, 2, 2)
+
+    assert dict(result_df.dtypes)["birthDate"] == "date"

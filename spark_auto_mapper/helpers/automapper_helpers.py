@@ -17,7 +17,7 @@ from spark_auto_mapper.type_definitions.defined_types import AutoMapperAnyDataTy
 class AutoMapperHelpers:
     @staticmethod
     def list(value: Optional[AutoMapperAnyDataType] = None
-             ) -> AutoMapperDataTypeList:
+             ) -> AutoMapperDataTypeList[Any]:
         return AutoMapperDataTypeList(value=value)
 
     @staticmethod

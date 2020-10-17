@@ -1,4 +1,4 @@
-from pyspark.sql import Column
+from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import coalesce, to_date
 
 from spark_auto_mapper.data_types.column import AutoMapperDataTypeColumn
@@ -19,14 +19,20 @@ class AutoMapperDateDataType(AutoMapperDataTypeBase):
             if isinstance(value, AutoMapperDataTypeBase) \
             else AutoMapperValueParser.parse_value(value)
 
-    def get_column_spec(self) -> Column:
+    def get_column_spec(self, source_df: DataFrame) -> Column:
         if isinstance(self.value, AutoMapperDataTypeColumn) \
-                or isinstance(self.value, AutoMapperDataTypeLiteral):
+                and not dict(source_df.dtypes)[self.value.value] == "date":
             return coalesce(
-                to_date(self.value.get_column_spec(), format='yyyy-MM-dd'),
-                to_date(self.value.get_column_spec(), format='yyyyMMdd'),
-                to_date(self.value.get_column_spec(), format='MM/dd/yy')
+                to_date(self.value.get_column_spec(source_df=source_df), format='yyyy-MM-dd'),
+                to_date(self.value.get_column_spec(source_df=source_df), format='yyyyMMdd'),
+                to_date(self.value.get_column_spec(source_df=source_df), format='MM/dd/yy')
+            )
+        elif isinstance(self.value, AutoMapperDataTypeLiteral):
+            return coalesce(
+                to_date(self.value.get_column_spec(source_df=source_df), format='yyyy-MM-dd'),
+                to_date(self.value.get_column_spec(source_df=source_df), format='yyyyMMdd'),
+                to_date(self.value.get_column_spec(source_df=source_df), format='MM/dd/yy')
             )
         else:
-            column_spec = self.value.get_column_spec()
+            column_spec = self.value.get_column_spec(source_df=source_df)
             return column_spec
