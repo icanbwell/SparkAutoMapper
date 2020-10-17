@@ -11,7 +11,7 @@ from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
 _T = TypeVar("_T")
 
 
-class AutoMapperDataTypeList(AutoMapperDataTypeBase, Generic[_T]):
+class AutoMapperDataTypeList(Generic[_T], AutoMapperDataTypeBase):
     def __init__(self, value: Optional[AutoMapperAnyDataType]) -> None:
         super().__init__()
         # can a single mapper or a list of mappers
