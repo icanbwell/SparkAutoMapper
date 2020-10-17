@@ -1,4 +1,4 @@
-from pyspark.sql import Column
+from pyspark.sql import Column, DataFrame
 
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 from spark_auto_mapper.data_types.column import AutoMapperDataTypeColumn
@@ -16,12 +16,12 @@ class AutoMapperAmountDataType(AutoMapperDataTypeBase):
             if isinstance(value, AutoMapperDataTypeBase) \
             else AutoMapperValueParser.parse_value(value)
 
-    def get_column_spec(self) -> Column:
+    def get_column_spec(self, source_df: DataFrame) -> Column:
         if isinstance(self.value, AutoMapperDataTypeColumn) \
                 or isinstance(self.value, AutoMapperDataTypeLiteral):
             # parse the amount here
-            column_spec = self.value.get_column_spec()
+            column_spec = self.value.get_column_spec(source_df=source_df)
             return column_spec
         else:
-            column_spec = self.value.get_column_spec()
+            column_spec = self.value.get_column_spec(source_df=source_df)
             return column_spec

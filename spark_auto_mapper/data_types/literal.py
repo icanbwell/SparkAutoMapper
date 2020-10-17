@@ -1,6 +1,6 @@
 from datetime import date, datetime
 
-from pyspark.sql import Column
+from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import lit
 
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
@@ -12,7 +12,7 @@ class AutoMapperDataTypeLiteral(AutoMapperDataTypeBase):
         super().__init__()
         self.value: AutoMapperNativeSimpleType = value
 
-    def get_column_spec(self) -> Column:
+    def get_column_spec(self, source_df: DataFrame) -> Column:
         if isinstance(self.value, str) or isinstance(self.value, int) \
                 or isinstance(self.value, float) or isinstance(self.value, date) \
                 or isinstance(self.value, datetime):

@@ -47,7 +47,7 @@ def test_auto_mapper_full(spark_session_per_function: SparkSession) -> None:
             )
         )
 
-    sql_expressions: Dict[str, Column] = mapper.get_column_specs()
+    sql_expressions: Dict[str, Column] = mapper.get_column_specs(source_df=source_df)
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 

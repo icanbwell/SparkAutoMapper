@@ -26,5 +26,5 @@ class AutoMapperContainer(AutoMapperBase):
     def transform_with_data_frame(self, df: DataFrame, source_df: DataFrame, keys: List[str]) -> DataFrame:
         return df  # we do nothing since self.mappers do all the work
 
-    def get_column_specs(self) -> Dict[str, Column]:
-        return {column_name: mapper.get_column_specs()[column_name] for column_name, mapper in self.mappers.items()}
+    def get_column_specs(self, source_df: DataFrame) -> Dict[str, Column]:
+        return {column_name: mapper.get_column_specs(source_df=source_df)[column_name] for column_name, mapper in self.mappers.items()}
