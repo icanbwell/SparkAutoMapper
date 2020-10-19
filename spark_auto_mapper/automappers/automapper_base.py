@@ -7,7 +7,9 @@ class AutoMapperBase:
     def __init__(self) -> None:
         pass
 
-    def transform_with_data_frame(self, df: DataFrame, source_df: DataFrame, keys: List[str]) -> DataFrame:
+    def transform_with_data_frame(
+        self, df: DataFrame, source_df: DataFrame, keys: List[str]
+    ) -> DataFrame:
         # implement in subclasses
         raise NotImplementedError
 

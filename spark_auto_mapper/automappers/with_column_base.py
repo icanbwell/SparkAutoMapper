@@ -11,10 +11,7 @@ from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
 
 
 class AutoMapperWithColumnBase(AutoMapperBase):
-    def __init__(self,
-                 dst_column: str,
-                 value: AutoMapperAnyDataType
-                 ) -> None:
+    def __init__(self, dst_column: str, value: AutoMapperAnyDataType) -> None:
         super().__init__()
         # should only have one parameter
         self.dst_column: str = dst_column
@@ -29,26 +26,23 @@ class AutoMapperWithColumnBase(AutoMapperBase):
             column_spec = child.get_column_spec(source_df=source_df)
             return column_spec.alias(self.dst_column)
 
-        raise ValueError(f"{type(self.value)} is not supported for {self.value}")
+        raise ValueError(
+            f"{type(self.value)} is not supported for {self.value}"
+        )
 
     def get_column_specs(self, source_df: DataFrame) -> Dict[str, Column]:
         return {self.dst_column: self.get_column_spec(source_df=source_df)}
 
     # noinspection PyMethodMayBeStatic
-    def transform_with_data_frame(self, df: DataFrame, source_df: DataFrame, keys: List[str]) -> DataFrame:
+    def transform_with_data_frame(
+        self, df: DataFrame, source_df: DataFrame, keys: List[str]
+    ) -> DataFrame:
         # now add on my stuff
         column_spec: Column = self.get_column_spec(source_df=source_df)
 
         conditions = [col(f'b.{key}') == col(f'a.{key}') for key in keys]
 
         result_df = df.alias('a').join(
-            source_df.alias('b'),
-            conditions
-        ).select(
-            [
-                col('a.' + xx) for xx in df.columns
-            ] + [
-                column_spec
-            ]
-        )
+            source_df.alias('b'), conditions
+        ).select([col('a.' + xx) for xx in df.columns] + [column_spec])
         return result_df

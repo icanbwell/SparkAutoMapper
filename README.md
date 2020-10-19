@@ -315,4 +315,3 @@ mapper = AutoMapperFhir(
 2. Create a new release
 3. The GitHub Action should automatically kick in and publish the package
 4. You can see the status in the Actions tab
-

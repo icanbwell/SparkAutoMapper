@@ -14,7 +14,9 @@ class AutoMapperDataTypeColumn(AutoMapperDataTypeBase):
             self.value = value
 
     def get_column_spec(self, source_df: DataFrame) -> Column:
-        if isinstance(self.value, str):  # if the src column is just string then consider it a sql expression
+        if isinstance(
+            self.value, str
+        ):  # if the src column is just string then consider it a sql expression
             return col(self.value)
 
         raise ValueError(f"value: {self.value} is not str")

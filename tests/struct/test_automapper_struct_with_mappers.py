@@ -13,8 +13,7 @@ def test_auto_mapper_struct_with_mappers(spark_session: SparkSession) -> None:
         [
             (1, 'Qureshi', 'Imran'),
             (2, 'Vidal', 'Michael'),
-        ],
-        ['member_id', 'last_name', 'first_name']
+        ], ['member_id', 'last_name', 'first_name']
     ).createOrReplaceTempView("patients")
 
     source_df: DataFrame = spark_session.table("patients")
@@ -24,22 +23,13 @@ def test_auto_mapper_struct_with_mappers(spark_session: SparkSession) -> None:
 
     # Act
     mapper = AutoMapper(
-        view="members",
-        source_view="patients",
-        keys=["member_id"]
-    ).columns(
-        dst2=A.complex(
-            use="usual",
-            family=A.struct(
-                {
-                    "given": "foo"
-                }
-            )
-        )
-    )
+        view="members", source_view="patients", keys=["member_id"]
+    ).columns(dst2=A.complex(use="usual", family=A.struct({"given": "foo"})))
 
     assert isinstance(mapper, AutoMapper)
-    sql_expressions: Dict[str, Column] = mapper.get_column_specs(source_df=source_df)
+    sql_expressions: Dict[str, Column] = mapper.get_column_specs(
+        source_df=source_df
+    )
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
@@ -49,9 +39,7 @@ def test_auto_mapper_struct_with_mappers(spark_session: SparkSession) -> None:
     assert str(sql_expressions["dst2"]) == str(
         struct(
             expr("usual").alias("use"),
-            struct(
-                expr("foo").alias("given")
-            ).alias("family")
+            struct(expr("foo").alias("given")).alias("family")
         ).alias("dst2")
     )
 

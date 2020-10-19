@@ -16,8 +16,9 @@ from spark_auto_mapper.type_definitions.defined_types import AutoMapperAnyDataTy
 
 class AutoMapperHelpers:
     @staticmethod
-    def list(value: Optional[AutoMapperAnyDataType] = None
-             ) -> AutoMapperDataTypeList[Any]:
+    def list(
+        value: Optional[AutoMapperAnyDataType] = None
+    ) -> AutoMapperDataTypeList[Any]:
         return AutoMapperDataTypeList(value=value)
 
     @staticmethod
@@ -49,7 +50,9 @@ class AutoMapperHelpers:
         return AutoMapperAmountDataType(value)
 
     @staticmethod
-    def boolean(value: AutoMapperBooleanInputType) -> AutoMapperBooleanDataType:
+    def boolean(
+        value: AutoMapperBooleanInputType
+    ) -> AutoMapperBooleanDataType:
         return AutoMapperBooleanDataType(value)
 
     @staticmethod

@@ -6,14 +6,20 @@ from spark_auto_mapper.type_definitions.native_types import AutoMapperNativeSimp
     AutoMapperNativeAmountType
 from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperWrapperType
 
-AutoMapperTextInputType = Union[AutoMapperNativeTextType, AutoMapperWrapperType]
+AutoMapperTextInputType = Union[AutoMapperNativeTextType,
+                                AutoMapperWrapperType]
 
-AutoMapperNumberInputType = Union[AutoMapperNativeNumberType, AutoMapperWrapperType]
+AutoMapperNumberInputType = Union[AutoMapperNativeNumberType,
+                                  AutoMapperWrapperType]
 
-AutoMapperBooleanInputType = Union[AutoMapperNativeBooleanType, AutoMapperWrapperType]
+AutoMapperBooleanInputType = Union[AutoMapperNativeBooleanType,
+                                   AutoMapperWrapperType]
 
-AutoMapperDateInputType = Union[AutoMapperNativeDateType, AutoMapperWrapperType]
+AutoMapperDateInputType = Union[AutoMapperNativeDateType,
+                                AutoMapperWrapperType]
 
-AutoMapperAmountInputType = Union[AutoMapperNativeAmountType, AutoMapperWrapperType]
+AutoMapperAmountInputType = Union[AutoMapperNativeAmountType,
+                                  AutoMapperWrapperType]
 
-AutoMapperAnyDataType = Union[AutoMapperNativeSimpleType, AutoMapperNativeListType, AutoMapperDataTypeBase]
+AutoMapperAnyDataType = Union[AutoMapperNativeSimpleType,
+                              AutoMapperNativeListType, AutoMapperDataTypeBase]

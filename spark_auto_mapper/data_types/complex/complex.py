@@ -13,7 +13,8 @@ class AutoMapperDataTypeComplex(AutoMapperDataTypeComplexBase):
     def __init__(self, **kwargs: AutoMapperAnyDataType) -> None:
         super().__init__()
         self.value: Dict[str, AutoMapperDataTypeBase] = {
-            key: AutoMapperValueParser.parse_value(value) for key, value in kwargs.items()
+            key: AutoMapperValueParser.parse_value(value)
+            for key, value in kwargs.items()
         }
 
     def get_column_spec(self, source_df: DataFrame) -> Column:

@@ -12,7 +12,10 @@ def capture_arguments(func: Any) -> Any:
     @wraps(func)
     def wrapper(self: Any, *args: Any, **kwargs: Any) -> Any:
         if len(args) > 0:
-            raise TypeError("Method %s forces keyword arguments." % func.__name__)
+            raise TypeError(
+                "Method %s forces keyword arguments." % func.__name__
+            )
         self._input_kwargs = kwargs
         return func(self, **kwargs)
+
     return wrapper

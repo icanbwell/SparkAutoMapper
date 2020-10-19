@@ -9,9 +9,7 @@ from spark_auto_mapper.type_definitions.defined_types import AutoMapperDateInput
 
 
 class AutoMapperDateDataType(AutoMapperDataTypeBase):
-    def __init__(self,
-                 value: AutoMapperDateInputType
-                 ):
+    def __init__(self, value: AutoMapperDateInputType):
         super().__init__()
         # keep string separate so we can parse it to date
 
@@ -23,15 +21,33 @@ class AutoMapperDateDataType(AutoMapperDataTypeBase):
         if isinstance(self.value, AutoMapperDataTypeColumn) \
                 and not dict(source_df.dtypes)[self.value.value] == "date":
             return coalesce(
-                to_date(self.value.get_column_spec(source_df=source_df), format='yyyy-MM-dd'),
-                to_date(self.value.get_column_spec(source_df=source_df), format='yyyyMMdd'),
-                to_date(self.value.get_column_spec(source_df=source_df), format='MM/dd/yy')
+                to_date(
+                    self.value.get_column_spec(source_df=source_df),
+                    format='yyyy-MM-dd'
+                ),
+                to_date(
+                    self.value.get_column_spec(source_df=source_df),
+                    format='yyyyMMdd'
+                ),
+                to_date(
+                    self.value.get_column_spec(source_df=source_df),
+                    format='MM/dd/yy'
+                )
             )
         elif isinstance(self.value, AutoMapperDataTypeLiteral):
             return coalesce(
-                to_date(self.value.get_column_spec(source_df=source_df), format='yyyy-MM-dd'),
-                to_date(self.value.get_column_spec(source_df=source_df), format='yyyyMMdd'),
-                to_date(self.value.get_column_spec(source_df=source_df), format='MM/dd/yy')
+                to_date(
+                    self.value.get_column_spec(source_df=source_df),
+                    format='yyyy-MM-dd'
+                ),
+                to_date(
+                    self.value.get_column_spec(source_df=source_df),
+                    format='yyyyMMdd'
+                ),
+                to_date(
+                    self.value.get_column_spec(source_df=source_df),
+                    format='MM/dd/yy'
+                )
             )
         else:
             column_spec = self.value.get_column_spec(source_df=source_df)

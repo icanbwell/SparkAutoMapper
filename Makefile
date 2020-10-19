@@ -80,3 +80,12 @@ run-pre-commit:
 
 .PHONY:init
 init: installspark up devsetup tests
+
+.PHONY:continuous_integration
+continuous_integration:
+	pip install --upgrade pip && \
+    pip install --upgrade -r requirements.txt && \
+    pip install --upgrade -r requirements-test.txt && \
+    python setup.py install && \
+    pre-commit run --all-files && \
+    pytest tests

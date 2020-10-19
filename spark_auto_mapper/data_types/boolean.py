@@ -7,9 +7,7 @@ from spark_auto_mapper.type_definitions.defined_types import AutoMapperBooleanIn
 
 
 class AutoMapperBooleanDataType(AutoMapperDataTypeBase):
-    def __init__(self,
-                 value: AutoMapperBooleanInputType
-                 ):
+    def __init__(self, value: AutoMapperBooleanInputType):
         super().__init__()
         self.value: AutoMapperDataTypeBase = value \
             if isinstance(value, AutoMapperDataTypeBase) \
@@ -19,7 +17,8 @@ class AutoMapperBooleanDataType(AutoMapperDataTypeBase):
         if isinstance(self.value, AutoMapperDataTypeColumn) \
                 and dict(source_df.dtypes)[self.value.value] == "string":
             # parse the amount here
-            column_spec = self.value.get_column_spec(source_df=source_df).cast("boolean")
+            column_spec = self.value.get_column_spec(source_df=source_df
+                                                     ).cast("boolean")
             return column_spec
         else:
             column_spec = self.value.get_column_spec(source_df=source_df)
