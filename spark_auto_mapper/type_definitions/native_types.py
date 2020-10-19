@@ -13,4 +13,5 @@ AutoMapperNativeDateType = Union[str, date, datetime]
 
 AutoMapperNativeAmountType = Union[str, int, float]
 
-AutoMapperNativeListType = Union[List[str], List[int], List[float], List[date], List[datetime], List[Dict[str, Any]]]
+AutoMapperNativeListType = Union[List[str], List[int], List[float], List[date],
+                                 List[datetime], List[Dict[str, Any]]]

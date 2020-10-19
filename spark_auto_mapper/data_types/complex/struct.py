@@ -13,7 +13,8 @@ class AutoMapperDataTypeStruct(AutoMapperDataTypeComplexBase):
         super().__init__()
         assert isinstance(value, dict)
         self.value: Dict[str, AutoMapperDataTypeBase] = {
-            key: AutoMapperValueParser.parse_value(value) for key, value in value.items()
+            key: AutoMapperValueParser.parse_value(value)
+            for key, value in value.items()
         }
 
     def get_column_spec(self, source_df: DataFrame) -> Column:

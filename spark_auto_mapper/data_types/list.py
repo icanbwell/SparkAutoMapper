@@ -28,13 +28,18 @@ class AutoMapperDataTypeList(Generic[_T], AutoMapperDataTypeBase):
             raise ValueError(f"{type(value)} is not supported")
 
     def get_column_spec(self, source_df: DataFrame) -> Column:
-        if isinstance(self.value, str):  # if the src column is just string then consider it a sql expression
+        if isinstance(
+            self.value, str
+        ):  # if the src column is just string then consider it a sql expression
             return array(lit(self.value))
 
-        if isinstance(self.value, list):  # if the src column is a list then iterate
+        if isinstance(
+            self.value, list
+        ):  # if the src column is a list then iterate
             return array(
                 [
-                    self.get_value(item, source_df=source_df) for item in self.value
+                    self.get_value(item, source_df=source_df)
+                    for item in self.value
                 ]
             )
 

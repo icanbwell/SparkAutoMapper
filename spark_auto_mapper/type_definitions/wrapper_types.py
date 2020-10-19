@@ -6,6 +6,9 @@ from spark_auto_mapper.data_types.expression import AutoMapperDataTypeExpression
 from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
 from spark_auto_mapper.type_definitions.native_types import AutoMapperNativeSimpleType, AutoMapperNativeListType
 
-AutoMapperWrapperType = Union[AutoMapperDataTypeLiteral, AutoMapperDataTypeColumn, AutoMapperDataTypeExpression]
+AutoMapperWrapperType = Union[AutoMapperDataTypeLiteral,
+                              AutoMapperDataTypeColumn,
+                              AutoMapperDataTypeExpression]
 
-AutoMapperAnyDataType = Union[AutoMapperNativeSimpleType, AutoMapperNativeListType, AutoMapperDataTypeBase]
+AutoMapperAnyDataType = Union[AutoMapperNativeSimpleType,
+                              AutoMapperNativeListType, AutoMapperDataTypeBase]

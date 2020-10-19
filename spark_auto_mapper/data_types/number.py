@@ -7,9 +7,7 @@ from spark_auto_mapper.type_definitions.defined_types import AutoMapperNumberInp
 
 
 class AutoMapperNumberDataType(AutoMapperDataTypeBase):
-    def __init__(self,
-                 value: AutoMapperNumberInputType
-                 ):
+    def __init__(self, value: AutoMapperNumberInputType):
         super().__init__()
         self.value: AutoMapperDataTypeBase = value \
             if isinstance(value, AutoMapperDataTypeBase) \
@@ -19,7 +17,8 @@ class AutoMapperNumberDataType(AutoMapperDataTypeBase):
         if isinstance(self.value, AutoMapperDataTypeColumn) \
                 and dict(source_df.dtypes)[self.value.value] == "string":
             # parse the amount here
-            column_spec = self.value.get_column_spec(source_df=source_df).cast("int")
+            column_spec = self.value.get_column_spec(source_df=source_df
+                                                     ).cast("int")
             return column_spec
         else:
             column_spec = self.value.get_column_spec(source_df=source_df)

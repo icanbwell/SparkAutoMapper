@@ -3,9 +3,10 @@ from spark_auto_mapper.data_types.complex.complex_base import AutoMapperDataType
 
 
 class AutoMapperWithComplex(AutoMapperContainer):
-    def __init__(self,
-                 entity: AutoMapperDataTypeComplexBase
-                 ) -> None:
+    def __init__(self, entity: AutoMapperDataTypeComplexBase) -> None:
         super().__init__()
 
-        self.generate_mappers(mappers_dict={key: value for key, value in entity.value.items()})
+        self.generate_mappers(
+            mappers_dict={key: value
+                          for key, value in entity.value.items()}
+        )

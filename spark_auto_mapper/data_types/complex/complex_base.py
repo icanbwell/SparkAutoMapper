@@ -8,17 +8,15 @@ from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 
 
 class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
-    def __init__(self,
-                 **kwargs: Any
-                 ) -> None:
+    def __init__(self, **kwargs: Any) -> None:
         super().__init__()
         self.value: Dict[str, AutoMapperDataTypeBase] = {
-            parameter_name
-            if not parameter_name.endswith("_")  # some property names are python keywords so we have to append with _
-            else parameter_name[:-1]: AutoMapperValueParser.parse_value(
-                parameter_value)
-            for parameter_name, parameter_value
-            in kwargs.items()
+            parameter_name if not parameter_name.endswith(
+                "_"
+            )  # some property names are python keywords so we have to append with _
+            else parameter_name[:-1]:
+            AutoMapperValueParser.parse_value(parameter_value)
+            for parameter_name, parameter_value in kwargs.items()
             if parameter_value is not None
         }
 

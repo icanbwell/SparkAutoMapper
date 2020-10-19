@@ -4,9 +4,7 @@ from spark_auto_mapper.type_definitions.defined_types import AutoMapperAnyDataTy
 
 class AutoMapperWithColumn(AutoMapperWithColumnBase):
     # This class is just a helper that allows us to pass the parameters in the form dst_column=value
-    def __init__(self,
-                 **kwargs: AutoMapperAnyDataType
-                 ) -> None:
+    def __init__(self, **kwargs: AutoMapperAnyDataType) -> None:
         assert len(kwargs) == 1, kwargs
         dst_column: str = list(kwargs.keys())[0]
         value = kwargs[dst_column]
