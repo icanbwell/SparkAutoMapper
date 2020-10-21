@@ -16,7 +16,7 @@ TEMPORARY_KEY = "__row_id"
 class AutoMapper(AutoMapperContainer):
     def __init__(
         self,
-        keys: Optional[List[str]],
+        keys: Optional[List[str]] = None,
         view: Optional[str] = None,
         source_view: Optional[str] = None
     ):

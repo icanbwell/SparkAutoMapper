@@ -43,7 +43,7 @@ def test_auto_mapper_multiple_columns(spark_session: SparkSession) -> None:
     result_df.printSchema()
     result_df.show()
 
-    assert len(result_df.columns) == 5
+    assert len(result_df.columns) == 5, list(result_df.columns)
     assert result_df.where("member_id == 1").select("dst1"
                                                     ).collect()[0][0] == "src1"
     assert result_df.where("member_id == 1"
