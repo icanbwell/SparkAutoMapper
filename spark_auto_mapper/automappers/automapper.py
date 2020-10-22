@@ -1,6 +1,7 @@
 from typing import List, Optional
 
 from pyspark.sql import DataFrame
+from pyspark.sql.functions import monotonically_increasing_id
 
 from spark_auto_mapper.automappers.automapper_base import AutoMapperBase
 from spark_auto_mapper.automappers.container import AutoMapperContainer
@@ -9,11 +10,13 @@ from spark_auto_mapper.data_types.complex.complex_base import AutoMapperDataType
 from spark_auto_mapper.helpers.spark_helpers import SparkHelpers
 from spark_auto_mapper.type_definitions.defined_types import AutoMapperAnyDataType
 
+TEMPORARY_KEY = "__row_id"
+
 
 class AutoMapper(AutoMapperContainer):
     def __init__(
         self,
-        keys: List[str],
+        keys: Optional[List[str]] = None,
         view: Optional[str] = None,
         source_view: Optional[str] = None
     ):
@@ -24,10 +27,9 @@ class AutoMapper(AutoMapperContainer):
         :parameter source_view: where to load the data from
         """
         super().__init__()
-        assert keys and len(keys) > 0
         self.view: Optional[str] = view
         self.source_view: Optional[str] = source_view
-        self.keys: List[str] = keys
+        self.keys: Optional[List[str]] = keys
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
     def transform_with_data_frame(
@@ -41,11 +43,21 @@ class AutoMapper(AutoMapperContainer):
         return df
 
     def transform(self, df: DataFrame) -> DataFrame:
-        assert self.keys and len(self.keys) > 0
         # if source_view is specified then load that else assume that df is the source view
         source_df: DataFrame = df.sql_ctx.table(
             self.source_view
         ) if self.source_view else df
+        # if keys are not specified then add a __row_id column to both the source and the destination
+        #   and use that as key
+        if not self.keys or len(self.keys) == 0:
+            assert not self.view or not SparkHelpers.spark_table_exists(
+                sql_ctx=df.sql_ctx, view=self.view
+            )
+            self.keys = [TEMPORARY_KEY]
+            source_df = source_df.withColumn(
+                TEMPORARY_KEY, monotonically_increasing_id()
+            )
+
         # if view is specified then check if it exists
         destination_df: DataFrame = df.sql_ctx.table(self.view) \
             if self.view and SparkHelpers.spark_table_exists(sql_ctx=df.sql_ctx, view=self.view) \
@@ -54,6 +66,10 @@ class AutoMapper(AutoMapperContainer):
         result_df: DataFrame = self.transform_with_data_frame(
             df=destination_df, source_df=source_df, keys=self.keys
         )
+
+        # now drop the __row_id if we added it
+        result_df = result_df.drop(TEMPORARY_KEY)
+
         # if view was specified then create that view
         if self.view:
             result_df.createOrReplaceTempView(self.view)
