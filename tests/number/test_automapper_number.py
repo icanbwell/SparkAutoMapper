@@ -35,7 +35,7 @@ def test_auto_mapper_number(spark_session: SparkSession) -> None:
         print(f"{column_name}: {sql_expression}")
 
     assert str(sql_expressions["age"]
-               ) == str(col("my_age").cast("int").alias("age"))
+               ) == str(col("b.my_age").cast("int").alias("age"))
 
     result_df: DataFrame = mapper.transform(df=df)
 

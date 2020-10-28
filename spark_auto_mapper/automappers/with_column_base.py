@@ -42,7 +42,10 @@ class AutoMapperWithColumnBase(AutoMapperBase):
 
         conditions = [col(f'b.{key}') == col(f'a.{key}') for key in keys]
 
-        result_df = df.alias('a').join(
+        result_df: DataFrame = df.alias('a').join(
             source_df.alias('b'), conditions
-        ).select([col('a.' + xx) for xx in df.columns] + [column_spec])
+        ).select(
+            [col('a.' + column_name)
+             for column_name in df.columns] + [column_spec]
+        )
         return result_df

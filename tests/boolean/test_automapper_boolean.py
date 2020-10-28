@@ -35,7 +35,7 @@ def test_auto_mapper_boolean(spark_session: SparkSession) -> None:
         print(f"{column_name}: {sql_expression}")
 
     assert str(sql_expressions["age"]
-               ) == str(col("my_age").cast("boolean").alias("age"))
+               ) == str(col("b.my_age").cast("boolean").alias("age"))
 
     result_df: DataFrame = mapper.transform(df=df)
 
