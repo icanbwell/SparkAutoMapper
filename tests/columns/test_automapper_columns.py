@@ -6,6 +6,7 @@ from pyspark.sql.functions import array, lit, struct
 from pyspark.sql.functions import col
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
+from spark_auto_mapper.data_types.list import AutoMapperList
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 
@@ -28,9 +29,11 @@ def test_auto_mapper_columns(spark_session: SparkSession) -> None:
         view="members", source_view="patients", keys=["member_id"]
     ).columns(
         dst1="src1",
-        dst2=A.list("address1"),
-        dst3=A.list(["address1", "address2"]),
-        dst4=A.list(A.complex(use="usual", family=A.column("last_name")))
+        dst2=AutoMapperList(["address1"]),
+        dst3=AutoMapperList(["address1", "address2"]),
+        dst4=AutoMapperList(
+            [A.complex(use="usual", family=A.column("last_name"))]
+        )
     )
 
     assert isinstance(mapper, AutoMapper)

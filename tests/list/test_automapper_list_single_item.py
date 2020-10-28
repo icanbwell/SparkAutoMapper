@@ -4,7 +4,7 @@ from pyspark.sql import SparkSession, Column, DataFrame
 from pyspark.sql.functions import array, expr
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
-from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
+from spark_auto_mapper.data_types.list import AutoMapperList
 
 
 def test_auto_mapper_array_single_item(spark_session: SparkSession) -> None:
@@ -24,7 +24,7 @@ def test_auto_mapper_array_single_item(spark_session: SparkSession) -> None:
     # Act
     mapper = AutoMapper(
         view="members", source_view="patients", keys=["member_id"]
-    ).columns(dst2=A.list("address1"))
+    ).columns(dst2=AutoMapperList(["address1"]))
 
     assert isinstance(mapper, AutoMapper)
     sql_expressions: Dict[str, Column] = mapper.get_column_specs(
