@@ -2,6 +2,7 @@ from typing import Dict
 
 from pyspark.sql import SparkSession, Column, DataFrame
 from spark_auto_mapper.automappers.automapper import AutoMapper
+from spark_auto_mapper.data_types.list import AutoMapperList
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 
@@ -22,11 +23,11 @@ def test_auto_mapper_multiple_columns(spark_session: SparkSession) -> None:
     # Act
     mapper = AutoMapper(
         view="members", source_view="patients", keys=["member_id"]
-    ).columns(dst1="src1").columns(dst2=A.list("address1")).columns(
-        dst3=A.list(["address1", "address2"])
+    ).columns(dst1="src1").columns(dst2=AutoMapperList(["address1"])).columns(
+        dst3=AutoMapperList(["address1", "address2"])
     ).columns(
-        dst4=A.list(
-            value=A.complex(use="usual", family=A.column("last_name"))
+        dst4=AutoMapperList(
+            [A.complex(use="usual", family=A.column("last_name"))]
         )
     )
 

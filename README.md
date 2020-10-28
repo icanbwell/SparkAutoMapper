@@ -263,7 +263,7 @@ Define a custom data type:
 from spark_auto_mapper.type_definitions.automapper_defined_types import AutoMapperTextInputType
 from spark_auto_mapper.helpers.automapper_value_parser import AutoMapperValueParser
 from spark_auto_mapper.data_types.date import AutoMapperDateDataType
-from spark_auto_mapper.data_types.list import AutoMapperDataTypeList
+from spark_auto_mapper.data_types.list import AutoMapperList
 from spark_auto_mapper_fhir.fhir_types.automapper_fhir_data_type_complex_base import AutoMapperFhirDataTypeComplexBase
 
 
@@ -272,7 +272,7 @@ class AutoMapperFhirDataTypePatient(AutoMapperFhirDataTypeComplexBase):
     def __init__(self,
                  id_: AutoMapperTextInputType,
                  birthDate: AutoMapperDateDataType,
-                 name: AutoMapperDataTypeList,
+                 name: AutoMapperList,
                  gender: AutoMapperTextInputType
                  ) -> None:
         super().__init__()

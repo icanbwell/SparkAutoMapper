@@ -5,14 +5,20 @@ from pyspark.sql.functions import array
 from pyspark.sql.functions import lit
 
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
-from spark_auto_mapper.type_definitions.defined_types import AutoMapperAnyDataType
 from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
+from spark_auto_mapper.type_definitions.native_types import AutoMapperNativeSimpleType
 
-_T = TypeVar("_T")
+_T = TypeVar("_T", AutoMapperNativeSimpleType, AutoMapperDataTypeBase)
 
 
-class AutoMapperDataTypeList(Generic[_T], AutoMapperDataTypeBase):
-    def __init__(self, value: Optional[AutoMapperAnyDataType]) -> None:
+class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
+    """
+    Base class for lists
+    Generics:  https://mypy.readthedocs.io/en/stable/generics.html
+    Multiple Inheritance:
+    https://stackoverflow.com/questions/52754339/how-to-express-multiple-inheritance-in-python-type-hint
+    """
+    def __init__(self, value: Optional[List[_T]]) -> None:
         super().__init__()
         # can a single mapper or a list of mappers
         self.value: Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]

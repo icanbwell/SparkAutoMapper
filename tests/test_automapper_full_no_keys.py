@@ -2,6 +2,7 @@ from typing import Dict
 
 from pyspark.sql import SparkSession, Column, DataFrame
 from spark_auto_mapper.automappers.automapper import AutoMapper
+from spark_auto_mapper.data_types.list import AutoMapperList
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 
@@ -25,16 +26,20 @@ def test_auto_mapper_full_no_keys(
     # Act
     mapper = AutoMapper(view="members", source_view="patients").columns(
         dst1="src1",
-        dst2=A.list(client_address_variable),
-        dst3=A.list([client_address_variable, "address2"])
+        dst2=AutoMapperList([client_address_variable]),
+        dst3=AutoMapperList([client_address_variable, "address2"])
     )
 
     company_name: str = "Microsoft"
 
     if company_name == "Microsoft":
         mapper = mapper.columns(
-            dst4=A.list(A.complex(use="usual", family=A.column("last_name"))),
-            dst5=A.list(A.complex(use="usual", first=A.column("first_name"))),
+            dst4=AutoMapperList(
+                [A.complex(use="usual", family=A.column("last_name"))]
+            ),
+            dst5=AutoMapperList(
+                [A.complex(use="usual", first=A.column("first_name"))]
+            ),
         )
 
     sql_expressions: Dict[str, Column] = mapper.get_column_specs(

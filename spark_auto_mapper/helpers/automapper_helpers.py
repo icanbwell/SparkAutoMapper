@@ -1,4 +1,4 @@
-from typing import Dict, Any, Optional
+from typing import Any, Dict
 
 from spark_auto_mapper.data_types.amount import AutoMapperAmountDataType
 from spark_auto_mapper.data_types.boolean import AutoMapperBooleanDataType
@@ -6,7 +6,6 @@ from spark_auto_mapper.data_types.column import AutoMapperDataTypeColumn
 from spark_auto_mapper.data_types.complex.complex import AutoMapperDataTypeComplex
 from spark_auto_mapper.data_types.date import AutoMapperDateDataType
 from spark_auto_mapper.data_types.expression import AutoMapperDataTypeExpression
-from spark_auto_mapper.data_types.list import AutoMapperDataTypeList
 from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
 from spark_auto_mapper.data_types.number import AutoMapperNumberDataType
 from spark_auto_mapper.data_types.complex.struct import AutoMapperDataTypeStruct
@@ -15,12 +14,6 @@ from spark_auto_mapper.type_definitions.defined_types import AutoMapperAnyDataTy
 
 
 class AutoMapperHelpers:
-    @staticmethod
-    def list(
-        value: Optional[AutoMapperAnyDataType] = None
-    ) -> AutoMapperDataTypeList[Any]:
-        return AutoMapperDataTypeList(value=value)
-
     @staticmethod
     def struct(value: Dict[str, Any]) -> AutoMapperDataTypeStruct:
         return AutoMapperDataTypeStruct(value=value)
