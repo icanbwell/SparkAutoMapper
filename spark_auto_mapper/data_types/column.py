@@ -14,9 +14,13 @@ class AutoMapperDataTypeColumn(AutoMapperDataTypeBase):
             self.value = value
 
     def get_column_spec(self, source_df: DataFrame) -> Column:
-        if isinstance(
-            self.value, str
-        ):  # if the src column is just string then consider it a sql expression
-            return col(self.value)
+        if isinstance(self.value, str):
+            if not self.value.startswith("a.") and not self.value.startswith(
+                "b."
+            ):
+                # prepend with "b." in case the column exists in both a and b tables
+                return col("b." + self.value)
+            else:
+                return col(self.value)
 
         raise ValueError(f"value: {self.value} is not str")

@@ -54,7 +54,7 @@ def test_auto_mapper_columns(spark_session: SparkSession) -> None:
         array(
             struct(
                 lit("usual").alias("use"),
-                col("last_name").alias("family")
+                col("b.last_name").alias("family")
             )
         ).alias("dst4")
     )

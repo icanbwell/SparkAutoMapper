@@ -2,7 +2,7 @@ from typing import Dict
 
 from pyspark.sql import SparkSession, Column, DataFrame
 # noinspection PyUnresolvedReferences
-from pyspark.sql.functions import expr
+from pyspark.sql.functions import col
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
@@ -35,7 +35,7 @@ def test_auto_mapper_with_column(spark_session: SparkSession) -> None:
         print(f"{column_name}: {sql_expression}")
 
     assert str(sql_expressions["lname"]
-               ) == str(expr("last_name").alias("lname"))
+               ) == str(col("b.last_name").alias("lname"))
 
     result_df: DataFrame = mapper.transform(df=df)
 
