@@ -8,7 +8,9 @@ from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
 from spark_auto_mapper.type_definitions.native_types import AutoMapperNativeSimpleType
 
-_T = TypeVar("_T", AutoMapperNativeSimpleType, AutoMapperDataTypeBase)
+_T = TypeVar(
+    "_T", bound=Union[AutoMapperNativeSimpleType, AutoMapperDataTypeBase]
+)
 
 
 class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
