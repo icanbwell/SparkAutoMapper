@@ -1,9 +1,10 @@
-from typing import Any, Dict
+from typing import Any, Dict, Union
 
 from spark_auto_mapper.data_types.amount import AutoMapperAmountDataType
 from spark_auto_mapper.data_types.boolean import AutoMapperBooleanDataType
 from spark_auto_mapper.data_types.column import AutoMapperDataTypeColumn
 from spark_auto_mapper.data_types.complex.complex import AutoMapperDataTypeComplex
+from spark_auto_mapper.data_types.concat import AutoMapperConcatDataType
 from spark_auto_mapper.data_types.date import AutoMapperDateDataType
 from spark_auto_mapper.data_types.expression import AutoMapperDataTypeExpression
 from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
@@ -11,6 +12,8 @@ from spark_auto_mapper.data_types.number import AutoMapperNumberDataType
 from spark_auto_mapper.data_types.complex.struct import AutoMapperDataTypeStruct
 from spark_auto_mapper.type_definitions.defined_types import AutoMapperAnyDataType, AutoMapperBooleanInputType, \
     AutoMapperAmountInputType, AutoMapperNumberInputType, AutoMapperDateInputType
+from spark_auto_mapper.type_definitions.native_types import AutoMapperNativeTextType
+from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperWrapperType
 
 
 class AutoMapperHelpers:
@@ -51,3 +54,9 @@ class AutoMapperHelpers:
     @staticmethod
     def number(value: AutoMapperNumberInputType) -> AutoMapperNumberDataType:
         return AutoMapperNumberDataType(value)
+
+    @staticmethod
+    def concat(
+        *args: Union[AutoMapperNativeTextType, AutoMapperWrapperType]
+    ) -> AutoMapperConcatDataType:
+        return AutoMapperConcatDataType(*args)
