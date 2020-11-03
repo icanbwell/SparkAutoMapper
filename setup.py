@@ -80,6 +80,6 @@ setup(
     dependency_links=[],
     include_package_data=True,
     zip_safe=False,
-    package_data={"spark_auto_mapper": ["py.typed"]},
+    package_data={package_name: ["py.typed"]},
     data_files=[]
 )
