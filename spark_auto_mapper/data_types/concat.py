@@ -4,12 +4,13 @@ from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import concat
 
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
+from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
 from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
 from spark_auto_mapper.type_definitions.native_types import AutoMapperNativeTextType
 from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperWrapperType
 
 
-class AutoMapperConcatDataType(AutoMapperDataTypeBase):
+class AutoMapperConcatDataType(AutoMapperTextLikeBase):
     """
     Concatenates multiple strings together
     """
