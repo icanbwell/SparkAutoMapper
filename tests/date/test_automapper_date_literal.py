@@ -26,7 +26,10 @@ def test_auto_mapper_date_literal(spark_session: SparkSession) -> None:
 
     # Act
     mapper = AutoMapper(
-        view="members", source_view="patients", keys=["member_id"]
+        view="members",
+        source_view="patients",
+        keys=["member_id"],
+        drop_key_columns=False
     ).columns(birthDate=A.date("1970-01-01"))
 
     assert isinstance(mapper, AutoMapper)

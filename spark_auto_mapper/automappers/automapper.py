@@ -18,7 +18,9 @@ class AutoMapper(AutoMapperContainer):
         self,
         keys: Optional[List[str]] = None,
         view: Optional[str] = None,
-        source_view: Optional[str] = None
+        source_view: Optional[str] = None,
+        keep_duplicates: bool = False,
+        drop_key_columns: bool = True
     ):
         """
         Defines an AutoMapper
@@ -30,6 +32,8 @@ class AutoMapper(AutoMapperContainer):
         self.view: Optional[str] = view
         self.source_view: Optional[str] = source_view
         self.keys: Optional[List[str]] = keys
+        self.keep_duplicates: bool = keep_duplicates
+        self.drop_key_columns: bool = drop_key_columns
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
     def transform_with_data_frame(
@@ -67,8 +71,16 @@ class AutoMapper(AutoMapperContainer):
             df=destination_df, source_df=source_df, keys=self.keys
         )
 
-        # now drop the __row_id if we added it
-        result_df = result_df.drop(TEMPORARY_KEY)
+        # # now drop the __row_id if we added it
+        # result_df = result_df.drop(TEMPORARY_KEY)
+
+        # drop the key columns
+        if self.drop_key_columns:
+            result_df = result_df.drop(*self.keys)
+
+        # remove duplicates
+        if not self.keep_duplicates:
+            result_df = result_df.drop_duplicates()
 
         # if view was specified then create that view
         if self.view:

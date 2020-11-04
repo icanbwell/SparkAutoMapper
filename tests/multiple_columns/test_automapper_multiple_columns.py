@@ -22,7 +22,10 @@ def test_auto_mapper_multiple_columns(spark_session: SparkSession) -> None:
 
     # Act
     mapper = AutoMapper(
-        view="members", source_view="patients", keys=["member_id"]
+        view="members",
+        source_view="patients",
+        keys=["member_id"],
+        drop_key_columns=False
     ).columns(dst1="src1").columns(dst2=AutoMapperList(["address1"])).columns(
         dst3=AutoMapperList(["address1", "address2"])
     ).columns(

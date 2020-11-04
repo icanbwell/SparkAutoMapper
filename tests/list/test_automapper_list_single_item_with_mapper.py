@@ -28,7 +28,10 @@ def test_auto_mapper_array_single_item_with_mapper(
 
     # Act
     mapper = AutoMapper(
-        view="members", source_view="patients", keys=["member_id"]
+        view="members",
+        source_view="patients",
+        keys=["member_id"],
+        drop_key_columns=False
     ).columns(dst2=AutoMapperList([A.complex(addr="address1")]))
 
     assert isinstance(mapper, AutoMapper)

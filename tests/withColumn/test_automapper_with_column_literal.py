@@ -23,7 +23,10 @@ def test_auto_mapper_with_column_literal(spark_session: SparkSession) -> None:
 
     # Act
     mapper = AutoMapper(
-        view="members", source_view="patients", keys=["member_id"]
+        view="members",
+        source_view="patients",
+        keys=["member_id"],
+        drop_key_columns=False
     ).columns(lname="last_name")
 
     assert isinstance(mapper, AutoMapper)

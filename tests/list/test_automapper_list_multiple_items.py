@@ -25,7 +25,10 @@ def test_auto_mapper_array_multiple_items(spark_session: SparkSession) -> None:
 
     # Act
     mapper = AutoMapper(
-        view="members", source_view="patients", keys=["member_id"]
+        view="members",
+        source_view="patients",
+        keys=["member_id"],
+        drop_key_columns=False
     ).columns(dst2=AutoMapperList(["address1", "address2"]))
 
     assert isinstance(mapper, AutoMapper)

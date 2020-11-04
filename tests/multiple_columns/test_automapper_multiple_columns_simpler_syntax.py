@@ -23,7 +23,10 @@ def test_auto_mapper_multiple_columns_simpler_syntax(
 
     # Act
     mapper = AutoMapper(
-        view="members", source_view="patients", keys=["member_id"]
+        view="members",
+        source_view="patients",
+        keys=["member_id"],
+        drop_key_columns=False
     ).columns(dst1="src1").columns(dst2=["address1"]).columns(
         dst3=["address1", "address2"]
     ).columns(dst4=[dict(use="usual", family="[last_name]")])
