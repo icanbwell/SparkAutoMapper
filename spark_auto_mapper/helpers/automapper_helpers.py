@@ -19,44 +19,98 @@ from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperWrapperTy
 class AutoMapperHelpers:
     @staticmethod
     def struct(value: Dict[str, Any]) -> AutoMapperDataTypeStruct:
+        """
+        Creates a struct
+        :param value: A dictionary to be converted to a struct
+        :return: A struct automapper type
+        """
         return AutoMapperDataTypeStruct(value=value)
 
     @staticmethod
     def complex(**kwargs: AutoMapperAnyDataType) -> AutoMapperDataTypeComplex:
+        """
+        Creates a complex type.
+        :param kwargs: parameters to be used to create the complex type
+        :return: A complex automapper type
+        """
         return AutoMapperDataTypeComplex(**kwargs)
 
     @staticmethod
     def column(value: str) -> AutoMapperDataTypeColumn:
+        """
+        Specifies that the value parameter should be used as a column name
+        :param value: name of column
+        :return: A column automapper type
+        """
         return AutoMapperDataTypeColumn(value)
 
     @staticmethod
     def text(value: str) -> AutoMapperDataTypeLiteral:
+        """
+        Specifies that the value parameter should be used as a literal text
+        :param value: literal text value
+        :return: a literal automapper type
+        """
         return AutoMapperDataTypeLiteral(value)
 
     @staticmethod
     def expression(value: str) -> AutoMapperDataTypeExpression:
+        """
+        Specifies that the value parameter should be executed as a sql expression in Spark
+        :param value: sql
+        :return: an expression automapper type
+        """
         return AutoMapperDataTypeExpression(value)
 
     @staticmethod
     def date(value: AutoMapperDateInputType) -> AutoMapperDateDataType:
+        """
+        Specifies that value should be parsed into a date.  We currently support the following formats:
+        yyyy-MM-dd
+        yyyyMMdd
+        MM/dd/yy
+        (For adding more, go to AutoMapperDateDataType)
+        :param value: text
+        :return: a date automapper type
+        """
         return AutoMapperDateDataType(value)
 
     @staticmethod
     def amount(value: AutoMapperAmountInputType) -> AutoMapperAmountDataType:
+        """
+        Specifies the value should be used as an amount
+        :param value:
+        :return: an amount automapper type
+        """
         return AutoMapperAmountDataType(value)
 
     @staticmethod
     def boolean(
         value: AutoMapperBooleanInputType
     ) -> AutoMapperBooleanDataType:
+        """
+        Specifies the value should be used as a boolean
+        :param value:
+        :return: a boolean automapper type
+        """
         return AutoMapperBooleanDataType(value)
 
     @staticmethod
     def number(value: AutoMapperNumberInputType) -> AutoMapperNumberDataType:
+        """
+        Specifies value should be used as a number
+        :param value:
+        :return: a number automapper type
+        """
         return AutoMapperNumberDataType(value)
 
     @staticmethod
     def concat(
         *args: Union[AutoMapperNativeTextType, AutoMapperWrapperType]
     ) -> AutoMapperConcatDataType:
+        """
+        concatenates a list of values.  Each value can be a string or a column
+        :param args: string or column
+        :return: a concat automapper type
+        """
         return AutoMapperConcatDataType(*args)
