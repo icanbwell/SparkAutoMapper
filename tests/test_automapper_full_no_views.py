@@ -22,7 +22,7 @@ def test_auto_mapper_full_no_views(
     client_address_variable: str = "address1"
 
     # Act
-    mapper = AutoMapper(keys=["member_id"]).columns(
+    mapper = AutoMapper(keys=["member_id"], drop_key_columns=False).columns(
         dst1="src1",
         dst2=AutoMapperList([client_address_variable]),
         dst3=AutoMapperList([client_address_variable, "address2"])

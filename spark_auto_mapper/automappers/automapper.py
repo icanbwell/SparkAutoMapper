@@ -76,7 +76,7 @@ class AutoMapper(AutoMapperContainer):
 
         # drop the key columns
         if self.drop_key_columns:
-            result_df = result_df.drop(self.keys)
+            result_df = result_df.drop(*self.keys)
 
         # remove duplicates
         if not self.keep_duplicates:

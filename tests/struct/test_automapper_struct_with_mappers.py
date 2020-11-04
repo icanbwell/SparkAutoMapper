@@ -23,7 +23,10 @@ def test_auto_mapper_struct_with_mappers(spark_session: SparkSession) -> None:
 
     # Act
     mapper = AutoMapper(
-        view="members", source_view="patients", keys=["member_id"]
+        view="members",
+        source_view="patients",
+        keys=["member_id"],
+        drop_key_columns=False
     ).columns(dst2=A.complex(use="usual", family=A.struct({"given": "foo"})))
 
     assert isinstance(mapper, AutoMapper)

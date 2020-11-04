@@ -26,7 +26,10 @@ def test_auto_mapper_full(spark_session_per_function: SparkSession) -> None:
 
     # Act
     mapper = AutoMapper(
-        view="members", source_view="patients", keys=["member_id"]
+        view="members",
+        source_view="patients",
+        keys=["member_id"],
+        drop_key_columns=False
     ).columns(
         dst1="src1",
         dst2=AutoMapperList([client_address_variable]),
