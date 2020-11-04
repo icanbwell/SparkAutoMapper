@@ -6,12 +6,9 @@ from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 from tests.conftest import clean_spark_session
 
 
-def test_auto_mapper_duplicates(
-    spark_session_per_function: SparkSession
-) -> None:
-    clean_spark_session(session=spark_session_per_function)
-    spark_session: SparkSession = spark_session_per_function
+def test_auto_mapper_handles_duplicates(spark_session: SparkSession) -> None:
     # Arrange
+    clean_spark_session(session=spark_session)
     spark_session.createDataFrame(
         [
             (1, 'Qureshi', 'Imran'),
