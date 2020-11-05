@@ -38,19 +38,19 @@ class AutoMapperMapDataType(AutoMapperDataTypeExpression):
             source_df=source_df
         )
 
-        column_spec = when(
-            inner_column_spec.eqNullSafe(list(self.mapping.keys())[0]),
-            list(self.mapping.values()
-                 )[0].get_column_spec(source_df=source_df)
-        )
+        column_spec: Optional[Column] = None
         key: str
         value: AutoMapperDataTypeBase
-        for key, value in list(self.mapping.items())[1:]:
+        for key, value in self.mapping.items():
             column_spec = column_spec.when(
+                inner_column_spec.eqNullSafe(key),
+                value.get_column_spec(source_df=source_df)
+            ) if column_spec is not None else when(
                 inner_column_spec.eqNullSafe(key),
                 value.get_column_spec(source_df=source_df)
             )
 
-        column_spec = column_spec.otherwise(lit(self.default))
+        if column_spec is not None:
+            column_spec = column_spec.otherwise(lit(self.default))
 
         return column_spec
