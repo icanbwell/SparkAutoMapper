@@ -7,6 +7,7 @@ from spark_auto_mapper.data_types.complex.complex import AutoMapperDataTypeCompl
 from spark_auto_mapper.data_types.concat import AutoMapperConcatDataType
 from spark_auto_mapper.data_types.date import AutoMapperDateDataType
 from spark_auto_mapper.data_types.expression import AutoMapperDataTypeExpression
+from spark_auto_mapper.data_types.if_not_null import AutoMapperIfNotNullDataType
 from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
 from spark_auto_mapper.data_types.number import AutoMapperNumberDataType
 from spark_auto_mapper.data_types.complex.struct import AutoMapperDataTypeStruct
@@ -114,3 +115,17 @@ class AutoMapperHelpers:
         :return: a concat automapper type
         """
         return AutoMapperConcatDataType(*args)
+
+    @staticmethod
+    def if_not_null(
+        check: AutoMapperDataTypeColumn, value: AutoMapperAnyDataType
+    ) -> AutoMapperIfNotNullDataType:
+        """
+        concatenates a list of values.  Each value can be a string or a column
+
+
+        :param check: column to check for null
+        :param value: what to return if the value is not null
+        :return: a concat automapper type
+        """
+        return AutoMapperIfNotNullDataType(check=check, value=value)
