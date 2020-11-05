@@ -1,4 +1,4 @@
-from typing import Any, Dict, Union, TypeVar, cast
+from typing import Any, Dict, Union, TypeVar, cast, Optional
 
 from spark_auto_mapper.data_types.amount import AutoMapperAmountDataType
 from spark_auto_mapper.data_types.boolean import AutoMapperBooleanDataType
@@ -10,6 +10,7 @@ from spark_auto_mapper.data_types.date import AutoMapperDateDataType
 from spark_auto_mapper.data_types.expression import AutoMapperDataTypeExpression
 from spark_auto_mapper.data_types.if_not_null import AutoMapperIfNotNullDataType
 from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
+from spark_auto_mapper.data_types.map import AutoMapperMapDataType
 from spark_auto_mapper.data_types.number import AutoMapperNumberDataType
 from spark_auto_mapper.data_types.complex.struct import AutoMapperDataTypeStruct
 from spark_auto_mapper.type_definitions.defined_types import AutoMapperAnyDataType, AutoMapperBooleanInputType, \
@@ -139,4 +140,22 @@ class AutoMapperHelpers:
         return cast(
             _TAutoMapperDataType,
             AutoMapperIfNotNullDataType(check=check, value=value)
+        )
+
+    @staticmethod
+    def map(
+        column: AutoMapperDataTypeColumn,
+        mapping: Dict[str, AutoMapperNativeSimpleType],
+        default: Optional[AutoMapperNativeSimpleType] = None
+    ) -> AutoMapperDataTypeExpression:
+        """
+        maps the contents of a column to values
+        :param column: column
+        :param mapping: A dictionary mapping the contents of the column to other values
+                        e.g., {"Y":"Yes", "N": "No"}
+        :param default: the value to assign if no value matches
+        :return: a map automapper type
+        """
+        return AutoMapperMapDataType(
+            column=column, mapping=mapping, default=default
         )
