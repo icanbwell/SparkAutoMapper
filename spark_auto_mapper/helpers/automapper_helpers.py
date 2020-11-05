@@ -153,7 +153,7 @@ class AutoMapperHelpers:
         :param column: column
         :param mapping: A dictionary mapping the contents of the column to other values
                         e.g., {"Y":"Yes", "N": "No"}
-        :param default: teh value to assign if no value
+        :param default: the value to assign if no value matches
         :return: a map automapper type
         """
         return AutoMapperMapDataType(
