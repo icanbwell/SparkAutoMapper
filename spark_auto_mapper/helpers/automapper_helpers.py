@@ -1,10 +1,11 @@
-from typing import Any, Dict, Union
+from typing import Any, Dict, Union, TypeVar
 
 from spark_auto_mapper.data_types.amount import AutoMapperAmountDataType
 from spark_auto_mapper.data_types.boolean import AutoMapperBooleanDataType
 from spark_auto_mapper.data_types.column import AutoMapperDataTypeColumn
 from spark_auto_mapper.data_types.complex.complex import AutoMapperDataTypeComplex
 from spark_auto_mapper.data_types.concat import AutoMapperConcatDataType
+from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 from spark_auto_mapper.data_types.date import AutoMapperDateDataType
 from spark_auto_mapper.data_types.expression import AutoMapperDataTypeExpression
 from spark_auto_mapper.data_types.if_not_null import AutoMapperIfNotNullDataType
@@ -13,7 +14,7 @@ from spark_auto_mapper.data_types.number import AutoMapperNumberDataType
 from spark_auto_mapper.data_types.complex.struct import AutoMapperDataTypeStruct
 from spark_auto_mapper.type_definitions.defined_types import AutoMapperAnyDataType, AutoMapperBooleanInputType, \
     AutoMapperAmountInputType, AutoMapperNumberInputType, AutoMapperDateInputType
-from spark_auto_mapper.type_definitions.native_types import AutoMapperNativeTextType
+from spark_auto_mapper.type_definitions.native_types import AutoMapperNativeTextType, AutoMapperNativeSimpleType
 from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperWrapperType
 
 
@@ -116,16 +117,19 @@ class AutoMapperHelpers:
         """
         return AutoMapperConcatDataType(*args)
 
+    _T = TypeVar(
+        "_T", bound=Union[AutoMapperNativeSimpleType, AutoMapperDataTypeBase]
+    )
+
     @staticmethod
-    def if_not_null(
-        check: AutoMapperDataTypeColumn, value: AutoMapperAnyDataType
-    ) -> AutoMapperIfNotNullDataType:
+    def if_not_null(check: AutoMapperDataTypeColumn,
+                    value: _T) -> AutoMapperIfNotNullDataType[_T]:
         """
         concatenates a list of values.  Each value can be a string or a column
 
 
         :param check: column to check for null
         :param value: what to return if the value is not null
-        :return: a concat automapper type
+        :return: an if_not_null automapper type
         """
         return AutoMapperIfNotNullDataType(check=check, value=value)
