@@ -13,6 +13,8 @@ from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
 from spark_auto_mapper.data_types.map import AutoMapperMapDataType
 from spark_auto_mapper.data_types.number import AutoMapperNumberDataType
 from spark_auto_mapper.data_types.complex.struct import AutoMapperDataTypeStruct
+from spark_auto_mapper.data_types.substring import AutoMapperSubstringDataType
+from spark_auto_mapper.data_types.substring_by_delimiter import AutoMapperSubstringByDelimiterDataType
 from spark_auto_mapper.type_definitions.defined_types import AutoMapperAnyDataType, AutoMapperBooleanInputType, \
     AutoMapperAmountInputType, AutoMapperNumberInputType, AutoMapperDateInputType
 from spark_auto_mapper.type_definitions.native_types import AutoMapperNativeTextType, AutoMapperNativeSimpleType
@@ -158,4 +160,102 @@ class AutoMapperHelpers:
         """
         return AutoMapperMapDataType(
             column=column, mapping=mapping, default=default
+        )
+
+    @staticmethod
+    def left(
+        column: AutoMapperDataTypeColumn, length: int
+    ) -> AutoMapperSubstringDataType:
+        """
+        Take the specified number of first characters in a string
+
+        :param column: column whose contents to use
+        :param length: number of characters to take from left
+        :return: a concat automapper type
+        """
+        return AutoMapperSubstringDataType(
+            column=column, start=0, length=length
+        )
+
+    @staticmethod
+    def right(
+        column: AutoMapperDataTypeColumn, length: int
+    ) -> AutoMapperSubstringDataType:
+        """
+        Take the specified number of last characters in a string
+
+        :param column: column whose contents to use
+        :param length: number of characters to take from right
+        :return: a concat automapper type
+        """
+        return AutoMapperSubstringDataType(
+            column=column, start=-length, length=length
+        )
+
+    @staticmethod
+    def substring(
+        column: AutoMapperDataTypeColumn, start: int, length: int
+    ) -> AutoMapperSubstringDataType:
+        """
+        Finds a substring in the specified string.
+
+        :param column: column whose contents to use
+        :param start: position to start
+        :param length: number of characters to take
+        :return: a concat automapper type
+        """
+        return AutoMapperSubstringDataType(
+            column=column, start=start, length=length
+        )
+
+    @staticmethod
+    def string_before_delimiter(
+        column: AutoMapperDataTypeColumn, delimiter: str
+    ) -> AutoMapperSubstringByDelimiterDataType:
+        """
+        Take the specified number of first characters in a string
+
+        :param column: column whose contents to use
+        :param delimiter: string to use as delimiter
+        :return: a concat automapper type
+        """
+        return AutoMapperSubstringByDelimiterDataType(
+            column=column, delimiter=delimiter, delimiter_count=1
+        )
+
+    @staticmethod
+    def string_after_delimiter(
+        column: AutoMapperDataTypeColumn, delimiter: str
+    ) -> AutoMapperSubstringByDelimiterDataType:
+        """
+        Take the specified number of first characters in a string
+
+        :param column: column whose contents to use
+        :param delimiter: string to use as delimiter
+        :return: a concat automapper type
+        """
+        return AutoMapperSubstringByDelimiterDataType(
+            column=column, delimiter=delimiter, delimiter_count=-1
+        )
+
+    @staticmethod
+    def substring_by_delimiter(
+        column: AutoMapperDataTypeColumn, delimiter: str, delimiter_count: int
+    ) -> AutoMapperSubstringByDelimiterDataType:
+        """
+        Returns the substring from string str before count occurrences of the delimiter.
+        substring_by_delimiter performs a case-sensitive match when searching for delimiter.
+
+        :param column: column whose contents to use
+        :param delimiter: string to use as delimiter
+        :param delimiter_count: If delimiter_count is positive, everything the left of the final delimiter
+                                    (counting from left) is returned.
+                                If delimiter_count is negative, every to the right of the final delimiter
+                                    (counting from the right) is returned.
+        :return: a concat automapper type
+        """
+        return AutoMapperSubstringByDelimiterDataType(
+            column=column,
+            delimiter=delimiter,
+            delimiter_count=delimiter_count
         )
