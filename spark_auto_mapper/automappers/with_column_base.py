@@ -39,13 +39,15 @@ class AutoMapperWithColumnBase(AutoMapperBase):
     ) -> DataFrame:
         # now add on my stuff
         column_spec: Column = self.get_column_spec(source_df=source_df)
+        print(column_spec)
 
         conditions = [col(f'b.{key}') == col(f'a.{key}') for key in keys]
 
+        existing_columns: List[Column] = [
+            col('a.' + column_name) for column_name in df.columns
+        ]
+
         result_df: DataFrame = df.alias('a').join(
             source_df.alias('b'), conditions
-        ).select(
-            [col('a.' + column_name)
-             for column_name in df.columns] + [column_spec]
-        )
+        ).select(existing_columns + [column_spec])
         return result_df

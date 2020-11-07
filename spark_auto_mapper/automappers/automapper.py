@@ -2,6 +2,8 @@ from typing import List, Optional
 
 from pyspark.sql import DataFrame
 from pyspark.sql.functions import monotonically_increasing_id
+# noinspection PyUnresolvedReferences
+from pyspark.sql.functions import col
 
 from spark_auto_mapper.automappers.automapper_base import AutoMapperBase
 from spark_auto_mapper.automappers.container import AutoMapperContainer
@@ -66,9 +68,24 @@ class AutoMapper(AutoMapperContainer):
         destination_df: DataFrame = df.sql_ctx.table(self.view) \
             if self.view and SparkHelpers.spark_table_exists(sql_ctx=df.sql_ctx, view=self.view) \
             else source_df.select(self.keys)
+
+        # rename key columns to avoid name clash if someone creates a column with that name
+        renamed_key_columns: List[str] = []
+        for key in self.keys:
+            renamed_key_column: str = f"__{key}"
+            source_df = source_df.withColumn(renamed_key_column, col(key))
+            destination_df = destination_df.withColumn(
+                renamed_key_column, col(key)
+            )
+            renamed_key_columns.append(renamed_key_column)
+
+        # # remove the key columns now
+        # source_df = source_df.drop(*self.keys)
+        # destination_df = destination_df.drop(*self.keys)
+
         # run the mapper
         result_df: DataFrame = self.transform_with_data_frame(
-            df=destination_df, source_df=source_df, keys=self.keys
+            df=destination_df, source_df=source_df, keys=renamed_key_columns
         )
 
         # # now drop the __row_id if we added it
@@ -77,6 +94,9 @@ class AutoMapper(AutoMapperContainer):
         # drop the key columns
         if self.drop_key_columns:
             result_df = result_df.drop(*self.keys)
+
+        # drop the renamed key columns
+        result_df = result_df.drop(*renamed_key_columns)
 
         # remove duplicates
         if not self.keep_duplicates:
