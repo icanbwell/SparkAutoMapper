@@ -24,7 +24,11 @@ class AutoMapperWithColumnBase(AutoMapperBase):
         if isinstance(self.value, AutoMapperDataTypeBase):
             child: AutoMapperDataTypeBase = self.value
             column_spec = child.get_column_spec(source_df=source_df)
-            return column_spec.alias(self.dst_column)
+            # if dst_column already exists in source_df then prepend with ___ to make it unique
+            if self.dst_column in source_df.columns:
+                return column_spec.alias(f"___{self.dst_column}")
+            else:
+                return column_spec.alias(self.dst_column)
 
         raise ValueError(
             f"{type(self.value)} is not supported for {self.value}"
@@ -39,13 +43,13 @@ class AutoMapperWithColumnBase(AutoMapperBase):
     ) -> DataFrame:
         # now add on my stuff
         column_spec: Column = self.get_column_spec(source_df=source_df)
-
         conditions = [col(f'b.{key}') == col(f'a.{key}') for key in keys]
+
+        existing_columns: List[Column] = [
+            col('a.' + column_name) for column_name in df.columns
+        ]
 
         result_df: DataFrame = df.alias('a').join(
             source_df.alias('b'), conditions
-        ).select(
-            [col('a.' + column_name)
-             for column_name in df.columns] + [column_spec]
-        )
+        ).select(existing_columns + [column_spec])
         return result_df

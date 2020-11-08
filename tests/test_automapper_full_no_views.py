@@ -6,10 +6,7 @@ from spark_auto_mapper.data_types.list import AutoMapperList
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 
-def test_auto_mapper_full_no_views(
-    spark_session_per_function: SparkSession
-) -> None:
-    spark_session: SparkSession = spark_session_per_function
+def test_auto_mapper_full_no_views(spark_session: SparkSession) -> None:
     # Arrange
     source_df = spark_session.createDataFrame(
         [

@@ -4,13 +4,12 @@ from pyspark.sql import SparkSession, Column, DataFrame
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.data_types.list import AutoMapperList
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
+from tests.conftest import clean_spark_session
 
 
-def test_auto_mapper_full_no_keys(
-    spark_session_per_function: SparkSession
-) -> None:
-    spark_session: SparkSession = spark_session_per_function
+def test_auto_mapper_full_no_keys(spark_session: SparkSession) -> None:
     # Arrange
+    clean_spark_session(session=spark_session)
     spark_session.createDataFrame(
         [
             ('Qureshi', 'Imran'),

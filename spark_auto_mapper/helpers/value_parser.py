@@ -29,7 +29,7 @@ class AutoMapperValueParser:
 
         # if value is a dict then wrap with struct
         if isinstance(value, dict):
-            from spark_auto_mapper.data_types.complex.struct import AutoMapperDataTypeStruct
+            from spark_auto_mapper.data_types.complex.struct_type import AutoMapperDataTypeStruct
             return AutoMapperDataTypeStruct(value=value)
         if isinstance(value, List):
             from spark_auto_mapper.data_types.list import AutoMapperList

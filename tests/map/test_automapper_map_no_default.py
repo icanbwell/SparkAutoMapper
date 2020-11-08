@@ -42,7 +42,8 @@ def test_automapper_map_no_default(spark_session: SparkSession) -> None:
         when(col("b.has_kids").eqNullSafe(
             lit("Y")
         ), lit("Yes")).when(col("b.has_kids").eqNullSafe(lit("N")),
-                            lit("No")).otherwise(lit(None)).alias("has_kids")
+                            lit("No")).otherwise(lit(None)
+                                                 ).alias("___has_kids")
     )
 
     result_df: DataFrame = mapper.transform(df=df)

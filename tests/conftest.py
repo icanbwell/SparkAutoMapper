@@ -1,6 +1,8 @@
 import logging
 import os
 import shutil
+import random
+import string
 from os import path
 
 import pytest
@@ -62,6 +64,12 @@ def clean_close(session: SparkSession) -> None:
     session.stop()
 
 
+def get_random_string(length: int) -> str:
+    letters = string.ascii_lowercase
+    result_str = ''.join(random.choice(letters) for _ in range(length))
+    return result_str
+
+
 @pytest.fixture(scope="session")
 def spark_session(request: FixtureRequest) -> SparkSession:
     # make sure env variables are set correctly
@@ -71,13 +79,14 @@ def spark_session(request: FixtureRequest) -> SparkSession:
     clean_spark_dir()
 
     master = "local[2]"
+    # master: str = "spark://localhost:7077"
     if not path.exists("/Applications/Docker.app"):
         master = "local[2]"
         print(f"++++++ Running on local spark: {master} ++++")
     else:
         print(f"++++++ Running on docker spark: {master} ++++")
 
-    session = SparkSession.builder.appName("pytest-pyspark-local-testing"). \
+    session = SparkSession.builder.appName(f"pytest-pyspark-local-testing-{get_random_string(4)}"). \
         master(master). \
         config("spark.ui.showConsoleProgress", "false"). \
         config("spark.sql.shuffle.partitions", "2"). \
