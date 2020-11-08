@@ -79,17 +79,13 @@ class AutoMapper(AutoMapperContainer):
             )
             renamed_key_columns.append(renamed_key_column)
 
-        # # remove the key columns now
-        # source_df = source_df.drop(*self.keys)
-        # destination_df = destination_df.drop(*self.keys)
-
         # run the mapper
         result_df: DataFrame = self.transform_with_data_frame(
             df=destination_df, source_df=source_df, keys=renamed_key_columns
         )
 
-        # # now drop the __row_id if we added it
-        # result_df = result_df.drop(TEMPORARY_KEY)
+        # now drop the __row_id if we added it
+        result_df = result_df.drop(TEMPORARY_KEY)
 
         # drop the key columns
         if self.drop_key_columns:
@@ -97,6 +93,14 @@ class AutoMapper(AutoMapperContainer):
 
         # drop the renamed key columns
         result_df = result_df.drop(*renamed_key_columns)
+
+        # replace any columns we had prepended with "___" to avoid a name clash with key columns
+        for column_name in [
+            c for c in result_df.columns if c.startswith("___")
+        ]:
+            result_df = result_df.withColumnRenamed(
+                column_name, column_name.replace("___", "")
+            )
 
         # remove duplicates
         if not self.keep_duplicates:

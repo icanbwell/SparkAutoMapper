@@ -12,7 +12,7 @@ from spark_auto_mapper.data_types.if_not_null import AutoMapperIfNotNullDataType
 from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
 from spark_auto_mapper.data_types.map import AutoMapperMapDataType
 from spark_auto_mapper.data_types.number import AutoMapperNumberDataType
-from spark_auto_mapper.data_types.complex.struct import AutoMapperDataTypeStruct
+from spark_auto_mapper.data_types.complex.struct_type import AutoMapperDataTypeStruct
 from spark_auto_mapper.data_types.substring import AutoMapperSubstringDataType
 from spark_auto_mapper.data_types.substring_by_delimiter import AutoMapperSubstringByDelimiterDataType
 from spark_auto_mapper.type_definitions.defined_types import AutoMapperAnyDataType, AutoMapperBooleanInputType, \
