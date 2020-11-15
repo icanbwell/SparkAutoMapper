@@ -51,9 +51,10 @@ class AutoMapper(AutoMapperContainer):
                 # write out the full list of columns
                 columns_in_source: List[str] = list(source_df.columns)
                 columns_in_destination: List[str] = list(df.columns)
-                msg: str = f"processing column:[{column_name}]"
-                msg += f"source columns:[{','.join(columns_in_source)}]"
-                msg += f"destination columns:[{','.join(columns_in_destination)}]"
+                msg: str = str(e)
+                msg += f", Processing column:[{column_name}]"
+                msg += f", Source columns:[{','.join(columns_in_source)}]"
+                msg += f", Destination columns:[{','.join(columns_in_destination)}]"
                 raise Exception(msg) from e
         return df
 
@@ -93,8 +94,9 @@ class AutoMapper(AutoMapperContainer):
                 columns_in_destination: List[str] = list(
                     destination_df.columns
                 )
-                msg: str = f"source columns:[{','.join(columns_in_source)}]"
-                msg += f"destination columns:[{','.join(columns_in_destination)}]"
+                msg: str = str(e)
+                msg += f", Source columns:[{','.join(columns_in_source)}]"
+                msg += f", Destination columns:[{','.join(columns_in_destination)}]"
                 raise Exception(msg) from e
             renamed_key_columns.append(renamed_key_column)
 
