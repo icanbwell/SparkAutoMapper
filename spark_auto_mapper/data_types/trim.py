@@ -1,3 +1,5 @@
+from typing import Union
+
 from pyspark.sql import Column, DataFrame
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import trim
@@ -10,10 +12,13 @@ class AutoMapperTrimDataType(AutoMapperTextLikeBase):
     """
     Concatenates multiple strings together
     """
-    def __init__(self, column: AutoMapperDataTypeColumn):
+    def __init__(
+        self, column: Union[AutoMapperDataTypeColumn, AutoMapperTextLikeBase]
+    ):
         super().__init__()
 
-        self.column: AutoMapperDataTypeColumn = column
+        self.column: Union[AutoMapperDataTypeColumn,
+                           AutoMapperTextLikeBase] = column
 
     def get_column_spec(self, source_df: DataFrame) -> Column:
         column_spec = trim(self.column.get_column_spec(source_df=source_df))
