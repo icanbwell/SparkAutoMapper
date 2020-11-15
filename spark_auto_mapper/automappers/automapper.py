@@ -43,9 +43,18 @@ class AutoMapper(AutoMapperContainer):
     ) -> DataFrame:
         # iterate over each child mapper and run it
         for column_name, child_mapper in self.mappers.items():
-            df = child_mapper.transform_with_data_frame(
-                df=df, source_df=source_df, keys=keys
-            )
+            try:
+                df = child_mapper.transform_with_data_frame(
+                    df=df, source_df=source_df, keys=keys
+                )
+            except Exception as e:
+                # write out the full list of columns
+                columns_in_source: List[str] = list(source_df.columns)
+                columns_in_destination: List[str] = list(df.columns)
+                msg: str = f"processing column:[{column_name}]"
+                msg += f"source columns:[{','.join(columns_in_source)}]"
+                msg += f"destination columns:[{','.join(columns_in_destination)}]"
+                raise Exception(msg) from e
         return df
 
     def transform(self, df: DataFrame) -> DataFrame:
@@ -74,9 +83,19 @@ class AutoMapper(AutoMapperContainer):
         for key in self.keys:
             renamed_key_column: str = f"__{key}"
             source_df = source_df.withColumn(renamed_key_column, col(key))
-            destination_df = destination_df.withColumn(
-                renamed_key_column, col(key)
-            )
+            try:
+                destination_df = destination_df.withColumn(
+                    renamed_key_column, col(key)
+                )
+            except Exception as e:
+                # write out the full list of columns
+                columns_in_source: List[str] = list(source_df.columns)
+                columns_in_destination: List[str] = list(
+                    destination_df.columns
+                )
+                msg: str = f"source columns:[{','.join(columns_in_source)}]"
+                msg += f"destination columns:[{','.join(columns_in_destination)}]"
+                raise Exception(msg) from e
             renamed_key_columns.append(renamed_key_column)
 
         # run the mapper
