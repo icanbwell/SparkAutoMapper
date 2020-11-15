@@ -13,6 +13,7 @@ from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
 from spark_auto_mapper.data_types.map import AutoMapperMapDataType
 from spark_auto_mapper.data_types.number import AutoMapperNumberDataType
 from spark_auto_mapper.data_types.complex.struct_type import AutoMapperDataTypeStruct
+from spark_auto_mapper.data_types.regex_replace import AutoMapperRegExReplaceDataType
 from spark_auto_mapper.data_types.substring import AutoMapperSubstringDataType
 from spark_auto_mapper.data_types.substring_by_delimiter import AutoMapperSubstringByDelimiterDataType
 from spark_auto_mapper.type_definitions.defined_types import AutoMapperAnyDataType, AutoMapperBooleanInputType, \
@@ -258,4 +259,20 @@ class AutoMapperHelpers:
             column=column,
             delimiter=delimiter,
             delimiter_count=delimiter_count
+        )
+
+    @staticmethod
+    def regex_replace(
+        column: AutoMapperDataTypeColumn, pattern: str, replacement: str
+    ) -> AutoMapperRegExReplaceDataType:
+        """
+        Replace all substrings of the specified string value that match regexp with rep.
+
+        :param column: column whose contents to use
+        :param pattern: pattern to search for
+        :param replacement: string to replace with
+        :return: a regex_replace automapper type
+        """
+        return AutoMapperRegExReplaceDataType(
+            column=column, pattern=pattern, replacement=replacement
         )
