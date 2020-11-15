@@ -15,7 +15,8 @@ class AutoMapperConcatDataType(AutoMapperTextLikeBase):
     Concatenates multiple strings together
     """
     def __init__(
-        self, *args: Union[AutoMapperNativeTextType, AutoMapperWrapperType]
+        self, *args: Union[AutoMapperNativeTextType, AutoMapperWrapperType,
+                           AutoMapperTextLikeBase]
     ):
         super().__init__()
 

@@ -1,5 +1,7 @@
 from typing import Any, Dict, Union, TypeVar, cast, Optional
 
+from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
+
 from spark_auto_mapper.data_types.amount import AutoMapperAmountDataType
 from spark_auto_mapper.data_types.boolean import AutoMapperBooleanDataType
 from spark_auto_mapper.data_types.column import AutoMapperDataTypeColumn
@@ -118,7 +120,8 @@ class AutoMapperHelpers:
 
     @staticmethod
     def concat(
-        *args: Union[AutoMapperNativeTextType, AutoMapperWrapperType]
+        *args: Union[AutoMapperNativeTextType, AutoMapperWrapperType,
+                     AutoMapperTextLikeBase]
     ) -> AutoMapperConcatDataType:
         """
         concatenates a list of values.  Each value can be a string or a column
@@ -166,7 +169,8 @@ class AutoMapperHelpers:
 
     @staticmethod
     def left(
-        column: AutoMapperDataTypeColumn, length: int
+        column: Union[AutoMapperDataTypeColumn, AutoMapperTextLikeBase],
+        length: int
     ) -> AutoMapperSubstringDataType:
         """
         Take the specified number of first characters in a string
@@ -181,7 +185,8 @@ class AutoMapperHelpers:
 
     @staticmethod
     def right(
-        column: AutoMapperDataTypeColumn, length: int
+        column: Union[AutoMapperDataTypeColumn, AutoMapperTextLikeBase],
+        length: int
     ) -> AutoMapperSubstringDataType:
         """
         Take the specified number of last characters in a string
@@ -196,7 +201,8 @@ class AutoMapperHelpers:
 
     @staticmethod
     def substring(
-        column: AutoMapperDataTypeColumn, start: int, length: int
+        column: Union[AutoMapperDataTypeColumn, AutoMapperTextLikeBase],
+        start: int, length: int
     ) -> AutoMapperSubstringDataType:
         """
         Finds a substring in the specified string.
@@ -212,7 +218,8 @@ class AutoMapperHelpers:
 
     @staticmethod
     def string_before_delimiter(
-        column: AutoMapperDataTypeColumn, delimiter: str
+        column: Union[AutoMapperDataTypeColumn, AutoMapperTextLikeBase],
+        delimiter: str
     ) -> AutoMapperSubstringByDelimiterDataType:
         """
         Take the specified number of first characters in a string
@@ -227,7 +234,8 @@ class AutoMapperHelpers:
 
     @staticmethod
     def string_after_delimiter(
-        column: AutoMapperDataTypeColumn, delimiter: str
+        column: Union[AutoMapperDataTypeColumn, AutoMapperTextLikeBase],
+        delimiter: str
     ) -> AutoMapperSubstringByDelimiterDataType:
         """
         Take the specified number of first characters in a string
@@ -242,7 +250,8 @@ class AutoMapperHelpers:
 
     @staticmethod
     def substring_by_delimiter(
-        column: AutoMapperDataTypeColumn, delimiter: str, delimiter_count: int
+        column: Union[AutoMapperDataTypeColumn, AutoMapperTextLikeBase],
+        delimiter: str, delimiter_count: int
     ) -> AutoMapperSubstringByDelimiterDataType:
         """
         Returns the substring from string str before count occurrences of the delimiter.
@@ -264,7 +273,8 @@ class AutoMapperHelpers:
 
     @staticmethod
     def regex_replace(
-        column: AutoMapperDataTypeColumn, pattern: str, replacement: str
+        column: Union[AutoMapperDataTypeColumn, AutoMapperTextLikeBase],
+        pattern: str, replacement: str
     ) -> AutoMapperRegExReplaceDataType:
         """
         Replace all substrings of the specified string value that match regexp with rep.
@@ -279,7 +289,9 @@ class AutoMapperHelpers:
         )
 
     @staticmethod
-    def trim(column: AutoMapperDataTypeColumn) -> AutoMapperTrimDataType:
+    def trim(
+        column: Union[AutoMapperDataTypeColumn, AutoMapperTextLikeBase]
+    ) -> AutoMapperTrimDataType:
         """
         Trim the spaces from both ends for the specified string column.
 
