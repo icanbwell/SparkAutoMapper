@@ -16,6 +16,7 @@ from spark_auto_mapper.data_types.complex.struct_type import AutoMapperDataTypeS
 from spark_auto_mapper.data_types.regex_replace import AutoMapperRegExReplaceDataType
 from spark_auto_mapper.data_types.substring import AutoMapperSubstringDataType
 from spark_auto_mapper.data_types.substring_by_delimiter import AutoMapperSubstringByDelimiterDataType
+from spark_auto_mapper.data_types.trim import AutoMapperTrimDataType
 from spark_auto_mapper.type_definitions.defined_types import AutoMapperAnyDataType, AutoMapperBooleanInputType, \
     AutoMapperAmountInputType, AutoMapperNumberInputType, AutoMapperDateInputType
 from spark_auto_mapper.type_definitions.native_types import AutoMapperNativeTextType, AutoMapperNativeSimpleType
@@ -268,7 +269,7 @@ class AutoMapperHelpers:
         """
         Replace all substrings of the specified string value that match regexp with rep.
 
-        :param column: column whose contents to use
+        :param column: column whose contents to replace
         :param pattern: pattern to search for
         :param replacement: string to replace with
         :return: a regex_replace automapper type
@@ -276,3 +277,13 @@ class AutoMapperHelpers:
         return AutoMapperRegExReplaceDataType(
             column=column, pattern=pattern, replacement=replacement
         )
+
+    @staticmethod
+    def trim(column: AutoMapperDataTypeColumn) -> AutoMapperTrimDataType:
+        """
+        Trim the spaces from both ends for the specified string column.
+
+        :param column: column whose contents to trim
+        :return: a trim automapper type
+        """
+        return AutoMapperTrimDataType(column=column)
