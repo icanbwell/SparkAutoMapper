@@ -31,11 +31,11 @@ class AutoMapperDateDataType(AutoMapperDataTypeBase):
                 ),
                 to_date(
                     self.value.get_column_spec(source_df=source_df),
-                    format='MM/dd/yy'
+                    format='MM/dd/yyyy'
                 ),
                 to_date(
                     self.value.get_column_spec(source_df=source_df),
-                    format='MM/dd/yyyy'
+                    format='MM/dd/yy'
                 )
             )
         elif isinstance(self.value, AutoMapperDataTypeLiteral):

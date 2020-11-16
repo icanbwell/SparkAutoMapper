@@ -15,7 +15,7 @@ def test_auto_mapper_date_column(spark_session: SparkSession) -> None:
     spark_session.createDataFrame(
         [
             (1, 'Qureshi', 'Imran', "1970-01-01"),
-            (2, 'Vidal', 'Michael', "1970-02-02"),
+            (2, 'Vidal', 'Michael', "12/31/2020"),
         ], ['member_id', 'last_name', 'first_name', "date_of_birth"]
     ).createOrReplaceTempView("patients")
 
@@ -40,8 +40,8 @@ def test_auto_mapper_date_column(spark_session: SparkSession) -> None:
         coalesce(
             to_date(col("b.date_of_birth"), format='yyyy-MM-dd'),
             to_date(col("b.date_of_birth"), format='yyyyMMdd'),
-            to_date(col("b.date_of_birth"), format='MM/dd/yy'),
-            to_date(col("b.date_of_birth"), format='MM/dd/yyyy')
+            to_date(col("b.date_of_birth"), format='MM/dd/yyyy'),
+            to_date(col("b.date_of_birth"), format='MM/dd/yy')
         ).alias("birthDate")
     )
 
@@ -54,6 +54,6 @@ def test_auto_mapper_date_column(spark_session: SparkSession) -> None:
     assert result_df.where("member_id == 1").select("birthDate").collect(
     )[0][0] == date(1970, 1, 1)
     assert result_df.where("member_id == 2").select("birthDate").collect(
-    )[0][0] == date(1970, 2, 2)
+    )[0][0] == date(2020, 12, 31)
 
     assert dict(result_df.dtypes)["birthDate"] == "date"
