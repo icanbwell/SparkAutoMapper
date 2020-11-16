@@ -40,7 +40,8 @@ def test_auto_mapper_date_column(spark_session: SparkSession) -> None:
         coalesce(
             to_date(col("b.date_of_birth"), format='yyyy-MM-dd'),
             to_date(col("b.date_of_birth"), format='yyyyMMdd'),
-            to_date(col("b.date_of_birth"), format='MM/dd/yy')
+            to_date(col("b.date_of_birth"), format='MM/dd/yy'),
+            to_date(col("b.date_of_birth"), format='MM/dd/yyyy')
         ).alias("birthDate")
     )
 
