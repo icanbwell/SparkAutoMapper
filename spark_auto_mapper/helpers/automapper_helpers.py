@@ -1,5 +1,7 @@
 from typing import Any, Dict, Union, TypeVar, cast, Optional
 
+from spark_auto_mapper.data_types.coalesce import AutoMapperCoalesceDataType
+from spark_auto_mapper.data_types.hash import AutoMapperHashDataType
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
 
 from spark_auto_mapper.data_types.amount import AutoMapperAmountDataType
@@ -132,7 +134,9 @@ class AutoMapperHelpers:
 
     @staticmethod
     def if_not_null(
-        check: AutoMapperDataTypeColumn, value: _TAutoMapperDataType
+        check: AutoMapperDataTypeColumn,
+        value: _TAutoMapperDataType,
+        when_null: Optional[_TAutoMapperDataType] = None
     ) -> _TAutoMapperDataType:
         """
         concatenates a list of values.  Each value can be a string or a column
@@ -140,13 +144,16 @@ class AutoMapperHelpers:
 
         :param check: column to check for null
         :param value: what to return if the value is not null
+        :param when_null: what value to assign if check is not
         :return: an if_not_null automapper type
         """
 
         # cast it to the inner type so type checking is happy
         return cast(
             _TAutoMapperDataType,
-            AutoMapperIfNotNullDataType(check=check, value=value)
+            AutoMapperIfNotNullDataType(
+                check=check, value=value, when_null=when_null
+            )
         )
 
     @staticmethod
@@ -299,3 +306,26 @@ class AutoMapperHelpers:
         :return: a trim automapper type
         """
         return AutoMapperTrimDataType(column=column)
+
+    @staticmethod
+    def hash(
+        *args: Union[AutoMapperNativeTextType, AutoMapperWrapperType,
+                     AutoMapperTextLikeBase]
+    ) -> AutoMapperHashDataType:
+        """
+        Calculates the hash code of given columns, and returns the result as an int column.
+        :param args: string or column
+        :return: a concat automapper type
+        """
+        return AutoMapperHashDataType(*args)
+
+    @staticmethod
+    def coalesce(*args: _TAutoMapperDataType, ) -> _TAutoMapperDataType:
+        """
+        Returns the first column that is not null.
+
+        :return: a coalesce automapper type
+        """
+
+        # cast it to the inner type so type checking is happy
+        return cast(_TAutoMapperDataType, AutoMapperCoalesceDataType(*args))

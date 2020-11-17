@@ -1,7 +1,7 @@
 from datetime import date, datetime
 from typing import Union, List, Any, Dict
 
-AutoMapperNativeSimpleType = Union[str, int, float, date, datetime]
+AutoMapperNativeSimpleType = Union[str, int, float, date, datetime, None]
 
 AutoMapperNativeTextType = Union[str]
 
