@@ -3,6 +3,7 @@ from typing import Dict
 from pyspark.sql import SparkSession, Column, DataFrame
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import col, when
+from pyspark.sql.functions import lit
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
@@ -26,7 +27,10 @@ def test_automapper_if_not_null(spark_session: SparkSession) -> None:
     mapper = AutoMapper(
         view="members", source_view="patients", keys=["member_id"]
     ).columns(
-        age=A.if_not_null(A.column("my_age"), A.number(A.column("my_age")))
+        age=A.if_not_null(
+            A.column("my_age"), A.number(A.column("my_age")),
+            A.number(A.text("100"))
+        )
     )
 
     assert isinstance(mapper, AutoMapper)
@@ -38,7 +42,8 @@ def test_automapper_if_not_null(spark_session: SparkSession) -> None:
 
     assert str(sql_expressions["age"]) == str(
         when(col("b.my_age").isNull(),
-             None).otherwise(col("b.my_age").cast("int")).alias("age")
+             lit("100").cast("int")).otherwise(col("b.my_age").cast("int")
+                                               ).alias("age")
     )
 
     result_df: DataFrame = mapper.transform(df=df)
@@ -50,6 +55,6 @@ def test_automapper_if_not_null(spark_session: SparkSession) -> None:
     assert result_df.where("member_id == 1").select("age"
                                                     ).collect()[0][0] == 54
     assert result_df.where("member_id == 2").select("age"
-                                                    ).collect()[0][0] is None
+                                                    ).collect()[0][0] == 100
 
     assert dict(result_df.dtypes)["age"] == "int"

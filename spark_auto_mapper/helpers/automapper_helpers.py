@@ -132,7 +132,9 @@ class AutoMapperHelpers:
 
     @staticmethod
     def if_not_null(
-        check: AutoMapperDataTypeColumn, value: _TAutoMapperDataType
+        check: AutoMapperDataTypeColumn,
+        value: _TAutoMapperDataType,
+        when_null: Optional[_TAutoMapperDataType] = None
     ) -> _TAutoMapperDataType:
         """
         concatenates a list of values.  Each value can be a string or a column
@@ -140,13 +142,16 @@ class AutoMapperHelpers:
 
         :param check: column to check for null
         :param value: what to return if the value is not null
+        :param when_null: what value to assign if check is not
         :return: an if_not_null automapper type
         """
 
         # cast it to the inner type so type checking is happy
         return cast(
             _TAutoMapperDataType,
-            AutoMapperIfNotNullDataType(check=check, value=value)
+            AutoMapperIfNotNullDataType(
+                check=check, value=value, when_null=when_null
+            )
         )
 
     @staticmethod
