@@ -1,5 +1,7 @@
 from typing import Any, Dict, Union, TypeVar, cast, Optional
 
+from spark_auto_mapper.data_types.coalesce import AutoMapperCoalesceDataType
+from spark_auto_mapper.data_types.hash import AutoMapperHashDataType
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
 
 from spark_auto_mapper.data_types.amount import AutoMapperAmountDataType
@@ -304,3 +306,26 @@ class AutoMapperHelpers:
         :return: a trim automapper type
         """
         return AutoMapperTrimDataType(column=column)
+
+    @staticmethod
+    def hash(
+        *args: Union[AutoMapperNativeTextType, AutoMapperWrapperType,
+                     AutoMapperTextLikeBase]
+    ) -> AutoMapperHashDataType:
+        """
+        Calculates the hash code of given columns, and returns the result as an int column.
+        :param args: string or column
+        :return: a concat automapper type
+        """
+        return AutoMapperHashDataType(*args)
+
+    @staticmethod
+    def coalesce(*args: _TAutoMapperDataType, ) -> _TAutoMapperDataType:
+        """
+        Returns the first column that is not null.
+
+        :return: a coalesce automapper type
+        """
+
+        # cast it to the inner type so type checking is happy
+        return cast(_TAutoMapperDataType, AutoMapperCoalesceDataType(*args))
