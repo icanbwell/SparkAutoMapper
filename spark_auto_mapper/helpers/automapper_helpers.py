@@ -2,6 +2,7 @@ from typing import Any, Dict, Union, TypeVar, cast, Optional
 
 from spark_auto_mapper.data_types.coalesce import AutoMapperCoalesceDataType
 from spark_auto_mapper.data_types.hash import AutoMapperHashDataType
+from spark_auto_mapper.data_types.if_not_null_or_empty import AutoMapperIfNotNullOrEmptyDataType
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
 
 from spark_auto_mapper.data_types.amount import AutoMapperAmountDataType
@@ -136,7 +137,8 @@ class AutoMapperHelpers:
     def if_not_null(
         check: AutoMapperDataTypeColumn,
         value: _TAutoMapperDataType,
-        when_null: Optional[_TAutoMapperDataType] = None
+        when_null: Optional[Union[AutoMapperTextLikeBase,
+                                  _TAutoMapperDataType]] = None
     ) -> _TAutoMapperDataType:
         """
         concatenates a list of values.  Each value can be a string or a column
@@ -153,6 +155,33 @@ class AutoMapperHelpers:
             _TAutoMapperDataType,
             AutoMapperIfNotNullDataType(
                 check=check, value=value, when_null=when_null
+            )
+        )
+
+    @staticmethod
+    def if_not_null_or_empty(
+        check: AutoMapperDataTypeColumn,
+        value: _TAutoMapperDataType,
+        when_null_or_empty: Optional[Union[AutoMapperTextLikeBase,
+                                           _TAutoMapperDataType]] = None
+    ) -> _TAutoMapperDataType:
+        """
+        concatenates a list of values.  Each value can be a string or a column
+
+
+        :param check: column to check for null
+        :param value: what to return if the value is not null
+        :param when_null_or_empty: what value to assign if check is not
+        :return: an if_not_null automapper type
+        """
+
+        # cast it to the inner type so type checking is happy
+        return cast(
+            _TAutoMapperDataType,
+            AutoMapperIfNotNullOrEmptyDataType(
+                check=check,
+                value=value,
+                when_null_or_empty=when_null_or_empty
             )
         )
 

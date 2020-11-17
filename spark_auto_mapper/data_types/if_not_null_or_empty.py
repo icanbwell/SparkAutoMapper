@@ -16,7 +16,7 @@ _T = TypeVar(
 )
 
 
-class AutoMapperIfNotNullDataType(AutoMapperDataTypeBase, Generic[_T]):
+class AutoMapperIfNotNullOrEmptyDataType(AutoMapperDataTypeBase, Generic[_T]):
     """
     If check returns null then return null else return value
     """
@@ -24,7 +24,7 @@ class AutoMapperIfNotNullDataType(AutoMapperDataTypeBase, Generic[_T]):
         self,
         check: AutoMapperDataTypeColumn,
         value: _T,
-        when_null: Optional[Union[AutoMapperTextLikeBase, _T]] = None
+        when_null_or_empty: Optional[Union[AutoMapperTextLikeBase, _T]] = None
     ):
         super().__init__()
 
@@ -32,8 +32,8 @@ class AutoMapperIfNotNullDataType(AutoMapperDataTypeBase, Generic[_T]):
         self.value: AutoMapperDataTypeBase = value \
             if isinstance(value, AutoMapperDataTypeBase) \
             else AutoMapperValueParser.parse_value(value)
-        if when_null:
-            self.when_null: AutoMapperDataTypeBase = cast(AutoMapperDataTypeBase, when_null) \
+        if when_null_or_empty:
+            self.when_null: AutoMapperDataTypeBase = cast(AutoMapperDataTypeBase, when_null_or_empty) \
                 if isinstance(value, AutoMapperDataTypeBase) \
                 else AutoMapperValueParser.parse_value(value)
         else:
@@ -41,7 +41,8 @@ class AutoMapperIfNotNullDataType(AutoMapperDataTypeBase, Generic[_T]):
 
     def get_column_spec(self, source_df: DataFrame) -> Column:
         column_spec = when(
-            self.check.get_column_spec(source_df=source_df).isNull(),
+            self.check.get_column_spec(source_df=source_df).isNull()
+            | self.check.get_column_spec(source_df=source_df).eqNullSafe(""),
             self.when_null.get_column_spec(source_df=source_df)
         ).otherwise(self.value.get_column_spec(source_df=source_df))
 
