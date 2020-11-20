@@ -41,7 +41,17 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
         elif isinstance(value, AutoMapperDataTypeBase):
             self.value = value
         elif isinstance(value, List):
-            self.value = [AutoMapperValueParser.parse_value(v) for v in value]
+            if len(
+                value
+            ) > 1:  # if there are multiple items and the structs don't match then Spark errors
+                self.value = [
+                    AutoMapperValueParser.parse_value(v, include_nulls=True)
+                    for v in value
+                ]
+            else:
+                self.value = [
+                    AutoMapperValueParser.parse_value(v) for v in value
+                ]
         else:
             raise ValueError(f"{type(value)} is not supported")
 

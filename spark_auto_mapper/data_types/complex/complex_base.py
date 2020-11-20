@@ -15,7 +15,8 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
         """
         super().__init__()
 
-        include_nulls: bool = "include_nulls" in kwargs
+        # this flag specifies that we should include all values in the column_spec event NULLs
+        self.include_nulls: bool = "include_nulls" in kwargs
 
         self.value: Dict[str, AutoMapperDataTypeBase] = {
             parameter_name if not parameter_name.endswith(
@@ -24,13 +25,16 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
             else parameter_name[:-1]:
             AutoMapperValueParser.parse_value(parameter_value)
             for parameter_name, parameter_value in kwargs.items()
-            if include_nulls or parameter_value is not None
         }
+
+    def set_include_nulls(self, include_nulls: bool) -> None:
+        self.include_nulls = include_nulls
 
     def get_column_spec(self, source_df: DataFrame) -> Column:
         return struct(
             [
                 self.get_value(value=value, source_df=source_df).alias(key)
                 for key, value in self.value.items()
+                if self.include_nulls or value is not None
             ]
         )
