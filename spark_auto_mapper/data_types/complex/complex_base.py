@@ -33,15 +33,19 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
         self.include_nulls = include_nulls
 
     def get_column_spec(self, source_df: DataFrame) -> Column:
+        valid_columns: Dict[str, AutoMapperDataTypeBase] = {
+            key: value
+            for key, value in self.value.items() if self.include_nulls or (
+                value is not None and not (
+                    isinstance(value, AutoMapperDataTypeLiteral)
+                    and value.value is None
+                )
+            )
+        }
         column_spec: Column = struct(
             [
                 self.get_value(value=value, source_df=source_df).alias(key)
-                for key, value in self.value.items() if self.include_nulls or (
-                    value is not None and not (
-                        isinstance(value, AutoMapperDataTypeLiteral)
-                        and value.value is None
-                    )
-                )
+                for key, value in valid_columns.items()
             ]
         )
         return column_spec
