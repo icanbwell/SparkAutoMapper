@@ -17,7 +17,6 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
             else parameter_name[:-1]:
             AutoMapperValueParser.parse_value(parameter_value)
             for parameter_name, parameter_value in kwargs.items()
-            if parameter_value is not None
         }
 
     def get_column_spec(self, source_df: DataFrame) -> Column:
