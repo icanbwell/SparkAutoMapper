@@ -33,7 +33,7 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
         self.include_nulls = include_nulls
 
     def get_column_spec(self, source_df: DataFrame) -> Column:
-        return struct(
+        column_spec: Column = struct(
             [
                 self.get_value(value=value, source_df=source_df).alias(key)
                 for key, value in self.value.items() if self.include_nulls or (
@@ -44,3 +44,4 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
                 )
             ]
         )
+        return column_spec
