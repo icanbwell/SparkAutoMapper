@@ -23,7 +23,7 @@ class AutoMapperDateDataType(AutoMapperDataTypeBase):
             return coalesce(
                 to_date(
                     self.value.get_column_spec(source_df=source_df),
-                    format='yyyy-MM-dd'
+                    format='y-M-d'
                 ),
                 to_date(
                     self.value.get_column_spec(source_df=source_df),
@@ -31,18 +31,14 @@ class AutoMapperDateDataType(AutoMapperDataTypeBase):
                 ),
                 to_date(
                     self.value.get_column_spec(source_df=source_df),
-                    format='MM/dd/yyyy'
-                ),
-                to_date(
-                    self.value.get_column_spec(source_df=source_df),
-                    format='MM/dd/yy'
+                    format='M/d/y'
                 )
             )
         elif isinstance(self.value, AutoMapperDataTypeLiteral):
             return coalesce(
                 to_date(
                     self.value.get_column_spec(source_df=source_df),
-                    format='yyyy-MM-dd'
+                    format='y-M-d'
                 ),
                 to_date(
                     self.value.get_column_spec(source_df=source_df),
@@ -50,7 +46,7 @@ class AutoMapperDateDataType(AutoMapperDataTypeBase):
                 ),
                 to_date(
                     self.value.get_column_spec(source_df=source_df),
-                    format='MM/dd/yy'
+                    format='M/d/y'
                 )
             )
         else:

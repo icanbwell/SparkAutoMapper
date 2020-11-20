@@ -41,9 +41,9 @@ def test_auto_mapper_date_literal(spark_session: SparkSession) -> None:
 
     assert str(sql_expressions["birthDate"]) == str(
         coalesce(
-            to_date(lit("1970-01-01"), format='yyyy-MM-dd'),
+            to_date(lit("1970-01-01"), format='y-M-d'),
             to_date(lit("1970-01-01"), format='yyyyMMdd'),
-            to_date(lit("1970-01-01"), format='MM/dd/yy')
+            to_date(lit("1970-01-01"), format='M/d/y')
         ).alias("birthDate")
     )
 
