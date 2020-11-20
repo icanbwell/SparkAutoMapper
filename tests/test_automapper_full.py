@@ -4,7 +4,6 @@ from pyspark.sql import SparkSession, Column, DataFrame
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.data_types.list import AutoMapperList
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
-# noinspection Mypy
 
 
 def test_auto_mapper_full(spark_session: SparkSession) -> None:
