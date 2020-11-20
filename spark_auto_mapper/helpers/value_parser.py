@@ -38,4 +38,8 @@ class AutoMapperValueParser:
         if isinstance(value, AutoMapperDataTypeBase):
             return value
 
+        if value is None:
+            from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
+            return AutoMapperDataTypeLiteral(None)
+
         raise ValueError(f"{type(value)} is not supported for {value}")
