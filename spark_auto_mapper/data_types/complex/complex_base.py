@@ -33,6 +33,16 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
         self.include_nulls = include_nulls
 
     def get_column_spec(self, source_df: DataFrame) -> Column:
+        valid_columns = self.get_child_mappers()
+        column_spec: Column = struct(
+            [
+                self.get_value(value=value, source_df=source_df).alias(key)
+                for key, value in valid_columns.items()
+            ]
+        )
+        return column_spec
+
+    def get_child_mappers(self) -> Dict[str, AutoMapperDataTypeBase]:
         valid_columns: Dict[str, AutoMapperDataTypeBase] = {
             key: value
             for key, value in self.value.items() if self.include_nulls or (
@@ -42,10 +52,4 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
                 )
             )
         }
-        column_spec: Column = struct(
-            [
-                self.get_value(value=value, source_df=source_df).alias(key)
-                for key, value in valid_columns.items()
-            ]
-        )
-        return column_spec
+        return valid_columns

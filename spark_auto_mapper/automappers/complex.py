@@ -7,6 +7,8 @@ class AutoMapperWithComplex(AutoMapperContainer):
         super().__init__()
 
         self.generate_mappers(
-            mappers_dict={key: value
-                          for key, value in entity.value.items()}
+            mappers_dict={
+                key: value
+                for key, value in entity.get_child_mappers().items()
+            }
         )
