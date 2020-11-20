@@ -4,7 +4,7 @@
 # So we have copied these wrapper functions here for now until Spark 3.1.0 becomes available
 
 import sys
-from typing import Any, List
+from typing import Any, List, Union
 
 # noinspection PyProtectedMember
 from pyspark import since, SparkContext
@@ -112,7 +112,7 @@ def _create_lambda(f: Any) -> Any:
 
 # noinspection PyProtectedMember,SpellCheckingInspection
 def _invoke_higher_order_function(
-    name: str, cols: List[str], funs: Any
+    name: str, cols: List[Union[str, Column]], funs: Any
 ) -> Column:
     """
     Invokes expression identified by name,
@@ -135,7 +135,7 @@ def _invoke_higher_order_function(
 
 # noinspection PyUnresolvedReferences
 @since(3.1)
-def transform(col: str, f: Any) -> Column:
+def transform(col: Union[str, Column], f: Any) -> Column:
     """
     Returns an array of elements after applying a transformation to each element in the input array.
     :param col: name of column or expression
@@ -170,7 +170,7 @@ def transform(col: str, f: Any) -> Column:
 
 # noinspection PyUnresolvedReferences
 @since(3.1)
-def exists(col: str, f: Any) -> Column:
+def exists(col: Union[str, Column], f: Any) -> Column:
     """
     Returns whether a predicate holds for one or more elements in the array.
     :param col: name of column or expression
@@ -194,7 +194,7 @@ def exists(col: str, f: Any) -> Column:
 
 # noinspection SpellCheckingInspection,PyUnresolvedReferences
 @since(3.1)
-def forall(col: str, f: Any) -> Column:
+def forall(col: Union[str, Column], f: Any) -> Column:
     """
     Returns whether a predicate holds for every element in the array.
     :param col: name of column or expression
@@ -222,7 +222,7 @@ def forall(col: str, f: Any) -> Column:
 
 # noinspection PyShadowingBuiltins,PyUnresolvedReferences
 @since(3.1)
-def filter(col: str, f: Any) -> Column:
+def filter(col: Union[str, Column], f: Any) -> Column:
     """
     Returns an array of elements for which a predicate holds in a given array.
     :param col: name of column or expression
@@ -256,7 +256,12 @@ def filter(col: str, f: Any) -> Column:
 
 # noinspection PyUnresolvedReferences,PyShadowingNames,PyShadowingBuiltins
 @since(3.1)
-def aggregate(col: str, zero: str, merge: Any, finish: Any = None) -> Column:
+def aggregate(
+    col: Union[str, Column],
+    zero: Union[str, Column],
+    merge: Any,
+    finish: Any = None
+) -> Column:
     """
     Applies a binary operator to an initial state and all elements in the array,
     and reduces this to a single state. The final state is converted into the final result
@@ -310,7 +315,9 @@ def aggregate(col: str, zero: str, merge: Any, finish: Any = None) -> Column:
 
 # noinspection PyUnresolvedReferences
 @since(3.1)
-def zip_with(col1: str, col2: str, f: Any) -> Column:
+def zip_with(
+    col1: Union[str, Column], col2: Union[str, Column], f: Any
+) -> Column:
     """
     Merge two given arrays, element-wise, into a single array using a function.
     If one array is shorter, nulls are appended at the end to match the length of the longer
@@ -343,7 +350,7 @@ def zip_with(col1: str, col2: str, f: Any) -> Column:
 
 # noinspection PyUnresolvedReferences
 @since(3.1)
-def transform_keys(col: str, f: Any) -> Column:
+def transform_keys(col: Union[str, Column], f: Any) -> Column:
     """
     Applies a function to every key-value pair in a map and returns
     a map with the results of those applications as the new keys for the pairs.
@@ -369,7 +376,7 @@ def transform_keys(col: str, f: Any) -> Column:
 
 # noinspection PyUnresolvedReferences
 @since(3.1)
-def transform_values(col: str, f: Any) -> Column:
+def transform_values(col: Union[str, Column], f: Any) -> Column:
     """
     Applies a function to every key-value pair in a map and returns
     a map with the results of those applications as the new values for the pairs.
@@ -395,7 +402,7 @@ def transform_values(col: str, f: Any) -> Column:
 
 # noinspection PyUnresolvedReferences
 @since(3.1)
-def map_filter(col: str, f: Any) -> Column:
+def map_filter(col: Union[str, Column], f: Any) -> Column:
     """
     Returns a map whose key-value pairs satisfy a predicate.
     :param col: name of column or expression
@@ -420,7 +427,9 @@ def map_filter(col: str, f: Any) -> Column:
 
 # noinspection PyUnresolvedReferences
 @since(3.1)
-def map_zip_with(col1: str, col2: str, f: Any) -> Column:
+def map_zip_with(
+    col1: Union[str, Column], col2: Union[str, Column], f: Any
+) -> Column:
     """
     Merge two given maps, key-wise into a single map using a function.
     :param col1: name of the first column or expression
