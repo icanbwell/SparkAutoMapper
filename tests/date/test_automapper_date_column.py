@@ -38,10 +38,9 @@ def test_auto_mapper_date_column(spark_session: SparkSession) -> None:
 
     assert str(sql_expressions["birthDate"]) == str(
         coalesce(
-            to_date(col("b.date_of_birth"), format='yyyy-MM-dd'),
+            to_date(col("b.date_of_birth"), format='y-M-d'),
             to_date(col("b.date_of_birth"), format='yyyyMMdd'),
-            to_date(col("b.date_of_birth"), format='MM/dd/yyyy'),
-            to_date(col("b.date_of_birth"), format='MM/dd/yy')
+            to_date(col("b.date_of_birth"), format='M/d/y')
         ).alias("birthDate")
     )
 

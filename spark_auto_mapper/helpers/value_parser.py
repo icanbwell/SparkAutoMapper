@@ -8,7 +8,8 @@ from spark_auto_mapper.type_definitions.defined_types import AutoMapperAnyDataTy
 class AutoMapperValueParser:
     @staticmethod
     def parse_value(
-        value: Union[Dict[str, Any], List[Any], AutoMapperAnyDataType]
+        value: Union[Dict[str, Any], List[Any], AutoMapperAnyDataType],
+        include_nulls: bool = False
     ) -> AutoMapperDataTypeBase:
         # convert any short syntax to long syntax
         if isinstance(value, str):
@@ -34,6 +35,11 @@ class AutoMapperValueParser:
         if isinstance(value, List):
             from spark_auto_mapper.data_types.list import AutoMapperList
             return AutoMapperList(value=value)
+
+        from spark_auto_mapper.data_types.complex.complex_base import AutoMapperDataTypeComplexBase
+        if isinstance(value, AutoMapperDataTypeComplexBase) and include_nulls:
+            value.set_include_nulls(include_nulls=include_nulls)
+            return value
 
         if isinstance(value, AutoMapperDataTypeBase):
             return value
