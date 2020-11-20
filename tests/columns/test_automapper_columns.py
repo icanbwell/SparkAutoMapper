@@ -8,6 +8,7 @@ from pyspark.sql.functions import col
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.data_types.list import AutoMapperList
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
+from spark_auto_mapper.helpers.spark_higher_order_functions import filter
 
 
 def test_auto_mapper_columns(spark_session: SparkSession) -> None:
@@ -49,16 +50,22 @@ def test_auto_mapper_columns(spark_session: SparkSession) -> None:
     # Assert
     assert len(sql_expressions) == 4
     assert str(sql_expressions["dst1"]) == str(lit("src1").alias("dst1"))
-    assert str(sql_expressions["dst2"]
-               ) == str(array(lit("address1")).alias("dst2"))
-    assert str(sql_expressions["dst3"]
-               ) == str(array(lit("address1"), lit("address2")).alias("dst3"))
+    assert str(sql_expressions["dst2"]) == str(
+        filter(array(lit("address1")), lambda x: x.isNotNull()).alias("dst2")
+    )
+    assert str(sql_expressions["dst3"]) == str(
+        filter(
+            array(lit("address1"), lit("address2")), lambda x: x.isNotNull()
+        ).alias("dst3")
+    )
     assert str(sql_expressions["dst4"]) == str(
-        array(
-            struct(
-                lit("usual").alias("use"),
-                col("b.last_name").alias("family")
-            )
+        filter(
+            array(
+                struct(
+                    lit("usual").alias("use"),
+                    col("b.last_name").alias("family")
+                )
+            ), lambda x: x.isNotNull()
         ).alias("dst4")
     )
 
