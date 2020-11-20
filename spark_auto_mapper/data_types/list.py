@@ -22,7 +22,10 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
     https://stackoverflow.com/questions/52754339/how-to-express-multiple-inheritance-in-python-type-hint
     """
     def __init__(
-        self, value: Optional[List[_T]], remove_nulls: bool = True
+        self,
+        value: Optional[List[_T]],
+        remove_nulls: bool = True,
+        include_null_properties: bool = False
     ) -> None:
         """
         Generates a list (array) in Spark
@@ -41,7 +44,7 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
         elif isinstance(value, AutoMapperDataTypeBase):
             self.value = value
         elif isinstance(value, List):
-            if len(
+            if include_null_properties and len(
                 value
             ) > 1:  # if there are multiple items and the structs don't match then Spark errors
                 self.value = [
