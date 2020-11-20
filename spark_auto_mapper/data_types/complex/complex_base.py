@@ -9,7 +9,14 @@ from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 
 class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
     def __init__(self, **kwargs: Any) -> None:
+        """
+        base class for complex types
+        :param kwargs:
+        """
         super().__init__()
+
+        include_nulls: bool = "include_nulls" in kwargs
+
         self.value: Dict[str, AutoMapperDataTypeBase] = {
             parameter_name if not parameter_name.endswith(
                 "_"
@@ -17,6 +24,7 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
             else parameter_name[:-1]:
             AutoMapperValueParser.parse_value(parameter_value)
             for parameter_name, parameter_value in kwargs.items()
+            if include_nulls or parameter_value is not None
         }
 
     def get_column_spec(self, source_df: DataFrame) -> Column:

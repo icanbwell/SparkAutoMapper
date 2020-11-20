@@ -4,6 +4,7 @@ from pyspark.sql import DataFrame
 from pyspark.sql.functions import monotonically_increasing_id
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import col
+from pyspark.sql.utils import AnalysisException
 
 from spark_auto_mapper.automappers.automapper_base import AutoMapperBase
 from spark_auto_mapper.automappers.container import AutoMapperContainer
@@ -47,16 +48,36 @@ class AutoMapper(AutoMapperContainer):
                 df = child_mapper.transform_with_data_frame(
                     df=df, source_df=source_df, keys=keys
                 )
+            except AnalysisException as e:
+                msg: str = ""
+                if e.desc.startswith("cannot resolve 'array"):
+                    msg = "Looks like the elements of the array have different structures.  " \
+                          "All items in an array should have the exact same structure.  " \
+                          "You can pass in include_nulls to AutoMapperDataTypeComplexBase to force it to create " \
+                          "null values for each element in the structure. "
+                msg += self.get_message_for_exception(
+                    column_name, df, e, source_df
+                )
+                raise Exception(msg) from e
             except Exception as e:
-                # write out the full list of columns
-                columns_in_source: List[str] = list(source_df.columns)
-                columns_in_destination: List[str] = list(df.columns)
-                msg: str = str(e)
-                msg += f", Processing column:[{column_name}]"
-                msg += f", Source columns:[{','.join(columns_in_source)}]"
-                msg += f", Destination columns:[{','.join(columns_in_destination)}]"
+                msg = self.get_message_for_exception(
+                    column_name, df, e, source_df
+                )
                 raise Exception(msg) from e
         return df
+
+    @staticmethod
+    def get_message_for_exception(
+        column_name: str, df: DataFrame, e: Exception, source_df: DataFrame
+    ) -> str:
+        # write out the full list of columns
+        columns_in_source: List[str] = list(source_df.columns)
+        columns_in_destination: List[str] = list(df.columns)
+        msg: str = str(e)
+        msg += f", Processing column:[{column_name}]"
+        msg += f", Source columns:[{','.join(columns_in_source)}]"
+        msg += f", Destination columns:[{','.join(columns_in_destination)}]"
+        return msg
 
     def transform(self, df: DataFrame) -> DataFrame:
         # if source_view is specified then load that else assume that df is the source view

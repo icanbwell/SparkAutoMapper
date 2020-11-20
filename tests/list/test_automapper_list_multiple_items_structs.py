@@ -36,10 +36,12 @@ def test_auto_mapper_array_multiple_items_structs(
         dst2=AutoMapperList(
             [
                 AutoMapperDataTypeComplexBase(
-                    a=A.column("first_name"), b=A.column("last_name")
+                    a=A.column("first_name"),
+                    b=A.column("last_name"),
+                    include_nulls=True
                 ),
                 AutoMapperDataTypeComplexBase(
-                    a=A.column("first_name"), b=None
+                    a=A.column("first_name"), b=None, include_nulls=True
                 )
             ]
         )
