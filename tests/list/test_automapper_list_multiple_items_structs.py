@@ -41,7 +41,8 @@ def test_auto_mapper_array_multiple_items_structs(
                 AutoMapperDataTypeComplexBase(
                     a=A.column("first_name"), b=None
                 )
-            ]
+            ],
+            include_null_properties=True
         )
     )
 
