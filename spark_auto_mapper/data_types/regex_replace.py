@@ -1,10 +1,8 @@
-from typing import Union
-
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import regexp_replace
-from spark_auto_mapper.data_types.column import AutoMapperDataTypeColumn
 
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
+from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperColumnOrColumnLikeType
 
 
 class AutoMapperRegExReplaceDataType(AutoMapperTextLikeBase):
@@ -12,13 +10,12 @@ class AutoMapperRegExReplaceDataType(AutoMapperTextLikeBase):
     Concatenates multiple strings together
     """
     def __init__(
-        self, column: Union[AutoMapperDataTypeColumn, AutoMapperTextLikeBase],
-        pattern: str, replacement: str
+        self, column: AutoMapperColumnOrColumnLikeType, pattern: str,
+        replacement: str
     ):
         super().__init__()
 
-        self.column: Union[AutoMapperDataTypeColumn,
-                           AutoMapperTextLikeBase] = column
+        self.column: AutoMapperColumnOrColumnLikeType = column
         self.pattern: str = pattern
         self.replacement: str = replacement
 

@@ -6,10 +6,10 @@ from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
 
 from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
 
-from spark_auto_mapper.data_types.column import AutoMapperDataTypeColumn
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
 from spark_auto_mapper.type_definitions.native_types import AutoMapperNativeSimpleType
+from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperColumnOrColumnLikeType
 
 _T = TypeVar(
     "_T", bound=Union[AutoMapperNativeSimpleType, AutoMapperDataTypeBase]
@@ -22,13 +22,13 @@ class AutoMapperIfNotNullOrEmptyDataType(AutoMapperDataTypeBase, Generic[_T]):
     """
     def __init__(
         self,
-        check: AutoMapperDataTypeColumn,
+        check: AutoMapperColumnOrColumnLikeType,
         value: _T,
         when_null_or_empty: Optional[Union[AutoMapperTextLikeBase, _T]] = None
     ):
         super().__init__()
 
-        self.check: AutoMapperDataTypeColumn = check
+        self.check: AutoMapperColumnOrColumnLikeType = check
         self.value: AutoMapperDataTypeBase = value \
             if isinstance(value, AutoMapperDataTypeBase) \
             else AutoMapperValueParser.parse_value(value)

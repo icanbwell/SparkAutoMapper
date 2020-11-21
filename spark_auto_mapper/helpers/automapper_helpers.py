@@ -25,7 +25,7 @@ from spark_auto_mapper.data_types.trim import AutoMapperTrimDataType
 from spark_auto_mapper.type_definitions.defined_types import AutoMapperAnyDataType, AutoMapperBooleanInputType, \
     AutoMapperAmountInputType, AutoMapperNumberInputType, AutoMapperDateInputType
 from spark_auto_mapper.type_definitions.native_types import AutoMapperNativeTextType, AutoMapperNativeSimpleType
-from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperWrapperType
+from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperWrapperType, AutoMapperColumnOrColumnLikeType
 
 _TAutoMapperDataType = TypeVar(
     "_TAutoMapperDataType",
@@ -135,7 +135,7 @@ class AutoMapperHelpers:
 
     @staticmethod
     def if_not_null(
-        check: AutoMapperDataTypeColumn,
+        check: AutoMapperColumnOrColumnLikeType,
         value: _TAutoMapperDataType,
         when_null: Optional[Union[AutoMapperTextLikeBase,
                                   _TAutoMapperDataType]] = None
@@ -160,7 +160,7 @@ class AutoMapperHelpers:
 
     @staticmethod
     def if_not_null_or_empty(
-        check: AutoMapperDataTypeColumn,
+        check: AutoMapperColumnOrColumnLikeType,
         value: _TAutoMapperDataType,
         when_null_or_empty: Optional[Union[AutoMapperTextLikeBase,
                                            _TAutoMapperDataType]] = None
@@ -187,7 +187,7 @@ class AutoMapperHelpers:
 
     @staticmethod
     def map(
-        column: AutoMapperDataTypeColumn,
+        column: AutoMapperColumnOrColumnLikeType,
         mapping: Dict[str, AutoMapperNativeSimpleType],
         default: Optional[AutoMapperNativeSimpleType] = None
     ) -> AutoMapperDataTypeExpression:
@@ -205,8 +205,7 @@ class AutoMapperHelpers:
 
     @staticmethod
     def left(
-        column: Union[AutoMapperDataTypeColumn, AutoMapperTextLikeBase],
-        length: int
+        column: AutoMapperColumnOrColumnLikeType, length: int
     ) -> AutoMapperSubstringDataType:
         """
         Take the specified number of first characters in a string
@@ -221,8 +220,7 @@ class AutoMapperHelpers:
 
     @staticmethod
     def right(
-        column: Union[AutoMapperDataTypeColumn, AutoMapperTextLikeBase],
-        length: int
+        column: AutoMapperColumnOrColumnLikeType, length: int
     ) -> AutoMapperSubstringDataType:
         """
         Take the specified number of last characters in a string
@@ -237,8 +235,7 @@ class AutoMapperHelpers:
 
     @staticmethod
     def substring(
-        column: Union[AutoMapperDataTypeColumn, AutoMapperTextLikeBase],
-        start: int, length: int
+        column: AutoMapperColumnOrColumnLikeType, start: int, length: int
     ) -> AutoMapperSubstringDataType:
         """
         Finds a substring in the specified string.
@@ -254,8 +251,7 @@ class AutoMapperHelpers:
 
     @staticmethod
     def string_before_delimiter(
-        column: Union[AutoMapperDataTypeColumn, AutoMapperTextLikeBase],
-        delimiter: str
+        column: AutoMapperColumnOrColumnLikeType, delimiter: str
     ) -> AutoMapperSubstringByDelimiterDataType:
         """
         Take the specified number of first characters in a string
@@ -270,8 +266,7 @@ class AutoMapperHelpers:
 
     @staticmethod
     def string_after_delimiter(
-        column: Union[AutoMapperDataTypeColumn, AutoMapperTextLikeBase],
-        delimiter: str
+        column: AutoMapperColumnOrColumnLikeType, delimiter: str
     ) -> AutoMapperSubstringByDelimiterDataType:
         """
         Take the specified number of first characters in a string
@@ -286,8 +281,8 @@ class AutoMapperHelpers:
 
     @staticmethod
     def substring_by_delimiter(
-        column: Union[AutoMapperDataTypeColumn, AutoMapperTextLikeBase],
-        delimiter: str, delimiter_count: int
+        column: AutoMapperColumnOrColumnLikeType, delimiter: str,
+        delimiter_count: int
     ) -> AutoMapperSubstringByDelimiterDataType:
         """
         Returns the substring from string str before count occurrences of the delimiter.
@@ -309,8 +304,8 @@ class AutoMapperHelpers:
 
     @staticmethod
     def regex_replace(
-        column: Union[AutoMapperDataTypeColumn, AutoMapperTextLikeBase],
-        pattern: str, replacement: str
+        column: AutoMapperColumnOrColumnLikeType, pattern: str,
+        replacement: str
     ) -> AutoMapperRegExReplaceDataType:
         """
         Replace all substrings of the specified string value that match regexp with rep.
@@ -326,7 +321,7 @@ class AutoMapperHelpers:
 
     @staticmethod
     def trim(
-        column: Union[AutoMapperDataTypeColumn, AutoMapperTextLikeBase]
+        column: AutoMapperColumnOrColumnLikeType
     ) -> AutoMapperTrimDataType:
         """
         Trim the spaces from both ends for the specified string column.

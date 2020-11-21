@@ -1,5 +1,7 @@
 from typing import Union
 
+from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
+
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 from spark_auto_mapper.data_types.column import AutoMapperDataTypeColumn
 from spark_auto_mapper.data_types.expression import AutoMapperDataTypeExpression
@@ -12,3 +14,6 @@ AutoMapperWrapperType = Union[AutoMapperDataTypeLiteral,
 
 AutoMapperAnyDataType = Union[AutoMapperNativeSimpleType,
                               AutoMapperNativeListType, AutoMapperDataTypeBase]
+
+AutoMapperColumnOrColumnLikeType = Union[AutoMapperWrapperType,
+                                         AutoMapperTextLikeBase]
