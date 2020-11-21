@@ -29,8 +29,15 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
             for parameter_name, parameter_value in kwargs.items()
         }
 
-    def set_include_nulls(self, include_nulls: bool) -> None:
-        self.include_nulls = include_nulls
+    def set_include_null_properties(
+        self, include_null_properties: bool
+    ) -> None:
+        self.include_nulls = include_null_properties
+        # now recursively set this into any other complex children
+        for key, value in self.get_child_mappers().items():
+            value.set_include_null_properties(
+                include_null_properties=include_null_properties
+            )
 
     def get_column_spec(self, source_df: DataFrame) -> Column:
         valid_columns = self.get_child_mappers()

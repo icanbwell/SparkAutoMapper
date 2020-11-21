@@ -13,3 +13,8 @@ class AutoMapperDataTypeBase:
         assert isinstance(value, AutoMapperDataTypeBase)
         child: AutoMapperDataTypeBase = value
         return child.get_column_spec(source_df=source_df)
+
+    def set_include_null_properties(
+        self, include_null_properties: bool
+    ) -> None:
+        pass  # sub-classes can implement if they support this

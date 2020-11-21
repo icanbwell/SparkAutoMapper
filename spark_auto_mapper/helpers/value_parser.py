@@ -36,11 +36,6 @@ class AutoMapperValueParser:
             from spark_auto_mapper.data_types.list import AutoMapperList
             return AutoMapperList(value=value)
 
-        from spark_auto_mapper.data_types.complex.complex_base import AutoMapperDataTypeComplexBase
-        if isinstance(value, AutoMapperDataTypeComplexBase) and include_nulls:
-            value.set_include_nulls(include_nulls=include_nulls)
-            return value
-
         if isinstance(value, AutoMapperDataTypeBase):
             return value
 
