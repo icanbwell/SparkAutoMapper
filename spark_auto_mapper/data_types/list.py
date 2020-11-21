@@ -44,19 +44,27 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
         elif isinstance(value, AutoMapperDataTypeBase):
             self.value = value
         elif isinstance(value, List):
-            if include_null_properties and len(
-                value
-            ) > 1:  # if there are multiple items and the structs don't match then Spark errors
-                self.value = [
-                    AutoMapperValueParser.parse_value(v, include_nulls=True)
-                    for v in value
-                ]
-            else:
-                self.value = [
-                    AutoMapperValueParser.parse_value(v) for v in value
-                ]
+            self.value = [AutoMapperValueParser.parse_value(v) for v in value]
+            # if there are more than two items we have to maintain the same schema in children or Spark errors
+            if include_null_properties and len(value) > 1:
+                self.set_include_null_properties(
+                    include_null_properties=include_null_properties
+                )
         else:
             raise ValueError(f"{type(value)} is not supported")
+
+    def set_include_null_properties(
+        self, include_null_properties: bool
+    ) -> None:
+        if isinstance(self.value, list):
+            for item in self.value:
+                item.set_include_null_properties(
+                    include_null_properties=include_null_properties
+                )
+        elif isinstance(self.value, AutoMapperDataTypeBase):
+            self.value.set_include_null_properties(
+                include_null_properties=include_null_properties
+            )
 
     def get_column_spec(self, source_df: DataFrame) -> Column:
         if isinstance(

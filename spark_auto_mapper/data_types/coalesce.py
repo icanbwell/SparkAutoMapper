@@ -33,3 +33,11 @@ class AutoMapperCoalesceDataType(AutoMapperTextLikeBase):
             *[col.get_column_spec(source_df=source_df) for col in self.value]
         )
         return column_spec
+
+    def set_include_null_properties(
+        self, include_null_properties: bool
+    ) -> None:
+        for item in self.value:
+            item.set_include_null_properties(
+                include_null_properties=include_null_properties
+            )

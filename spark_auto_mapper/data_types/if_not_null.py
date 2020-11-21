@@ -39,6 +39,13 @@ class AutoMapperIfNotNullDataType(AutoMapperDataTypeBase, Generic[_T]):
         else:
             self.when_null = AutoMapperDataTypeLiteral(None)
 
+    def set_include_null_properties(
+        self, include_null_properties: bool
+    ) -> None:
+        self.value.set_include_null_properties(
+            include_null_properties=include_null_properties
+        )
+
     def get_column_spec(self, source_df: DataFrame) -> Column:
         column_spec = when(
             self.check.get_column_spec(source_df=source_df).isNull(),
