@@ -39,10 +39,8 @@ class AutoMapperIfNotNullOrEmptyDataType(AutoMapperDataTypeBase, Generic[_T]):
         else:
             self.when_null = AutoMapperDataTypeLiteral(None)
 
-    def set_include_null_properties(
-        self, include_null_properties: bool
-    ) -> None:
-        self.value.set_include_null_properties(
+    def include_null_properties(self, include_null_properties: bool) -> None:
+        self.value.include_null_properties(
             include_null_properties=include_null_properties
         )
 
