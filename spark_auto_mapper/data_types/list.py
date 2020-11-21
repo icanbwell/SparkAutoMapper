@@ -25,7 +25,7 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
         self,
         value: Optional[List[_T]],
         remove_nulls: bool = True,
-        include_null_properties: bool = False
+        include_null_properties: bool = True
     ) -> None:
         """
         Generates a list (array) in Spark
@@ -47,22 +47,20 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
             self.value = [AutoMapperValueParser.parse_value(v) for v in value]
             # if there are more than two items we have to maintain the same schema in children or Spark errors
             if include_null_properties and len(value) > 1:
-                self.set_include_null_properties(
+                self.include_null_properties(
                     include_null_properties=include_null_properties
                 )
         else:
             raise ValueError(f"{type(value)} is not supported")
 
-    def set_include_null_properties(
-        self, include_null_properties: bool
-    ) -> None:
+    def include_null_properties(self, include_null_properties: bool) -> None:
         if isinstance(self.value, list):
             for item in self.value:
-                item.set_include_null_properties(
+                item.include_null_properties(
                     include_null_properties=include_null_properties
                 )
         elif isinstance(self.value, AutoMapperDataTypeBase):
-            self.value.set_include_null_properties(
+            self.value.include_null_properties(
                 include_null_properties=include_null_properties
             )
 
