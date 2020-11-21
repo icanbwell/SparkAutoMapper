@@ -4,22 +4,22 @@ from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 from spark_auto_mapper.type_definitions.native_types import AutoMapperNativeSimpleType, AutoMapperNativeListType, \
     AutoMapperNativeTextType, AutoMapperNativeNumberType, AutoMapperNativeBooleanType, AutoMapperNativeDateType, \
     AutoMapperNativeAmountType
-from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperWrapperType
+from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperColumnOrColumnLikeType
 
 AutoMapperTextInputType = Union[AutoMapperNativeTextType,
-                                AutoMapperWrapperType]
+                                AutoMapperColumnOrColumnLikeType]
 
 AutoMapperNumberInputType = Union[AutoMapperNativeNumberType,
-                                  AutoMapperWrapperType]
+                                  AutoMapperColumnOrColumnLikeType]
 
 AutoMapperBooleanInputType = Union[AutoMapperNativeBooleanType,
-                                   AutoMapperWrapperType]
+                                   AutoMapperColumnOrColumnLikeType]
 
 AutoMapperDateInputType = Union[AutoMapperNativeDateType,
-                                AutoMapperWrapperType]
+                                AutoMapperColumnOrColumnLikeType]
 
 AutoMapperAmountInputType = Union[AutoMapperNativeAmountType,
-                                  AutoMapperWrapperType]
+                                  AutoMapperColumnOrColumnLikeType]
 
 AutoMapperAnyDataType = Union[AutoMapperNativeSimpleType,
                               AutoMapperNativeListType, AutoMapperDataTypeBase]

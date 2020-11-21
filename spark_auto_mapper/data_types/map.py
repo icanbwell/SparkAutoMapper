@@ -4,11 +4,11 @@ from pyspark.sql import Column, DataFrame
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import when, lit
 
-from spark_auto_mapper.data_types.column import AutoMapperDataTypeColumn
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 from spark_auto_mapper.data_types.expression import AutoMapperDataTypeExpression
 from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
 from spark_auto_mapper.type_definitions.native_types import AutoMapperNativeSimpleType
+from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperColumnOrColumnLikeType
 
 
 class AutoMapperMapDataType(AutoMapperDataTypeExpression):
@@ -16,13 +16,13 @@ class AutoMapperMapDataType(AutoMapperDataTypeExpression):
     Applies the supplied mapping to the value of column
     """
     def __init__(
-        self, column: AutoMapperDataTypeColumn,
+        self, column: AutoMapperColumnOrColumnLikeType,
         mapping: Dict[str, AutoMapperNativeSimpleType],
         default: Optional[AutoMapperNativeSimpleType]
     ):
         super().__init__(value="")
 
-        self.column: AutoMapperDataTypeColumn = column
+        self.column: AutoMapperColumnOrColumnLikeType = column
         self.mapping: Dict[str, AutoMapperDataTypeBase] = {
             key: (
                 value if isinstance(value, AutoMapperDataTypeBase) else

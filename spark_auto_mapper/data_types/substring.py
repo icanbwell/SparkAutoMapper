@@ -1,10 +1,8 @@
-from typing import Union
-
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import substring
 
-from spark_auto_mapper.data_types.column import AutoMapperDataTypeColumn
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
+from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperColumnOrColumnLikeType
 
 
 class AutoMapperSubstringDataType(AutoMapperTextLikeBase):
@@ -12,13 +10,11 @@ class AutoMapperSubstringDataType(AutoMapperTextLikeBase):
     Finds a substring in a string
     """
     def __init__(
-        self, column: Union[AutoMapperDataTypeColumn, AutoMapperTextLikeBase],
-        start: int, length: int
+        self, column: AutoMapperColumnOrColumnLikeType, start: int, length: int
     ):
         super().__init__()
 
-        self.column: Union[AutoMapperDataTypeColumn,
-                           AutoMapperTextLikeBase] = column
+        self.column: AutoMapperColumnOrColumnLikeType = column
         self.start: int = start
         self.length: int = length
 
