@@ -1,4 +1,4 @@
-from typing import Any, Dict, Union, TypeVar, cast, Optional
+from typing import Any, Dict, Union, TypeVar, cast, Optional, List
 
 from spark_auto_mapper.data_types.coalesce import AutoMapperCoalesceDataType
 from spark_auto_mapper.data_types.hash import AutoMapperHashDataType
@@ -24,7 +24,7 @@ from spark_auto_mapper.data_types.substring import AutoMapperSubstringDataType
 from spark_auto_mapper.data_types.substring_by_delimiter import AutoMapperSubstringByDelimiterDataType
 from spark_auto_mapper.data_types.trim import AutoMapperTrimDataType
 from spark_auto_mapper.type_definitions.defined_types import AutoMapperAnyDataType, AutoMapperBooleanInputType, \
-    AutoMapperAmountInputType, AutoMapperNumberInputType, AutoMapperDateInputType
+    AutoMapperAmountInputType, AutoMapperNumberInputType, AutoMapperDateInputType, AutoMapperTextInputType
 from spark_auto_mapper.type_definitions.native_types import AutoMapperNativeTextType, AutoMapperNativeSimpleType
 from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperWrapperType, AutoMapperColumnOrColumnLikeType
 
@@ -63,11 +63,13 @@ class AutoMapperHelpers:
         return AutoMapperDataTypeColumn(value)
 
     @staticmethod
-    def text(value: str) -> AutoMapperDataTypeLiteral:
+    def text(
+        value: Union[AutoMapperNativeSimpleType, AutoMapperTextInputType]
+    ) -> AutoMapperDataTypeLiteral:
         """
         Specifies that the value parameter should be used as a literal text
-        :param value: literal text value
-        :return: a literal automapper type
+        :param value: text value
+        :return: a text automapper type
         """
         return AutoMapperDataTypeLiteral(value)
 
@@ -137,7 +139,7 @@ class AutoMapperHelpers:
     @staticmethod
     def if_(
         column: AutoMapperColumnOrColumnLikeType,
-        equals_: AutoMapperAnyDataType,
+        check: Union[AutoMapperAnyDataType, List[AutoMapperAnyDataType]],
         value: _TAutoMapperDataType,
         else_: Optional[_TAutoMapperDataType] = None
     ) -> _TAutoMapperDataType:
@@ -146,7 +148,7 @@ class AutoMapperHelpers:
 
 
         :param column: column to check
-        :param equals_: value to compare the column to
+        :param check: value to compare the column to
         :param value: what to return if the value matches
         :param else_: what value to assign if check fails
         :return: an if automapper type
@@ -156,7 +158,7 @@ class AutoMapperHelpers:
         return cast(
             _TAutoMapperDataType,
             AutoMapperIfDataType(
-                column=column, equals_=equals_, value=value, else_=else_
+                column=column, check=check, value=value, else_=else_
             )
         )
 
@@ -213,7 +215,7 @@ class AutoMapperHelpers:
     @staticmethod
     def map(
         column: AutoMapperColumnOrColumnLikeType,
-        mapping: Dict[AutoMapperAnyDataType, AutoMapperAnyDataType],
+        mapping: Dict[AutoMapperTextInputType, AutoMapperAnyDataType],
         default: Optional[AutoMapperAnyDataType] = None
     ) -> AutoMapperDataTypeExpression:
         """
