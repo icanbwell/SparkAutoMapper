@@ -2,7 +2,6 @@ from typing import TypeVar, Union, Generic, Optional, cast
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import when
-from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
 
 from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
 
@@ -17,31 +16,34 @@ _TAutoMapperDataType = TypeVar(
 )
 
 
-class AutoMapperIfNotNullDataType(
+class AutoMapperIfDataType(
     AutoMapperDataTypeBase, Generic[_TAutoMapperDataType]
 ):
     """
-    If check returns null then return null else return value
+    If check returns value if the checks passes else when_not
     """
     def __init__(
         self,
-        check: AutoMapperColumnOrColumnLikeType,
+        column: AutoMapperColumnOrColumnLikeType,
+        equals_: _TAutoMapperDataType,
         value: _TAutoMapperDataType,
-        when_null: Optional[Union[AutoMapperTextLikeBase,
-                                  _TAutoMapperDataType]] = None
+        else_: Optional[_TAutoMapperDataType] = None
     ):
         super().__init__()
 
-        self.check: AutoMapperColumnOrColumnLikeType = check
+        self.column: AutoMapperColumnOrColumnLikeType = column
+        self.check_value: AutoMapperDataTypeBase = equals_ \
+            if isinstance(equals_, AutoMapperDataTypeBase) \
+            else AutoMapperValueParser.parse_value(equals_)
         self.value: AutoMapperDataTypeBase = value \
             if isinstance(value, AutoMapperDataTypeBase) \
             else AutoMapperValueParser.parse_value(value)
-        if when_null:
-            self.when_null: AutoMapperDataTypeBase = cast(AutoMapperDataTypeBase, when_null) \
+        if else_:
+            self.else_: AutoMapperDataTypeBase = cast(AutoMapperDataTypeBase, else_) \
                 if isinstance(value, AutoMapperDataTypeBase) \
                 else AutoMapperValueParser.parse_value(value)
         else:
-            self.when_null = AutoMapperDataTypeLiteral(None)
+            self.else_ = AutoMapperDataTypeLiteral(None)
 
     def include_null_properties(self, include_null_properties: bool) -> None:
         self.value.include_null_properties(
@@ -50,8 +52,9 @@ class AutoMapperIfNotNullDataType(
 
     def get_column_spec(self, source_df: DataFrame) -> Column:
         column_spec = when(
-            self.check.get_column_spec(source_df=source_df).isNull(),
-            self.when_null.get_column_spec(source_df=source_df)
-        ).otherwise(self.value.get_column_spec(source_df=source_df))
+            self.column.get_column_spec(source_df=source_df).eqNullSafe(
+                self.check_value.get_column_spec(source_df=source_df)
+            ), self.value.get_column_spec(source_df=source_df)
+        ).otherwise(self.else_.get_column_spec(source_df=source_df))
 
         return column_spec

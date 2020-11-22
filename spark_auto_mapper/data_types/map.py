@@ -7,8 +7,7 @@ from pyspark.sql.functions import when, lit
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 from spark_auto_mapper.data_types.expression import AutoMapperDataTypeExpression
 from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
-from spark_auto_mapper.type_definitions.native_types import AutoMapperNativeSimpleType
-from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperColumnOrColumnLikeType
+from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperColumnOrColumnLikeType, AutoMapperAnyDataType
 
 
 class AutoMapperMapDataType(AutoMapperDataTypeExpression):
@@ -16,14 +15,15 @@ class AutoMapperMapDataType(AutoMapperDataTypeExpression):
     Applies the supplied mapping to the value of column
     """
     def __init__(
-        self, column: AutoMapperColumnOrColumnLikeType,
-        mapping: Dict[str, AutoMapperNativeSimpleType],
-        default: Optional[AutoMapperNativeSimpleType]
+        self,
+        column: AutoMapperColumnOrColumnLikeType,
+        mapping: Dict[AutoMapperAnyDataType, AutoMapperAnyDataType],
+        default: Optional[AutoMapperAnyDataType] = None
     ):
         super().__init__(value="")
 
         self.column: AutoMapperColumnOrColumnLikeType = column
-        self.mapping: Dict[str, AutoMapperDataTypeBase] = {
+        self.mapping: Dict[AutoMapperAnyDataType, AutoMapperDataTypeBase] = {
             key: (
                 value if isinstance(value, AutoMapperDataTypeBase) else
                 AutoMapperValueParser.parse_value(value)
@@ -31,7 +31,7 @@ class AutoMapperMapDataType(AutoMapperDataTypeExpression):
             for key, value in mapping.items()
         }
         assert self.mapping
-        self.default: Optional[AutoMapperNativeSimpleType] = default
+        self.default: Optional[AutoMapperAnyDataType] = default
 
     def get_column_spec(self, source_df: DataFrame) -> Column:
         inner_column_spec: Column = self.column.get_column_spec(
@@ -39,7 +39,7 @@ class AutoMapperMapDataType(AutoMapperDataTypeExpression):
         )
 
         column_spec: Optional[Column] = None
-        key: str
+        key: AutoMapperAnyDataType
         value: AutoMapperDataTypeBase
         for key, value in self.mapping.items():
             column_spec = column_spec.when(
