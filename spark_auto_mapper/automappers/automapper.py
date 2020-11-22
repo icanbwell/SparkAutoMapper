@@ -1,4 +1,5 @@
-from typing import List, Optional
+from pathlib import Path
+from typing import List, Optional, Union
 
 from pyspark.sql import DataFrame
 from pyspark.sql.functions import monotonically_increasing_id
@@ -23,7 +24,9 @@ class AutoMapper(AutoMapperContainer):
         view: Optional[str] = None,
         source_view: Optional[str] = None,
         keep_duplicates: bool = False,
-        drop_key_columns: bool = True
+        drop_key_columns: bool = True,
+        checkpoint_after_columns: Optional[int] = None,
+        checkpoint_path: Optional[Union[str, Path]] = None
     ):
         """
         Defines an AutoMapper
@@ -37,14 +40,32 @@ class AutoMapper(AutoMapperContainer):
         self.keys: Optional[List[str]] = keys
         self.keep_duplicates: bool = keep_duplicates
         self.drop_key_columns: bool = drop_key_columns
+        self.checkpoint_after_columns: Optional[int] = checkpoint_after_columns
+        self.checkpoint_path: Optional[Union[str, Path]] = checkpoint_path
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
     def transform_with_data_frame(
         self, df: DataFrame, source_df: DataFrame, keys: List[str]
     ) -> DataFrame:
+        current_child_number: int = 0
         # iterate over each child mapper and run it
         for column_name, child_mapper in self.mappers.items():
+            current_child_number += 1
             try:
+                # checkpoint if specified
+                if self.checkpoint_after_columns:
+                    if (
+                        current_child_number % self.checkpoint_after_columns
+                    ) == 0:
+                        if not self.checkpoint_path:
+                            df = df.checkpoint(eager=True)
+                        else:
+                            checkpoint_path: Path = Path(
+                                self.checkpoint_path
+                            ).joinpath(str(current_child_number))
+                            df.write.parquet(str(checkpoint_path))
+                            df = df.sql_ctx.read.parquet(str(checkpoint_path))
+                # transform the next child mapper
                 df = child_mapper.transform_with_data_frame(
                     df=df, source_df=source_df, keys=keys
                 )
