@@ -63,7 +63,8 @@ class AutoMapper(AutoMapperContainer):
                         else:
                             checkpoint_path: Path = Path(
                                 self.checkpoint_path
-                            ).joinpath(str(current_child_number))
+                            ).joinpath(self.view or "df"
+                                       ).joinpath(str(current_child_number))
                             df.write.parquet(str(checkpoint_path))
                             df = df.sql_ctx.read.parquet(str(checkpoint_path))
                 # transform the next child mapper
@@ -86,6 +87,15 @@ class AutoMapper(AutoMapperContainer):
                     column_name, df, e, source_df
                 )
                 raise Exception(msg) from e
+
+        # write out final checkpoint for this automapper
+        if self.checkpoint_path:
+            checkpoint_path = Path(self.checkpoint_path
+                                   ).joinpath(self.view
+                                              or "df").joinpath("final")
+            df.write.parquet(str(checkpoint_path))
+            df = df.sql_ctx.read.parquet(str(checkpoint_path))
+
         return df
 
     @staticmethod
