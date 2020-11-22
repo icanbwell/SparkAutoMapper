@@ -2,6 +2,7 @@ from typing import Any, Dict, Union, TypeVar, cast, Optional
 
 from spark_auto_mapper.data_types.coalesce import AutoMapperCoalesceDataType
 from spark_auto_mapper.data_types.hash import AutoMapperHashDataType
+from spark_auto_mapper.data_types.if_ import AutoMapperIfDataType
 from spark_auto_mapper.data_types.if_not_null_or_empty import AutoMapperIfNotNullOrEmptyDataType
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
 
@@ -134,14 +135,39 @@ class AutoMapperHelpers:
         return AutoMapperConcatDataType(*args)
 
     @staticmethod
+    def if_(
+        column: AutoMapperColumnOrColumnLikeType,
+        equals_: AutoMapperAnyDataType,
+        value: _TAutoMapperDataType,
+        else_: Optional[_TAutoMapperDataType] = None
+    ) -> _TAutoMapperDataType:
+        """
+        Checks if column matches check_value.  Returns value if it matches else else_
+
+
+        :param column: column to check
+        :param equals_: value to compare the column to
+        :param value: what to return if the value matches
+        :param else_: what value to assign if check fails
+        :return: an if automapper type
+        """
+
+        # cast it to the inner type so type checking is happy
+        return cast(
+            _TAutoMapperDataType,
+            AutoMapperIfDataType(
+                column=column, equals_=equals_, value=value, else_=else_
+            )
+        )
+
+    @staticmethod
     def if_not_null(
         check: AutoMapperColumnOrColumnLikeType,
         value: _TAutoMapperDataType,
-        when_null: Optional[Union[AutoMapperTextLikeBase,
-                                  _TAutoMapperDataType]] = None
+        when_null: Optional[_TAutoMapperDataType] = None
     ) -> _TAutoMapperDataType:
         """
-        concatenates a list of values.  Each value can be a string or a column
+        Checks if `check` is null
 
 
         :param check: column to check for null
@@ -162,11 +188,10 @@ class AutoMapperHelpers:
     def if_not_null_or_empty(
         check: AutoMapperColumnOrColumnLikeType,
         value: _TAutoMapperDataType,
-        when_null_or_empty: Optional[Union[AutoMapperTextLikeBase,
-                                           _TAutoMapperDataType]] = None
+        when_null_or_empty: Optional[_TAutoMapperDataType] = None
     ) -> _TAutoMapperDataType:
         """
-        concatenates a list of values.  Each value can be a string or a column
+        Checks if `check` is null or empty.
 
 
         :param check: column to check for null
@@ -188,8 +213,8 @@ class AutoMapperHelpers:
     @staticmethod
     def map(
         column: AutoMapperColumnOrColumnLikeType,
-        mapping: Dict[str, AutoMapperNativeSimpleType],
-        default: Optional[AutoMapperNativeSimpleType] = None
+        mapping: Dict[AutoMapperAnyDataType, AutoMapperAnyDataType],
+        default: Optional[AutoMapperAnyDataType] = None
     ) -> AutoMapperDataTypeExpression:
         """
         maps the contents of a column to values
@@ -338,15 +363,17 @@ class AutoMapperHelpers:
     ) -> AutoMapperHashDataType:
         """
         Calculates the hash code of given columns, and returns the result as an int column.
+
+
         :param args: string or column
         :return: a concat automapper type
         """
         return AutoMapperHashDataType(*args)
 
     @staticmethod
-    def coalesce(*args: _TAutoMapperDataType, ) -> _TAutoMapperDataType:
+    def coalesce(*args: _TAutoMapperDataType) -> _TAutoMapperDataType:
         """
-        Returns the first column that is not null.
+        Returns the first value that is not null.
 
         :return: a coalesce automapper type
         """

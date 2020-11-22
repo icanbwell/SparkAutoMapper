@@ -2,29 +2,30 @@ from typing import TypeVar, Union, Generic, Optional, cast
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import when
-from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
-
-from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
 
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
+from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
 from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
 from spark_auto_mapper.type_definitions.native_types import AutoMapperNativeSimpleType
 from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperColumnOrColumnLikeType
 
-_T = TypeVar(
-    "_T", bound=Union[AutoMapperNativeSimpleType, AutoMapperDataTypeBase]
+_TAutoMapperDataType = TypeVar(
+    "_TAutoMapperDataType",
+    bound=Union[AutoMapperNativeSimpleType, AutoMapperDataTypeBase]
 )
 
 
-class AutoMapperIfNotNullOrEmptyDataType(AutoMapperDataTypeBase, Generic[_T]):
+class AutoMapperIfNotNullOrEmptyDataType(
+    AutoMapperDataTypeBase, Generic[_TAutoMapperDataType]
+):
     """
     If check returns null then return null else return value
     """
     def __init__(
         self,
         check: AutoMapperColumnOrColumnLikeType,
-        value: _T,
-        when_null_or_empty: Optional[Union[AutoMapperTextLikeBase, _T]] = None
+        value: _TAutoMapperDataType,
+        when_null_or_empty: Optional[_TAutoMapperDataType] = None
     ):
         super().__init__()
 
