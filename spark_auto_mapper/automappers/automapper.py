@@ -53,6 +53,7 @@ class AutoMapper(AutoMapperContainer):
             current_child_number += 1
             try:
                 # checkpoint if specified
+                # https://livebook.manning.com/book/spark-in-action-second-edition/16-cache-and-checkpoint-enhancing-spark-s-performances/v-14/43
                 if self.checkpoint_after_columns:
                     if (
                         current_child_number % self.checkpoint_after_columns
