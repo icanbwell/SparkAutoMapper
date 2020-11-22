@@ -1,4 +1,5 @@
 from datetime import date, datetime
+from typing import Union
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import lit
@@ -8,9 +9,12 @@ from spark_auto_mapper.type_definitions.native_types import AutoMapperNativeSimp
 
 
 class AutoMapperDataTypeLiteral(AutoMapperTextLikeBase):
-    def __init__(self, value: AutoMapperNativeSimpleType):
+    def __init__(
+        self, value: Union[AutoMapperNativeSimpleType, AutoMapperTextLikeBase]
+    ):
         super().__init__()
-        self.value: AutoMapperNativeSimpleType = value
+        self.value: Union[AutoMapperNativeSimpleType,
+                          AutoMapperTextLikeBase] = value
 
     def get_column_spec(self, source_df: DataFrame) -> Column:
         if not self.value:
@@ -19,5 +23,7 @@ class AutoMapperDataTypeLiteral(AutoMapperTextLikeBase):
                 or isinstance(self.value, float) or isinstance(self.value, date) \
                 or isinstance(self.value, datetime):
             return lit(self.value)
+        if isinstance(self.value, AutoMapperTextLikeBase):
+            return self.value.get_column_spec(source_df=source_df)
 
         raise ValueError(f"value: {self.value} is not str")

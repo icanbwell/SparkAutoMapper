@@ -63,11 +63,13 @@ class AutoMapperHelpers:
         return AutoMapperDataTypeColumn(value)
 
     @staticmethod
-    def text(value: str) -> AutoMapperDataTypeLiteral:
+    def text(
+        value: Union[AutoMapperNativeSimpleType, AutoMapperTextInputType]
+    ) -> AutoMapperDataTypeLiteral:
         """
         Specifies that the value parameter should be used as a literal text
-        :param value: literal text value
-        :return: a literal automapper type
+        :param value: text value
+        :return: a text automapper type
         """
         return AutoMapperDataTypeLiteral(value)
 
