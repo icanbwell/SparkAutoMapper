@@ -1,4 +1,4 @@
-from typing import TypeVar, Union, Generic, Optional, cast
+from typing import TypeVar, Union, Generic, Optional, cast, List
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import when
@@ -7,12 +7,10 @@ from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
 
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
-from spark_auto_mapper.type_definitions.native_types import AutoMapperNativeSimpleType
-from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperColumnOrColumnLikeType
+from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperColumnOrColumnLikeType, AutoMapperAnyDataType
 
 _TAutoMapperDataType = TypeVar(
-    "_TAutoMapperDataType",
-    bound=Union[AutoMapperNativeSimpleType, AutoMapperDataTypeBase]
+    "_TAutoMapperDataType", bound=AutoMapperAnyDataType
 )
 
 
@@ -25,16 +23,24 @@ class AutoMapperIfDataType(
     def __init__(
         self,
         column: AutoMapperColumnOrColumnLikeType,
-        equals_: _TAutoMapperDataType,
+        check: Union[AutoMapperAnyDataType, List[AutoMapperAnyDataType]],
         value: _TAutoMapperDataType,
         else_: Optional[_TAutoMapperDataType] = None
     ):
         super().__init__()
 
         self.column: AutoMapperColumnOrColumnLikeType = column
-        self.check_value: AutoMapperDataTypeBase = equals_ \
-            if isinstance(equals_, AutoMapperDataTypeBase) \
-            else AutoMapperValueParser.parse_value(equals_)
+        if isinstance(check, list):
+            self.check: Union[AutoMapperDataTypeBase,
+                              List[AutoMapperDataTypeBase]] = [
+                                  a if isinstance(a, AutoMapperDataTypeBase)
+                                  else AutoMapperValueParser.parse_value(a)
+                                  for a in check
+                              ]
+        else:
+            self.check = check \
+                if isinstance(check, AutoMapperDataTypeBase) \
+                else AutoMapperValueParser.parse_value(check)
         self.value: AutoMapperDataTypeBase = value \
             if isinstance(value, AutoMapperDataTypeBase) \
             else AutoMapperValueParser.parse_value(value)
@@ -51,10 +57,20 @@ class AutoMapperIfDataType(
         )
 
     def get_column_spec(self, source_df: DataFrame) -> Column:
-        column_spec = when(
-            self.column.get_column_spec(source_df=source_df).eqNullSafe(
-                self.check_value.get_column_spec(source_df=source_df)
-            ), self.value.get_column_spec(source_df=source_df)
-        ).otherwise(self.else_.get_column_spec(source_df=source_df))
+        if isinstance(self.check, list):
+            column_spec = when(
+                self.column.get_column_spec(source_df=source_df).isin(
+                    *[
+                        c.get_column_spec(source_df=source_df)
+                        for c in self.check
+                    ]
+                ), self.value.get_column_spec(source_df=source_df)
+            ).otherwise(self.else_.get_column_spec(source_df=source_df))
+        else:
+            column_spec = when(
+                self.column.get_column_spec(source_df=source_df).eqNullSafe(
+                    self.check.get_column_spec(source_df=source_df)
+                ), self.value.get_column_spec(source_df=source_df)
+            ).otherwise(self.else_.get_column_spec(source_df=source_df))
 
         return column_spec

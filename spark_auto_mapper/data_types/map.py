@@ -3,6 +3,7 @@ from typing import Dict, Optional
 from pyspark.sql import Column, DataFrame
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import when, lit
+from spark_auto_mapper.type_definitions.defined_types import AutoMapperTextInputType
 
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 from spark_auto_mapper.data_types.expression import AutoMapperDataTypeExpression
@@ -17,7 +18,7 @@ class AutoMapperMapDataType(AutoMapperDataTypeExpression):
     def __init__(
         self,
         column: AutoMapperColumnOrColumnLikeType,
-        mapping: Dict[AutoMapperAnyDataType, AutoMapperAnyDataType],
+        mapping: Dict[AutoMapperTextInputType, AutoMapperAnyDataType],
         default: Optional[AutoMapperAnyDataType] = None
     ):
         super().__init__(value="")

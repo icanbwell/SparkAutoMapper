@@ -9,12 +9,13 @@ from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 
-def test_automapper_if_(spark_session: SparkSession) -> None:
+def test_automapper_if_list(spark_session: SparkSession) -> None:
     # Arrange
     spark_session.createDataFrame(
         [
             (1, 'Qureshi', 'Imran', "54"),
-            (2, 'Vidal', 'Michael', None),
+            (2, 'Qureshi', 'Imran', "59"),
+            (3, 'Vidal', 'Michael', None),
         ], ['member_id', 'last_name', 'first_name', "my_age"]
     ).createOrReplaceTempView("patients")
 
@@ -29,7 +30,7 @@ def test_automapper_if_(spark_session: SparkSession) -> None:
     ).columns(
         age=A.if_(
             column=A.column("my_age"),
-            check=A.text("54"),
+            check=["54", "59"],
             value=A.number(A.column("my_age")),
             else_=A.number(A.text("100"))
         )
@@ -43,7 +44,7 @@ def test_automapper_if_(spark_session: SparkSession) -> None:
         print(f"{column_name}: {sql_expression}")
 
     assert str(sql_expressions["age"]) == str(
-        when(col("b.my_age").eqNullSafe("54"),
+        when(col("b.my_age").isin(["54", "59"]),
              col("b.my_age").cast("int")).otherwise(lit("100").cast("int")
                                                     ).alias("age")
     )
@@ -57,6 +58,7 @@ def test_automapper_if_(spark_session: SparkSession) -> None:
     assert result_df.where("member_id == 1").select("age"
                                                     ).collect()[0][0] == 54
     assert result_df.where("member_id == 2").select("age"
+                                                    ).collect()[0][0] == 59
+    assert result_df.where("member_id == 3").select("age"
                                                     ).collect()[0][0] == 100
-
     assert dict(result_df.dtypes)["age"] == "int"
