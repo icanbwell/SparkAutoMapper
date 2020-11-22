@@ -54,7 +54,7 @@ class AutoMapperHelpers:
         return AutoMapperDataTypeComplex(**kwargs)
 
     @staticmethod
-    def column(value: str) -> AutoMapperDataTypeColumn:
+    def column(value: str) -> AutoMapperTextLikeBase:
         """
         Specifies that the value parameter should be used as a column name
         :param value: name of column
@@ -65,7 +65,7 @@ class AutoMapperHelpers:
     @staticmethod
     def text(
         value: Union[AutoMapperNativeSimpleType, AutoMapperTextInputType]
-    ) -> AutoMapperDataTypeLiteral:
+    ) -> AutoMapperTextLikeBase:
         """
         Specifies that the value parameter should be used as a literal text
         :param value: text value
@@ -74,7 +74,7 @@ class AutoMapperHelpers:
         return AutoMapperDataTypeLiteral(value)
 
     @staticmethod
-    def expression(value: str) -> AutoMapperDataTypeExpression:
+    def expression(value: str) -> AutoMapperTextLikeBase:
         """
         Specifies that the value parameter should be executed as a sql expression in Spark
         :param value: sql
