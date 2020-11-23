@@ -31,7 +31,7 @@ class AutoMapper(AutoMapperContainer):
         use_schema: bool = True,
         include_extension: bool = False,
         include_null_properties: bool = False,
-        use_single_select: bool = False,
+        use_single_select: bool = True,
         verify_row_count: bool = True
     ):
         """
@@ -47,6 +47,12 @@ class AutoMapper(AutoMapperContainer):
         :param checkpoint_path: Path where to store the checkpoints
         :param reuse_existing_view: If view already exists, whether to reuse it or create a new one
         :param use_schema: apply schema to columns
+        :param include_extension: By default we don't include extension elements since they take up a lot of schema.
+                If you're using extensions then set this
+        :param include_null_properties: If you want to include null properties
+        :param use_single_select: This is a faster way to run the AutoMapper since it will select all the columns at once.
+                However this makes it harder to debug since you don't know what column failed
+        :param verify_row_count: verifies that the count of rows remains the same before and after the transformation
         """
         super().__init__()
         self.view: Optional[str] = view
@@ -74,6 +80,8 @@ class AutoMapper(AutoMapperContainer):
         ]
 
         try:
+            if not self.drop_key_columns:
+                column_specs = [col(f"b.{c}") for c in keys] + column_specs
             df = source_df.alias("b").select(*column_specs)
             # write out final checkpoint for this automapper
             if self.checkpoint_path:
@@ -218,9 +226,7 @@ class AutoMapper(AutoMapperContainer):
         # run the mapper
         if self.use_single_select:
             result_df: DataFrame = self.transform_with_data_frame_single_select(
-                df=destination_df,
-                source_df=source_df,
-                keys=renamed_key_columns
+                df=destination_df, source_df=source_df, keys=self.keys
             )
         else:
             result_df = self.transform_with_data_frame(
