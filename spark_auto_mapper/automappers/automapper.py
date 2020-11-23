@@ -27,7 +27,8 @@ class AutoMapper(AutoMapperContainer):
         drop_key_columns: bool = True,
         checkpoint_after_columns: Optional[int] = None,
         checkpoint_path: Optional[Union[str, Path]] = None,
-        reuse_existing_view: bool = False
+        reuse_existing_view: bool = False,
+        use_schema: bool = True
     ):
         """
         Creates an AutoMapper
@@ -41,6 +42,7 @@ class AutoMapper(AutoMapperContainer):
         :param checkpoint_after_columns: checkpoint after how many columns have been processed
         :param checkpoint_path: Path where to store the checkpoints
         :param reuse_existing_view: If view already exists, whether to reuse it or create a new one
+        :param use_schema: apply schema to columns
         """
         super().__init__()
         self.view: Optional[str] = view
@@ -51,6 +53,7 @@ class AutoMapper(AutoMapperContainer):
         self.checkpoint_after_columns: Optional[int] = checkpoint_after_columns
         self.checkpoint_path: Optional[Union[str, Path]] = checkpoint_path
         self.reuse_existing_view: bool = reuse_existing_view
+        self.use_schema: bool = use_schema
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
     def transform_with_data_frame(
@@ -209,7 +212,7 @@ class AutoMapper(AutoMapperContainer):
     # noinspection PyPep8Naming,PyMethodMayBeStatic
     def complex(self, entity: AutoMapperDataTypeComplexBase) -> 'AutoMapper':
         resource_mapper: AutoMapperWithComplex = AutoMapperWithComplex(
-            entity=entity
+            entity=entity, use_schema=self.use_schema
         )
         # # ask entity for its schema
         # schema: Optional[StructType] = entity.get_schema()
