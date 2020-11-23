@@ -46,7 +46,7 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
         elif isinstance(value, List):
             self.value = [AutoMapperValueParser.parse_value(v) for v in value]
             # if there are more than two items we have to maintain the same schema in children or Spark errors
-            if include_null_properties and len(value) > 1:
+            if include_null_properties:
                 self.include_null_properties(
                     include_null_properties=include_null_properties
                 )
