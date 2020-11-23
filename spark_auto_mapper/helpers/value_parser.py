@@ -1,6 +1,8 @@
 from datetime import date, datetime
 from typing import Union, Dict, Any, List
 
+from pyspark.sql.types import DateType, FloatType, IntegerType
+
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 from spark_auto_mapper.type_definitions.defined_types import AutoMapperAnyDataType
 
@@ -22,11 +24,21 @@ class AutoMapperValueParser:
                 from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
                 return AutoMapperDataTypeLiteral(value=value)
 
-        if isinstance(value, int) or isinstance(value, float) or isinstance(
-            value, date
-        ) or isinstance(value, datetime):
+        if isinstance(value, int):
             from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
-            return AutoMapperDataTypeLiteral(value=value)
+            return AutoMapperDataTypeLiteral(value=value, type_=IntegerType())
+
+        if isinstance(value, float):
+            from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
+            return AutoMapperDataTypeLiteral(value=value, type_=FloatType())
+
+        if isinstance(value, date):
+            from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
+            return AutoMapperDataTypeLiteral(value=value, type_=DateType())
+
+        if isinstance(value, datetime):
+            from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
+            return AutoMapperDataTypeLiteral(value=value, type_=DateType())
 
         # if value is a dict then wrap with struct
         if isinstance(value, dict):

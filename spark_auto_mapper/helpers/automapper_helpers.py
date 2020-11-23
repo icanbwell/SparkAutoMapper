@@ -1,5 +1,7 @@
 from typing import Any, Dict, Union, TypeVar, cast, Optional, List
 
+from pyspark.sql.types import StringType
+
 from spark_auto_mapper.data_types.coalesce import AutoMapperCoalesceDataType
 from spark_auto_mapper.data_types.hash import AutoMapperHashDataType
 from spark_auto_mapper.data_types.if_ import AutoMapperIfDataType
@@ -71,7 +73,7 @@ class AutoMapperHelpers:
         :param value: text value
         :return: a text automapper type
         """
-        return AutoMapperDataTypeLiteral(value)
+        return AutoMapperDataTypeLiteral(value, StringType())
 
     @staticmethod
     def expression(value: str) -> AutoMapperTextLikeBase:

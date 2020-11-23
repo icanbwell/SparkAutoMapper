@@ -4,6 +4,7 @@ from pyspark.sql import SparkSession, Column, DataFrame
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import col, when
 from pyspark.sql.functions import lit
+from pyspark.sql.types import StringType
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
@@ -49,7 +50,7 @@ def test_automapper_if_not_null_or_empty(spark_session: SparkSession) -> None:
     assert str(sql_expressions["age"]) == str(
         when(
             col("b.my_age").isNull() | col("b.my_age").eqNullSafe(""),
-            lit("100")
+            lit("100").cast(StringType())
         ).otherwise(col("b.my_age")).alias("age")
     )
 

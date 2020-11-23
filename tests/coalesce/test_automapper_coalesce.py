@@ -4,6 +4,7 @@ from pyspark.sql import SparkSession, Column, DataFrame
 from pyspark.sql.functions import coalesce
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import lit, col
+from pyspark.sql.types import StringType
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
@@ -43,7 +44,8 @@ def test_auto_mapper_coalesce(spark_session: SparkSession) -> None:
 
     assert str(sql_expressions["my_column"]) == str(
         coalesce(
-            col("b.last_name"), col("b.date_of_birth"), lit("last_resort")
+            col("b.last_name"), col("b.date_of_birth"),
+            lit("last_resort").cast(StringType())
         ).alias("my_column")
     )
 

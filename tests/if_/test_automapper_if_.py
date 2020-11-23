@@ -4,6 +4,7 @@ from pyspark.sql import SparkSession, Column, DataFrame
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import col, when
 from pyspark.sql.functions import lit
+from pyspark.sql.types import StringType, IntegerType
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
@@ -43,9 +44,11 @@ def test_automapper_if_(spark_session: SparkSession) -> None:
         print(f"{column_name}: {sql_expression}")
 
     assert str(sql_expressions["age"]) == str(
-        when(col("b.my_age").eqNullSafe("54"),
-             col("b.my_age").cast("int")).otherwise(lit("100").cast("int")
-                                                    ).alias("age")
+        when(
+            col("b.my_age").eqNullSafe(lit("54").cast(StringType())),
+            col("b.my_age").cast(IntegerType())
+        ).otherwise(lit("100").cast(StringType()).cast(IntegerType())
+                    ).alias("age")
     )
 
     result_df: DataFrame = mapper.transform(df=df)
