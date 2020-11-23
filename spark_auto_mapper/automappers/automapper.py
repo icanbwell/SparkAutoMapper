@@ -31,7 +31,8 @@ class AutoMapper(AutoMapperContainer):
         use_schema: bool = True,
         include_extension: bool = False,
         include_null_properties: bool = False,
-        use_single_select: bool = False
+        use_single_select: bool = False,
+        verify_row_count: bool = True
     ):
         """
         Creates an AutoMapper
@@ -60,6 +61,7 @@ class AutoMapper(AutoMapperContainer):
         self.include_extension: bool = include_extension
         self.include_null_properties: bool = include_null_properties
         self.use_single_select: bool = use_single_select
+        self.verify_row_count: bool = verify_row_count
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
     def transform_with_data_frame_single_select(
@@ -71,14 +73,27 @@ class AutoMapper(AutoMapperContainer):
             for column_name, child_mapper in self.mappers.items()
         ]
 
-        df = source_df.alias("b").select(*column_specs)
-        # write out final checkpoint for this automapper
-        if self.checkpoint_path:
-            checkpoint_path = Path(self.checkpoint_path
-                                   ).joinpath(self.view
-                                              or "df").joinpath("final")
-            df.write.parquet(str(checkpoint_path))
-            df = df.sql_ctx.read.parquet(str(checkpoint_path))
+        try:
+            df = source_df.alias("b").select(*column_specs)
+            # write out final checkpoint for this automapper
+            if self.checkpoint_path:
+                checkpoint_path = Path(self.checkpoint_path
+                                       ).joinpath(self.view
+                                                  or "df").joinpath("final")
+                df.write.parquet(str(checkpoint_path))
+                df = df.sql_ctx.read.parquet(str(checkpoint_path))
+        except AnalysisException as e:
+            msg: str = ""
+            if e.desc.startswith("cannot resolve 'array"):
+                msg = "Looks like the elements of the array have different structures.  " \
+                      "All items in an array should have the exact same structure.  " \
+                      "You can pass in include_nulls to AutoMapperDataTypeComplexBase to force it to create " \
+                      "null values for each element in the structure. "
+            msg += self.get_message_for_exception("", df, e, source_df)
+            raise Exception(msg) from e
+        except Exception as e:
+            msg = self.get_message_for_exception("", df, e, source_df)
+            raise Exception(msg) from e
         return df
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
@@ -106,13 +121,16 @@ class AutoMapper(AutoMapperContainer):
                             df.write.parquet(str(checkpoint_path))
                             df = df.sql_ctx.read.parquet(str(checkpoint_path))
 
-                before_row_count: int = df.count()
+                before_row_count: int = -1
+                if self.verify_row_count:
+                    before_row_count = df.count()
                 # transform the next child mapper
                 df = child_mapper.transform_with_data_frame(
                     df=df, source_df=source_df, keys=keys
                 )
-                after_row_count: int = df.count()
-                assert before_row_count == after_row_count
+                if self.verify_row_count:
+                    after_row_count: int = df.count()
+                    assert before_row_count == after_row_count
 
             except AnalysisException as e:
                 msg: str = ""
