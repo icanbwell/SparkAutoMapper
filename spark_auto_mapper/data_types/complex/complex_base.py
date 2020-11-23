@@ -1,7 +1,8 @@
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import struct
+from pyspark.sql.types import StructType
 
 from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
 from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
@@ -58,3 +59,8 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
             )
         }
         return valid_columns
+
+    # override this if your inherited class has a defined schema
+    # noinspection PyMethodMayBeStatic
+    def get_schema(self) -> Optional[StructType]:
+        return None

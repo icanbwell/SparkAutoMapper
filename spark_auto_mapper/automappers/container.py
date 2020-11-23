@@ -1,6 +1,7 @@
 from typing import List, Dict
 
 from pyspark.sql import DataFrame, Column
+from pyspark.sql.types import StructField
 
 from spark_auto_mapper.automappers.automapper_base import AutoMapperBase
 from spark_auto_mapper.automappers.with_column_base import AutoMapperWithColumnBase
@@ -13,13 +14,17 @@ class AutoMapperContainer(AutoMapperBase):
 
         # set up a bunch of withColumn for each parameter to AutoMapperFhirDataTypeComplexBase
         self.mappers: Dict[str, AutoMapperBase] = {}
+        self.column_schema: Dict[str, StructField] = {}
 
     def generate_mappers(
         self, mappers_dict: Dict[str, AutoMapperAnyDataType]
     ) -> None:
         for column, value in mappers_dict.items():
             automapper = AutoMapperWithColumnBase(
-                dst_column=column, value=value
+                dst_column=column,
+                value=value,
+                column_schema=self.column_schema[column]
+                if column in self.column_schema else None
             )
             assert isinstance(automapper,
                               AutoMapperWithColumnBase), type(automapper)
