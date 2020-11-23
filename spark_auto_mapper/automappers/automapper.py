@@ -106,10 +106,14 @@ class AutoMapper(AutoMapperContainer):
                             df.write.parquet(str(checkpoint_path))
                             df = df.sql_ctx.read.parquet(str(checkpoint_path))
 
+                before_row_count: int = df.count()
                 # transform the next child mapper
                 df = child_mapper.transform_with_data_frame(
                     df=df, source_df=source_df, keys=keys
                 )
+                after_row_count: int = df.count()
+                assert before_row_count == after_row_count
+
             except AnalysisException as e:
                 msg: str = ""
                 if e.desc.startswith("cannot resolve 'array"):
