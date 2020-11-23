@@ -14,7 +14,7 @@ from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
 class AutoMapperWithColumnBase(AutoMapperBase):
     def __init__(
         self, dst_column: str, value: AutoMapperAnyDataType,
-        column_schema: Optional[StructField]
+        column_schema: Optional[StructField], include_null_properties: bool
     ) -> None:
         super().__init__()
         # should only have one parameter
@@ -23,6 +23,9 @@ class AutoMapperWithColumnBase(AutoMapperBase):
         self.value: AutoMapperDataTypeBase = AutoMapperValueParser.parse_value(value) \
             if not isinstance(value, AutoMapperDataTypeBase) \
             else value
+        self.value.include_null_properties(
+            include_null_properties=include_null_properties
+        )
 
     def get_column_spec(self, source_df: DataFrame) -> Column:
         # if value is an AutoMapper then ask it for its column spec

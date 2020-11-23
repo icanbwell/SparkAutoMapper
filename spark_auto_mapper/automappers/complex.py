@@ -27,5 +27,6 @@ class AutoMapperWithComplex(AutoMapperContainer):
                 key: value
                 for key, value in entity.get_child_mappers().items()
             },
-            column_schema=column_schema
+            column_schema=column_schema,
+            include_null_properties=use_schema
         )
