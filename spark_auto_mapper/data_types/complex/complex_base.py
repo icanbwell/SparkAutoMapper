@@ -62,5 +62,5 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
 
     # override this if your inherited class has a defined schema
     # noinspection PyMethodMayBeStatic
-    def get_schema(self) -> Optional[StructType]:
+    def get_schema(self, include_extension: bool) -> Optional[StructType]:
         return None

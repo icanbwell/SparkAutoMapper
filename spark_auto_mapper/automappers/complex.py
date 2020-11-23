@@ -8,12 +8,15 @@ from spark_auto_mapper.data_types.complex.complex_base import AutoMapperDataType
 
 class AutoMapperWithComplex(AutoMapperContainer):
     def __init__(
-        self, entity: AutoMapperDataTypeComplexBase, use_schema: bool
+        self, entity: AutoMapperDataTypeComplexBase, use_schema: bool,
+        include_extension: bool
     ) -> None:
         super().__init__()
 
         # ask entity for its schema
-        schema: Optional[StructType] = entity.get_schema()
+        schema: Optional[StructType] = entity.get_schema(
+            include_extension=include_extension
+        )
         column_schema: Dict[str,
                             StructField] = {f.name: f
                                             for f in schema
