@@ -17,14 +17,15 @@ class AutoMapperContainer(AutoMapperBase):
 
     def generate_mappers(
         self, mappers_dict: Dict[str, AutoMapperAnyDataType],
-        column_schema: Dict[str, StructField]
+        column_schema: Dict[str, StructField], include_null_properties: bool
     ) -> None:
         for column, value in mappers_dict.items():
             automapper = AutoMapperWithColumnBase(
                 dst_column=column,
                 value=value,
                 column_schema=column_schema[column]
-                if column in column_schema else None
+                if column in column_schema else None,
+                include_null_properties=include_null_properties
             )
             assert isinstance(automapper,
                               AutoMapperWithColumnBase), type(automapper)

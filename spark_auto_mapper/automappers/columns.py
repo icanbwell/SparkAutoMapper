@@ -6,4 +6,8 @@ class AutoMapperColumns(AutoMapperContainer):
     def __init__(self, **kwargs: AutoMapperAnyDataType) -> None:
         super().__init__()
 
-        self.generate_mappers(mappers_dict=kwargs, column_schema={})
+        self.generate_mappers(
+            mappers_dict=kwargs,
+            column_schema={},
+            include_null_properties=False
+        )

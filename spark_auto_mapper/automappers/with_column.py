@@ -9,5 +9,8 @@ class AutoMapperWithColumn(AutoMapperWithColumnBase):
         dst_column: str = list(kwargs.keys())[0]
         value = kwargs[dst_column]
         super().__init__(
-            dst_column=dst_column, value=value, column_schema=None
+            dst_column=dst_column,
+            value=value,
+            column_schema=None,
+            include_null_properties=False
         )

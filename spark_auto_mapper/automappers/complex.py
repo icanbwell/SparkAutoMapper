@@ -9,7 +9,7 @@ from spark_auto_mapper.data_types.complex.complex_base import AutoMapperDataType
 class AutoMapperWithComplex(AutoMapperContainer):
     def __init__(
         self, entity: AutoMapperDataTypeComplexBase, use_schema: bool,
-        include_extension: bool
+        include_extension: bool, include_null_properties: bool
     ) -> None:
         super().__init__()
 
@@ -27,5 +27,6 @@ class AutoMapperWithComplex(AutoMapperContainer):
                 key: value
                 for key, value in entity.get_child_mappers().items()
             },
-            column_schema=column_schema
+            column_schema=column_schema,
+            include_null_properties=include_null_properties or use_schema
         )
