@@ -201,6 +201,12 @@ class AutoMapper(AutoMapperContainer):
         resource_mapper: AutoMapperWithComplex = AutoMapperWithComplex(
             entity=entity
         )
+        # # ask entity for its schema
+        # schema: Optional[StructType] = entity.get_schema()
+        # schema_dict: Dict[str,
+        #                   StructType] = {f.name: f
+        #                                  for f in schema} if schema else {}
+
         for column_name, child_mapper in resource_mapper.mappers.items():
             self.register_child(dst_column=column_name, child=child_mapper)
         return self

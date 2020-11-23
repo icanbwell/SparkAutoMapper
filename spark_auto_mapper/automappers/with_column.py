@@ -8,4 +8,6 @@ class AutoMapperWithColumn(AutoMapperWithColumnBase):
         assert len(kwargs) == 1, kwargs
         dst_column: str = list(kwargs.keys())[0]
         value = kwargs[dst_column]
-        super().__init__(dst_column=dst_column, value=value)
+        super().__init__(
+            dst_column=dst_column, value=value, column_schema=None
+        )

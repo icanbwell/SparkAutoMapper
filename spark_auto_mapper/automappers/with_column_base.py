@@ -1,8 +1,9 @@
-from typing import List, Dict
+from typing import List, Dict, Optional
 
 from pyspark.sql import Column, DataFrame
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import col
+from pyspark.sql.types import StructField
 
 from spark_auto_mapper.automappers.automapper_base import AutoMapperBase
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
@@ -11,10 +12,14 @@ from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
 
 
 class AutoMapperWithColumnBase(AutoMapperBase):
-    def __init__(self, dst_column: str, value: AutoMapperAnyDataType) -> None:
+    def __init__(
+        self, dst_column: str, value: AutoMapperAnyDataType,
+        column_schema: Optional[StructField]
+    ) -> None:
         super().__init__()
         # should only have one parameter
         self.dst_column: str = dst_column
+        self.column_schema: Optional[StructField] = column_schema
         self.value: AutoMapperDataTypeBase = AutoMapperValueParser.parse_value(value) \
             if not isinstance(value, AutoMapperDataTypeBase) \
             else value
@@ -24,6 +29,9 @@ class AutoMapperWithColumnBase(AutoMapperBase):
         if isinstance(self.value, AutoMapperDataTypeBase):
             child: AutoMapperDataTypeBase = self.value
             column_spec = child.get_column_spec(source_df=source_df)
+            # if the type has a schema then apply it
+            if self.column_schema:
+                column_spec = column_spec.cast(self.column_schema.dataType)
             # if dst_column already exists in source_df then prepend with ___ to make it unique
             if self.dst_column in source_df.columns:
                 return column_spec.alias(f"___{self.dst_column}")
