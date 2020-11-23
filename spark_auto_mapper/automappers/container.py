@@ -14,17 +14,17 @@ class AutoMapperContainer(AutoMapperBase):
 
         # set up a bunch of withColumn for each parameter to AutoMapperFhirDataTypeComplexBase
         self.mappers: Dict[str, AutoMapperBase] = {}
-        self.column_schema: Dict[str, StructField] = {}
 
     def generate_mappers(
-        self, mappers_dict: Dict[str, AutoMapperAnyDataType]
+        self, mappers_dict: Dict[str, AutoMapperAnyDataType],
+        column_schema: Dict[str, StructField]
     ) -> None:
         for column, value in mappers_dict.items():
             automapper = AutoMapperWithColumnBase(
                 dst_column=column,
                 value=value,
-                column_schema=self.column_schema[column]
-                if column in self.column_schema else None
+                column_schema=column_schema[column]
+                if column in column_schema else None
             )
             assert isinstance(automapper,
                               AutoMapperWithColumnBase), type(automapper)

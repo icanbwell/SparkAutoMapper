@@ -1,11 +1,10 @@
 from pathlib import Path
-from typing import List, Optional, Union, Dict
+from typing import List, Optional, Union
 
 from pyspark.sql import DataFrame
 from pyspark.sql.functions import monotonically_increasing_id
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import col
-from pyspark.sql.types import StructType, StructField
 from pyspark.sql.utils import AnalysisException
 
 from spark_auto_mapper.automappers.automapper_base import AutoMapperBase
@@ -186,21 +185,15 @@ class AutoMapper(AutoMapperContainer):
             result_df.createOrReplaceTempView(self.view)
         return result_df
 
-    def register_child(
-        self, dst_column: str, child: 'AutoMapperBase',
-        column_schema: Optional[StructField]
-    ) -> None:
+    def register_child(self, dst_column: str, child: 'AutoMapperBase') -> None:
         self.mappers[dst_column] = child
-        self.column_schema[dst_column] = column_schema
 
     # noinspection PyMethodMayBeStatic,PyPep8Naming
     def columns(self, **kwargs: AutoMapperAnyDataType) -> 'AutoMapper':
         from spark_auto_mapper.automappers.columns import AutoMapperColumns
         columns_mapper: AutoMapperColumns = AutoMapperColumns(**kwargs)
         for column_name, child_mapper in columns_mapper.mappers.items():
-            self.register_child(
-                dst_column=column_name, child=child_mapper, column_schema=None
-            )
+            self.register_child(dst_column=column_name, child=child_mapper)
         return self
 
     # noinspection PyPep8Naming,PyMethodMayBeStatic
@@ -208,17 +201,12 @@ class AutoMapper(AutoMapperContainer):
         resource_mapper: AutoMapperWithComplex = AutoMapperWithComplex(
             entity=entity
         )
-        # ask entity for its schema
-        schema: Optional[StructType] = entity.get_schema()
-        schema_dict: Dict[str,
-                          StructType] = {f.name: f
-                                         for f in schema} if schema else {}
+        # # ask entity for its schema
+        # schema: Optional[StructType] = entity.get_schema()
+        # schema_dict: Dict[str,
+        #                   StructType] = {f.name: f
+        #                                  for f in schema} if schema else {}
 
         for column_name, child_mapper in resource_mapper.mappers.items():
-            self.register_child(
-                dst_column=column_name,
-                child=child_mapper,
-                column_schema=schema_dict[column_name]
-                if column_name in schema_dict else None
-            )
+            self.register_child(dst_column=column_name, child=child_mapper)
         return self

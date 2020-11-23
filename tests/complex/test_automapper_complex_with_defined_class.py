@@ -1,7 +1,8 @@
-from typing import Dict
+from typing import Dict, Optional
 
 from pyspark.sql import SparkSession, Column, DataFrame
 from pyspark.sql.functions import col
+from pyspark.sql.types import StructType, StructField, StringType, IntegerType
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.data_types.complex.complex_base import AutoMapperDataTypeComplexBase
@@ -15,6 +16,15 @@ class MyClass(AutoMapperDataTypeComplexBase):
         self, name: AutoMapperTextLikeBase, age: AutoMapperNumberDataType
     ) -> None:
         super().__init__(name=name, age=age)
+
+    def get_schema(self) -> Optional[StructType]:
+        schema: StructType = StructType(
+            [
+                StructField("name", StringType(), False),
+                StructField("age", IntegerType(), True),
+            ]
+        )
+        return schema
 
 
 def test_auto_mapper_complex_with_defined_class(
@@ -54,8 +64,9 @@ def test_auto_mapper_complex_with_defined_class(
 
     # Assert
     assert str(sql_expressions["name"]
-               ) == str(col("b.last_name").alias("name"))
-    assert str(sql_expressions["age"]) == str(col("b.my_age").alias("age"))
+               ) == str(col("b.last_name").cast("string").alias("name"))
+    assert str(sql_expressions["age"]
+               ) == str(col("b.my_age").cast("int").alias("age"))
 
     result_df.printSchema()
     result_df.show()
@@ -63,4 +74,4 @@ def test_auto_mapper_complex_with_defined_class(
     assert result_df.where("member_id == 1"
                            ).select("name").collect()[0][0] == "Qureshi"
 
-    assert dict(result_df.dtypes)["age"] == "bigint"
+    assert dict(result_df.dtypes)["age"] == "int"
