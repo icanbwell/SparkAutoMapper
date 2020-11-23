@@ -23,9 +23,10 @@ class AutoMapperWithColumnBase(AutoMapperBase):
         self.value: AutoMapperDataTypeBase = AutoMapperValueParser.parse_value(value) \
             if not isinstance(value, AutoMapperDataTypeBase) \
             else value
-        self.value.include_null_properties(
-            include_null_properties=include_null_properties
-        )
+        if include_null_properties:
+            self.value.include_null_properties(
+                include_null_properties=include_null_properties
+            )
 
     def get_column_spec(self, source_df: DataFrame) -> Column:
         # if value is an AutoMapper then ask it for its column spec
