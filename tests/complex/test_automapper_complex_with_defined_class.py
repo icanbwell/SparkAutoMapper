@@ -17,7 +17,7 @@ class MyClass(AutoMapperDataTypeComplexBase):
     ) -> None:
         super().__init__(name=name, age=age)
 
-    def get_schema(self) -> Optional[StructType]:
+    def get_schema(self, include_extension: bool) -> Optional[StructType]:
         schema: StructType = StructType(
             [
                 StructField("name", StringType(), False),
