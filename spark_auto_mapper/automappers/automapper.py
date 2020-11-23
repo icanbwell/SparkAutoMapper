@@ -29,7 +29,8 @@ class AutoMapper(AutoMapperContainer):
         checkpoint_path: Optional[Union[str, Path]] = None,
         reuse_existing_view: bool = False,
         use_schema: bool = True,
-        include_extension: bool = False
+        include_extension: bool = False,
+        include_null_properties: bool = False
     ):
         """
         Creates an AutoMapper
@@ -56,6 +57,7 @@ class AutoMapper(AutoMapperContainer):
         self.reuse_existing_view: bool = reuse_existing_view
         self.use_schema: bool = use_schema
         self.include_extension: bool = include_extension
+        self.include_null_properties: bool = include_null_properties
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
     def transform_with_data_frame(
@@ -216,7 +218,8 @@ class AutoMapper(AutoMapperContainer):
         resource_mapper: AutoMapperWithComplex = AutoMapperWithComplex(
             entity=entity,
             use_schema=self.use_schema,
-            include_extension=self.include_extension
+            include_extension=self.include_extension,
+            include_null_properties=self.include_null_properties
         )
         # # ask entity for its schema
         # schema: Optional[StructType] = entity.get_schema()
