@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import List, Optional, Union
 
-from pyspark.sql import DataFrame
+from pyspark.sql import DataFrame, Column
 from pyspark.sql.functions import monotonically_increasing_id
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import col
@@ -30,7 +30,8 @@ class AutoMapper(AutoMapperContainer):
         reuse_existing_view: bool = False,
         use_schema: bool = True,
         include_extension: bool = False,
-        include_null_properties: bool = False
+        include_null_properties: bool = False,
+        use_single_select: bool = False
     ):
         """
         Creates an AutoMapper
@@ -58,6 +59,27 @@ class AutoMapper(AutoMapperContainer):
         self.use_schema: bool = use_schema
         self.include_extension: bool = include_extension
         self.include_null_properties: bool = include_null_properties
+        self.use_single_select: bool = use_single_select
+
+    # noinspection PyMethodMayBeStatic,PyUnusedLocal
+    def transform_with_data_frame_single_select(
+        self, df: DataFrame, source_df: DataFrame, keys: List[str]
+    ) -> DataFrame:
+        # get all the column specs
+        column_specs: List[Column] = [
+            child_mapper.get_column_specs(source_df=source_df)[column_name]
+            for column_name, child_mapper in self.mappers.items()
+        ]
+
+        df = source_df.alias("b").select(*column_specs)
+        # write out final checkpoint for this automapper
+        if self.checkpoint_path:
+            checkpoint_path = Path(self.checkpoint_path
+                                   ).joinpath(self.view
+                                              or "df").joinpath("final")
+            df.write.parquet(str(checkpoint_path))
+            df = df.sql_ctx.read.parquet(str(checkpoint_path))
+        return df
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
     def transform_with_data_frame(
@@ -83,6 +105,7 @@ class AutoMapper(AutoMapperContainer):
                                        ).joinpath(str(current_child_number))
                             df.write.parquet(str(checkpoint_path))
                             df = df.sql_ctx.read.parquet(str(checkpoint_path))
+
                 # transform the next child mapper
                 df = child_mapper.transform_with_data_frame(
                     df=df, source_df=source_df, keys=keys
@@ -171,9 +194,18 @@ class AutoMapper(AutoMapperContainer):
             renamed_key_columns.append(renamed_key_column)
 
         # run the mapper
-        result_df: DataFrame = self.transform_with_data_frame(
-            df=destination_df, source_df=source_df, keys=renamed_key_columns
-        )
+        if self.use_single_select:
+            result_df: DataFrame = self.transform_with_data_frame_single_select(
+                df=destination_df,
+                source_df=source_df,
+                keys=renamed_key_columns
+            )
+        else:
+            result_df = self.transform_with_data_frame(
+                df=destination_df,
+                source_df=source_df,
+                keys=renamed_key_columns
+            )
 
         # now drop the __row_id if we added it
         result_df = result_df.drop(TEMPORARY_KEY)
