@@ -26,13 +26,21 @@ class AutoMapper(AutoMapperContainer):
         keep_duplicates: bool = False,
         drop_key_columns: bool = True,
         checkpoint_after_columns: Optional[int] = None,
-        checkpoint_path: Optional[Union[str, Path]] = None
+        checkpoint_path: Optional[Union[str, Path]] = None,
+        reuse_existing_view: bool = False
     ):
         """
-        Defines an AutoMapper
+        Creates an AutoMapper
+
+
         :param keys: joining keys
         :param view: view to return
-        :parameter source_view: where to load the data from
+        :param source_view: where to load the data from
+        :param keep_duplicates: whether to leave duplicates at the end
+        :param drop_key_columns: whether to drop the key columns at the end
+        :param checkpoint_after_columns: checkpoint after how many columns have been processed
+        :param checkpoint_path: Path where to store the checkpoints
+        :param reuse_existing_view: If view already exists, whether to reuse it or create a new one
         """
         super().__init__()
         self.view: Optional[str] = view
@@ -42,6 +50,7 @@ class AutoMapper(AutoMapperContainer):
         self.drop_key_columns: bool = drop_key_columns
         self.checkpoint_after_columns: Optional[int] = checkpoint_after_columns
         self.checkpoint_path: Optional[Union[str, Path]] = checkpoint_path
+        self.reuse_existing_view: bool = reuse_existing_view
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
     def transform_with_data_frame(
@@ -129,7 +138,8 @@ class AutoMapper(AutoMapperContainer):
 
         # if view is specified then check if it exists
         destination_df: DataFrame = df.sql_ctx.table(self.view) \
-            if self.view and SparkHelpers.spark_table_exists(sql_ctx=df.sql_ctx, view=self.view) \
+            if self.view and self.reuse_existing_view and SparkHelpers.spark_table_exists(sql_ctx=df.sql_ctx,
+                                                                                          view=self.view) \
             else source_df.select(self.keys)
 
         # rename key columns to avoid name clash if someone creates a column with that name
