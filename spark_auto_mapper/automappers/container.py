@@ -5,7 +5,6 @@ from pyspark.sql.types import StructField
 
 from spark_auto_mapper.automappers.automapper_base import AutoMapperBase
 from spark_auto_mapper.automappers.with_column_base import AutoMapperWithColumnBase
-from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
 from spark_auto_mapper.type_definitions.defined_types import AutoMapperAnyDataType
 
 
@@ -19,23 +18,17 @@ class AutoMapperContainer(AutoMapperBase):
     def generate_mappers(
         self, mappers_dict: Dict[str, AutoMapperAnyDataType],
         column_schema: Dict[str, StructField], include_null_properties: bool,
-        skip_if_null: List[str]
+        skip_schema_validation: List[str]
     ) -> None:
         column: str
         value: AutoMapperAnyDataType
         for column, value in mappers_dict.items():
-            if column in skip_if_null:
-                # if column is in skip_if_null list then only add if it is not null
-                if isinstance(
-                    value, AutoMapperDataTypeLiteral
-                ) and value.value is None:
-                    continue
             # add an automapper
             automapper = AutoMapperWithColumnBase(
                 dst_column=column,
                 value=value,
-                column_schema=column_schema[column]
-                if column in column_schema else None,
+                column_schema=column_schema[column] if column in column_schema
+                and column not in skip_schema_validation else None,
                 include_null_properties=include_null_properties
             )
             assert isinstance(automapper,

@@ -34,7 +34,7 @@ class AutoMapper(AutoMapperContainer):
         include_null_properties: bool = False,
         use_single_select: bool = True,
         verify_row_count: bool = True,
-        skip_if_null: List[str] = ["extension"]
+        skip_schema_validation: List[str] = ["extension"]
     ):
         """
         Creates an AutoMapper
@@ -55,7 +55,7 @@ class AutoMapper(AutoMapperContainer):
         :param use_single_select: This is a faster way to run the AutoMapper since it will select all the columns at once.
                 However this makes it harder to debug since you don't know what column failed
         :param verify_row_count: verifies that the count of rows remains the same before and after the transformation
-        :param skip_if_null: skip these elements if they are null
+        :param skip_schema_validation: skip schema checks on these columns
         """
         super().__init__()
         self.view: Optional[str] = view
@@ -71,7 +71,7 @@ class AutoMapper(AutoMapperContainer):
         self.include_null_properties: bool = include_null_properties
         self.use_single_select: bool = use_single_select
         self.verify_row_count: bool = verify_row_count
-        self.skip_if_null: List[str] = skip_if_null
+        self.skip_schema_validation: List[str] = skip_schema_validation
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
     def transform_with_data_frame_single_select(
@@ -284,7 +284,7 @@ class AutoMapper(AutoMapperContainer):
             use_schema=self.use_schema,
             include_extension=self.include_extension,
             include_null_properties=self.include_null_properties,
-            skip_if_null=self.skip_if_null
+            skip_schema_validation=self.skip_schema_validation
         )
 
         for column_name, child_mapper in resource_mapper.mappers.items():
