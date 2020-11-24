@@ -9,5 +9,6 @@ class AutoMapperColumns(AutoMapperContainer):
         self.generate_mappers(
             mappers_dict=kwargs,
             column_schema={},
-            include_null_properties=False
+            include_null_properties=False,
+            skip_if_null=[]
         )

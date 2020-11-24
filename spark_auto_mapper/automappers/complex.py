@@ -1,4 +1,4 @@
-from typing import Optional, Dict
+from typing import Optional, Dict, List
 
 from pyspark.sql.types import StructType, StructField
 
@@ -9,7 +9,8 @@ from spark_auto_mapper.data_types.complex.complex_base import AutoMapperDataType
 class AutoMapperWithComplex(AutoMapperContainer):
     def __init__(
         self, entity: AutoMapperDataTypeComplexBase, use_schema: bool,
-        include_extension: bool, include_null_properties: bool
+        include_extension: bool, include_null_properties: bool,
+        skip_if_null: List[str]
     ) -> None:
         super().__init__()
 
@@ -28,5 +29,6 @@ class AutoMapperWithComplex(AutoMapperContainer):
                 for key, value in entity.get_child_mappers().items()
             },
             column_schema=column_schema,
-            include_null_properties=include_null_properties or use_schema
+            include_null_properties=include_null_properties or use_schema,
+            skip_if_null=skip_if_null
         )
