@@ -1,4 +1,4 @@
-from typing import Any, Dict, Union, TypeVar, cast, Optional, List
+from typing import Any, Dict, Union, TypeVar, cast, Optional, List, Callable
 
 from pyspark.sql.types import StringType
 
@@ -6,6 +6,7 @@ from spark_auto_mapper.data_types.coalesce import AutoMapperCoalesceDataType
 from spark_auto_mapper.data_types.hash import AutoMapperHashDataType
 from spark_auto_mapper.data_types.if_ import AutoMapperIfDataType
 from spark_auto_mapper.data_types.if_not_null_or_empty import AutoMapperIfNotNullOrEmptyDataType
+from spark_auto_mapper.data_types.split_and_map import AutoMapperSplitAndMapDataType
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
 
 from spark_auto_mapper.data_types.amount import AutoMapperAmountDataType
@@ -384,3 +385,26 @@ class AutoMapperHelpers:
 
         # cast it to the inner type so type checking is happy
         return cast(_TAutoMapperDataType, AutoMapperCoalesceDataType(*args))
+
+    @staticmethod
+    def split_and_map(
+        check: AutoMapperColumnOrColumnLikeType, delimiter: str,
+        func: Callable[[AutoMapperTextInputType], _TAutoMapperDataType]
+    ) -> List[_TAutoMapperDataType]:
+        """
+        Checks if `check` is null
+
+
+        :param check: column to check for null
+        :param func: what to return if the value is not null
+        :param delimiter: delimiter
+        :return: an if_not_null automapper type
+        """
+
+        # cast it to the inner type so type checking is happy
+        return cast(
+            List[_TAutoMapperDataType],
+            AutoMapperSplitAndMapDataType(
+                check=check, delimiter=delimiter, func=func
+            )
+        )
