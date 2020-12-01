@@ -10,7 +10,8 @@ class AutoMapperWithComplex(AutoMapperContainer):
     def __init__(
         self, entity: AutoMapperDataTypeComplexBase, use_schema: bool,
         include_extension: bool, include_null_properties: bool,
-        skip_schema_validation: List[str]
+        skip_schema_validation: List[str],
+        skip_if_columns_null_or_empty: Optional[List[str]]
     ) -> None:
         super().__init__()
 
@@ -30,5 +31,6 @@ class AutoMapperWithComplex(AutoMapperContainer):
             },
             column_schema=column_schema,
             include_null_properties=include_null_properties or use_schema,
-            skip_schema_validation=skip_schema_validation
+            skip_schema_validation=skip_schema_validation,
+            skip_if_columns_null_or_empty=skip_if_columns_null_or_empty
         )

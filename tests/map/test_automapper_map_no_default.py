@@ -25,7 +25,10 @@ def test_automapper_map_no_default(spark_session: SparkSession) -> None:
 
     # Act
     mapper = AutoMapper(
-        view="members", source_view="patients", keys=["member_id"]
+        view="members",
+        source_view="patients",
+        keys=["member_id"],
+        keep_null_rows=True
     ).columns(has_kids=A.map(A.column("has_kids"), {
         "Y": "Yes",
         "N": "No"
