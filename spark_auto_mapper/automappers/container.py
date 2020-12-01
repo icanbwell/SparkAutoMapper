@@ -30,7 +30,8 @@ class AutoMapperContainer(AutoMapperBase):
                 value=value,
                 column_schema=column_schema[column] if column in column_schema
                 and column not in skip_schema_validation else None,
-                include_null_properties=include_null_properties,
+                include_null_properties=include_null_properties
+                and column not in skip_schema_validation,
                 skip_if_columns_null_or_empty=skip_if_columns_null_or_empty
             )
             assert isinstance(automapper,
