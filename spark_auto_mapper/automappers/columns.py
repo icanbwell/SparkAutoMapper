@@ -10,5 +10,6 @@ class AutoMapperColumns(AutoMapperContainer):
             mappers_dict=kwargs,
             column_schema={},
             include_null_properties=False,
-            skip_schema_validation=[]
+            skip_schema_validation=[],
+            skip_if_columns_null_or_empty=None
         )

@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List, Dict, Optional
 
 from pyspark.sql import DataFrame, Column
 from pyspark.sql.types import StructField
@@ -18,7 +18,8 @@ class AutoMapperContainer(AutoMapperBase):
     def generate_mappers(
         self, mappers_dict: Dict[str, AutoMapperAnyDataType],
         column_schema: Dict[str, StructField], include_null_properties: bool,
-        skip_schema_validation: List[str]
+        skip_schema_validation: List[str],
+        skip_if_columns_null_or_empty: Optional[List[str]]
     ) -> None:
         column: str
         value: AutoMapperAnyDataType
@@ -29,7 +30,8 @@ class AutoMapperContainer(AutoMapperBase):
                 value=value,
                 column_schema=column_schema[column] if column in column_schema
                 and column not in skip_schema_validation else None,
-                include_null_properties=include_null_properties
+                include_null_properties=include_null_properties,
+                skip_if_columns_null_or_empty=skip_if_columns_null_or_empty
             )
             assert isinstance(automapper,
                               AutoMapperWithColumnBase), type(automapper)

@@ -2,7 +2,7 @@ from typing import Dict, Optional
 
 from pyspark.sql import SparkSession, Column, DataFrame
 # noinspection PyUnresolvedReferences
-from pyspark.sql.functions import col
+from pyspark.sql.functions import col, when, lit
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
@@ -14,13 +14,15 @@ from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 class MyClass(AutoMapperDataTypeComplexBase):
     def __init__(
-        self, name: AutoMapperTextLikeBase, age: AutoMapperNumberDataType
+        self, id_: AutoMapperTextLikeBase, name: AutoMapperTextLikeBase,
+        age: AutoMapperNumberDataType
     ) -> None:
-        super().__init__(name=name, age=age)
+        super().__init__(id_=id_, name=name, age=age)
 
     def get_schema(self, include_extension: bool) -> Optional[StructType]:
         schema: StructType = StructType(
             [
+                StructField("id", StringType(), False),
                 StructField("name", StringType(), False),
                 StructField("age", IntegerType(), True),
             ]
@@ -28,14 +30,14 @@ class MyClass(AutoMapperDataTypeComplexBase):
         return schema
 
 
-def test_auto_mapper_complex_with_defined_class(
+def test_automapper_complex_with_skip_if_null(
     spark_session: SparkSession
 ) -> None:
     # Arrange
     spark_session.createDataFrame(
         [
             (1, 'Qureshi', 'Imran', 45),
-            (2, 'Vidal', 'Michael', 35),
+            (2, 'Vidal', '', 35),
         ], ['member_id', 'last_name', 'first_name', 'my_age']
     ).createOrReplaceTempView("patients")
 
@@ -49,9 +51,14 @@ def test_auto_mapper_complex_with_defined_class(
         view="members",
         source_view="patients",
         keys=["member_id"],
-        drop_key_columns=False
+        drop_key_columns=True,
+        skip_if_columns_null_or_empty=["first_name"]
     ).complex(
-        MyClass(name=A.column("last_name"), age=A.number(A.column("my_age")))
+        MyClass(
+            id_=A.column("member_id"),
+            name=A.column("last_name"),
+            age=A.number(A.column("my_age"))
+        )
     )
 
     assert isinstance(mapper, AutoMapper)
@@ -64,15 +71,25 @@ def test_auto_mapper_complex_with_defined_class(
     result_df: DataFrame = mapper.transform(df=df)
 
     # Assert
-    assert str(sql_expressions["name"]
-               ) == str(col("b.last_name").cast("string").alias("name"))
-    assert str(sql_expressions["age"]
-               ) == str(col("b.my_age").cast("int").alias("age"))
+    assert str(sql_expressions["name"]) == str(
+        when(
+            col("b.first_name").isNull() | col("b.first_name").eqNullSafe(""),
+            lit(None)
+        ).otherwise(col("b.last_name")).cast(StringType()).alias("name")
+    )
+    assert str(sql_expressions["age"]) == str(
+        when(
+            col("b.first_name").isNull() | col("b.first_name").eqNullSafe(""),
+            lit(None)
+        ).otherwise(col("b.my_age")).cast(IntegerType()).alias("age")
+    )
 
     result_df.printSchema()
+
     result_df.show()
 
-    assert result_df.where("member_id == 1"
-                           ).select("name").collect()[0][0] == "Qureshi"
+    assert result_df.count() == 1
+    assert result_df.where("id == 1").select("name"
+                                             ).collect()[0][0] == "Qureshi"
 
     assert dict(result_df.dtypes)["age"] == "int"

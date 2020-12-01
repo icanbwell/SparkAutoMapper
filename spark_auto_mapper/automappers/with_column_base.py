@@ -2,7 +2,7 @@ from typing import List, Dict, Optional
 
 from pyspark.sql import Column, DataFrame
 # noinspection PyUnresolvedReferences
-from pyspark.sql.functions import col
+from pyspark.sql.functions import col, when, lit
 from pyspark.sql.types import StructField
 
 from spark_auto_mapper.automappers.automapper_base import AutoMapperBase
@@ -13,8 +13,12 @@ from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
 
 class AutoMapperWithColumnBase(AutoMapperBase):
     def __init__(
-        self, dst_column: str, value: AutoMapperAnyDataType,
-        column_schema: Optional[StructField], include_null_properties: bool
+        self,
+        dst_column: str,
+        value: AutoMapperAnyDataType,
+        column_schema: Optional[StructField],
+        include_null_properties: bool,
+        skip_if_columns_null_or_empty: Optional[List[str]] = None
     ) -> None:
         super().__init__()
         # should only have one parameter
@@ -23,6 +27,8 @@ class AutoMapperWithColumnBase(AutoMapperBase):
         self.value: AutoMapperDataTypeBase = AutoMapperValueParser.parse_value(value) \
             if not isinstance(value, AutoMapperDataTypeBase) \
             else value
+        self.skip_if_columns_null_or_empty: Optional[
+            List[str]] = skip_if_columns_null_or_empty
         if include_null_properties:
             self.value.include_null_properties(
                 include_null_properties=include_null_properties
@@ -33,6 +39,13 @@ class AutoMapperWithColumnBase(AutoMapperBase):
         if isinstance(self.value, AutoMapperDataTypeBase):
             child: AutoMapperDataTypeBase = self.value
             column_spec = child.get_column_spec(source_df=source_df)
+            if self.skip_if_columns_null_or_empty:
+                columns_to_check = f"b.{self.skip_if_columns_null_or_empty[0]}"  # TODO: handle more than one
+                # wrap column spec in when
+                column_spec = when(
+                    col(columns_to_check).isNull()
+                    | col(columns_to_check).eqNullSafe(""), lit(None)
+                ).otherwise(self.value.get_column_spec(source_df=source_df))
             # if the type has a schema then apply it
             if self.column_schema:
                 column_spec = column_spec.cast(self.column_schema.dataType)

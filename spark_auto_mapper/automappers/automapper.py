@@ -34,7 +34,9 @@ class AutoMapper(AutoMapperContainer):
         include_null_properties: bool = False,
         use_single_select: bool = True,
         verify_row_count: bool = True,
-        skip_schema_validation: List[str] = ["extension"]
+        skip_schema_validation: List[str] = ["extension"],
+        skip_if_columns_null_or_empty: Optional[List[str]] = None,
+        keep_null_rows: bool = False
     ):
         """
         Creates an AutoMapper
@@ -56,6 +58,8 @@ class AutoMapper(AutoMapperContainer):
                 However this makes it harder to debug since you don't know what column failed
         :param verify_row_count: verifies that the count of rows remains the same before and after the transformation
         :param skip_schema_validation: skip schema checks on these columns
+        :param skip_if_columns_null_or_empty: skip creating the record if any of these columns are null or empty
+        :param keep_null_rows: whether to keep the null rows instead of removing them
         """
         super().__init__()
         self.view: Optional[str] = view
@@ -72,6 +76,9 @@ class AutoMapper(AutoMapperContainer):
         self.use_single_select: bool = use_single_select
         self.verify_row_count: bool = verify_row_count
         self.skip_schema_validation: List[str] = skip_schema_validation
+        self.skip_if_columns_null_or_empty: Optional[
+            List[str]] = skip_if_columns_null_or_empty
+        self.keep_null_rows: bool = keep_null_rows
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
     def transform_with_data_frame_single_select(
@@ -257,6 +264,10 @@ class AutoMapper(AutoMapperContainer):
                 column_name, column_name.replace("___", "")
             )
 
+        # drop any rows where all values are null
+        if not self.keep_null_rows:
+            result_df = result_df.dropna(how="all")
+
         # remove duplicates
         if not self.keep_duplicates:
             result_df = result_df.drop_duplicates()
@@ -284,7 +295,8 @@ class AutoMapper(AutoMapperContainer):
             use_schema=self.use_schema,
             include_extension=self.include_extension,
             include_null_properties=self.include_null_properties,
-            skip_schema_validation=self.skip_schema_validation
+            skip_schema_validation=self.skip_schema_validation,
+            skip_if_columns_null_or_empty=self.skip_if_columns_null_or_empty
         )
 
         for column_name, child_mapper in resource_mapper.mappers.items():
