@@ -6,6 +6,7 @@ from spark_auto_mapper.data_types.coalesce import AutoMapperCoalesceDataType
 from spark_auto_mapper.data_types.hash import AutoMapperHashDataType
 from spark_auto_mapper.data_types.if_ import AutoMapperIfDataType
 from spark_auto_mapper.data_types.if_not_null_or_empty import AutoMapperIfNotNullOrEmptyDataType
+from spark_auto_mapper.data_types.if_regex import AutoMapperIfRegExDataType
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
 
 from spark_auto_mapper.data_types.amount import AutoMapperAmountDataType
@@ -384,3 +385,29 @@ class AutoMapperHelpers:
 
         # cast it to the inner type so type checking is happy
         return cast(_TAutoMapperDataType, AutoMapperCoalesceDataType(*args))
+
+    @staticmethod
+    def if_regex(
+        column: AutoMapperColumnOrColumnLikeType,
+        check: Union[str, List[str]],
+        value: _TAutoMapperDataType,
+        else_: Optional[_TAutoMapperDataType] = None
+    ) -> _TAutoMapperDataType:
+        """
+        Checks if column matches check_value.  Returns value if it matches else else_
+
+
+        :param column: column to check
+        :param check: value to compare the column to. Has to be a string or list of strings
+        :param value: what to return if the value matches
+        :param else_: what value to assign if check fails
+        :return: an if automapper type
+        """
+
+        # cast it to the inner type so type checking is happy
+        return cast(
+            _TAutoMapperDataType,
+            AutoMapperIfRegExDataType(
+                column=column, check=check, value=value, else_=else_
+            )
+        )
