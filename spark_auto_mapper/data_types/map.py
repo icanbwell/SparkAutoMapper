@@ -34,9 +34,11 @@ class AutoMapperMapDataType(AutoMapperDataTypeExpression):
         assert self.mapping
         self.default: Optional[AutoMapperAnyDataType] = default
 
-    def get_column_spec(self, source_df: DataFrame) -> Column:
+    def get_column_spec(
+        self, source_df: DataFrame, current_column: Optional[Column]
+    ) -> Column:
         inner_column_spec: Column = self.column.get_column_spec(
-            source_df=source_df
+            source_df=source_df, current_column=None
         )
 
         column_spec: Optional[Column] = None
@@ -45,10 +47,12 @@ class AutoMapperMapDataType(AutoMapperDataTypeExpression):
         for key, value in self.mapping.items():
             column_spec = column_spec.when(
                 inner_column_spec.eqNullSafe(key),
-                value.get_column_spec(source_df=source_df)
+                value.
+                get_column_spec(source_df=source_df, current_column=None)
             ) if column_spec is not None else when(
                 inner_column_spec.eqNullSafe(key),
-                value.get_column_spec(source_df=source_df)
+                value.
+                get_column_spec(source_df=source_df, current_column=None)
             )
 
         if column_spec is not None:

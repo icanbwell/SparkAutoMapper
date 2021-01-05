@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pyspark.sql import Column, DataFrame
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import trim
@@ -15,6 +17,12 @@ class AutoMapperTrimDataType(AutoMapperTextLikeBase):
 
         self.column: AutoMapperColumnOrColumnLikeType = column
 
-    def get_column_spec(self, source_df: DataFrame) -> Column:
-        column_spec = trim(self.column.get_column_spec(source_df=source_df))
+    def get_column_spec(
+        self, source_df: DataFrame, current_column: Optional[Column]
+    ) -> Column:
+        column_spec = trim(
+            self.column.get_column_spec(
+                source_df=source_df, current_column=current_column
+            )
+        )
         return column_spec

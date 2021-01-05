@@ -38,14 +38,20 @@ class AutoMapperWithColumnBase(AutoMapperBase):
         # if value is an AutoMapper then ask it for its column spec
         if isinstance(self.value, AutoMapperDataTypeBase):
             child: AutoMapperDataTypeBase = self.value
-            column_spec = child.get_column_spec(source_df=source_df)
+            column_spec = child.get_column_spec(
+                source_df=source_df, current_column=None
+            )
             if self.skip_if_columns_null_or_empty:
                 columns_to_check = f"b.{self.skip_if_columns_null_or_empty[0]}"  # TODO: handle more than one
                 # wrap column spec in when
                 column_spec = when(
                     col(columns_to_check).isNull()
                     | col(columns_to_check).eqNullSafe(""), lit(None)
-                ).otherwise(self.value.get_column_spec(source_df=source_df))
+                ).otherwise(
+                    self.value.get_column_spec(
+                        source_df=source_df, current_column=None
+                    )
+                )
             # if the type has a schema then apply it
             if self.column_schema:
                 column_spec = column_spec.cast(self.column_schema.dataType)

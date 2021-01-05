@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Optional
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import struct
@@ -17,10 +17,15 @@ class AutoMapperDataTypeComplex(AutoMapperDataTypeComplexBase):
             for key, value in kwargs.items()
         }
 
-    def get_column_spec(self, source_df: DataFrame) -> Column:
+    def get_column_spec(
+        self, source_df: DataFrame, current_column: Optional[Column]
+    ) -> Column:
         return struct(
             [
-                self.get_value(value=value, source_df=source_df).alias(key)
-                for key, value in self.value.items()
+                self.get_value(
+                    value=value,
+                    source_df=source_df,
+                    current_column=current_column
+                ).alias(key) for key, value in self.value.items()
             ]
         )

@@ -64,7 +64,9 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
                 include_null_properties=include_null_properties
             )
 
-    def get_column_spec(self, source_df: DataFrame) -> Column:
+    def get_column_spec(
+        self, source_df: DataFrame, current_column: Optional[Column]
+    ) -> Column:
         if isinstance(
             self.value, str
         ):  # if the src column is just string then consider it a sql expression
@@ -75,14 +77,14 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
         ):  # if the src column is a list then iterate
             return filter(array(
                 [
-                    self.get_value(item, source_df=source_df)
+                    self.get_value(item, source_df=source_df, current_column=current_column)
                     for item in self.value
                 ]
             ), lambda x: x.isNotNull()) \
                 if self.remove_nulls \
                 else array(
                 [
-                    self.get_value(item, source_df=source_df)
+                    self.get_value(item, source_df=source_df, current_column=current_column)
                     for item in self.value
                 ]
             )
@@ -90,8 +92,8 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
         # if value is an AutoMapper then ask it for its column spec
         if isinstance(self.value, AutoMapperDataTypeBase):
             child: AutoMapperDataTypeBase = self.value
-            return filter(array(child.get_column_spec(source_df=source_df)), lambda x: x.isNotNull()) \
+            return filter(array(child.get_column_spec(source_df=source_df, current_column=None)), lambda x: x.isNotNull()) \
                 if self.remove_nulls \
-                else array(child.get_column_spec(source_df=source_df))
+                else array(child.get_column_spec(source_df=source_df, current_column=None))
 
         raise ValueError(f"value: {self.value} is neither str nor AutoMapper")

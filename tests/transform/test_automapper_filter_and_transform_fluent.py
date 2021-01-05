@@ -12,7 +12,9 @@ from pyspark.sql.functions import lit, struct
 # noinspection PyUnresolvedReferences
 
 
-def test_automapper_filter_and_transform(spark_session: SparkSession) -> None:
+def test_automapper_filter_and_transform_fluent(
+    spark_session: SparkSession
+) -> None:
     clean_spark_session(spark_session)
     data_dir: Path = Path(__file__).parent.joinpath("./")
 
@@ -28,11 +30,11 @@ def test_automapper_filter_and_transform(spark_session: SparkSession) -> None:
 
     # Act
     mapper = AutoMapper(view="members", source_view="patients").columns(
-        age=A.transform(
-            A.filter(
-                column=A.column("identifier"),
-                func=lambda x: x["use"] == lit("usual")
-            ), A.complex(bar=A.column("_.value"), bar2=A.column("_.system"))
+        age=A.filter(
+            column=A.column("identifier"),
+            func=lambda x: x["use"] == lit("usual")
+        ).transform(
+            A.complex(bar=A.column("_.value"), bar2=A.column("_.system"))
         )
     )
 

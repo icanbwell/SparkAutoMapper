@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pyspark.sql import Column, DataFrame
 # noinspection PyUnresolvedReferences
 
@@ -9,5 +11,7 @@ class AutoMapperDataTypeColumnWrapper(AutoMapperTextLikeBase):
         super().__init__()
         self.value: Column = value
 
-    def get_column_spec(self, source_df: DataFrame) -> Column:
+    def get_column_spec(
+        self, source_df: DataFrame, current_column: Optional[Column]
+    ) -> Column:
         return self.value

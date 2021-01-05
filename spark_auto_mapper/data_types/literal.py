@@ -20,7 +20,9 @@ class AutoMapperDataTypeLiteral(AutoMapperTextLikeBase):
                           AutoMapperTextLikeBase] = value
         self.type_: Optional[DataType] = type_
 
-    def get_column_spec(self, source_df: DataFrame) -> Column:
+    def get_column_spec(
+        self, source_df: DataFrame, current_column: Optional[Column]
+    ) -> Column:
         if not self.value:
             return lit(None)
         if isinstance(self.value, str) or isinstance(self.value, int) \
@@ -30,9 +32,9 @@ class AutoMapperDataTypeLiteral(AutoMapperTextLikeBase):
                                         ) if self.type_ else lit(self.value)
         if isinstance(self.value, AutoMapperTextLikeBase):
             return self.value.get_column_spec(
-                source_df=source_df
+                source_df=source_df, current_column=None
             ).cast(self.type_) if self.type_ else self.value.get_column_spec(
-                source_df=source_df
+                source_df=source_df, current_column=None
             )
 
         raise ValueError(
