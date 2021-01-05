@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 from pyspark.sql import SparkSession, DataFrame
@@ -19,7 +20,32 @@ def test_automapper_filter(spark_session: SparkSession) -> None:
     df.select("identifier").show(truncate=False)
 
     result_df = df.select(
-        filter("identifier", lambda x: x["use"] == lit("usual"))
+        filter("identifier",
+               lambda x: x["use"] == lit("usual")).alias("filtered")
     )
 
     result_df.show(truncate=False)
+
+    result_text: str = result_df.toJSON().collect()[0]
+    expected_json = json.loads(
+        """
+        {
+            "filtered": [
+                {
+                    "use": "usual",
+                    "type": {
+                      "coding": [
+                        {
+                          "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                          "code": "PRN"
+                        }
+                      ]
+                    },
+                    "system": "http://medstarhealth.org",
+                    "value": ""
+                }
+            ]
+        }
+    """
+    )
+    assert json.loads(result_text) == expected_json
