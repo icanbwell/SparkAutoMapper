@@ -3,11 +3,11 @@ from typing import Optional
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import split
 
-from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
+from spark_auto_mapper.data_types.array_base import AutoMapperArrayBase
 from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperColumnOrColumnLikeType
 
 
-class AutoMapperSplitByDelimiterDataType(AutoMapperTextLikeBase):
+class AutoMapperSplitByDelimiterDataType(AutoMapperArrayBase):
     """
     Returns the substring from string str before count occurrences of the delimiter.
     If count is positive, everything the left of the final delimiter (counting from left) is returned.

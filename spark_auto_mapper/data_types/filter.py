@@ -2,7 +2,7 @@ from typing import TypeVar, Generic, Callable, Any, Dict, Optional
 
 from pyspark.sql import DataFrame, Column
 
-from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
+from spark_auto_mapper.data_types.array_base import AutoMapperArrayBase
 
 from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperAnyDataType, AutoMapperColumnOrColumnLikeType
 from spark_auto_mapper.helpers.spark_higher_order_functions import filter
@@ -13,7 +13,7 @@ _TAutoMapperDataType = TypeVar(
 
 
 class AutoMapperFilterDataType(
-    AutoMapperDataTypeBase, Generic[_TAutoMapperDataType]
+    AutoMapperArrayBase, Generic[_TAutoMapperDataType]
 ):
     def __init__(
         self, column: AutoMapperColumnOrColumnLikeType,
