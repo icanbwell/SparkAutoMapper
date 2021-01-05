@@ -3,6 +3,7 @@ from typing import Any, Dict, Union, TypeVar, cast, Optional, List, Callable
 from pyspark.sql.types import StringType
 
 from spark_auto_mapper.data_types.coalesce import AutoMapperCoalesceDataType
+from spark_auto_mapper.data_types.field import AutoMapperDataTypeField
 from spark_auto_mapper.data_types.filter import AutoMapperFilterDataType
 from spark_auto_mapper.data_types.hash import AutoMapperHashDataType
 from spark_auto_mapper.data_types.if_ import AutoMapperIfDataType
@@ -26,6 +27,7 @@ from spark_auto_mapper.data_types.complex.struct_type import AutoMapperDataTypeS
 from spark_auto_mapper.data_types.regex_replace import AutoMapperRegExReplaceDataType
 from spark_auto_mapper.data_types.substring import AutoMapperSubstringDataType
 from spark_auto_mapper.data_types.substring_by_delimiter import AutoMapperSubstringByDelimiterDataType
+from spark_auto_mapper.data_types.transform import AutoMapperTransformDataType
 from spark_auto_mapper.data_types.trim import AutoMapperTrimDataType
 from spark_auto_mapper.type_definitions.defined_types import AutoMapperAnyDataType, AutoMapperBooleanInputType, \
     AutoMapperAmountInputType, AutoMapperNumberInputType, AutoMapperDateInputType, AutoMapperTextInputType
@@ -419,16 +421,42 @@ class AutoMapperHelpers:
         func: Callable[[Dict[str, Any]], Any]
     ) -> _TAutoMapperDataType:
         """
-        Checks if column matches check_value.  Returns value if it matches else else_
+        Filters a column by a function
 
 
         :param column: column to check
-        :param func: func
-        :return: an if automapper type
+        :param func: func to filter by
+        :return: a filter automapper type
         """
-
         # cast it to the inner type so type checking is happy
         return cast(
             _TAutoMapperDataType,
             AutoMapperFilterDataType(column=column, func=func)
         )
+
+    @staticmethod
+    def transform(
+        column: AutoMapperColumnOrColumnLikeType, value: _TAutoMapperDataType
+    ) -> _TAutoMapperDataType:
+        """
+        transforms a column into another type or struct
+
+
+        :param column: column to check
+        :param value: func to create type or struct
+        :return: a transform automapper type
+        """
+        # cast it to the inner type so type checking is happy
+        return cast(
+            _TAutoMapperDataType,
+            AutoMapperTransformDataType(column=column, value=value)
+        )
+
+    @staticmethod
+    def field(value: str) -> AutoMapperTextLikeBase:
+        """
+        Specifies that the value parameter should be used as a field name
+        :param value: name of column
+        :return: A column automapper type
+        """
+        return AutoMapperDataTypeField(value)

@@ -1,7 +1,9 @@
 from datetime import date, datetime
 from typing import Union, Dict, Any, List
 
+from pyspark.sql import Column
 from pyspark.sql.types import DateType, FloatType, IntegerType
+from spark_auto_mapper.data_types.column_wrapper import AutoMapperDataTypeColumnWrapper
 
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 from spark_auto_mapper.type_definitions.defined_types import AutoMapperAnyDataType
@@ -54,5 +56,8 @@ class AutoMapperValueParser:
         if value is None:
             from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
             return AutoMapperDataTypeLiteral(None)
+
+        if isinstance(value, Column):
+            return AutoMapperDataTypeColumnWrapper(value)
 
         raise ValueError(f"{type(value)} is not supported for {value}")

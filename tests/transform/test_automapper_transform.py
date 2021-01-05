@@ -1,44 +1,57 @@
-import json
 from pathlib import Path
+from typing import Dict
 
-from pyspark.sql import SparkSession, DataFrame
-from spark_auto_mapper.helpers.spark_higher_order_functions import filter, transform
-from pyspark.sql.functions import lit, struct
+from pyspark.sql import SparkSession, DataFrame, Column
+from tests.conftest import clean_spark_session
+
+from spark_auto_mapper.automappers.automapper import AutoMapper
+from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 
 def test_automapper_transform(spark_session: SparkSession) -> None:
+    clean_spark_session(spark_session)
     data_dir: Path = Path(__file__).parent.joinpath("./")
 
-    data_json_file: Path = data_dir.joinpath("../filter/data.json")
+    data_json_file: Path = data_dir.joinpath("data.json")
 
-    df: DataFrame = spark_session.read.json(
+    source_df: DataFrame = spark_session.read.json(
         str(data_json_file), multiLine=True
     )
 
-    df.show(truncate=False)
+    source_df.createOrReplaceTempView("patients")
 
-    df.select("identifier").show(truncate=False)
+    source_df.show(truncate=False)
 
-    result_df = df.select(
-        transform(
-            filter("identifier", lambda x: x["use"] == lit("usual")), lambda y:
-            struct([y["value"].alias("bar"), y["system"].alias("bar2")])
-        ).alias("transformed")
+    # Act
+    # mapper = AutoMapper(view="members", source_view="patients").columns(
+    #     age=A.transform(
+    #         A.filter(
+    #             column=A.column("identifier"),
+    #             func=lambda x: x["use"] == lit("usual")
+    #         ), A.complex(bar=A.field('y["value"]'), bar2=A.field('y["system"]'))
+    #     )
+    # )
+    mapper = AutoMapper(view="members", source_view="patients").columns(
+        age=A.transform(
+            A.column("identifier"),
+            A.complex(
+                bar=A.field("identifier.value"),
+                bar2=A.field("identifier.system")
+            )
+        )
     )
+
+    assert isinstance(mapper, AutoMapper)
+    sql_expressions: Dict[str, Column] = mapper.get_column_specs(
+        source_df=source_df
+    )
+    for column_name, sql_expression in sql_expressions.items():
+        print(f"{column_name}: {sql_expression}")
+
+    # assert str(sql_expressions["age"]) == str(
+    #     filter("b.identifier",
+    #            lambda x: x["use"] == lit("usual")).alias("age")
+    # )
+    result_df: DataFrame = mapper.transform(df=source_df)
 
     result_df.show(truncate=False)
-
-    result_text: str = result_df.select("transformed").toJSON().collect()[0]
-    expected_json = json.loads(
-        """
-        {
-            "transformed": [
-                {
-                    "bar": "123",
-                    "bar2": "http://medstarhealth.org"
-                }
-            ]
-        }
-    """
-    )
-    assert json.loads(result_text) == expected_json
