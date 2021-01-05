@@ -92,8 +92,8 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
         # if value is an AutoMapper then ask it for its column spec
         if isinstance(self.value, AutoMapperDataTypeBase):
             child: AutoMapperDataTypeBase = self.value
-            return filter(array(child.get_column_spec(source_df=source_df, current_column=None)), lambda x: x.isNotNull()) \
+            return filter(array(child.get_column_spec(source_df=source_df, current_column=current_column)), lambda x: x.isNotNull()) \
                 if self.remove_nulls \
-                else array(child.get_column_spec(source_df=source_df, current_column=None))
+                else array(child.get_column_spec(source_df=source_df, current_column=current_column))
 
         raise ValueError(f"value: {self.value} is neither str nor AutoMapper")

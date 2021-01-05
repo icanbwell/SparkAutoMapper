@@ -49,17 +49,18 @@ class AutoMapperIfNotNullOrEmptyDataType(
         self, source_df: DataFrame, current_column: Optional[Column]
     ) -> Column:
         column_spec = when(
-            self.check.
-            get_column_spec(source_df=source_df, current_column=None).isNull()
+            self.check.get_column_spec(
+                source_df=source_df, current_column=current_column
+            ).isNull()
             | self.check.get_column_spec(
-                source_df=source_df, current_column=None
+                source_df=source_df, current_column=current_column
             ).eqNullSafe(""),
             self.when_null.get_column_spec(
-                source_df=source_df, current_column=None
+                source_df=source_df, current_column=current_column
             )
         ).otherwise(
             self.value.get_column_spec(
-                source_df=source_df, current_column=None
+                source_df=source_df, current_column=current_column
             )
         )
 

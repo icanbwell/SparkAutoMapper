@@ -54,28 +54,28 @@ class AutoMapperIfRegExDataType(
             value: str = self.check[0]
             column_spec = when(
                 self.column.get_column_spec(
-                    source_df=source_df, current_column=None
+                    source_df=source_df, current_column=current_column
                 ).rlike(value),
                 self.value.get_column_spec(
-                    source_df=source_df, current_column=None
+                    source_df=source_df, current_column=current_column
                 )
             ).otherwise(
                 self.else_.get_column_spec(
-                    source_df=source_df, current_column=None
+                    source_df=source_df, current_column=current_column
                 )
             )
         else:
             value = self.check
             column_spec = when(
                 self.column.get_column_spec(
-                    source_df=source_df, current_column=None
+                    source_df=source_df, current_column=current_column
                 ).rlike(value),
                 self.value.get_column_spec(
-                    source_df=source_df, current_column=None
+                    source_df=source_df, current_column=current_column
                 )
             ).otherwise(
                 self.else_.get_column_spec(
-                    source_df=source_df, current_column=None
+                    source_df=source_df, current_column=current_column
                 )
             )
 

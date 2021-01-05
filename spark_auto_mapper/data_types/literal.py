@@ -32,9 +32,9 @@ class AutoMapperDataTypeLiteral(AutoMapperTextLikeBase):
                                         ) if self.type_ else lit(self.value)
         if isinstance(self.value, AutoMapperTextLikeBase):
             return self.value.get_column_spec(
-                source_df=source_df, current_column=None
+                source_df=source_df, current_column=current_column
             ).cast(self.type_) if self.type_ else self.value.get_column_spec(
-                source_df=source_df, current_column=None
+                source_df=source_df, current_column=current_column
             )
 
         raise ValueError(

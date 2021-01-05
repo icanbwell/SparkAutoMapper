@@ -62,37 +62,37 @@ class AutoMapperIfDataType(
         if isinstance(self.check, list):
             column_spec = when(
                 self.column.get_column_spec(
-                    source_df=source_df, current_column=None
+                    source_df=source_df, current_column=current_column
                 ).isin(
                     *[
                         c.get_column_spec(
-                            source_df=source_df, current_column=None
+                            source_df=source_df, current_column=current_column
                         ) for c in self.check
                     ]
                 ),
                 self.value.get_column_spec(
-                    source_df=source_df, current_column=None
+                    source_df=source_df, current_column=current_column
                 )
             ).otherwise(
                 self.else_.get_column_spec(
-                    source_df=source_df, current_column=None
+                    source_df=source_df, current_column=current_column
                 )
             )
         else:
             column_spec = when(
                 self.column.get_column_spec(
-                    source_df=source_df, current_column=None
+                    source_df=source_df, current_column=current_column
                 ).eqNullSafe(
                     self.check.get_column_spec(
-                        source_df=source_df, current_column=None
+                        source_df=source_df, current_column=current_column
                     )
                 ),
                 self.value.get_column_spec(
-                    source_df=source_df, current_column=None
+                    source_df=source_df, current_column=current_column
                 )
             ).otherwise(
                 self.else_.get_column_spec(
-                    source_df=source_df, current_column=None
+                    source_df=source_df, current_column=current_column
                 )
             )
 

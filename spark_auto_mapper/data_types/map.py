@@ -38,7 +38,7 @@ class AutoMapperMapDataType(AutoMapperDataTypeExpression):
         self, source_df: DataFrame, current_column: Optional[Column]
     ) -> Column:
         inner_column_spec: Column = self.column.get_column_spec(
-            source_df=source_df, current_column=None
+            source_df=source_df, current_column=current_column
         )
 
         column_spec: Optional[Column] = None
@@ -47,12 +47,14 @@ class AutoMapperMapDataType(AutoMapperDataTypeExpression):
         for key, value in self.mapping.items():
             column_spec = column_spec.when(
                 inner_column_spec.eqNullSafe(key),
-                value.
-                get_column_spec(source_df=source_df, current_column=None)
+                value.get_column_spec(
+                    source_df=source_df, current_column=current_column
+                )
             ) if column_spec is not None else when(
                 inner_column_spec.eqNullSafe(key),
-                value.
-                get_column_spec(source_df=source_df, current_column=None)
+                value.get_column_spec(
+                    source_df=source_df, current_column=current_column
+                )
             )
 
         if column_spec is not None:
