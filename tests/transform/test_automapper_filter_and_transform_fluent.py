@@ -10,7 +10,6 @@ from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 from pyspark.sql.functions import lit, struct
 # noinspection PyUnresolvedReferences
-from pyspark.sql.functions import col
 
 
 def test_automapper_filter_and_transform_fluent(
@@ -35,10 +34,7 @@ def test_automapper_filter_and_transform_fluent(
             column=A.column("identifier"),
             func=lambda x: x["use"] == lit("usual")
         ).transform(
-            A.complex(
-                bar=A.column("identifier.value"),
-                bar2=A.column("identifier.system")
-            )
+            A.complex(bar=A.column("_.value"), bar2=A.column("_.system"))
         )
     )
 
@@ -51,11 +47,8 @@ def test_automapper_filter_and_transform_fluent(
 
     assert str(sql_expressions["age"]) == str(
         transform(
-            filter("b.identifier", lambda x: x["use"] == lit("usual")),
-            lambda x: struct(
-                col("b.identifier.value").alias("bar"),
-                col("b.identifier.system").alias("bar2")
-            )
+            filter("b.identifier", lambda x: x["use"] == lit("usual")), lambda
+            x: struct(x["value"].alias("bar"), x["system"].alias("bar2"))
         ).alias("age")
     )
     result_df: DataFrame = mapper.transform(df=source_df)
