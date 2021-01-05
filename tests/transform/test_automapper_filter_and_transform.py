@@ -2,18 +2,18 @@ from pathlib import Path
 from typing import Dict
 
 from pyspark.sql import SparkSession, DataFrame, Column
-from spark_auto_mapper.helpers.spark_higher_order_functions import transform
+from spark_auto_mapper.helpers.spark_higher_order_functions import transform, filter
 
 from tests.conftest import clean_spark_session
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
-from pyspark.sql.functions import struct
+from pyspark.sql.functions import lit, struct
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import col
 
 
-def test_automapper_transform(spark_session: SparkSession) -> None:
+def test_automapper_filter_and_transform(spark_session: SparkSession) -> None:
     clean_spark_session(spark_session)
     data_dir: Path = Path(__file__).parent.joinpath("./")
 
@@ -30,7 +30,10 @@ def test_automapper_transform(spark_session: SparkSession) -> None:
     # Act
     mapper = AutoMapper(view="members", source_view="patients").columns(
         age=A.transform(
-            A.column("identifier"),
+            A.filter(
+                column=A.column("identifier"),
+                func=lambda x: x["use"] == lit("usual")
+            ),
             A.complex(
                 bar=A.field("identifier.value"),
                 bar2=A.field("identifier.system")
@@ -47,7 +50,8 @@ def test_automapper_transform(spark_session: SparkSession) -> None:
 
     assert str(sql_expressions["age"]) == str(
         transform(
-            "b.identifier", lambda x: struct(
+            filter("b.identifier", lambda x: x["use"] == lit("usual")),
+            lambda x: struct(
                 col("identifier.value").alias("bar"),
                 col("identifier.system").alias("bar2")
             )
