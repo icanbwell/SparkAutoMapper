@@ -22,7 +22,7 @@ def test_automapper_transform(spark_session: SparkSession) -> None:
     result_df = df.select(
         transform(
             filter("identifier", lambda x: x["use"] == lit("usual")),
-            lambda y: struct([lit("foo").alias("bar")])
+            lambda y: struct([y["value"].alias("bar")])
         ).alias("transformed")
     )
 
@@ -34,7 +34,7 @@ def test_automapper_transform(spark_session: SparkSession) -> None:
         {
             "transformed": [
                 {
-                    "bar": "foo"
+                    "bar": "123"
                 }
             ]
         }
