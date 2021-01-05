@@ -28,9 +28,4 @@ class AutoMapperTransformDataType(
         value_get_column_spec: Column = self.value.get_column_spec(
             source_df=source_df
         )
-        # my_column_spec = struct([col("identifier.value").alias("bar"), col("identifier.system").alias("bar2")])
-        # return transform(column_spec, lambda y: my_column_spec)
-        # return transform(column_spec, lambda y: struct([y[col("value")].alias("bar"), y["system"].alias("bar2")]))
-        # return transform(column_spec, lambda y: struct([y["value"].alias("bar"), y["system"].alias("bar2")]))
-        # return transform(column_spec, lambda y: struct([y["value"].alias("bar"), y["system"].alias("bar2")]))
         return transform(column_spec, lambda y: value_get_column_spec)
