@@ -46,19 +46,37 @@ class AutoMapperIfRegExDataType(
             include_null_properties=include_null_properties
         )
 
-    def get_column_spec(self, source_df: DataFrame) -> Column:
+    def get_column_spec(
+        self, source_df: DataFrame, current_column: Optional[Column]
+    ) -> Column:
         # rlike takes a string and not a column
         if isinstance(self.check, list):
             value: str = self.check[0]
             column_spec = when(
-                self.column.get_column_spec(source_df=source_df).rlike(value),
-                self.value.get_column_spec(source_df=source_df)
-            ).otherwise(self.else_.get_column_spec(source_df=source_df))
+                self.column.get_column_spec(
+                    source_df=source_df, current_column=None
+                ).rlike(value),
+                self.value.get_column_spec(
+                    source_df=source_df, current_column=None
+                )
+            ).otherwise(
+                self.else_.get_column_spec(
+                    source_df=source_df, current_column=None
+                )
+            )
         else:
             value = self.check
             column_spec = when(
-                self.column.get_column_spec(source_df=source_df).rlike(value),
-                self.value.get_column_spec(source_df=source_df)
-            ).otherwise(self.else_.get_column_spec(source_df=source_df))
+                self.column.get_column_spec(
+                    source_df=source_df, current_column=None
+                ).rlike(value),
+                self.value.get_column_spec(
+                    source_df=source_df, current_column=None
+                )
+            ).otherwise(
+                self.else_.get_column_spec(
+                    source_df=source_df, current_column=None
+                )
+            )
 
         return column_spec

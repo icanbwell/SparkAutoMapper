@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import substring
 
@@ -18,9 +20,12 @@ class AutoMapperSubstringDataType(AutoMapperTextLikeBase):
         self.start: int = start
         self.length: int = length
 
-    def get_column_spec(self, source_df: DataFrame) -> Column:
+    def get_column_spec(
+        self, source_df: DataFrame, current_column: Optional[Column]
+    ) -> Column:
         column_spec = substring(
-            self.column.get_column_spec(source_df=source_df), self.start,
-            self.length
+            self.column.get_column_spec(
+                source_df=source_df, current_column=current_column
+            ), self.start, self.length
         )
         return column_spec

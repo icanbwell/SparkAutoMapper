@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pyspark.sql import Column, DataFrame
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import col
@@ -13,9 +15,14 @@ class AutoMapperDataTypeColumn(AutoMapperTextLikeBase):
         else:
             self.value = value
 
-    def get_column_spec(self, source_df: DataFrame) -> Column:
+    def get_column_spec(
+        self, source_df: DataFrame, current_column: Optional[Column]
+    ) -> Column:
         if isinstance(self.value, str):
-            if not self.value.startswith("a.") and not self.value.startswith(
+            if self.value.startswith("_"):
+                # replace "." with "[]"
+                return current_column
+            elif not self.value.startswith("a.") and not self.value.startswith(
                 "b."
             ):
                 # prepend with "b." in case the column exists in both a and b tables

@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import split
 
@@ -22,8 +24,12 @@ class AutoMapperSplitByDelimiterDataType(AutoMapperTextLikeBase):
             "["
         ) else f"[{delimiter}]"
 
-    def get_column_spec(self, source_df: DataFrame) -> Column:
+    def get_column_spec(
+        self, source_df: DataFrame, current_column: Optional[Column]
+    ) -> Column:
         column_spec = split(
-            self.column.get_column_spec(source_df=source_df), self.delimiter
+            self.column.get_column_spec(
+                source_df=source_df, current_column=current_column
+            ), self.delimiter
         )
         return column_spec

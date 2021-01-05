@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import regexp_replace
 
@@ -19,9 +21,13 @@ class AutoMapperRegExReplaceDataType(AutoMapperTextLikeBase):
         self.pattern: str = pattern
         self.replacement: str = replacement
 
-    def get_column_spec(self, source_df: DataFrame) -> Column:
+    def get_column_spec(
+        self, source_df: DataFrame, current_column: Optional[Column]
+    ) -> Column:
         column_spec = regexp_replace(
-            self.column.get_column_spec(source_df=source_df),
+            self.column.get_column_spec(
+                source_df=source_df, current_column=current_column
+            ),
             pattern=self.pattern,
             replacement=self.replacement
         )

@@ -1,4 +1,4 @@
-from typing import TypeVar, Generic, Callable, Any, Dict
+from typing import TypeVar, Generic, Callable, Any, Dict, Optional
 
 from pyspark.sql import DataFrame, Column
 
@@ -24,7 +24,11 @@ class AutoMapperFilterDataType(
         self.column: AutoMapperColumnOrColumnLikeType = column
         self.func: Callable[[Dict[str, Any]], Any] = func
 
-    def get_column_spec(self, source_df: DataFrame) -> Column:
+    def get_column_spec(
+        self, source_df: DataFrame, current_column: Optional[Column]
+    ) -> Column:
         return filter(
-            self.column.get_column_spec(source_df=source_df), self.func
+            self.column.get_column_spec(
+                source_df=source_df, current_column=current_column
+            ), self.func
         )

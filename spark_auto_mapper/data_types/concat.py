@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List, Union, Optional
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import concat
@@ -25,8 +25,14 @@ class AutoMapperConcatDataType(AutoMapperTextLikeBase):
             AutoMapperValueParser.parse_value(value) for value in args
         ]
 
-    def get_column_spec(self, source_df: DataFrame) -> Column:
+    def get_column_spec(
+        self, source_df: DataFrame, current_column: Optional[Column]
+    ) -> Column:
         column_spec = concat(
-            *[col.get_column_spec(source_df=source_df) for col in self.value]
+            *[
+                col.get_column_spec(
+                    source_df=source_df, current_column=current_column
+                ) for col in self.value
+            ]
         )
         return column_spec

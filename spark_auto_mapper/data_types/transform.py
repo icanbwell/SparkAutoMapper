@@ -1,4 +1,4 @@
-from typing import Generic, TypeVar
+from typing import Generic, Optional, TypeVar
 
 from pyspark.sql import DataFrame, Column
 
@@ -23,9 +23,17 @@ class AutoMapperTransformDataType(
         self.column: AutoMapperColumnOrColumnLikeType = column
         self.value: _TAutoMapperDataType = value
 
-    def get_column_spec(self, source_df: DataFrame) -> Column:
-        column_spec: Column = self.column.get_column_spec(source_df=source_df)
-        value_get_column_spec: Column = self.value.get_column_spec(
-            source_df=source_df
+    def get_column_spec(
+        self, source_df: DataFrame, current_column: Optional[Column]
+    ) -> Column:
+        column_spec: Column = self.column.get_column_spec(
+            source_df=source_df, current_column=current_column
         )
-        return transform(column_spec, lambda y: value_get_column_spec)
+
+        def get_column_spec_for_column(x: Column) -> Column:
+            value_get_column_spec: Column = self.value.get_column_spec(
+                source_df=source_df, current_column=x
+            )
+            return value_get_column_spec
+
+        return transform(column_spec, get_column_spec_for_column)

@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pyspark.sql import Column, DataFrame
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import col
@@ -13,8 +15,13 @@ class AutoMapperDataTypeField(AutoMapperTextLikeBase):
         else:
             self.value = value
 
-    def get_column_spec(self, source_df: DataFrame) -> Column:
+    def get_column_spec(
+        self, source_df: DataFrame, current_column: Optional[Column]
+    ) -> Column:
         if isinstance(self.value, str):
-            return col(self.value)
+            if self.value.startswith("_"):
+                return current_column
+            else:
+                return col(self.value)
 
         raise ValueError(f"value: {self.value} is not str")

@@ -56,21 +56,44 @@ class AutoMapperIfDataType(
             include_null_properties=include_null_properties
         )
 
-    def get_column_spec(self, source_df: DataFrame) -> Column:
+    def get_column_spec(
+        self, source_df: DataFrame, current_column: Optional[Column]
+    ) -> Column:
         if isinstance(self.check, list):
             column_spec = when(
-                self.column.get_column_spec(source_df=source_df).isin(
+                self.column.get_column_spec(
+                    source_df=source_df, current_column=None
+                ).isin(
                     *[
-                        c.get_column_spec(source_df=source_df)
-                        for c in self.check
+                        c.get_column_spec(
+                            source_df=source_df, current_column=None
+                        ) for c in self.check
                     ]
-                ), self.value.get_column_spec(source_df=source_df)
-            ).otherwise(self.else_.get_column_spec(source_df=source_df))
+                ),
+                self.value.get_column_spec(
+                    source_df=source_df, current_column=None
+                )
+            ).otherwise(
+                self.else_.get_column_spec(
+                    source_df=source_df, current_column=None
+                )
+            )
         else:
             column_spec = when(
-                self.column.get_column_spec(source_df=source_df).eqNullSafe(
-                    self.check.get_column_spec(source_df=source_df)
-                ), self.value.get_column_spec(source_df=source_df)
-            ).otherwise(self.else_.get_column_spec(source_df=source_df))
+                self.column.get_column_spec(
+                    source_df=source_df, current_column=None
+                ).eqNullSafe(
+                    self.check.get_column_spec(
+                        source_df=source_df, current_column=None
+                    )
+                ),
+                self.value.get_column_spec(
+                    source_df=source_df, current_column=None
+                )
+            ).otherwise(
+                self.else_.get_column_spec(
+                    source_df=source_df, current_column=None
+                )
+            )
 
         return column_spec

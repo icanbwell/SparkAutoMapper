@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import substring_index
 
@@ -22,9 +24,12 @@ class AutoMapperSubstringByDelimiterDataType(AutoMapperTextLikeBase):
         self.delimiter: str = delimiter
         self.delimiter_count: int = delimiter_count
 
-    def get_column_spec(self, source_df: DataFrame) -> Column:
+    def get_column_spec(
+        self, source_df: DataFrame, current_column: Optional[Column]
+    ) -> Column:
         column_spec = substring_index(
-            self.column.get_column_spec(source_df=source_df), self.delimiter,
-            self.delimiter_count
+            self.column.get_column_spec(
+                source_df=source_df, current_column=current_column
+            ), self.delimiter, self.delimiter_count
         )
         return column_spec
