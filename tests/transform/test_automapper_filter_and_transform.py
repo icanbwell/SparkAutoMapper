@@ -35,8 +35,8 @@ def test_automapper_filter_and_transform(spark_session: SparkSession) -> None:
                 func=lambda x: x["use"] == lit("usual")
             ),
             A.complex(
-                bar=A.field("identifier.value"),
-                bar2=A.field("identifier.system")
+                bar=A.column("identifier.value"),
+                bar2=A.column("identifier.system")
             )
         )
     )
@@ -52,8 +52,8 @@ def test_automapper_filter_and_transform(spark_session: SparkSession) -> None:
         transform(
             filter("b.identifier", lambda x: x["use"] == lit("usual")),
             lambda x: struct(
-                col("identifier.value").alias("bar"),
-                col("identifier.system").alias("bar2")
+                col("b.identifier.value").alias("bar"),
+                col("b.identifier.system").alias("bar2")
             )
         ).alias("age")
     )

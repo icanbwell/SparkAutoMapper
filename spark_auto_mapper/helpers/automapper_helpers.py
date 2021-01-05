@@ -3,7 +3,6 @@ from typing import Any, Dict, Union, TypeVar, cast, Optional, List, Callable
 from pyspark.sql.types import StringType
 
 from spark_auto_mapper.data_types.coalesce import AutoMapperCoalesceDataType
-from spark_auto_mapper.data_types.field import AutoMapperDataTypeField
 from spark_auto_mapper.data_types.filter import AutoMapperFilterDataType
 from spark_auto_mapper.data_types.hash import AutoMapperHashDataType
 from spark_auto_mapper.data_types.if_ import AutoMapperIfDataType
@@ -452,11 +451,11 @@ class AutoMapperHelpers:
             AutoMapperTransformDataType(column=column, value=value)
         )
 
-    @staticmethod
-    def field(value: str) -> AutoMapperTextLikeBase:
-        """
-        Specifies that the value parameter should be used as a field name
-        :param value: name of column
-        :return: A column automapper type
-        """
-        return AutoMapperDataTypeField(value)
+    # @staticmethod
+    # def field(value: str) -> AutoMapperTextLikeBase:
+    #     """
+    #     Specifies that the value parameter should be used as a field name
+    #     :param value: name of column
+    #     :return: A column automapper type
+    #     """
+    #     return AutoMapperDataTypeField(value)
