@@ -8,6 +8,7 @@ from spark_auto_mapper.data_types.hash import AutoMapperHashDataType
 from spark_auto_mapper.data_types.if_ import AutoMapperIfDataType
 from spark_auto_mapper.data_types.if_not_null_or_empty import AutoMapperIfNotNullOrEmptyDataType
 from spark_auto_mapper.data_types.if_regex import AutoMapperIfRegExDataType
+from spark_auto_mapper.data_types.split_by_delimiter import AutoMapperSplitByDelimiterDataType
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
 
 from spark_auto_mapper.data_types.amount import AutoMapperAmountDataType
@@ -321,7 +322,7 @@ class AutoMapperHelpers:
         substring_by_delimiter performs a case-sensitive match when searching for delimiter.
 
         :param column: column whose contents to use
-        :param delimiter: string to use as delimiter
+        :param delimiter: string to use as delimiter.  can be a regex.
         :param delimiter_count: If delimiter_count is positive, everything the left of the final delimiter
                                     (counting from left) is returned.
                                 If delimiter_count is negative, every to the right of the final delimiter
@@ -459,3 +460,18 @@ class AutoMapperHelpers:
     #     :return: A column automapper type
     #     """
     #     return AutoMapperDataTypeField(value)
+
+    @staticmethod
+    def split_by_delimiter(
+        column: AutoMapperColumnOrColumnLikeType, delimiter: str
+    ) -> AutoMapperSplitByDelimiterDataType:
+        """
+        Split a string into an array using the delimiter
+
+        :param column: column whose contents to use
+        :param delimiter: string to use as delimiter
+        :return: a concat automapper type
+        """
+        return AutoMapperSplitByDelimiterDataType(
+            column=column, delimiter=delimiter
+        )
