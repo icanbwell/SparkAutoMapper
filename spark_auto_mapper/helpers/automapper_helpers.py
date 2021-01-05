@@ -420,7 +420,7 @@ class AutoMapperHelpers:
     def filter(
         column: AutoMapperColumnOrColumnLikeType,
         func: Callable[[Dict[str, Any]], Any]
-    ) -> _TAutoMapperDataType:
+    ) -> AutoMapperFilterDataType:
         """
         Filters a column by a function
 
@@ -429,11 +429,12 @@ class AutoMapperHelpers:
         :param func: func to filter by
         :return: a filter automapper type
         """
-        # cast it to the inner type so type checking is happy
-        return cast(
-            _TAutoMapperDataType,
-            AutoMapperFilterDataType(column=column, func=func)
-        )
+        # # cast it to the inner type so type checking is happy
+        # return cast(
+        #     _TAutoMapperDataType,
+        #     AutoMapperFilterDataType(column=column, func=func)
+        # )
+        return AutoMapperFilterDataType(column=column, func=func)
 
     @staticmethod
     def transform(

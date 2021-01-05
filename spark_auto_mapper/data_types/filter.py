@@ -1,20 +1,13 @@
-from typing import TypeVar, Generic, Callable, Any, Dict, Optional
+from typing import Callable, Any, Dict, Optional
 
 from pyspark.sql import DataFrame, Column
 
 from spark_auto_mapper.data_types.array_base import AutoMapperArrayBase
-
-from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperAnyDataType, AutoMapperColumnOrColumnLikeType
 from spark_auto_mapper.helpers.spark_higher_order_functions import filter
-
-_TAutoMapperDataType = TypeVar(
-    "_TAutoMapperDataType", bound=AutoMapperAnyDataType
-)
+from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperColumnOrColumnLikeType
 
 
-class AutoMapperFilterDataType(
-    AutoMapperArrayBase, Generic[_TAutoMapperDataType]
-):
+class AutoMapperFilterDataType(AutoMapperArrayBase):
     def __init__(
         self, column: AutoMapperColumnOrColumnLikeType,
         func: Callable[[Dict[str, Any]], Any]
