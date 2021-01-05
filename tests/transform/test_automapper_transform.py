@@ -9,7 +9,7 @@ from pyspark.sql.functions import lit, struct
 def test_automapper_transform(spark_session: SparkSession) -> None:
     data_dir: Path = Path(__file__).parent.joinpath("./")
 
-    data_json_file: Path = data_dir.joinpath("data.json")
+    data_json_file: Path = data_dir.joinpath("../filter/data.json")
 
     df: DataFrame = spark_session.read.json(
         str(data_json_file), multiLine=True

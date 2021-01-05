@@ -1,8 +1,9 @@
-from typing import Any, Dict, Union, TypeVar, cast, Optional, List
+from typing import Any, Dict, Union, TypeVar, cast, Optional, List, Callable
 
 from pyspark.sql.types import StringType
 
 from spark_auto_mapper.data_types.coalesce import AutoMapperCoalesceDataType
+from spark_auto_mapper.data_types.filter import AutoMapperFilterDataType
 from spark_auto_mapper.data_types.hash import AutoMapperHashDataType
 from spark_auto_mapper.data_types.if_ import AutoMapperIfDataType
 from spark_auto_mapper.data_types.if_not_null_or_empty import AutoMapperIfNotNullOrEmptyDataType
@@ -410,4 +411,24 @@ class AutoMapperHelpers:
             AutoMapperIfRegExDataType(
                 column=column, check=check, value=value, else_=else_
             )
+        )
+
+    @staticmethod
+    def filter(
+        column: AutoMapperColumnOrColumnLikeType,
+        func: Callable[[Dict[str, Any]], Any]
+    ) -> _TAutoMapperDataType:
+        """
+        Checks if column matches check_value.  Returns value if it matches else else_
+
+
+        :param column: column to check
+        :param func: func
+        :return: an if automapper type
+        """
+
+        # cast it to the inner type so type checking is happy
+        return cast(
+            _TAutoMapperDataType,
+            AutoMapperFilterDataType(column=column, func=func)
         )
