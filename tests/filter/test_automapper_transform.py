@@ -23,16 +23,16 @@ def test_automapper_transform(spark_session: SparkSession) -> None:
         transform(
             filter("identifier", lambda x: x["use"] == lit("usual")),
             lambda y: struct([lit("foo").alias("bar")])
-        ).alias("filtered")
+        ).alias("transformed")
     )
 
     result_df.show(truncate=False)
 
-    result_text: str = result_df.select("filtered").toJSON().collect()[0]
+    result_text: str = result_df.select("transformed").toJSON().collect()[0]
     expected_json = json.loads(
         """
         {
-            "filtered": [
+            "transformed": [
                 {
                     "bar": "foo"
                 }
