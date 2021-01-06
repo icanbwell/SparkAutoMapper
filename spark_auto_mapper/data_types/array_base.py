@@ -1,4 +1,4 @@
-from typing import Optional, TypeVar, Union, cast, Callable, Dict, Any
+from typing import Optional, TypeVar, Union, cast, Callable, Dict, Any, List
 
 from pyspark.sql import DataFrame, Column
 
@@ -21,7 +21,8 @@ class AutoMapperArrayBase(AutoMapperTextLikeBase):
         raise NotImplementedError  # base classes should implement this
 
     # noinspection PyMethodMayBeStatic
-    def transform(self, value: _TAutoMapperDataType) -> _TAutoMapperDataType:
+    def transform(self,
+                  value: _TAutoMapperDataType) -> List[_TAutoMapperDataType]:
         """
         transforms a column into another type or struct
 
@@ -32,7 +33,7 @@ class AutoMapperArrayBase(AutoMapperTextLikeBase):
         from spark_auto_mapper.data_types.transform import AutoMapperTransformDataType
         # cast it to the inner type so type checking is happy
         return cast(
-            _TAutoMapperDataType,
+            List[_TAutoMapperDataType],
             AutoMapperTransformDataType(column=self, value=value)
         )
 

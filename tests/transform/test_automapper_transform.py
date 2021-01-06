@@ -1,7 +1,9 @@
 from pathlib import Path
-from typing import Dict
+from typing import Dict, List
 
 from pyspark.sql import SparkSession, DataFrame, Column
+
+from spark_auto_mapper.data_types.complex.complex_base import AutoMapperDataTypeComplexBase
 from spark_auto_mapper.helpers.spark_higher_order_functions import transform
 
 from tests.conftest import clean_spark_session
@@ -11,6 +13,11 @@ from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 from pyspark.sql.functions import struct
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import col
+
+
+class MyObject(AutoMapperDataTypeComplexBase):
+    def __init__(self, age: List[AutoMapperDataTypeComplexBase]):
+        super().__init__(age=age)
 
 
 def test_automapper_transform(spark_session: SparkSession) -> None:
@@ -28,12 +35,14 @@ def test_automapper_transform(spark_session: SparkSession) -> None:
     source_df.show(truncate=False)
 
     # Act
-    mapper = AutoMapper(view="members", source_view="patients").columns(
-        age=A.transform(
-            A.column("identifier"),
-            A.complex(
-                bar=A.column("identifier.value"),
-                bar2=A.column("identifier.system")
+    mapper = AutoMapper(view="members", source_view="patients").complex(
+        MyObject(
+            age=A.transform(
+                A.column("identifier"),
+                A.complex(
+                    bar=A.column("identifier.value"),
+                    bar2=A.column("identifier.system")
+                )
             )
         )
     )

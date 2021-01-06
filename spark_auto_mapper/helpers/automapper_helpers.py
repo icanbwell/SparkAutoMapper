@@ -440,7 +440,7 @@ class AutoMapperHelpers:
     @staticmethod
     def transform(
         column: AutoMapperColumnOrColumnLikeType, value: _TAutoMapperDataType
-    ) -> _TAutoMapperDataType:
+    ) -> List[_TAutoMapperDataType]:
         """
         transforms a column into another type or struct
 
@@ -451,7 +451,7 @@ class AutoMapperHelpers:
         """
         # cast it to the inner type so type checking is happy
         return cast(
-            _TAutoMapperDataType,
+            List[_TAutoMapperDataType],
             AutoMapperTransformDataType(column=column, value=value)
         )
 

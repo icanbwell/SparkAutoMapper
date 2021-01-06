@@ -1,10 +1,16 @@
-from typing import Dict
+from typing import Dict, List
 
 from pyspark.sql import SparkSession, Column, DataFrame
 # noinspection PyUnresolvedReferences
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
+from spark_auto_mapper.data_types.complex.complex_base import AutoMapperDataTypeComplexBase
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
+
+
+class MyObject(AutoMapperDataTypeComplexBase):
+    def __init__(self, my_column: List[AutoMapperDataTypeComplexBase]):
+        super().__init__(my_column=my_column)
 
 
 def test_auto_mapper_split_by_delimiter_and_transform_fluent(
@@ -26,9 +32,11 @@ def test_auto_mapper_split_by_delimiter_and_transform_fluent(
     # Act
     mapper = AutoMapper(
         view="members", source_view="patients", keys=["member_id"]
-    ).columns(
-        my_column=A.split_by_delimiter(A.column("last_name"), "|").
-        transform(A.complex(bar=A.field("_"), bar2=A.field("_")))
+    ).complex(
+        MyObject(
+            my_column=A.split_by_delimiter(A.column("last_name"), "|").
+            transform(A.complex(bar=A.field("_"), bar2=A.field("_")))
+        )
     )
 
     assert isinstance(mapper, AutoMapper)
