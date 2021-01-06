@@ -57,7 +57,7 @@ class AutoMapperArrayBase(AutoMapperTextLikeBase):
         )
 
     # noinspection PyMethodMayBeStatic
-    def split_by_delimiter(self, delimiter: str) -> _TAutoMapperDataType:
+    def split_by_delimiter(self, delimiter: str) -> 'AutoMapperArrayBase':
         """
         transforms a column into another type or struct
 
@@ -69,7 +69,7 @@ class AutoMapperArrayBase(AutoMapperTextLikeBase):
 
         # cast it to the inner type so type checking is happy
         return cast(
-            _TAutoMapperDataType,
+            AutoMapperArrayBase,
             AutoMapperSplitByDelimiterDataType(
                 column=self, delimiter=delimiter
             )

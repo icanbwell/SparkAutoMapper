@@ -23,7 +23,7 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
     """
     def __init__(
         self,
-        value: Optional[List[_T]],
+        value: Optional[Union[List[_T], AutoMapperDataTypeBase]],
         remove_nulls: bool = True,
         include_null_properties: bool = True
     ) -> None:
@@ -92,8 +92,8 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
         # if value is an AutoMapper then ask it for its column spec
         if isinstance(self.value, AutoMapperDataTypeBase):
             child: AutoMapperDataTypeBase = self.value
-            return filter(array(child.get_column_spec(source_df=source_df, current_column=current_column)), lambda x: x.isNotNull()) \
-                if self.remove_nulls \
-                else array(child.get_column_spec(source_df=source_df, current_column=current_column))
+            return child.get_column_spec(
+                source_df=source_df, current_column=current_column
+            )
 
         raise ValueError(f"value: {self.value} is neither str nor AutoMapper")

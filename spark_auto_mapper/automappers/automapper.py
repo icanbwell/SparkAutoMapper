@@ -36,7 +36,8 @@ class AutoMapper(AutoMapperContainer):
         verify_row_count: bool = True,
         skip_schema_validation: List[str] = ["extension"],
         skip_if_columns_null_or_empty: Optional[List[str]] = None,
-        keep_null_rows: bool = False
+        keep_null_rows: bool = False,
+        filter_by: Optional[str] = None
     ):
         """
         Creates an AutoMapper
@@ -60,6 +61,7 @@ class AutoMapper(AutoMapperContainer):
         :param skip_schema_validation: skip schema checks on these columns
         :param skip_if_columns_null_or_empty: skip creating the record if any of these columns are null or empty
         :param keep_null_rows: whether to keep the null rows instead of removing them
+        :param filter_by: (Optional) SQL expression that is used to filter
         """
         super().__init__()
         self.view: Optional[str] = view
@@ -79,6 +81,7 @@ class AutoMapper(AutoMapperContainer):
         self.skip_if_columns_null_or_empty: Optional[
             List[str]] = skip_if_columns_null_or_empty
         self.keep_null_rows: bool = keep_null_rows
+        self.filter_by: Optional[str] = filter_by
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
     def transform_with_data_frame_single_select(
@@ -93,6 +96,7 @@ class AutoMapper(AutoMapperContainer):
         try:
             if not self.drop_key_columns:
                 column_specs = [col(f"b.{c}") for c in keys] + column_specs
+            # run all the selects
             df = source_df.alias("b").select(*column_specs)
             # write out final checkpoint for this automapper
             if self.checkpoint_path:
@@ -212,6 +216,10 @@ class AutoMapper(AutoMapperContainer):
             if self.view and self.reuse_existing_view and SparkHelpers.spark_table_exists(sql_ctx=df.sql_ctx,
                                                                                           view=self.view) \
             else source_df.select(self.keys)
+
+        # if filter is specified then run it
+        if self.filter_by is not None:
+            source_df = source_df.where(self.filter_by)
 
         # rename key columns to avoid name clash if someone creates a column with that name
         renamed_key_columns: List[str] = []

@@ -465,6 +465,14 @@ class AutoMapperHelpers:
         return AutoMapperDataTypeField(value)
 
     @staticmethod
+    def current_item() -> AutoMapperTextLikeBase:
+        """
+        Specifies to use the current item
+        :return: A column automapper type
+        """
+        return AutoMapperDataTypeField("_")
+
+    @staticmethod
     def split_by_delimiter(
         column: AutoMapperColumnOrColumnLikeType, delimiter: str
     ) -> AutoMapperSplitByDelimiterDataType:
