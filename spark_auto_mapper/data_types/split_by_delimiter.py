@@ -9,10 +9,7 @@ from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperColumnOrC
 
 class AutoMapperSplitByDelimiterDataType(AutoMapperArrayBase):
     """
-    Returns the substring from string str before count occurrences of the delimiter.
-    If count is positive, everything the left of the final delimiter (counting from left) is returned.
-    If count is negative, every to the right of the final delimiter (counting from the right) is returned.
-    substring_index performs a case-sensitive match when searching for delimiter.
+    Splits the string by the delimiter and returns an array
     """
     def __init__(
         self, column: AutoMapperColumnOrColumnLikeType, delimiter: str
@@ -20,6 +17,7 @@ class AutoMapperSplitByDelimiterDataType(AutoMapperArrayBase):
         super().__init__()
 
         self.column: AutoMapperColumnOrColumnLikeType = column
+        # if simple string passed in then convert to regex
         self.delimiter: str = delimiter if delimiter.startswith(
             "["
         ) else f"[{delimiter}]"

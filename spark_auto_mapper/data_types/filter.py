@@ -17,6 +17,11 @@ class AutoMapperFilterDataType(AutoMapperArrayBase):
         self.column: AutoMapperColumnOrColumnLikeType = column
         self.func: Callable[[Dict[str, Any]], Any] = func
 
+    def include_null_properties(self, include_null_properties: bool) -> None:
+        self.column.include_null_properties(
+            include_null_properties=include_null_properties
+        )
+
     def get_column_spec(
         self, source_df: DataFrame, current_column: Optional[Column]
     ) -> Column:

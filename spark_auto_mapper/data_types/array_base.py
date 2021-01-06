@@ -1,6 +1,7 @@
-from typing import Optional, TypeVar, Union, cast
+from typing import Optional, TypeVar, Union, cast, Callable, Dict, Any
 
 from pyspark.sql import DataFrame, Column
+
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
 
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
@@ -25,7 +26,7 @@ class AutoMapperArrayBase(AutoMapperTextLikeBase):
         transforms a column into another type or struct
 
 
-        :param value: func to create type or struct
+        :param value: Complex or Simple Type to create for each item in the array
         :return: a transform automapper type
         """
         from spark_auto_mapper.data_types.transform import AutoMapperTransformDataType
@@ -33,4 +34,42 @@ class AutoMapperArrayBase(AutoMapperTextLikeBase):
         return cast(
             _TAutoMapperDataType,
             AutoMapperTransformDataType(column=self, value=value)
+        )
+
+    # noinspection PyMethodMayBeStatic
+    def filter(
+        self, func: Callable[[Dict[str, Any]], Any]
+    ) -> _TAutoMapperDataType:
+        """
+        transforms a column into another type or struct
+
+
+        :param func: func to create type or struct
+        :return: a filter automapper type
+        """
+        from spark_auto_mapper.data_types.filter import AutoMapperFilterDataType
+
+        # cast it to the inner type so type checking is happy
+        return cast(
+            _TAutoMapperDataType,
+            AutoMapperFilterDataType(column=self, func=func)
+        )
+
+    # noinspection PyMethodMayBeStatic
+    def split_by_delimiter(self, delimiter: str) -> _TAutoMapperDataType:
+        """
+        transforms a column into another type or struct
+
+
+        :param delimiter: delimiter
+        :return: a split_by_delimiter automapper type
+        """
+        from spark_auto_mapper.data_types.split_by_delimiter import AutoMapperSplitByDelimiterDataType
+
+        # cast it to the inner type so type checking is happy
+        return cast(
+            _TAutoMapperDataType,
+            AutoMapperSplitByDelimiterDataType(
+                column=self, delimiter=delimiter
+            )
         )
