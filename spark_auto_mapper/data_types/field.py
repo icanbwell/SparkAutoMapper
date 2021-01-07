@@ -21,7 +21,7 @@ class AutoMapperDataTypeField(AutoMapperArrayLikeBase):
         if isinstance(self.value, str):
             if current_column is not None:
                 # noinspection RegExpSingleCharAlternation
-                elements: List[str] = re.split(r'\.|\[|]', self.value)
+                elements: List[str] = re.split(r"\.|\[|]", self.value)
                 my_column: Column = current_column
                 for element in elements:
                     if element != "_" and element != "":

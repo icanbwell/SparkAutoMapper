@@ -1,4 +1,5 @@
-from typing import Optional
+import re
+from typing import Optional, List
 
 from pyspark.sql import Column, DataFrame
 # noinspection PyUnresolvedReferences
@@ -19,17 +20,20 @@ class AutoMapperDataTypeColumn(AutoMapperArrayLikeBase):
         self, source_df: DataFrame, current_column: Optional[Column]
     ) -> Column:
         if isinstance(self.value, str):
-            if self.value.startswith("_") and current_column is not None:
-                elements = self.value.split(".")
-                if len(elements) > 1:
-                    return current_column[elements[1]]
-                else:
-                    return current_column
-            elif not self.value.startswith("a.") and not self.value.startswith(
+            if not self.value.startswith("a.") and not self.value.startswith(
                 "b."
             ):
                 # prepend with "b." in case the column exists in both a and b tables
-                return col("b." + self.value)
+                # noinspection RegExpSingleCharAlternation
+                elements: List[str] = re.split(r"\.|\[|]", self.value)
+                my_column: Optional[Column] = None
+                for element in elements:
+                    if element != "_" and element != "":
+                        my_column = my_column[element if not element.isnumeric(
+                        ) else int(element)] if my_column is not None else col(
+                            "b." + self.value
+                        )
+                return my_column
             else:
                 return col(self.value)
 

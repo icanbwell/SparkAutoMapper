@@ -39,10 +39,7 @@ def test_automapper_transform(spark_session: SparkSession) -> None:
         MyObject(
             age=A.transform(
                 A.column("identifier"),
-                A.complex(
-                    bar=A.column("identifier.value"),
-                    bar2=A.column("identifier.system")
-                )
+                A.complex(bar=A.field("value"), bar2=A.field("system"))
             )
         )
     )
@@ -57,11 +54,13 @@ def test_automapper_transform(spark_session: SparkSession) -> None:
     assert str(sql_expressions["age"]) == str(
         transform(
             "b.identifier", lambda x: struct(
-                col("b.identifier.value").alias("bar"),
-                col("b.identifier.system").alias("bar2")
+                col("x[value]").alias("bar"),
+                col("x[system]").alias("bar2")
             )
         ).alias("age")
     )
     result_df: DataFrame = mapper.transform(df=source_df)
 
     result_df.show(truncate=False)
+
+    assert result_df.select("age").collect()[0][0][0][0] == "123"

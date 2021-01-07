@@ -40,9 +40,8 @@ def test_automapper_filter_and_transform_fluent(
             age=A.filter(
                 column=A.column("identifier"),
                 func=lambda x: x["use"] == lit("usual")
-            ).transform(
-                A.complex(bar=A.column("_.value"), bar2=A.column("_.system"))
-            )
+            ).
+            transform(A.complex(bar=A.field("value"), bar2=A.field("system")))
         )
     )
 
