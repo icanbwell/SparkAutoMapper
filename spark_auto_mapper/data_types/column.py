@@ -4,10 +4,10 @@ from pyspark.sql import Column, DataFrame
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import col
 
-from spark_auto_mapper.data_types.array_base import AutoMapperArrayBase
+from spark_auto_mapper.data_types.array_base import AutoMapperArrayLikeBase
 
 
-class AutoMapperDataTypeColumn(AutoMapperArrayBase):
+class AutoMapperDataTypeColumn(AutoMapperArrayLikeBase):
     def __init__(self, value: str):
         super().__init__()
         if len(value) > 0 and value[0] == "[":
@@ -21,7 +21,7 @@ class AutoMapperDataTypeColumn(AutoMapperArrayBase):
         if isinstance(self.value, str):
             if self.value.startswith("_") and current_column is not None:
                 elements = self.value.split(".")
-                if len(elements) > 0:
+                if len(elements) > 1:
                     return current_column[elements[1]]
                 else:
                     return current_column

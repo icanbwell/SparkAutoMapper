@@ -2,7 +2,7 @@ from typing import Any, Dict, Union, TypeVar, cast, Optional, List, Callable
 
 from pyspark.sql.types import StringType
 
-from spark_auto_mapper.data_types.array_base import AutoMapperArrayBase
+from spark_auto_mapper.data_types.array_base import AutoMapperArrayLikeBase
 from spark_auto_mapper.data_types.coalesce import AutoMapperCoalesceDataType
 from spark_auto_mapper.data_types.field import AutoMapperDataTypeField
 from spark_auto_mapper.data_types.filter import AutoMapperFilterDataType
@@ -62,7 +62,7 @@ class AutoMapperHelpers:
         return AutoMapperDataTypeComplex(**kwargs)
 
     @staticmethod
-    def column(value: str) -> AutoMapperArrayBase:
+    def column(value: str) -> AutoMapperArrayLikeBase:
         """
         Specifies that the value parameter should be used as a column name
         :param value: name of column
@@ -82,7 +82,7 @@ class AutoMapperHelpers:
         return AutoMapperDataTypeLiteral(value, StringType())
 
     @staticmethod
-    def expression(value: str) -> AutoMapperTextLikeBase:
+    def expression(value: str) -> AutoMapperArrayLikeBase:
         """
         Specifies that the value parameter should be executed as a sql expression in Spark
         :param value: sql
@@ -465,7 +465,7 @@ class AutoMapperHelpers:
         return AutoMapperDataTypeField(value)
 
     @staticmethod
-    def current_item() -> AutoMapperTextLikeBase:
+    def current() -> AutoMapperTextLikeBase:
         """
         Specifies to use the current item
         :return: A column automapper type
