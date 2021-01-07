@@ -3,6 +3,7 @@ from typing import Generic, Optional, TypeVar, Union
 from pyspark.sql import DataFrame, Column
 
 from spark_auto_mapper.data_types.array_base import AutoMapperArrayLikeBase
+from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperAnyDataType, AutoMapperColumnOrColumnLikeType
 
 _TAutoMapperDataType = TypeVar(
@@ -14,12 +15,12 @@ class AutoMapperFirstDataType(
     AutoMapperArrayLikeBase, Generic[_TAutoMapperDataType]
 ):
     def __init__(
-        self, column: Union[AutoMapperArrayLikeBase,
+        self, column: Union[AutoMapperDataTypeBase,
                             AutoMapperColumnOrColumnLikeType]
     ) -> None:
         super().__init__()
 
-        self.column: Union[AutoMapperArrayLikeBase,
+        self.column: Union[AutoMapperDataTypeBase,
                            AutoMapperColumnOrColumnLikeType] = column
 
     def get_column_spec(
