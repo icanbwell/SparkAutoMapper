@@ -39,8 +39,7 @@ def test_automapper_filter_and_transform(spark_session: SparkSession) -> None:
                 A.filter(
                     column=A.column("identifier"),
                     func=lambda x: x["use"] == lit("usual")
-                ),
-                A.complex(bar=A.column("_.value"), bar2=A.column("_.system"))
+                ), A.complex(bar=A.field("value"), bar2=A.field("system"))
             )
         )
     )
