@@ -2,15 +2,17 @@ from pathlib import Path
 from typing import Dict
 
 from pyspark.sql import SparkSession, DataFrame, Column
+
+from spark_auto_mapper.helpers.spark_higher_order_functions import transform, filter
 from tests.conftest import clean_spark_session
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 # noinspection PyUnresolvedReferences
-from pyspark.sql.functions import col
+from pyspark.sql.functions import lit
 
 
-def test_automapper_first(spark_session: SparkSession) -> None:
+def test_automapper_select_one(spark_session: SparkSession) -> None:
     clean_spark_session(spark_session)
     data_dir: Path = Path(__file__).parent.joinpath("./")
 
@@ -26,7 +28,9 @@ def test_automapper_first(spark_session: SparkSession) -> None:
 
     # Act
     mapper = AutoMapper(view="members", source_view="patients").columns(
-        age=A.column("identifier").first()
+        age=A.column("identifier").filter(
+            lambda x: x["system"] == "http://hl7.org/fhir/sid/us-npi"
+        ).select_one(A.field("_.value"))
     )
 
     assert isinstance(mapper, AutoMapper)
@@ -36,8 +40,17 @@ def test_automapper_first(spark_session: SparkSession) -> None:
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
-    assert str(sql_expressions["age"]
-               ) == str(col("b.identifier[0]").alias("age"))
+    assert str(sql_expressions["age"]) == str(
+        transform(
+            filter(
+                "b.identifier",
+                lambda x: x["system"] == lit("http://hl7.org/fhir/sid/us-npi")
+            ), lambda x: x["value"]
+        )[0].alias("age")
+    )
     result_df: DataFrame = mapper.transform(df=source_df)
 
     result_df.show(truncate=False)
+
+    assert result_df.select("age").collect()[0][0] == "1730325416"
+    assert result_df.select("age").collect()[1][0] == "1467734301"

@@ -1,7 +1,6 @@
 from typing import Generic, Optional, TypeVar, Union
 
 from pyspark.sql import DataFrame, Column
-from pyspark.sql.functions import first
 
 from spark_auto_mapper.data_types.array_base import AutoMapperArrayLikeBase
 from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperAnyDataType, AutoMapperColumnOrColumnLikeType
@@ -30,4 +29,4 @@ class AutoMapperFirstDataType(
             source_df=source_df, current_column=current_column
         )
 
-        return first(column_spec)
+        return column_spec[0]
