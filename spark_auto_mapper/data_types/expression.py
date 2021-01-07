@@ -3,10 +3,10 @@ from typing import Optional
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import expr
 
-from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
+from spark_auto_mapper.data_types.array_base import AutoMapperArrayBase
 
 
-class AutoMapperDataTypeExpression(AutoMapperTextLikeBase):
+class AutoMapperDataTypeExpression(AutoMapperArrayBase):
     def __init__(self, value: str):
         super().__init__()
         self.value: str = value

@@ -21,7 +21,7 @@ class AutoMapperDataTypeColumn(AutoMapperArrayBase):
         if isinstance(self.value, str):
             if self.value.startswith("_") and current_column is not None:
                 elements = self.value.split(".")
-                if len(elements) > 0:
+                if len(elements) > 1:
                     return current_column[elements[1]]
                 else:
                     return current_column

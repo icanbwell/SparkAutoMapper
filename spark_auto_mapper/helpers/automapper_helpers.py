@@ -82,7 +82,7 @@ class AutoMapperHelpers:
         return AutoMapperDataTypeLiteral(value, StringType())
 
     @staticmethod
-    def expression(value: str) -> AutoMapperTextLikeBase:
+    def expression(value: str) -> AutoMapperArrayBase:
         """
         Specifies that the value parameter should be executed as a sql expression in Spark
         :param value: sql
@@ -465,7 +465,7 @@ class AutoMapperHelpers:
         return AutoMapperDataTypeField(value)
 
     @staticmethod
-    def current_item() -> AutoMapperTextLikeBase:
+    def current() -> AutoMapperTextLikeBase:
         """
         Specifies to use the current item
         :return: A column automapper type
