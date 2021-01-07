@@ -1,26 +1,18 @@
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict
 
 from pyspark.sql import SparkSession, DataFrame, Column
 
-from spark_auto_mapper.data_types.complex.complex_base import AutoMapperDataTypeComplexBase
-from spark_auto_mapper.helpers.spark_higher_order_functions import transform
-
+from spark_auto_mapper.helpers.spark_higher_order_functions import transform, filter
 from tests.conftest import clean_spark_session
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
-from pyspark.sql.functions import struct
 # noinspection PyUnresolvedReferences
-from pyspark.sql.functions import col
+from pyspark.sql.functions import lit
 
 
-class MyObject(AutoMapperDataTypeComplexBase):
-    def __init__(self, age: List[AutoMapperDataTypeComplexBase]):
-        super().__init__(age=age)
-
-
-def test_automapper_transform(spark_session: SparkSession) -> None:
+def test_automapper_select_one(spark_session: SparkSession) -> None:
     clean_spark_session(spark_session)
     data_dir: Path = Path(__file__).parent.joinpath("./")
 
@@ -35,13 +27,10 @@ def test_automapper_transform(spark_session: SparkSession) -> None:
     source_df.show(truncate=False)
 
     # Act
-    mapper = AutoMapper(view="members", source_view="patients").complex(
-        MyObject(
-            age=A.transform(
-                A.column("identifier"),
-                A.complex(bar=A.field("value"), bar2=A.field("system"))
-            )
-        )
+    mapper = AutoMapper(view="members", source_view="patients").columns(
+        age=A.column("identifier").filter(
+            lambda x: x["system"] == "http://hl7.org/fhir/sid/us-npi"
+        ).select_one(A.field("_.value"))
     )
 
     assert isinstance(mapper, AutoMapper)
@@ -53,14 +42,15 @@ def test_automapper_transform(spark_session: SparkSession) -> None:
 
     assert str(sql_expressions["age"]) == str(
         transform(
-            "b.identifier", lambda x: struct(
-                col("x[value]").alias("bar"),
-                col("x[system]").alias("bar2")
-            )
-        ).alias("age")
+            filter(
+                "b.identifier",
+                lambda x: x["system"] == lit("http://hl7.org/fhir/sid/us-npi")
+            ), lambda x: x["value"]
+        )[0].alias("age")
     )
     result_df: DataFrame = mapper.transform(df=source_df)
 
     result_df.show(truncate=False)
 
-    assert result_df.select("age").collect()[0][0][0][0] == "123"
+    assert result_df.select("age").collect()[0][0] == "1730325416"
+    assert result_df.select("age").collect()[1][0] == "1467734301"

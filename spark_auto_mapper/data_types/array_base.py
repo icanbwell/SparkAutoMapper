@@ -93,6 +93,25 @@ class AutoMapperArrayLikeBase(AutoMapperTextLikeBase):
             )
         )
 
+    def select_one(self, value: _TAutoMapperDataType) -> _TAutoMapperDataType:
+        """
+        selects first item from array
+
+
+        :param value: Complex or Simple Type to create for each item in the array
+        :return: a transform automapper type
+        """
+        from spark_auto_mapper.data_types.transform import AutoMapperTransformDataType
+        from spark_auto_mapper.data_types.first import AutoMapperFirstDataType
+
+        # cast it to the inner type so type checking is happy
+        return cast(
+            _TAutoMapperDataType,
+            AutoMapperFirstDataType(
+                column=AutoMapperTransformDataType(column=self, value=value)
+            )
+        )
+
     # noinspection PyMethodMayBeStatic
     def first(self) -> _TAutoMapperDataType:
         """
