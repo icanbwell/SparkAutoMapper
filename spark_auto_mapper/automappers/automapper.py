@@ -37,7 +37,8 @@ class AutoMapper(AutoMapperContainer):
         skip_schema_validation: List[str] = ["extension"],
         skip_if_columns_null_or_empty: Optional[List[str]] = None,
         keep_null_rows: bool = False,
-        filter_by: Optional[str] = None
+        filter_by: Optional[str] = None,
+        enable_logging: bool = True
     ):
         """
         Creates an AutoMapper
@@ -82,6 +83,7 @@ class AutoMapper(AutoMapperContainer):
             List[str]] = skip_if_columns_null_or_empty
         self.keep_null_rows: bool = keep_null_rows
         self.filter_by: Optional[str] = filter_by
+        self.enable_logging: bool = enable_logging
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
     def transform_with_data_frame_single_select(
@@ -96,6 +98,22 @@ class AutoMapper(AutoMapperContainer):
         try:
             if not self.drop_key_columns:
                 column_specs = [col(f"b.{c}") for c in keys] + column_specs
+
+            if self.enable_logging:
+                print(f"-------- automapper ({self.view}) column specs ------")
+                for column_spec in column_specs:
+                    print(column_spec)
+                print(
+                    f"-------- end automapper ({self.view}) column specs ------"
+                )
+                print(
+                    f"-------- automapper ({self.source_view}) source_df schema ------"
+                )
+                source_df.printSchema()
+                print(
+                    f"-------- end automapper ({self.source_view}) source_df schema ------"
+                )
+
             # run all the selects
             df = source_df.alias("b").select(*column_specs)
             # write out final checkpoint for this automapper
