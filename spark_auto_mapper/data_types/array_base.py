@@ -107,7 +107,7 @@ class AutoMapperArrayLikeBase(AutoMapperTextLikeBase):
         return cast(_TAutoMapperDataType, AutoMapperFirstDataType(column=self))
 
     # noinspection PyMethodMayBeStatic
-    def expression(self, value: str) -> AutoMapperTextLikeBase:
+    def expression(self, value: str) -> 'AutoMapperArrayLikeBase':
         """
         Specifies that the value parameter should be executed as a sql expression in Spark
 
@@ -117,9 +117,11 @@ class AutoMapperArrayLikeBase(AutoMapperTextLikeBase):
         """
         from spark_auto_mapper.data_types.expression import AutoMapperDataTypeExpression
 
-        return AutoMapperDataTypeExpression(value)
+        return cast(
+            AutoMapperArrayLikeBase, AutoMapperDataTypeExpression(value)
+        )
 
-    def current(self) -> AutoMapperTextLikeBase:
+    def current(self) -> 'AutoMapperArrayLikeBase':
         """
         Specifies to use the current item
         :return: A column automapper type
@@ -127,7 +129,7 @@ class AutoMapperArrayLikeBase(AutoMapperTextLikeBase):
         return self.field("_")
 
     # noinspection PyMethodMayBeStatic
-    def field(self, value: str) -> AutoMapperTextLikeBase:
+    def field(self, value: str) -> 'AutoMapperArrayLikeBase':
         """
         Specifies that the value parameter should be used as a field name
         :param value: name of column
@@ -135,4 +137,4 @@ class AutoMapperArrayLikeBase(AutoMapperTextLikeBase):
         """
         from spark_auto_mapper.data_types.field import AutoMapperDataTypeField
 
-        return AutoMapperDataTypeField(value)
+        return cast(AutoMapperArrayLikeBase, AutoMapperDataTypeField(value))

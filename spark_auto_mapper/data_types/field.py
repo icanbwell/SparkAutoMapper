@@ -4,10 +4,10 @@ from pyspark.sql import Column, DataFrame
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import col, expr
 
-from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
+from spark_auto_mapper.data_types.array_base import AutoMapperArrayLikeBase
 
 
-class AutoMapperDataTypeField(AutoMapperTextLikeBase):
+class AutoMapperDataTypeField(AutoMapperArrayLikeBase):
     def __init__(self, value: str):
         super().__init__()
         if len(value) > 0 and value[0] == "[":
