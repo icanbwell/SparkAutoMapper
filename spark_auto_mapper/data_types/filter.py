@@ -2,12 +2,12 @@ from typing import Callable, Any, Dict, Optional
 
 from pyspark.sql import DataFrame, Column
 
-from spark_auto_mapper.data_types.array_base import AutoMapperArrayBase
+from spark_auto_mapper.data_types.array_base import AutoMapperArrayLikeBase
 from spark_auto_mapper.helpers.spark_higher_order_functions import filter
 from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperColumnOrColumnLikeType
 
 
-class AutoMapperFilterDataType(AutoMapperArrayBase):
+class AutoMapperFilterDataType(AutoMapperArrayLikeBase):
     def __init__(
         self, column: AutoMapperColumnOrColumnLikeType,
         func: Callable[[Dict[str, Any]], Any]

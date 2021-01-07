@@ -3,11 +3,11 @@ from typing import Optional
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import split
 
-from spark_auto_mapper.data_types.array_base import AutoMapperArrayBase
+from spark_auto_mapper.data_types.array_base import AutoMapperArrayLikeBase
 from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperColumnOrColumnLikeType
 
 
-class AutoMapperSplitByDelimiterDataType(AutoMapperArrayBase):
+class AutoMapperSplitByDelimiterDataType(AutoMapperArrayLikeBase):
     """
     Splits the string by the delimiter and returns an array
     """

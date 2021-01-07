@@ -14,7 +14,7 @@ _TAutoMapperDataType = TypeVar(
 )
 
 
-class AutoMapperArrayBase(AutoMapperTextLikeBase):
+class AutoMapperArrayLikeBase(AutoMapperTextLikeBase):
     # noinspection PyMethodMayBeStatic
     def get_column_spec(
         self, source_df: DataFrame, current_column: Optional[Column]
@@ -58,7 +58,7 @@ class AutoMapperArrayBase(AutoMapperTextLikeBase):
     # noinspection PyMethodMayBeStatic
     def filter(
         self, func: Callable[[Dict[str, Any]], Any]
-    ) -> 'AutoMapperArrayBase':
+    ) -> 'AutoMapperArrayLikeBase':
         """
         filters an array column
 
@@ -70,12 +70,12 @@ class AutoMapperArrayBase(AutoMapperTextLikeBase):
 
         # cast it to the inner type so type checking is happy
         return cast(
-            AutoMapperArrayBase,
+            AutoMapperArrayLikeBase,
             AutoMapperFilterDataType(column=self, func=func)
         )
 
     # noinspection PyMethodMayBeStatic
-    def split_by_delimiter(self, delimiter: str) -> 'AutoMapperArrayBase':
+    def split_by_delimiter(self, delimiter: str) -> 'AutoMapperArrayLikeBase':
         """
         splits a text column by the delimiter to create an array
 
@@ -87,7 +87,7 @@ class AutoMapperArrayBase(AutoMapperTextLikeBase):
 
         # cast it to the inner type so type checking is happy
         return cast(
-            AutoMapperArrayBase,
+            AutoMapperArrayLikeBase,
             AutoMapperSplitByDelimiterDataType(
                 column=self, delimiter=delimiter
             )
