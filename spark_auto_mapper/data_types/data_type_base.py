@@ -1,6 +1,10 @@
-from typing import Optional
+from typing import Optional, TypeVar, Union, List, cast, Callable, Dict, Any
 
 from pyspark.sql import Column, DataFrame
+
+_TAutoMapperDataType = TypeVar(
+    "_TAutoMapperDataType", bound=Union['AutoMapperDataTypeBase']
+)
 
 
 class AutoMapperDataTypeBase:
@@ -36,3 +40,138 @@ class AutoMapperDataTypeBase:
 
     def include_null_properties(self, include_null_properties: bool) -> None:
         pass  # sub-classes can implement if they support this
+
+    # noinspection PyMethodMayBeStatic
+    def transform(self,
+                  value: _TAutoMapperDataType) -> List[_TAutoMapperDataType]:
+        """
+        transforms a column into another type or struct
+
+
+        :param value: Complex or Simple Type to create for each item in the array
+        :return: a transform automapper type
+        """
+        from spark_auto_mapper.data_types.transform import AutoMapperTransformDataType
+        # cast it to the inner type so type checking is happy
+        return cast(
+            List[_TAutoMapperDataType],
+            AutoMapperTransformDataType(column=self, value=value)
+        )
+
+    # noinspection PyMethodMayBeStatic
+    def select(self,
+               value: _TAutoMapperDataType) -> List[_TAutoMapperDataType]:
+        """
+        transforms a column into another type or struct
+
+
+        :param value: Complex or Simple Type to create for each item in the array
+        :return: a transform automapper type
+        """
+        from spark_auto_mapper.data_types.transform import AutoMapperTransformDataType
+        # cast it to the inner type so type checking is happy
+        return cast(
+            List[_TAutoMapperDataType],
+            AutoMapperTransformDataType(column=self, value=value)
+        )
+
+    # noinspection PyMethodMayBeStatic
+    def filter(
+        self, func: Callable[[Dict[str, Any]], Any]
+    ) -> _TAutoMapperDataType:
+        """
+        filters an array column
+
+
+        :param func: func to create type or struct
+        :return: a filter automapper type
+        """
+        from spark_auto_mapper.data_types.filter import AutoMapperFilterDataType
+
+        # cast it to the inner type so type checking is happy
+        return cast(
+            _TAutoMapperDataType,
+            AutoMapperFilterDataType(column=self, func=func)
+        )
+
+    # noinspection PyMethodMayBeStatic
+    def split_by_delimiter(self, delimiter: str) -> _TAutoMapperDataType:
+        """
+        splits a text column by the delimiter to create an array
+
+
+        :param delimiter: delimiter
+        :return: a split_by_delimiter automapper type
+        """
+        from spark_auto_mapper.data_types.split_by_delimiter import AutoMapperSplitByDelimiterDataType
+
+        # cast it to the inner type so type checking is happy
+        return cast(
+            _TAutoMapperDataType,
+            AutoMapperSplitByDelimiterDataType(
+                column=self, delimiter=delimiter
+            )
+        )
+
+    def select_one(self, value: _TAutoMapperDataType) -> _TAutoMapperDataType:
+        """
+        selects first item from array
+
+
+        :param value: Complex or Simple Type to create for each item in the array
+        :return: a transform automapper type
+        """
+        from spark_auto_mapper.data_types.transform import AutoMapperTransformDataType
+        from spark_auto_mapper.data_types.first import AutoMapperFirstDataType
+
+        # cast it to the inner type so type checking is happy
+        return cast(
+            _TAutoMapperDataType,
+            AutoMapperFirstDataType(
+                column=AutoMapperTransformDataType(column=self, value=value)
+            )
+        )
+
+    # noinspection PyMethodMayBeStatic
+    def first(self) -> _TAutoMapperDataType:
+        """
+        returns the first element in array
+
+
+        :return: a filter automapper type
+        """
+        from spark_auto_mapper.data_types.first import AutoMapperFirstDataType
+
+        # cast it to the inner type so type checking is happy
+        return cast(_TAutoMapperDataType, AutoMapperFirstDataType(column=self))
+
+    # noinspection PyMethodMayBeStatic
+    def expression(self, value: str) -> _TAutoMapperDataType:
+        """
+        Specifies that the value parameter should be executed as a sql expression in Spark
+
+
+        :param value: sql
+        :return: an expression automapper type
+        """
+        from spark_auto_mapper.data_types.expression import AutoMapperDataTypeExpression
+
+        return cast(_TAutoMapperDataType, AutoMapperDataTypeExpression(value))
+
+    def current(self) -> _TAutoMapperDataType:
+        """
+        Specifies to use the current item
+        :return: A column automapper type
+        """
+        return self.field("_")
+
+    # noinspection PyMethodMayBeStatic
+    def field(self, value: str) -> _TAutoMapperDataType:
+        """
+        Specifies that the value parameter should be used as a field name
+        :param value: name of column
+        :return: A column automapper type
+        """
+        from spark_auto_mapper.data_types.field import AutoMapperDataTypeField
+
+        return cast(_TAutoMapperDataType, AutoMapperDataTypeField(value))

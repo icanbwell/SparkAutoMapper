@@ -1,9 +1,10 @@
-from typing import Optional
+from typing import Optional, Union
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import split
 
 from spark_auto_mapper.data_types.array_base import AutoMapperArrayLikeBase
+from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperColumnOrColumnLikeType
 
 
@@ -12,11 +13,13 @@ class AutoMapperSplitByDelimiterDataType(AutoMapperArrayLikeBase):
     Splits the string by the delimiter and returns an array
     """
     def __init__(
-        self, column: AutoMapperColumnOrColumnLikeType, delimiter: str
+        self, column: Union[AutoMapperDataTypeBase,
+                            AutoMapperColumnOrColumnLikeType], delimiter: str
     ):
         super().__init__()
 
-        self.column: AutoMapperColumnOrColumnLikeType = column
+        self.column: Union[AutoMapperDataTypeBase,
+                           AutoMapperColumnOrColumnLikeType] = column
         # if simple string passed in then convert to regex
         self.delimiter: str = delimiter if delimiter.startswith(
             "["
