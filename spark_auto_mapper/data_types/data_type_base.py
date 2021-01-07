@@ -78,7 +78,7 @@ class AutoMapperDataTypeBase:
     # noinspection PyMethodMayBeStatic
     def filter(
         self, func: Callable[[Dict[str, Any]], Any]
-    ) -> _TAutoMapperDataType:
+    ) -> 'AutoMapperDataTypeBase':
         """
         filters an array column
 
@@ -90,7 +90,7 @@ class AutoMapperDataTypeBase:
 
         # cast it to the inner type so type checking is happy
         return cast(
-            _TAutoMapperDataType,
+            'AutoMapperDataTypeBase',
             AutoMapperFilterDataType(column=self, func=func)
         )
 
