@@ -175,3 +175,16 @@ class AutoMapperDataTypeBase:
         from spark_auto_mapper.data_types.field import AutoMapperDataTypeField
 
         return cast(_TAutoMapperDataType, AutoMapperDataTypeField(value))
+
+    def float(self) -> 'AutoMapperDataTypeBase':
+        """
+        Converts column to float
+
+        :return:
+        :rtype:
+        """
+        from spark_auto_mapper.data_types.float import AutoMapperFloatDataType
+
+        return cast(
+            'AutoMapperDataTypeBase', AutoMapperFloatDataType(value=self)
+        )

@@ -486,3 +486,17 @@ class AutoMapperHelpers:
         return AutoMapperSplitByDelimiterDataType(
             column=column, delimiter=delimiter
         )
+
+    @staticmethod
+    def float(value: AutoMapperDataTypeBase) -> 'AutoMapperDataTypeBase':
+        """
+        Converts column to float
+
+        :return:
+        :rtype:
+        """
+        from spark_auto_mapper.data_types.float import AutoMapperFloatDataType
+
+        return cast(
+            'AutoMapperDataTypeBase', AutoMapperFloatDataType(value=value)
+        )
