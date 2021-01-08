@@ -5,6 +5,7 @@ from pyspark.sql.functions import array
 from pyspark.sql.functions import lit
 
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
+from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
 from spark_auto_mapper.helpers.spark_higher_order_functions import filter
 from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
 from spark_auto_mapper.type_definitions.native_types import AutoMapperNativeSimpleType
@@ -23,7 +24,9 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
     """
     def __init__(
         self,
-        value: Optional[Union[List[_T], AutoMapperDataTypeBase]],
+        value: Optional[Union[List[_T], AutoMapperDataTypeBase,
+                              List[AutoMapperDataTypeBase],
+                              List[AutoMapperTextLikeBase]]],
         remove_nulls: bool = True,
         include_null_properties: bool = True
     ) -> None:

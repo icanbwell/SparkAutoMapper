@@ -48,7 +48,8 @@ class AutoMapperValueParser:
             return AutoMapperDataTypeStruct(value=value)
         if isinstance(value, List):
             from spark_auto_mapper.data_types.list import AutoMapperList
-            return AutoMapperList(value=value)
+            # ignore the type because we're using a list and it cannot ensure the type of the list
+            return AutoMapperList(value=value)  # type: ignore
 
         if isinstance(value, AutoMapperDataTypeBase):
             return value
