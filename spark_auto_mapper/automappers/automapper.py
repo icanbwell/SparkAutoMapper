@@ -8,6 +8,7 @@ from pyspark.sql.functions import col
 from pyspark.sql.utils import AnalysisException
 
 from spark_auto_mapper.automappers.automapper_base import AutoMapperBase
+from spark_auto_mapper.automappers.column_spec_wrapper import ColumnSpecWrapper
 from spark_auto_mapper.automappers.container import AutoMapperContainer
 from spark_auto_mapper.automappers.complex import AutoMapperWithComplex
 from spark_auto_mapper.data_types.complex.complex_base import AutoMapperDataTypeComplexBase
@@ -346,9 +347,10 @@ class AutoMapper(AutoMapperContainer):
         column_specs: Dict[str, Column] = self.get_column_specs(
             source_df=source_df
         )
-        output: str = f"view={self.view}" if self.view else ""
+        output: str = f"view={self.view}\n" if self.view else ""
         for column_name, column_spec in column_specs.items():
-            output += f"{column_name}= {column_spec}\n"
+            output += ColumnSpecWrapper(column_spec).to_debug_string()
+
         return output
 
     @property
@@ -358,4 +360,8 @@ class AutoMapper(AutoMapperContainer):
 
         :return dictionary of column specs
         """
-        return self.get_column_specs(source_df=None)
+        return {
+            column_name: ColumnSpecWrapper(column_spec)
+            for column_name, column_spec in
+            self.get_column_specs(source_df=None).items()
+        }
