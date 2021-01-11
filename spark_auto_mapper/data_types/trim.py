@@ -18,7 +18,7 @@ class AutoMapperTrimDataType(AutoMapperTextLikeBase):
         self.column: AutoMapperColumnOrColumnLikeType = column
 
     def get_column_spec(
-        self, source_df: DataFrame, current_column: Optional[Column]
+        self, source_df: Optional[DataFrame], current_column: Optional[Column]
     ) -> Column:
         column_spec = trim(
             self.column.get_column_spec(

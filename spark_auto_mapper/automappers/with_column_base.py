@@ -34,7 +34,7 @@ class AutoMapperWithColumnBase(AutoMapperBase):
                 include_null_properties=include_null_properties
             )
 
-    def get_column_spec(self, source_df: DataFrame) -> Column:
+    def get_column_spec(self, source_df: Optional[DataFrame]) -> Column:
         # if value is an AutoMapper then ask it for its column spec
         if isinstance(self.value, AutoMapperDataTypeBase):
             child: AutoMapperDataTypeBase = self.value
@@ -56,7 +56,7 @@ class AutoMapperWithColumnBase(AutoMapperBase):
             if self.column_schema:
                 column_spec = column_spec.cast(self.column_schema.dataType)
             # if dst_column already exists in source_df then prepend with ___ to make it unique
-            if self.dst_column in source_df.columns:
+            if source_df is not None and self.dst_column in source_df.columns:
                 return column_spec.alias(f"___{self.dst_column}")
             else:
                 return column_spec.alias(self.dst_column)
@@ -65,7 +65,8 @@ class AutoMapperWithColumnBase(AutoMapperBase):
             f"{type(self.value)} is not supported for {self.value}"
         )
 
-    def get_column_specs(self, source_df: DataFrame) -> Dict[str, Column]:
+    def get_column_specs(self,
+                         source_df: Optional[DataFrame]) -> Dict[str, Column]:
         return {self.dst_column: self.get_column_spec(source_df=source_df)}
 
     # noinspection PyMethodMayBeStatic

@@ -17,6 +17,6 @@ _TAutoMapperDataType = TypeVar(
 class AutoMapperArrayLikeBase(AutoMapperTextLikeBase):
     # noinspection PyMethodMayBeStatic
     def get_column_spec(
-        self, source_df: DataFrame, current_column: Optional[Column]
+        self, source_df: Optional[DataFrame], current_column: Optional[Column]
     ) -> Column:
         raise NotImplementedError  # base classes should implement this
