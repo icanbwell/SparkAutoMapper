@@ -25,7 +25,7 @@ class AutoMapperSubstringByDelimiterDataType(AutoMapperTextLikeBase):
         self.delimiter_count: int = delimiter_count
 
     def get_column_spec(
-        self, source_df: DataFrame, current_column: Optional[Column]
+        self, source_df: Optional[DataFrame], current_column: Optional[Column]
     ) -> Column:
         column_spec = substring_index(
             self.column.get_column_spec(

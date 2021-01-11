@@ -16,7 +16,7 @@ class AutoMapperDataTypeField(AutoMapperArrayLikeBase):
             self.value = value
 
     def get_column_spec(
-        self, source_df: DataFrame, current_column: Optional[Column]
+        self, source_df: Optional[DataFrame], current_column: Optional[Column]
     ) -> Column:
         if isinstance(self.value, str):
             if current_column is not None:

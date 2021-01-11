@@ -16,7 +16,7 @@ class AutoMapperFloatDataType(AutoMapperDataTypeBase):
             else AutoMapperValueParser.parse_value(value)
 
     def get_column_spec(
-        self, source_df: DataFrame, current_column: Optional[Column]
+        self, source_df: Optional[DataFrame], current_column: Optional[Column]
     ) -> Column:
         if isinstance(self.value, AutoMapperDataTypeLiteral):
             # parse the amount here
@@ -24,7 +24,7 @@ class AutoMapperFloatDataType(AutoMapperDataTypeBase):
                 source_df=source_df, current_column=current_column
             ).cast("float")
             return column_spec
-        if isinstance(self.value, AutoMapperDataTypeColumn) \
+        if isinstance(self.value, AutoMapperDataTypeColumn) and source_df is not None \
                 and dict(source_df.dtypes)[self.value.value] == "string":
             # parse the amount here
             column_spec = self.value.get_column_spec(

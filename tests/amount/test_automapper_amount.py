@@ -28,6 +28,9 @@ def test_auto_mapper_amount(spark_session: SparkSession) -> None:
         view="members", source_view="patients", keys=["member_id"]
     ).columns(age=A.amount(A.column("my_age")))
 
+    debug_text: str = mapper.to_debug_string()
+    print(debug_text)
+
     assert isinstance(mapper, AutoMapper)
     sql_expressions: Dict[str, Column] = mapper.get_column_specs(
         source_df=source_df

@@ -17,7 +17,7 @@ class AutoMapperDataTypeColumn(AutoMapperArrayLikeBase):
             self.value = value
 
     def get_column_spec(
-        self, source_df: DataFrame, current_column: Optional[Column]
+        self, source_df: Optional[DataFrame], current_column: Optional[Column]
     ) -> Column:
         if isinstance(self.value, str):
             if not self.value.startswith("a.") and not self.value.startswith(

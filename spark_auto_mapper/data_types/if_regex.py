@@ -47,7 +47,7 @@ class AutoMapperIfRegExDataType(
         )
 
     def get_column_spec(
-        self, source_df: DataFrame, current_column: Optional[Column]
+        self, source_df: Optional[DataFrame], current_column: Optional[Column]
     ) -> Column:
         # rlike takes a string and not a column
         if isinstance(self.check, list):

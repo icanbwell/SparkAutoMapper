@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Dict
 
 from pyspark.sql import DataFrame, Column
 from pyspark.sql.functions import monotonically_increasing_id
@@ -101,8 +101,7 @@ class AutoMapper(AutoMapperContainer):
 
             if self.enable_logging:
                 print(f"-------- automapper ({self.view}) column specs ------")
-                for column_spec in column_specs:
-                    print(column_spec)
+                print(self.to_debug_string(source_df=source_df))
                 print(
                     f"-------- end automapper ({self.view}) column specs ------"
                 )
@@ -328,3 +327,35 @@ class AutoMapper(AutoMapperContainer):
         for column_name, child_mapper in resource_mapper.mappers.items():
             self.register_child(dst_column=column_name, child=child_mapper)
         return self
+
+    def __repr__(self) -> str:
+        """
+        Display for debugger
+
+        :return: string representation for debugger
+        """
+        return self.to_debug_string()
+
+    def to_debug_string(self, source_df: Optional[DataFrame] = None) -> str:
+        """
+        Displays the automapper as a string
+
+        :param source_df: (Optional) source data frame
+        :return: string representation
+        """
+        column_specs: Dict[str, Column] = self.get_column_specs(
+            source_df=source_df
+        )
+        output: str = f"view={self.view}" if self.view else ""
+        for column_name, column_spec in column_specs.items():
+            output += f"{column_name}= {column_spec}\n"
+        return output
+
+    @property
+    def column_specs(self) -> Dict[str, Column]:
+        """
+        Useful to show in debugger
+
+        :return dictionary of column specs
+        """
+        return self.get_column_specs(source_df=None)

@@ -68,7 +68,7 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
             )
 
     def get_column_spec(
-        self, source_df: DataFrame, current_column: Optional[Column]
+        self, source_df: Optional[DataFrame], current_column: Optional[Column]
     ) -> Column:
         if isinstance(
             self.value, str

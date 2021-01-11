@@ -10,7 +10,7 @@ _TAutoMapperDataType = TypeVar(
 class AutoMapperDataTypeBase:
     # noinspection PyMethodMayBeStatic
     def get_column_spec(
-        self, source_df: DataFrame, current_column: Optional[Column]
+        self, source_df: Optional[DataFrame], current_column: Optional[Column]
     ) -> Column:
         """
         Gets the column spec for this automapper data type
@@ -22,7 +22,7 @@ class AutoMapperDataTypeBase:
 
     # noinspection PyMethodMayBeStatic
     def get_value(
-        self, value: 'AutoMapperDataTypeBase', source_df: DataFrame,
+        self, value: 'AutoMapperDataTypeBase', source_df: Optional[DataFrame],
         current_column: Optional[Column]
     ) -> Column:
         """

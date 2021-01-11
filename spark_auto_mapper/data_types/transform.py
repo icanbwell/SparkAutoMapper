@@ -32,7 +32,7 @@ class AutoMapperTransformDataType(
         )
 
     def get_column_spec(
-        self, source_df: DataFrame, current_column: Optional[Column]
+        self, source_df: Optional[DataFrame], current_column: Optional[Column]
     ) -> Column:
         column_spec: Column = self.column.get_column_spec(
             source_df=source_df, current_column=current_column

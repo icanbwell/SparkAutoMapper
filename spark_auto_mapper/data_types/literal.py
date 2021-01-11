@@ -21,7 +21,7 @@ class AutoMapperDataTypeLiteral(AutoMapperTextLikeBase):
         self.type_: Optional[DataType] = type_
 
     def get_column_spec(
-        self, source_df: DataFrame, current_column: Optional[Column]
+        self, source_df: Optional[DataFrame], current_column: Optional[Column]
     ) -> Column:
         if not self.value:
             return lit(None)
