@@ -8,6 +8,7 @@ from pyspark.sql.functions import col
 from pyspark.sql.utils import AnalysisException
 
 from spark_auto_mapper.automappers.automapper_base import AutoMapperBase
+from spark_auto_mapper.automappers.check_schema_result import CheckSchemaResult
 from spark_auto_mapper.automappers.automapper_exception import AutoMapperException
 from spark_auto_mapper.automappers.column_spec_wrapper import ColumnSpecWrapper
 from spark_auto_mapper.automappers.container import AutoMapperContainer
@@ -40,7 +41,8 @@ class AutoMapper(AutoMapperContainer):
         skip_if_columns_null_or_empty: Optional[List[str]] = None,
         keep_null_rows: bool = False,
         filter_by: Optional[str] = None,
-        enable_logging: bool = True
+        enable_logging: bool = True,
+        check_schema_for_all_columns: bool = False
     ):
         """
         Creates an AutoMapper
@@ -86,6 +88,7 @@ class AutoMapper(AutoMapperContainer):
         self.keep_null_rows: bool = keep_null_rows
         self.filter_by: Optional[str] = filter_by
         self.enable_logging: bool = enable_logging
+        self.check_schema_for_all_columns: bool = check_schema_for_all_columns
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
     def transform_with_data_frame_single_select(
@@ -98,7 +101,7 @@ class AutoMapper(AutoMapperContainer):
         ]
 
         try:
-            print("========== NEW 2 ==============")
+            # print("========== NEW 2 ==============")
             if not self.drop_key_columns:
                 column_specs = [col(f"b.{c}") for c in keys] + column_specs
 
@@ -116,6 +119,22 @@ class AutoMapper(AutoMapperContainer):
                     f"-------- end automapper ({self.source_view}) source_df schema ------"
                 )
 
+            if self.check_schema_for_all_columns:
+                for column_name, mapper in self.mappers.items():
+                    check_schema_result: Optional[CheckSchemaResult
+                                                  ] = mapper.check_schema(
+                                                      parent_column=None,
+                                                      source_df=source_df
+                                                  )
+                    if check_schema_result and len(
+                        check_schema_result.result.errors
+                    ) > 0:
+                        print(
+                            f"==== ERROR: Schema Mismatch [{column_name}]: {str(check_schema_result)} ==="
+                        )
+                    else:
+                        print(f"==== Schema Matches: [{column_name}] ====")
+
             # run all the selects
             df = source_df.alias("b").select(*column_specs)
             # write out final checkpoint for this automapper
@@ -127,16 +146,22 @@ class AutoMapper(AutoMapperContainer):
                 df = df.sql_ctx.read.parquet(str(checkpoint_path))
         except AnalysisException:
             # iterate through each column to find the problem child
-            for column_name, column_spec in self.get_column_specs(
-                source_df=source_df
-            ).items():
+            for column_name, mapper in self.mappers.items():
                 try:
                     print(f"========= Processing {column_name} =========== ")
-                    count = source_df.alias("b").select(column_spec).count()
+                    column_spec = mapper.get_column_specs(source_df=source_df
+                                                          )[column_name]
+                    source_df.alias("b").select(column_spec).limit(1).count()
                     print(
-                        f"========= Done Processing {column_name} : {count}=========== "
+                        f"========= Done Processing {column_name} =========== "
                     )
                 except AnalysisException as e2:
+                    print(
+                        f"========= checking Schema {column_name} =========== "
+                    )
+                    check_schema_result = mapper.check_schema(
+                        parent_column=None, source_df=source_df
+                    )
                     msg: str = ""
                     if e2.desc.startswith("cannot resolve 'array"):
                         msg = "Looks like the elements of the array have different structures.  " \
@@ -144,13 +169,16 @@ class AutoMapper(AutoMapperContainer):
                               "You can pass in include_nulls to AutoMapperDataTypeComplexBase to force it to create " \
                               "null values for each element in the structure. "
                     msg += self.get_message_for_exception(
-                        column_name, df, e2, source_df
+                        column_name + ": " + str(check_schema_result), df, e2,
+                        source_df
                     )
                     raise AutoMapperException(msg) from e2
         except Exception as e:
             print("====  OOPS ===========")
             msg = self.get_message_for_exception("", df, e, source_df)
             raise Exception(msg) from e
+
+        print(f"========= Finished AutoMapper {self.view} =========== ")
         return df
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal

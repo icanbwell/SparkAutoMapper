@@ -3,9 +3,11 @@ from typing import List, Dict, Optional
 from pyspark.sql import Column, DataFrame
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import col, when, lit
-from pyspark.sql.types import StructField
+from pyspark.sql.types import StructField, StructType
+from spark_data_frame_comparer.schema_comparer import SchemaComparer
 
 from spark_auto_mapper.automappers.automapper_base import AutoMapperBase
+from spark_auto_mapper.automappers.check_schema_result import CheckSchemaResult
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 from spark_auto_mapper.type_definitions.defined_types import AutoMapperAnyDataType
 from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
@@ -85,3 +87,21 @@ class AutoMapperWithColumnBase(AutoMapperBase):
             source_df.alias('b'), conditions
         ).select(existing_columns + [column_spec])
         return result_df
+
+    def check_schema(
+        self, parent_column: Optional[str], source_df: Optional[DataFrame]
+    ) -> Optional[CheckSchemaResult]:
+        if source_df and self.column_schema:
+            first_row_df: DataFrame = source_df.alias("b").select(
+                self.get_column_spec(source_df=source_df)
+            ).limit(1)
+            source_schema: StructType = first_row_df.schema
+            desired_schema: StructType = self.column_schema.dataType
+            result = SchemaComparer.compare_schema(
+                parent_column_name=self.dst_column,
+                source_schema=source_schema,
+                desired_schema=desired_schema
+            )
+            return CheckSchemaResult(result=result)
+        else:
+            return None
