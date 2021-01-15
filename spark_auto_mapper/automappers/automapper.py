@@ -8,6 +8,7 @@ from pyspark.sql.functions import col
 from pyspark.sql.utils import AnalysisException
 
 from spark_auto_mapper.automappers.automapper_base import AutoMapperBase
+from spark_auto_mapper.automappers.automapper_exception import AutoMapperException
 from spark_auto_mapper.automappers.column_spec_wrapper import ColumnSpecWrapper
 from spark_auto_mapper.automappers.container import AutoMapperContainer
 from spark_auto_mapper.automappers.complex import AutoMapperWithComplex
@@ -97,6 +98,7 @@ class AutoMapper(AutoMapperContainer):
         ]
 
         try:
+            print("========== NEW 2 ==============")
             if not self.drop_key_columns:
                 column_specs = [col(f"b.{c}") for c in keys] + column_specs
 
@@ -123,16 +125,30 @@ class AutoMapper(AutoMapperContainer):
                                                   or "df").joinpath("final")
                 df.write.parquet(str(checkpoint_path))
                 df = df.sql_ctx.read.parquet(str(checkpoint_path))
-        except AnalysisException as e:
-            msg: str = ""
-            if e.desc.startswith("cannot resolve 'array"):
-                msg = "Looks like the elements of the array have different structures.  " \
-                      "All items in an array should have the exact same structure.  " \
-                      "You can pass in include_nulls to AutoMapperDataTypeComplexBase to force it to create " \
-                      "null values for each element in the structure. "
-            msg += self.get_message_for_exception("", df, e, source_df)
-            raise Exception(msg) from e
+        except AnalysisException:
+            # iterate through each column to find the problem child
+            for column_name, column_spec in self.get_column_specs(
+                source_df=source_df
+            ).items():
+                try:
+                    print(f"========= Processing {column_name} =========== ")
+                    count = source_df.alias("b").select(column_spec).count()
+                    print(
+                        f"========= Done Processing {column_name} : {count}=========== "
+                    )
+                except AnalysisException as e2:
+                    msg: str = ""
+                    if e2.desc.startswith("cannot resolve 'array"):
+                        msg = "Looks like the elements of the array have different structures.  " \
+                              "All items in an array should have the exact same structure.  " \
+                              "You can pass in include_nulls to AutoMapperDataTypeComplexBase to force it to create " \
+                              "null values for each element in the structure. "
+                    msg += self.get_message_for_exception(
+                        column_name, df, e2, source_df
+                    )
+                    raise AutoMapperException(msg) from e2
         except Exception as e:
+            print("====  OOPS ===========")
             msg = self.get_message_for_exception("", df, e, source_df)
             raise Exception(msg) from e
         return df
@@ -207,8 +223,8 @@ class AutoMapper(AutoMapperContainer):
         # write out the full list of columns
         columns_in_source: List[str] = list(source_df.columns)
         columns_in_destination: List[str] = list(df.columns)
-        msg: str = str(e)
-        msg += f", Processing column:[{column_name}]"
+        msg: str = f", Processing column:[{column_name}]"
+        msg += str(e)
         msg += f", Source columns:[{','.join(columns_in_source)}]"
         msg += f", Destination columns:[{','.join(columns_in_destination)}]"
         return msg
