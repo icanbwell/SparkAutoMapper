@@ -92,10 +92,15 @@ class AutoMapperWithColumnBase(AutoMapperBase):
         self, parent_column: Optional[str], source_df: Optional[DataFrame]
     ) -> Optional[CheckSchemaResult]:
         if source_df and self.column_schema:
-            first_row_df: DataFrame = source_df.alias("b").select(
-                self.get_column_spec(source_df=source_df)
-            ).limit(1)
-            source_schema: StructType = first_row_df.schema
+            child: AutoMapperDataTypeBase = self.value
+            column_spec = child.get_column_spec(
+                source_df=source_df, current_column=None
+            )
+            # get just a few rows so Spark can infer the schema
+            first_few_rows_df: DataFrame = source_df.alias("b").select(
+                column_spec
+            ).limit(100)
+            source_schema: StructType = first_few_rows_df.schema
             desired_schema: StructType = self.column_schema.dataType
             result = SchemaComparer.compare_schema(
                 parent_column_name=self.dst_column,
