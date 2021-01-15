@@ -100,7 +100,7 @@ class AutoMapperWithColumnBase(AutoMapperBase):
             first_few_rows_df: DataFrame = source_df.alias("b").select(
                 column_spec
             ).limit(100)
-            source_schema: StructType = first_few_rows_df.schema
+            source_schema: StructType = first_few_rows_df.schema[0].dataType
             desired_schema: StructType = self.column_schema.dataType
             result = SchemaComparer.compare_schema(
                 parent_column_name=self.dst_column,

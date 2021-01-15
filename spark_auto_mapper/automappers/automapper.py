@@ -130,7 +130,8 @@ class AutoMapper(AutoMapperContainer):
                         check_schema_result.result.errors
                     ) > 0:
                         print(
-                            f"==== ERROR: Schema Mismatch [{column_name}]: {str(check_schema_result)} ==="
+                            f"==== ERROR: Schema Mismatch [{column_name}] ==="
+                            f"{str(check_schema_result)}"
                         )
                     else:
                         print(f"==== Schema Matches: [{column_name}] ====")
