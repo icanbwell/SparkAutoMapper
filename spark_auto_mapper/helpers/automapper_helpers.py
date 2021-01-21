@@ -11,6 +11,7 @@ from spark_auto_mapper.data_types.hash import AutoMapperHashDataType
 from spark_auto_mapper.data_types.if_ import AutoMapperIfDataType
 from spark_auto_mapper.data_types.if_not_null_or_empty import AutoMapperIfNotNullOrEmptyDataType
 from spark_auto_mapper.data_types.if_regex import AutoMapperIfRegExDataType
+from spark_auto_mapper.data_types.join_using_delimiter import AutoMapperJoinUsingDelimiterDataType
 from spark_auto_mapper.data_types.split_by_delimiter import AutoMapperSplitByDelimiterDataType
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
 
@@ -552,4 +553,18 @@ class AutoMapperHelpers:
         # cast it to the inner type so type checking is happy
         return cast(
             "AutoMapperDataTypeBase", AutoMapperArrayDataType(value=value)
+        )
+
+    @staticmethod
+    def join_using_delimiter(
+            column: AutoMapperColumnOrColumnLikeType, delimiter: str
+    ) -> AutoMapperJoinUsingDelimiterDataType:
+        """
+        Joins an array and forms a string using the delimiter
+        :param column: column whose contents to use
+        :param delimiter: string to use as delimiter
+        :return: a join automapper type
+        """
+        return AutoMapperJoinUsingDelimiterDataType(
+            column=column, delimiter=delimiter
         )
