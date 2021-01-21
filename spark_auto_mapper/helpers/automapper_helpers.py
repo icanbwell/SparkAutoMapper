@@ -500,3 +500,21 @@ class AutoMapperHelpers:
         return cast(
             'AutoMapperDataTypeBase', AutoMapperFloatDataType(value=value)
         )
+
+    @staticmethod
+    def flatten(
+        column: AutoMapperColumnOrColumnLikeType
+    ) -> "AutoMapperDataTypeBase":
+        """
+        creates a single array from an array of arrays.
+        If a structure of nested arrays is deeper than two levels, only one level of nesting is removed.
+        source: http://spark.apache.org/docs/latest/api/python/_modules/pyspark/sql/functions.html#flatten
+
+        :return: a flatten automapper type
+        """
+        from spark_auto_mapper.data_types.flatten import AutoMapperFlattenDataType
+
+        # cast it to the inner type so type checking is happy
+        return cast(
+            "AutoMapperDataTypeBase", AutoMapperFlattenDataType(column=column)
+        )
