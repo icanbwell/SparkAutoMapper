@@ -3,7 +3,7 @@ from typing import Optional, TypeVar, Union, List, cast, Callable, Dict, Any
 from pyspark.sql import Column, DataFrame
 
 _TAutoMapperDataType = TypeVar(
-    "_TAutoMapperDataType", bound=Union['AutoMapperDataTypeBase']
+    "_TAutoMapperDataType", bound=Union["AutoMapperDataTypeBase"]
 )
 
 
@@ -22,8 +22,10 @@ class AutoMapperDataTypeBase:
 
     # noinspection PyMethodMayBeStatic
     def get_value(
-        self, value: 'AutoMapperDataTypeBase', source_df: Optional[DataFrame],
-        current_column: Optional[Column]
+        self,
+        value: "AutoMapperDataTypeBase",
+        source_df: Optional[DataFrame],
+        current_column: Optional[Column],
     ) -> Column:
         """
         Gets the value for this automapper
@@ -52,10 +54,11 @@ class AutoMapperDataTypeBase:
         :return: a transform automapper type
         """
         from spark_auto_mapper.data_types.transform import AutoMapperTransformDataType
+
         # cast it to the inner type so type checking is happy
         return cast(
             List[_TAutoMapperDataType],
-            AutoMapperTransformDataType(column=self, value=value)
+            AutoMapperTransformDataType(column=self, value=value),
         )
 
     # noinspection PyMethodMayBeStatic
@@ -69,16 +72,17 @@ class AutoMapperDataTypeBase:
         :return: a transform automapper type
         """
         from spark_auto_mapper.data_types.transform import AutoMapperTransformDataType
+
         # cast it to the inner type so type checking is happy
         return cast(
             List[_TAutoMapperDataType],
-            AutoMapperTransformDataType(column=self, value=value)
+            AutoMapperTransformDataType(column=self, value=value),
         )
 
     # noinspection PyMethodMayBeStatic
     def filter(
         self, func: Callable[[Dict[str, Any]], Any]
-    ) -> 'AutoMapperDataTypeBase':
+    ) -> "AutoMapperDataTypeBase":
         """
         filters an array column
 
@@ -90,12 +94,12 @@ class AutoMapperDataTypeBase:
 
         # cast it to the inner type so type checking is happy
         return cast(
-            'AutoMapperDataTypeBase',
+            "AutoMapperDataTypeBase",
             AutoMapperFilterDataType(column=self, func=func)
         )
 
     # noinspection PyMethodMayBeStatic
-    def split_by_delimiter(self, delimiter: str) -> 'AutoMapperDataTypeBase':
+    def split_by_delimiter(self, delimiter: str) -> "AutoMapperDataTypeBase":
         """
         splits a text column by the delimiter to create an array
 
@@ -103,14 +107,16 @@ class AutoMapperDataTypeBase:
         :param delimiter: delimiter
         :return: a split_by_delimiter automapper type
         """
-        from spark_auto_mapper.data_types.split_by_delimiter import AutoMapperSplitByDelimiterDataType
+        from spark_auto_mapper.data_types.split_by_delimiter import (
+            AutoMapperSplitByDelimiterDataType,
+        )
 
         # cast it to the inner type so type checking is happy
         return cast(
-            'AutoMapperDataTypeBase',
+            "AutoMapperDataTypeBase",
             AutoMapperSplitByDelimiterDataType(
                 column=self, delimiter=delimiter
-            )
+            ),
         )
 
     def select_one(self, value: _TAutoMapperDataType) -> _TAutoMapperDataType:
@@ -129,7 +135,7 @@ class AutoMapperDataTypeBase:
             _TAutoMapperDataType,
             AutoMapperFirstDataType(
                 column=AutoMapperTransformDataType(column=self, value=value)
-            )
+            ),
         )
 
     # noinspection PyMethodMayBeStatic
@@ -176,7 +182,7 @@ class AutoMapperDataTypeBase:
 
         return cast(_TAutoMapperDataType, AutoMapperDataTypeField(value))
 
-    def float(self) -> 'AutoMapperDataTypeBase':
+    def float(self) -> "AutoMapperDataTypeBase":
         """
         Converts column to float
 
@@ -186,5 +192,21 @@ class AutoMapperDataTypeBase:
         from spark_auto_mapper.data_types.float import AutoMapperFloatDataType
 
         return cast(
-            'AutoMapperDataTypeBase', AutoMapperFloatDataType(value=self)
+            "AutoMapperDataTypeBase", AutoMapperFloatDataType(value=self)
+        )
+
+    # noinspection PyMethodMayBeStatic
+    def flatten(self) -> "AutoMapperDataTypeBase":
+        """
+        creates a single array from an array of arrays.
+        If a structure of nested arrays is deeper than two levels, only one level of nesting is removed.
+        source: http://spark.apache.org/docs/latest/api/python/_modules/pyspark/sql/functions.html#flatten
+
+        :return: a flatten automapper type
+        """
+        from spark_auto_mapper.data_types.flatten import AutoMapperFlattenDataType
+
+        # cast it to the inner type so type checking is happy
+        return cast(
+            "AutoMapperDataTypeBase", AutoMapperFlattenDataType(column=self)
         )
