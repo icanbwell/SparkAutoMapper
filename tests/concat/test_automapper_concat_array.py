@@ -26,7 +26,7 @@ def test_automapper_concat_array(spark_session: SparkSession) -> None:
     # Act
     mapper = AutoMapper(
         view="members", source_view="patients", drop_key_columns=False
-    ).columns(age=A.concat(A.column("identifier"), A.array(A.text("foo"))))
+    ).columns(age=A.column("identifier").concat(A.text("foo").to_array()))
 
     assert isinstance(mapper, AutoMapper)
     sql_expressions: Dict[str, Column] = mapper.get_column_specs(

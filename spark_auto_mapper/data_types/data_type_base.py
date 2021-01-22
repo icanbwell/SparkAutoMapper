@@ -2,6 +2,10 @@ from typing import Optional, TypeVar, Union, List, cast, Callable, Dict, Any
 
 from pyspark.sql import Column, DataFrame
 
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from spark_auto_mapper.data_types.array_base import AutoMapperArrayLikeBase
+
 _TAutoMapperDataType = TypeVar(
     "_TAutoMapperDataType", bound=Union["AutoMapperDataTypeBase"]
 )
@@ -212,7 +216,7 @@ class AutoMapperDataTypeBase:
         )
 
     # noinspection PyMethodMayBeStatic
-    def to_array(self) -> List[_TAutoMapperDataType]:
+    def to_array(self) -> 'AutoMapperArrayLikeBase':
         """
         converts single element into an array
 
@@ -223,7 +227,7 @@ class AutoMapperDataTypeBase:
 
         # cast it to the inner type so type checking is happy
         return cast(
-            List[_TAutoMapperDataType],
+            'AutoMapperArrayLikeBase',
             AutoMapperArrayDataType(value=self),
         )
 
