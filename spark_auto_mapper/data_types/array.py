@@ -15,6 +15,11 @@ class AutoMapperArrayDataType(AutoMapperArrayLikeBase):
             if isinstance(value, AutoMapperDataTypeBase) \
             else AutoMapperValueParser.parse_value(value)
 
+    def include_null_properties(self, include_null_properties: bool) -> None:
+        self.value.include_null_properties(
+            include_null_properties=include_null_properties
+        )
+
     def get_column_spec(
         self, source_df: Optional[DataFrame], current_column: Optional[Column]
     ) -> Column:

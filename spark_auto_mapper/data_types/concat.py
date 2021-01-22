@@ -25,6 +25,12 @@ class AutoMapperConcatDataType(AutoMapperTextLikeBase):
             AutoMapperValueParser.parse_value(value) for value in args
         ]
 
+    def include_null_properties(self, include_null_properties: bool) -> None:
+        for item in self.value:
+            item.include_null_properties(
+                include_null_properties=include_null_properties
+            )
+
     def get_column_spec(
         self, source_df: Optional[DataFrame], current_column: Optional[Column]
     ) -> Column:

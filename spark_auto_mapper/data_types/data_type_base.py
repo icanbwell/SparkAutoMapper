@@ -66,8 +66,7 @@ class AutoMapperDataTypeBase:
         )
 
     # noinspection PyMethodMayBeStatic
-    def select(self,
-               value: _TAutoMapperDataType) -> List[_TAutoMapperDataType]:
+    def select(self, value: _TAutoMapperDataType) -> _TAutoMapperDataType:
         """
         transforms a column into another type or struct
 
@@ -79,14 +78,14 @@ class AutoMapperDataTypeBase:
 
         # cast it to the inner type so type checking is happy
         return cast(
-            List[_TAutoMapperDataType],
+            _TAutoMapperDataType,
             AutoMapperTransformDataType(column=self, value=value),
         )
 
     # noinspection PyMethodMayBeStatic
     def filter(
-        self, func: Callable[[Dict[str, Any]], Any]
-    ) -> "AutoMapperDataTypeBase":
+        self: _TAutoMapperDataType, func: Callable[[Dict[str, Any]], Any]
+    ) -> _TAutoMapperDataType:
         """
         filters an array column
 
@@ -98,12 +97,14 @@ class AutoMapperDataTypeBase:
 
         # cast it to the inner type so type checking is happy
         return cast(
-            "AutoMapperDataTypeBase",
+            _TAutoMapperDataType,
             AutoMapperFilterDataType(column=self, func=func)
         )
 
     # noinspection PyMethodMayBeStatic
-    def split_by_delimiter(self, delimiter: str) -> "AutoMapperDataTypeBase":
+    def split_by_delimiter(
+        self: _TAutoMapperDataType, delimiter: str
+    ) -> _TAutoMapperDataType:
         """
         splits a text column by the delimiter to create an array
 
@@ -117,7 +118,7 @@ class AutoMapperDataTypeBase:
 
         # cast it to the inner type so type checking is happy
         return cast(
-            "AutoMapperDataTypeBase",
+            _TAutoMapperDataType,
             AutoMapperSplitByDelimiterDataType(
                 column=self, delimiter=delimiter
             ),
@@ -143,7 +144,7 @@ class AutoMapperDataTypeBase:
         )
 
     # noinspection PyMethodMayBeStatic
-    def first(self) -> _TAutoMapperDataType:
+    def first(self: _TAutoMapperDataType) -> _TAutoMapperDataType:
         """
         returns the first element in array
 
@@ -156,7 +157,9 @@ class AutoMapperDataTypeBase:
         return cast(_TAutoMapperDataType, AutoMapperFirstDataType(column=self))
 
     # noinspection PyMethodMayBeStatic
-    def expression(self, value: str) -> _TAutoMapperDataType:
+    def expression(
+        self: _TAutoMapperDataType, value: str
+    ) -> _TAutoMapperDataType:
         """
         Specifies that the value parameter should be executed as a sql expression in Spark
 
@@ -186,7 +189,7 @@ class AutoMapperDataTypeBase:
 
         return cast(_TAutoMapperDataType, AutoMapperDataTypeField(value))
 
-    def float(self) -> "AutoMapperDataTypeBase":
+    def float(self: _TAutoMapperDataType) -> _TAutoMapperDataType:
         """
         Converts column to float
 
@@ -195,9 +198,7 @@ class AutoMapperDataTypeBase:
         """
         from spark_auto_mapper.data_types.float import AutoMapperFloatDataType
 
-        return cast(
-            "AutoMapperDataTypeBase", AutoMapperFloatDataType(value=self)
-        )
+        return cast(_TAutoMapperDataType, AutoMapperFloatDataType(value=self))
 
     # noinspection PyMethodMayBeStatic
     def flatten(self) -> "AutoMapperDataTypeBase":
@@ -233,8 +234,8 @@ class AutoMapperDataTypeBase:
 
     # noinspection PyMethodMayBeStatic
     def concat(
-        self, list2: 'AutoMapperDataTypeBase'
-    ) -> 'AutoMapperDataTypeBase':
+        self: _TAutoMapperDataType, list2: _TAutoMapperDataType
+    ) -> _TAutoMapperDataType:
         """
         concatenates two arrays or strings
 
@@ -246,5 +247,5 @@ class AutoMapperDataTypeBase:
 
         # cast it to the inner type so type checking is happy
         return cast(
-            AutoMapperDataTypeBase, AutoMapperConcatDataType(self, list2)
+            _TAutoMapperDataType, AutoMapperConcatDataType(self, list2)
         )
