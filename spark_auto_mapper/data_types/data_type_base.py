@@ -210,3 +210,37 @@ class AutoMapperDataTypeBase:
         return cast(
             "AutoMapperDataTypeBase", AutoMapperFlattenDataType(column=self)
         )
+
+    # noinspection PyMethodMayBeStatic
+    def to_array(self) -> List[_TAutoMapperDataType]:
+        """
+        converts single element into an array
+
+
+        :return: an automapper type
+        """
+        from spark_auto_mapper.data_types.array import AutoMapperArrayDataType
+
+        # cast it to the inner type so type checking is happy
+        return cast(
+            List[_TAutoMapperDataType],
+            AutoMapperArrayDataType(value=self),
+        )
+
+    # noinspection PyMethodMayBeStatic
+    def concat(
+        self, list2: 'AutoMapperDataTypeBase'
+    ) -> "AutoMapperDataTypeBase":
+        """
+        concats two arrays or strings
+
+
+        :param list2:
+        :return: a filter automapper type
+        """
+        from spark_auto_mapper.data_types.concat import AutoMapperConcatDataType
+
+        # cast it to the inner type so type checking is happy
+        return cast(
+            "AutoMapperDataTypeBase", AutoMapperConcatDataType(self, list2)
+        )

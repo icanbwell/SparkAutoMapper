@@ -16,7 +16,7 @@ class AutoMapperConcatDataType(AutoMapperTextLikeBase):
     """
     def __init__(
         self, *args: Union[AutoMapperNativeTextType, AutoMapperWrapperType,
-                           AutoMapperTextLikeBase]
+                           AutoMapperTextLikeBase, AutoMapperDataTypeBase]
     ):
         super().__init__()
 

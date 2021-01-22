@@ -518,3 +518,20 @@ class AutoMapperHelpers:
         return cast(
             "AutoMapperDataTypeBase", AutoMapperFlattenDataType(column=column)
         )
+
+    @staticmethod
+    def array(
+        value: AutoMapperColumnOrColumnLikeType
+    ) -> "AutoMapperDataTypeBase":
+        """
+        creates an array from a single item.
+        source: http://spark.apache.org/docs/latest/api/python/_modules/pyspark/sql/functions.html#array
+
+        :return: an array automapper type
+        """
+        from spark_auto_mapper.data_types.array import AutoMapperArrayDataType
+
+        # cast it to the inner type so type checking is happy
+        return cast(
+            "AutoMapperDataTypeBase", AutoMapperArrayDataType(value=value)
+        )
