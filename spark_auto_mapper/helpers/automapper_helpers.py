@@ -135,7 +135,7 @@ class AutoMapperHelpers:
     @staticmethod
     def concat(
         *args: Union[AutoMapperNativeTextType, AutoMapperWrapperType,
-                     AutoMapperTextLikeBase]
+                     AutoMapperTextLikeBase, AutoMapperDataTypeBase]
     ) -> AutoMapperConcatDataType:
         """
         concatenates a list of values.  Each value can be a string or a column
@@ -520,9 +520,7 @@ class AutoMapperHelpers:
         )
 
     @staticmethod
-    def array(
-        value: AutoMapperColumnOrColumnLikeType
-    ) -> "AutoMapperDataTypeBase":
+    def array(value: AutoMapperDataTypeBase) -> "AutoMapperDataTypeBase":
         """
         creates an array from a single item.
         source: http://spark.apache.org/docs/latest/api/python/_modules/pyspark/sql/functions.html#array

@@ -230,9 +230,9 @@ class AutoMapperDataTypeBase:
     # noinspection PyMethodMayBeStatic
     def concat(
         self, list2: 'AutoMapperDataTypeBase'
-    ) -> "AutoMapperDataTypeBase":
+    ) -> 'AutoMapperDataTypeBase':
         """
-        concats two arrays or strings
+        concatenates two arrays or strings
 
 
         :param list2:
@@ -242,5 +242,5 @@ class AutoMapperDataTypeBase:
 
         # cast it to the inner type so type checking is happy
         return cast(
-            "AutoMapperDataTypeBase", AutoMapperConcatDataType(self, list2)
+            AutoMapperDataTypeBase, AutoMapperConcatDataType(self, list2)
         )
