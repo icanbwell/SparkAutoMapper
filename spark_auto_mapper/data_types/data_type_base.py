@@ -2,6 +2,10 @@ from typing import Optional, TypeVar, Union, List, cast, Callable, Dict, Any
 
 from pyspark.sql import Column, DataFrame
 
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from spark_auto_mapper.data_types.array_base import AutoMapperArrayLikeBase
+
 _TAutoMapperDataType = TypeVar(
     "_TAutoMapperDataType", bound=Union["AutoMapperDataTypeBase"]
 )
@@ -209,4 +213,38 @@ class AutoMapperDataTypeBase:
         # cast it to the inner type so type checking is happy
         return cast(
             "AutoMapperDataTypeBase", AutoMapperFlattenDataType(column=self)
+        )
+
+    # noinspection PyMethodMayBeStatic
+    def to_array(self) -> 'AutoMapperArrayLikeBase':
+        """
+        converts single element into an array
+
+
+        :return: an automapper type
+        """
+        from spark_auto_mapper.data_types.array import AutoMapperArrayDataType
+
+        # cast it to the inner type so type checking is happy
+        return cast(
+            'AutoMapperArrayLikeBase',
+            AutoMapperArrayDataType(value=self),
+        )
+
+    # noinspection PyMethodMayBeStatic
+    def concat(
+        self, list2: 'AutoMapperDataTypeBase'
+    ) -> 'AutoMapperDataTypeBase':
+        """
+        concatenates two arrays or strings
+
+
+        :param list2:
+        :return: a filter automapper type
+        """
+        from spark_auto_mapper.data_types.concat import AutoMapperConcatDataType
+
+        # cast it to the inner type so type checking is happy
+        return cast(
+            AutoMapperDataTypeBase, AutoMapperConcatDataType(self, list2)
         )
