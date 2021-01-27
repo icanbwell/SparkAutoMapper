@@ -123,8 +123,6 @@ def test_auto_mapper_complex_with_extension(
         source_view="patients",
         keys=["member_id"],
         drop_key_columns=False,
-        skip_schema_validation=[],
-        include_extension=True,
         include_null_properties=True
     ).complex(
         MyClass(
