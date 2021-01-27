@@ -15,6 +15,19 @@ from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 from spark_auto_mapper.type_definitions.defined_types import AutoMapperDateInputType
 
 
+class MyProcessingStatusExtensionItem(AutoMapperDataTypeComplexBase):
+    # noinspection PyPep8Naming
+    def __init__(
+        self,
+        url: str,
+        valueString: Optional[AutoMapperTextLikeBase] = None,
+        valueDateTime: Optional[AutoMapperDateInputType] = None
+    ) -> None:
+        super().__init__(
+            url=url, valueString=valueString, valueDateTime=valueDateTime
+        )
+
+
 class MyProcessingStatusExtension(AutoMapperDataTypeComplexBase):
     # noinspection PyPep8Naming
     def __init__(
@@ -25,22 +38,19 @@ class MyProcessingStatusExtension(AutoMapperDataTypeComplexBase):
     ) -> None:
         definition_base_url = "https://raw.githubusercontent.com/imranq2/SparkAutoMapper.FHIR/main/StructureDefinition/"
         processing_status_extensions = [
-            AutoMapperDataTypeComplexBase(
-                url=f"{definition_base_url}processing_status",
+            MyProcessingStatusExtensionItem(
+                url="processing_status",
                 valueString=processing_status,
-                valueDateTime=None
             ),
-            AutoMapperDataTypeComplexBase(
-                url=f"{definition_base_url}request_id",
+            MyProcessingStatusExtensionItem(
+                url="request_id",
                 valueString=request_id,
-                valueDateTime=None
             ),
         ]
         if date_processed:
             processing_status_extensions.append(
-                AutoMapperDataTypeComplexBase(
-                    url=f"{definition_base_url}date_processed",
-                    valueString=None,
+                MyProcessingStatusExtensionItem(
+                    url="date_processed",
                     valueDateTime=date_processed,
                 )
             )
@@ -122,8 +132,7 @@ def test_auto_mapper_complex_with_extension(
         view="members",
         source_view="patients",
         keys=["member_id"],
-        drop_key_columns=False,
-        include_null_properties=True
+        drop_key_columns=False
     ).complex(
         MyClass(
             name=A.column("last_name"),
