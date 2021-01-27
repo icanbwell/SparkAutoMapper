@@ -3,6 +3,9 @@ from typing import Optional, TypeVar, Union, List, cast, Callable, Dict, Any
 from pyspark.sql import Column, DataFrame
 
 from typing import TYPE_CHECKING
+
+from pyspark.sql.types import StructType
+
 if TYPE_CHECKING:
     from spark_auto_mapper.data_types.array_base import AutoMapperArrayLikeBase
 
@@ -249,3 +252,8 @@ class AutoMapperDataTypeBase:
         return cast(
             _TAutoMapperDataType, AutoMapperConcatDataType(self, list2)
         )
+
+    # override this if your inherited class has a defined schema
+    # noinspection PyMethodMayBeStatic
+    def get_schema(self, include_extension: bool) -> Optional[StructType]:
+        return None
