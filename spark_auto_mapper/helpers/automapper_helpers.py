@@ -4,6 +4,7 @@ from pyspark.sql.types import StringType
 
 from spark_auto_mapper.data_types.array_base import AutoMapperArrayLikeBase
 from spark_auto_mapper.data_types.coalesce import AutoMapperCoalesceDataType
+from spark_auto_mapper.data_types.datetime import AutoMapperDateTimeDataType
 from spark_auto_mapper.data_types.field import AutoMapperDataTypeField
 from spark_auto_mapper.data_types.filter import AutoMapperFilterDataType
 from spark_auto_mapper.data_types.hash import AutoMapperHashDataType
@@ -91,17 +92,36 @@ class AutoMapperHelpers:
         return AutoMapperDataTypeExpression(value)
 
     @staticmethod
-    def date(value: AutoMapperDateInputType) -> AutoMapperDateDataType:
+    def date(
+        value: AutoMapperDateInputType,
+        formats: Optional[List[str]] = None
+    ) -> AutoMapperDateDataType:
         """
-        Specifies that value should be parsed into a date.  We currently support the following formats:
-        yyyy-MM-dd
-        yyyyMMdd
-        MM/dd/yy
-        (For adding more, go to AutoMapperDateDataType)
-        :param value: text
-        :return: a date automapper type
+        Converts a value to date only
+        For datetime use the datetime mapper type
+
+
+        :param value: value
+        :param formats: (Optional) formats to use for trying to parse the value otherwise uses:
+                        y-M-d
+                        yyyyMMdd
+                        M/d/y
         """
-        return AutoMapperDateDataType(value)
+        return AutoMapperDateDataType(value, formats)
+
+    @staticmethod
+    def datetime(
+        value: AutoMapperDateInputType,
+        formats: Optional[List[str]] = None
+    ) -> AutoMapperDateTimeDataType:
+        """
+        Converts the value to a timestamp type in Spark
+
+
+        :param value: value
+        :param formats: (Optional) formats to use for trying to parse the value otherwise uses Spark defaults
+        """
+        return AutoMapperDateTimeDataType(value, formats)
 
     @staticmethod
     def amount(value: AutoMapperAmountInputType) -> AutoMapperAmountDataType:

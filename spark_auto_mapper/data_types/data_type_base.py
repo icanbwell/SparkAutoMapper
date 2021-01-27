@@ -3,8 +3,19 @@ from typing import Optional, TypeVar, Union, List, cast, Callable, Dict, Any
 from pyspark.sql import Column, DataFrame
 
 from typing import TYPE_CHECKING
+
+from pyspark.sql.types import StructType, StringType
+
 if TYPE_CHECKING:
+    from spark_auto_mapper.data_types.amount import AutoMapperAmountDataType
     from spark_auto_mapper.data_types.array_base import AutoMapperArrayLikeBase
+    from spark_auto_mapper.data_types.boolean import AutoMapperBooleanDataType
+    from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
+    from spark_auto_mapper.data_types.number import AutoMapperNumberDataType
+    from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
+    from spark_auto_mapper.data_types.datetime import AutoMapperDateTimeDataType
+    from spark_auto_mapper.data_types.date import AutoMapperDateDataType
+    from spark_auto_mapper.data_types.float import AutoMapperFloatDataType
 
 _TAutoMapperDataType = TypeVar(
     "_TAutoMapperDataType", bound=Union["AutoMapperDataTypeBase"]
@@ -189,17 +200,6 @@ class AutoMapperDataTypeBase:
 
         return cast(_TAutoMapperDataType, AutoMapperDataTypeField(value))
 
-    def float(self: _TAutoMapperDataType) -> _TAutoMapperDataType:
-        """
-        Converts column to float
-
-        :return:
-        :rtype:
-        """
-        from spark_auto_mapper.data_types.float import AutoMapperFloatDataType
-
-        return cast(_TAutoMapperDataType, AutoMapperFloatDataType(value=self))
-
     # noinspection PyMethodMayBeStatic
     def flatten(self) -> "AutoMapperDataTypeBase":
         """
@@ -249,3 +249,77 @@ class AutoMapperDataTypeBase:
         return cast(
             _TAutoMapperDataType, AutoMapperConcatDataType(self, list2)
         )
+
+    def to_float(self: _TAutoMapperDataType) -> 'AutoMapperFloatDataType':
+        """
+        Converts column to float
+
+        :return:
+        :rtype:
+        """
+        from spark_auto_mapper.data_types.float import AutoMapperFloatDataType
+
+        return AutoMapperFloatDataType(value=self)
+
+    def to_date(
+        self: _TAutoMapperDataType,
+        formats: Optional[List[str]] = None
+    ) -> 'AutoMapperDateDataType':
+        """
+        Converts a value to date only
+        For datetime use the datetime mapper type
+
+
+        :param formats: (Optional) formats to use for trying to parse the value otherwise uses:
+                        y-M-d
+                        yyyyMMdd
+                        M/d/y
+        """
+        from spark_auto_mapper.data_types.date import AutoMapperDateDataType
+
+        return AutoMapperDateDataType(self, formats)
+
+    def to_datetime(
+        self: _TAutoMapperDataType,
+        formats: Optional[List[str]] = None
+    ) -> 'AutoMapperDateTimeDataType':
+        """
+        Converts the value to a timestamp type in Spark
+
+
+        :param formats: (Optional) formats to use for trying to parse the value otherwise uses Spark defaults
+        """
+        return AutoMapperDateTimeDataType(self, formats)
+
+    def to_amount(self: _TAutoMapperDataType) -> 'AutoMapperAmountDataType':
+        """
+        Specifies the value should be used as an amount
+        :return: an amount automapper type
+        """
+        return AutoMapperAmountDataType(self)
+
+    def to_boolean(self: _TAutoMapperDataType) -> 'AutoMapperBooleanDataType':
+        """
+        Specifies the value should be used as a boolean
+        :return: a boolean automapper type
+        """
+        return AutoMapperBooleanDataType(self)
+
+    def to_number(self: _TAutoMapperDataType) -> 'AutoMapperNumberDataType':
+        """
+        Specifies value should be used as a number
+        :return: a number automapper type
+        """
+        return AutoMapperNumberDataType(self)
+
+    def to_text(self: _TAutoMapperDataType) -> 'AutoMapperTextLikeBase':
+        """
+        Specifies that the value parameter should be used as a literal text
+        :return: a text automapper type
+        """
+        return AutoMapperDataTypeLiteral(self, StringType())
+
+    # override this if your inherited class has a defined schema
+    # noinspection PyMethodMayBeStatic
+    def get_schema(self, include_extension: bool) -> Optional[StructType]:
+        return None

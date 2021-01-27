@@ -6,18 +6,21 @@ from pyspark.sql.functions import lit
 from pyspark.sql.types import DataType
 
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from spark_auto_mapper.type_definitions.defined_types import AutoMapperTextInputType
 from spark_auto_mapper.type_definitions.native_types import AutoMapperNativeSimpleType
 
 
 class AutoMapperDataTypeLiteral(AutoMapperTextLikeBase):
     def __init__(
         self,
-        value: Union[AutoMapperNativeSimpleType, AutoMapperTextLikeBase],
+        value: Union[AutoMapperNativeSimpleType, 'AutoMapperTextInputType'],
         type_: Optional[DataType] = None
     ):
         super().__init__()
         self.value: Union[AutoMapperNativeSimpleType,
-                          AutoMapperTextLikeBase] = value
+                          AutoMapperTextInputType] = value
         self.type_: Optional[DataType] = type_
 
     def get_column_spec(
