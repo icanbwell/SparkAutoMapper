@@ -3,8 +3,10 @@ from typing import Union, List, Optional, Generic, TypeVar
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import array
 from pyspark.sql.functions import lit
+from pyspark.sql.types import StructType, ArrayType, StructField
 
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
+from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
 from spark_auto_mapper.helpers.spark_higher_order_functions import filter
 from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
 from spark_auto_mapper.type_definitions.native_types import AutoMapperNativeSimpleType
@@ -23,7 +25,9 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
     """
     def __init__(
         self,
-        value: Optional[List[_T]],
+        value: Optional[Union[List[_T], AutoMapperDataTypeBase,
+                              List[AutoMapperDataTypeBase],
+                              List[AutoMapperTextLikeBase]]],
         remove_nulls: bool = True,
         include_null_properties: bool = True
     ) -> None:
@@ -64,7 +68,9 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
                 include_null_properties=include_null_properties
             )
 
-    def get_column_spec(self, source_df: DataFrame) -> Column:
+    def get_column_spec(
+        self, source_df: Optional[DataFrame], current_column: Optional[Column]
+    ) -> Column:
         if isinstance(
             self.value, str
         ):  # if the src column is just string then consider it a sql expression
@@ -75,14 +81,14 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
         ):  # if the src column is a list then iterate
             return filter(array(
                 [
-                    self.get_value(item, source_df=source_df)
+                    self.get_value(item, source_df=source_df, current_column=current_column)
                     for item in self.value
                 ]
             ), lambda x: x.isNotNull()) \
                 if self.remove_nulls \
                 else array(
                 [
-                    self.get_value(item, source_df=source_df)
+                    self.get_value(item, source_df=source_df, current_column=current_column)
                     for item in self.value
                 ]
             )
@@ -90,8 +96,24 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
         # if value is an AutoMapper then ask it for its column spec
         if isinstance(self.value, AutoMapperDataTypeBase):
             child: AutoMapperDataTypeBase = self.value
-            return filter(array(child.get_column_spec(source_df=source_df)), lambda x: x.isNotNull()) \
-                if self.remove_nulls \
-                else array(child.get_column_spec(source_df=source_df))
+            return child.get_column_spec(
+                source_df=source_df, current_column=current_column
+            )
 
         raise ValueError(f"value: {self.value} is neither str nor AutoMapper")
+
+    # noinspection PyMethodMayBeStatic
+    def get_schema(self, include_extension: bool) -> Optional[StructType]:
+        if isinstance(self.value, list):
+            # get schema for first element
+            if len(self.value) > 0:
+                first_element = self.value[0]
+                schema = first_element.get_schema(
+                    include_extension=include_extension
+                )
+                if schema is None:
+                    return None
+                return StructType(
+                    [StructField("extension", ArrayType(schema))]
+                )
+        return None

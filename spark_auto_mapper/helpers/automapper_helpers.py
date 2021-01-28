@@ -1,12 +1,17 @@
-from typing import Any, Dict, Union, TypeVar, cast, Optional, List
+from typing import Any, Dict, Union, TypeVar, cast, Optional, List, Callable
 
 from pyspark.sql.types import StringType
 
+from spark_auto_mapper.data_types.array_base import AutoMapperArrayLikeBase
 from spark_auto_mapper.data_types.coalesce import AutoMapperCoalesceDataType
+from spark_auto_mapper.data_types.datetime import AutoMapperDateTimeDataType
+from spark_auto_mapper.data_types.field import AutoMapperDataTypeField
+from spark_auto_mapper.data_types.filter import AutoMapperFilterDataType
 from spark_auto_mapper.data_types.hash import AutoMapperHashDataType
 from spark_auto_mapper.data_types.if_ import AutoMapperIfDataType
 from spark_auto_mapper.data_types.if_not_null_or_empty import AutoMapperIfNotNullOrEmptyDataType
 from spark_auto_mapper.data_types.if_regex import AutoMapperIfRegExDataType
+from spark_auto_mapper.data_types.split_by_delimiter import AutoMapperSplitByDelimiterDataType
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
 
 from spark_auto_mapper.data_types.amount import AutoMapperAmountDataType
@@ -25,6 +30,7 @@ from spark_auto_mapper.data_types.complex.struct_type import AutoMapperDataTypeS
 from spark_auto_mapper.data_types.regex_replace import AutoMapperRegExReplaceDataType
 from spark_auto_mapper.data_types.substring import AutoMapperSubstringDataType
 from spark_auto_mapper.data_types.substring_by_delimiter import AutoMapperSubstringByDelimiterDataType
+from spark_auto_mapper.data_types.transform import AutoMapperTransformDataType
 from spark_auto_mapper.data_types.trim import AutoMapperTrimDataType
 from spark_auto_mapper.type_definitions.defined_types import AutoMapperAnyDataType, AutoMapperBooleanInputType, \
     AutoMapperAmountInputType, AutoMapperNumberInputType, AutoMapperDateInputType, AutoMapperTextInputType
@@ -57,7 +63,7 @@ class AutoMapperHelpers:
         return AutoMapperDataTypeComplex(**kwargs)
 
     @staticmethod
-    def column(value: str) -> AutoMapperTextLikeBase:
+    def column(value: str) -> AutoMapperArrayLikeBase:
         """
         Specifies that the value parameter should be used as a column name
         :param value: name of column
@@ -77,7 +83,7 @@ class AutoMapperHelpers:
         return AutoMapperDataTypeLiteral(value, StringType())
 
     @staticmethod
-    def expression(value: str) -> AutoMapperTextLikeBase:
+    def expression(value: str) -> AutoMapperArrayLikeBase:
         """
         Specifies that the value parameter should be executed as a sql expression in Spark
         :param value: sql
@@ -86,17 +92,36 @@ class AutoMapperHelpers:
         return AutoMapperDataTypeExpression(value)
 
     @staticmethod
-    def date(value: AutoMapperDateInputType) -> AutoMapperDateDataType:
+    def date(
+        value: AutoMapperDateInputType,
+        formats: Optional[List[str]] = None
+    ) -> AutoMapperDateDataType:
         """
-        Specifies that value should be parsed into a date.  We currently support the following formats:
-        yyyy-MM-dd
-        yyyyMMdd
-        MM/dd/yy
-        (For adding more, go to AutoMapperDateDataType)
-        :param value: text
-        :return: a date automapper type
+        Converts a value to date only
+        For datetime use the datetime mapper type
+
+
+        :param value: value
+        :param formats: (Optional) formats to use for trying to parse the value otherwise uses:
+                        y-M-d
+                        yyyyMMdd
+                        M/d/y
         """
-        return AutoMapperDateDataType(value)
+        return AutoMapperDateDataType(value, formats)
+
+    @staticmethod
+    def datetime(
+        value: AutoMapperDateInputType,
+        formats: Optional[List[str]] = None
+    ) -> AutoMapperDateTimeDataType:
+        """
+        Converts the value to a timestamp type in Spark
+
+
+        :param value: value
+        :param formats: (Optional) formats to use for trying to parse the value otherwise uses Spark defaults
+        """
+        return AutoMapperDateTimeDataType(value, formats)
 
     @staticmethod
     def amount(value: AutoMapperAmountInputType) -> AutoMapperAmountDataType:
@@ -130,7 +155,7 @@ class AutoMapperHelpers:
     @staticmethod
     def concat(
         *args: Union[AutoMapperNativeTextType, AutoMapperWrapperType,
-                     AutoMapperTextLikeBase]
+                     AutoMapperTextLikeBase, AutoMapperDataTypeBase]
     ) -> AutoMapperConcatDataType:
         """
         concatenates a list of values.  Each value can be a string or a column
@@ -319,7 +344,7 @@ class AutoMapperHelpers:
         substring_by_delimiter performs a case-sensitive match when searching for delimiter.
 
         :param column: column whose contents to use
-        :param delimiter: string to use as delimiter
+        :param delimiter: string to use as delimiter.  can be a regex.
         :param delimiter_count: If delimiter_count is positive, everything the left of the final delimiter
                                     (counting from left) is returned.
                                 If delimiter_count is negative, every to the right of the final delimiter
@@ -410,4 +435,121 @@ class AutoMapperHelpers:
             AutoMapperIfRegExDataType(
                 column=column, check=check, value=value, else_=else_
             )
+        )
+
+    @staticmethod
+    def filter(
+        column: AutoMapperColumnOrColumnLikeType,
+        func: Callable[[Dict[str, Any]], Any]
+    ) -> AutoMapperFilterDataType:
+        """
+        Filters a column by a function
+
+
+        :param column: column to check
+        :param func: func to filter by
+        :return: a filter automapper type
+        """
+        # # cast it to the inner type so type checking is happy
+        # return cast(
+        #     _TAutoMapperDataType,
+        #     AutoMapperFilterDataType(column=column, func=func)
+        # )
+        return AutoMapperFilterDataType(column=column, func=func)
+
+    @staticmethod
+    def transform(
+        column: AutoMapperColumnOrColumnLikeType, value: _TAutoMapperDataType
+    ) -> List[_TAutoMapperDataType]:
+        """
+        transforms a column into another type or struct
+
+
+        :param column: column to check
+        :param value: func to create type or struct
+        :return: a transform automapper type
+        """
+        # cast it to the inner type so type checking is happy
+        return cast(
+            List[_TAutoMapperDataType],
+            AutoMapperTransformDataType(column=column, value=value)
+        )
+
+    @staticmethod
+    def field(value: str) -> AutoMapperTextLikeBase:
+        """
+        Specifies that the value parameter should be used as a field name
+        :param value: name of column
+        :return: A column automapper type
+        """
+        return AutoMapperDataTypeField(value)
+
+    @staticmethod
+    def current() -> AutoMapperTextLikeBase:
+        """
+        Specifies to use the current item
+        :return: A column automapper type
+        """
+        return AutoMapperDataTypeField("_")
+
+    @staticmethod
+    def split_by_delimiter(
+        column: AutoMapperColumnOrColumnLikeType, delimiter: str
+    ) -> AutoMapperSplitByDelimiterDataType:
+        """
+        Split a string into an array using the delimiter
+
+        :param column: column whose contents to use
+        :param delimiter: string to use as delimiter
+        :return: a concat automapper type
+        """
+        return AutoMapperSplitByDelimiterDataType(
+            column=column, delimiter=delimiter
+        )
+
+    @staticmethod
+    def float(value: AutoMapperDataTypeBase) -> 'AutoMapperDataTypeBase':
+        """
+        Converts column to float
+
+        :return:
+        :rtype:
+        """
+        from spark_auto_mapper.data_types.float import AutoMapperFloatDataType
+
+        return cast(
+            'AutoMapperDataTypeBase', AutoMapperFloatDataType(value=value)
+        )
+
+    @staticmethod
+    def flatten(
+        column: AutoMapperColumnOrColumnLikeType
+    ) -> "AutoMapperDataTypeBase":
+        """
+        creates a single array from an array of arrays.
+        If a structure of nested arrays is deeper than two levels, only one level of nesting is removed.
+        source: http://spark.apache.org/docs/latest/api/python/_modules/pyspark/sql/functions.html#flatten
+
+        :return: a flatten automapper type
+        """
+        from spark_auto_mapper.data_types.flatten import AutoMapperFlattenDataType
+
+        # cast it to the inner type so type checking is happy
+        return cast(
+            "AutoMapperDataTypeBase", AutoMapperFlattenDataType(column=column)
+        )
+
+    @staticmethod
+    def array(value: AutoMapperDataTypeBase) -> "AutoMapperDataTypeBase":
+        """
+        creates an array from a single item.
+        source: http://spark.apache.org/docs/latest/api/python/_modules/pyspark/sql/functions.html#array
+
+        :return: an array automapper type
+        """
+        from spark_auto_mapper.data_types.array import AutoMapperArrayDataType
+
+        # cast it to the inner type so type checking is happy
+        return cast(
+            "AutoMapperDataTypeBase", AutoMapperArrayDataType(value=value)
         )

@@ -6,21 +6,26 @@ from pyspark.sql.functions import lit
 from pyspark.sql.types import DataType
 
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from spark_auto_mapper.type_definitions.defined_types import AutoMapperTextInputType
 from spark_auto_mapper.type_definitions.native_types import AutoMapperNativeSimpleType
 
 
 class AutoMapperDataTypeLiteral(AutoMapperTextLikeBase):
     def __init__(
         self,
-        value: Union[AutoMapperNativeSimpleType, AutoMapperTextLikeBase],
+        value: Union[AutoMapperNativeSimpleType, 'AutoMapperTextInputType'],
         type_: Optional[DataType] = None
     ):
         super().__init__()
         self.value: Union[AutoMapperNativeSimpleType,
-                          AutoMapperTextLikeBase] = value
+                          AutoMapperTextInputType] = value
         self.type_: Optional[DataType] = type_
 
-    def get_column_spec(self, source_df: DataFrame) -> Column:
+    def get_column_spec(
+        self, source_df: Optional[DataFrame], current_column: Optional[Column]
+    ) -> Column:
         if not self.value:
             return lit(None)
         if isinstance(self.value, str) or isinstance(self.value, int) \
@@ -30,9 +35,9 @@ class AutoMapperDataTypeLiteral(AutoMapperTextLikeBase):
                                         ) if self.type_ else lit(self.value)
         if isinstance(self.value, AutoMapperTextLikeBase):
             return self.value.get_column_spec(
-                source_df=source_df
+                source_df=source_df, current_column=current_column
             ).cast(self.type_) if self.type_ else self.value.get_column_spec(
-                source_df=source_df
+                source_df=source_df, current_column=current_column
             )
 
         raise ValueError(
