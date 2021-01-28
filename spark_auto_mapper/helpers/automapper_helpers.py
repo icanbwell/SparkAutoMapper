@@ -243,7 +243,8 @@ class AutoMapperHelpers:
     @staticmethod
     def map(
         column: AutoMapperColumnOrColumnLikeType,
-        mapping: Dict[AutoMapperTextInputType, AutoMapperAnyDataType],
+        mapping: Dict[Optional[AutoMapperTextInputType],
+                      AutoMapperAnyDataType],
         default: Optional[AutoMapperAnyDataType] = None
     ) -> AutoMapperDataTypeExpression:
         """
