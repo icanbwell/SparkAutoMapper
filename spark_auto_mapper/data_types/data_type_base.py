@@ -289,6 +289,8 @@ class AutoMapperDataTypeBase:
 
         :param formats: (Optional) formats to use for trying to parse the value otherwise uses Spark defaults
         """
+        from spark_auto_mapper.data_types.datetime import AutoMapperDateTimeDataType
+
         return AutoMapperDateTimeDataType(self, formats)
 
     def to_amount(self: _TAutoMapperDataType) -> 'AutoMapperAmountDataType':
@@ -296,6 +298,8 @@ class AutoMapperDataTypeBase:
         Specifies the value should be used as an amount
         :return: an amount automapper type
         """
+        from spark_auto_mapper.data_types.amount import AutoMapperAmountDataType
+
         return AutoMapperAmountDataType(self)
 
     def to_boolean(self: _TAutoMapperDataType) -> 'AutoMapperBooleanDataType':
@@ -303,6 +307,8 @@ class AutoMapperDataTypeBase:
         Specifies the value should be used as a boolean
         :return: a boolean automapper type
         """
+        from spark_auto_mapper.data_types.boolean import AutoMapperBooleanDataType
+
         return AutoMapperBooleanDataType(self)
 
     def to_number(self: _TAutoMapperDataType) -> 'AutoMapperNumberDataType':
@@ -310,6 +316,8 @@ class AutoMapperDataTypeBase:
         Specifies value should be used as a number
         :return: a number automapper type
         """
+        from spark_auto_mapper.data_types.number import AutoMapperNumberDataType
+
         return AutoMapperNumberDataType(self)
 
     def to_text(self: _TAutoMapperDataType) -> 'AutoMapperTextLikeBase':
