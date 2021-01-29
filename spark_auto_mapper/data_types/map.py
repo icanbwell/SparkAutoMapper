@@ -18,7 +18,8 @@ class AutoMapperMapDataType(AutoMapperDataTypeExpression):
     def __init__(
         self,
         column: AutoMapperColumnOrColumnLikeType,
-        mapping: Dict[AutoMapperTextInputType, AutoMapperAnyDataType],
+        mapping: Dict[Optional[AutoMapperTextInputType],
+                      AutoMapperAnyDataType],
         default: Optional[AutoMapperAnyDataType] = None
     ):
         super().__init__(value="")
