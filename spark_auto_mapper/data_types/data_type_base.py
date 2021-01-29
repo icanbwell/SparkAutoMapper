@@ -319,6 +319,27 @@ class AutoMapperDataTypeBase:
         """
         return AutoMapperDataTypeLiteral(self, StringType())
 
+    # noinspection PyMethodMayBeStatic
+    def join_using_delimiter(
+        self: _TAutoMapperDataType, delimiter: str
+    ) -> _TAutoMapperDataType:
+        """
+        Joins an array and forms a string using the delimiter
+        :param delimiter: string to use as delimiter
+        :return: a join_using_delimiter automapper type
+        """
+        from spark_auto_mapper.data_types.join_using_delimiter import (
+            AutoMapperJoinUsingDelimiterDataType,
+        )
+
+        # cast it to the inner type so type checking is happy
+        return cast(
+            _TAutoMapperDataType,
+            AutoMapperJoinUsingDelimiterDataType(
+                column=self, delimiter=delimiter
+            ),
+        )
+
     # override this if your inherited class has a defined schema
     # noinspection PyMethodMayBeStatic
     def get_schema(self, include_extension: bool) -> Optional[StructType]:
