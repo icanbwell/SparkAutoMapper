@@ -20,7 +20,7 @@ class AutoMapperJoinUsingDelimiterDataType(AutoMapperTextLikeBase):
         self.delimiter: str = delimiter
 
     def get_column_spec(
-            self, source_df: Optional[DataFrame], current_column: Optional[Column]
+        self, source_df: Optional[DataFrame], current_column: Optional[Column]
     ) -> Column:
         column_spec = array_join(
             self.column.get_column_spec(

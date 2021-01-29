@@ -557,7 +557,7 @@ class AutoMapperHelpers:
 
     @staticmethod
     def join_using_delimiter(
-            column: AutoMapperColumnOrColumnLikeType, delimiter: str
+        column: AutoMapperColumnOrColumnLikeType, delimiter: str
     ) -> AutoMapperJoinUsingDelimiterDataType:
         """
         Joins an array and forms a string using the delimiter

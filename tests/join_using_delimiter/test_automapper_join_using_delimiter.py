@@ -34,13 +34,13 @@ def test_auto_mapper_join_using_delimiter(spark_session: SparkSession) -> None:
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
-    assert str(sql_expressions["my_column"]) == str(
-        array_join(col("b.suffix"), ", ").alias("my_column")
-    )
+    assert str(sql_expressions["my_column"]
+               ) == str(array_join(col("b.suffix"), ", ").alias("my_column"))
 
     result_df: DataFrame = mapper.transform(df=df)
 
     # Assert
     result_df.printSchema()
     result_df.show()
-    assert result_df.where("npi == 123456789").select("my_column").collect()[0][0] == "MD, PhD"
+    assert result_df.where("npi == 123456789"
+                           ).select("my_column").collect()[0][0] == "MD, PhD"
