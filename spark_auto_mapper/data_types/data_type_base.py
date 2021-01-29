@@ -289,6 +289,8 @@ class AutoMapperDataTypeBase:
 
         :param formats: (Optional) formats to use for trying to parse the value otherwise uses Spark defaults
         """
+        from spark_auto_mapper.data_types.datetime import AutoMapperDateTimeDataType
+
         return AutoMapperDateTimeDataType(self, formats)
 
     def to_amount(self: _TAutoMapperDataType) -> 'AutoMapperAmountDataType':
