@@ -2,7 +2,7 @@ from typing import Dict, Optional
 
 from pyspark.sql import Column, DataFrame
 # noinspection PyUnresolvedReferences
-from pyspark.sql.functions import when, lit
+from pyspark.sql.functions import when
 from spark_auto_mapper.type_definitions.defined_types import AutoMapperTextInputType
 
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
@@ -33,7 +33,10 @@ class AutoMapperMapDataType(AutoMapperDataTypeExpression):
             for key, value in mapping.items()
         }
         assert self.mapping
-        self.default: Optional[AutoMapperAnyDataType] = default
+        self.default: AutoMapperDataTypeBase = (
+            default if isinstance(default, AutoMapperDataTypeBase) else
+            AutoMapperValueParser.parse_value(default)
+        )
 
     def get_column_spec(
         self, source_df: Optional[DataFrame], current_column: Optional[Column]
@@ -46,19 +49,26 @@ class AutoMapperMapDataType(AutoMapperDataTypeExpression):
         key: AutoMapperAnyDataType
         value: AutoMapperDataTypeBase
         for key, value in self.mapping.items():
-            column_spec = column_spec.when(
-                inner_column_spec.eqNullSafe(key),
-                value.get_column_spec(
-                    source_df=source_df, current_column=current_column
+            if column_spec is not None:
+                column_spec = column_spec.when(
+                    inner_column_spec.eqNullSafe(key),
+                    value.get_column_spec(
+                        source_df=source_df, current_column=current_column
+                    )
                 )
-            ) if column_spec is not None else when(
-                inner_column_spec.eqNullSafe(key),
-                value.get_column_spec(
+            else:
+                column_spec = when(
+                    inner_column_spec.eqNullSafe(key),
+                    value.get_column_spec(
+                        source_df=source_df, current_column=current_column
+                    )
+                )
+
+        if column_spec is not None:
+            column_spec = column_spec.otherwise(
+                self.default.get_column_spec(
                     source_df=source_df, current_column=current_column
                 )
             )
-
-        if column_spec is not None:
-            column_spec = column_spec.otherwise(lit(self.default))
 
         return column_spec
