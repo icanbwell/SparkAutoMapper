@@ -44,6 +44,12 @@ def test_automapper_map(spark_session: SparkSession) -> None:
                 "Y": "Yes",
                 "N": "No"
             }, lit("TRUE")
+        ),
+        blank_col=A.map(
+            A.column("has_kids"), {
+                "Y": "Yes",
+                "N": "No"
+            }, ""
         )
     )
 
@@ -91,3 +97,5 @@ def test_automapper_map(spark_session: SparkSession) -> None:
                                                     ).collect()[0][0] == "f"
     assert result_df.where("member_id == 3").select("lit_col"
                                                     ).collect()[0][0] == "TRUE"
+    assert result_df.where("member_id == 3").select("blank_col"
+                                                    ).collect()[0][0] == ""
