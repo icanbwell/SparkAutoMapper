@@ -26,7 +26,7 @@ class AutoMapperDataTypeLiteral(AutoMapperTextLikeBase):
     def get_column_spec(
         self, source_df: Optional[DataFrame], current_column: Optional[Column]
     ) -> Column:
-        if not self.value:
+        if self.value is None:
             return lit(None)
         if isinstance(self.value, str) or isinstance(self.value, int) \
                 or isinstance(self.value, float) or isinstance(self.value, date) \
