@@ -45,12 +45,10 @@ def test_automapper_map(spark_session: SparkSession) -> None:
                 "N": "No"
             }, lit("TRUE")
         ),
-        blank_col=A.map(
-            A.column("has_kids"), {
-                "Y": "Yes",
-                "N": "No"
-            }, ""
-        )
+        blank_col=A.map(A.column("has_kids"), {
+            "Y": "Yes",
+            "N": "No"
+        }, "")
     )
 
     assert isinstance(mapper, AutoMapper)

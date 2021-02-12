@@ -6,7 +6,6 @@ from pyspark.sql.functions import lit
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
-from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 
 def test_auto_mapper_datatype_literal(spark_session: SparkSession) -> None:
@@ -19,9 +18,6 @@ def test_auto_mapper_datatype_literal(spark_session: SparkSession) -> None:
     ).createOrReplaceTempView("patients")
 
     source_df: DataFrame = spark_session.table("patients")
-
-    # example of a variable
-    client_address_variable: str = "address1"
 
     # Act
     mapper = AutoMapper(
@@ -63,6 +59,22 @@ def test_auto_mapper_datatype_literal(spark_session: SparkSession) -> None:
     result = result_df.collect()
 
     assert result == [
-        Row(member_id=1, dst1='src1', dst2=None, dst3='', dst4='literal', dst5=1234, dst6=0), 
-        Row(member_id=2, dst1='src1', dst2=None, dst3='', dst4='literal', dst5=1234, dst6=0), 
+        Row(
+            member_id=1,
+            dst1='src1',
+            dst2=None,
+            dst3='',
+            dst4='literal',
+            dst5=1234,
+            dst6=0
+        ),
+        Row(
+            member_id=2,
+            dst1='src1',
+            dst2=None,
+            dst3='',
+            dst4='literal',
+            dst5=1234,
+            dst6=0
+        ),
     ]
