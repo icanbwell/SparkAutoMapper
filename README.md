@@ -1,3 +1,9 @@
+[![Build and Test](https://github.com/imranq2/SparkAutoMapper/actions/workflows/build_and_test.yml/badge.svg)](https://github.com/imranq2/SparkAutoMapper/actions/workflows/build_and_test.yml)
+
+[![Upload Python Package](https://github.com/imranq2/SparkAutoMapper/actions/workflows/python-publish.yml/badge.svg)](https://github.com/imranq2/SparkAutoMapper/actions/workflows/python-publish.yml)
+
+[![Known Vulnerabilities](https://snyk.io/test/github/imranq2/SparkAutoMapper/badge.svg?targetFile=requirements.txt)](https://snyk.io/test/github/imranq2/SparkAutoMapper?targetFile=requirements.txt)
+
 # SparkAutoMapper
 Fluent API to map data from one view to another in Spark.  
 
