@@ -80,14 +80,14 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
             self.value, list
         ):  # if the src column is a list then iterate
             return filter(array(
-                [
+                *[
                     self.get_value(item, source_df=source_df, current_column=current_column)
                     for item in self.value
                 ]
             ), lambda x: x.isNotNull()) \
                 if self.remove_nulls \
                 else array(
-                [
+                *[
                     self.get_value(item, source_df=source_df, current_column=current_column)
                     for item in self.value
                 ]

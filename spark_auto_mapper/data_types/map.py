@@ -1,4 +1,5 @@
-from typing import Dict, Optional
+from decimal import Decimal
+from typing import Dict, Optional, Union
 
 from pyspark.sql import Column, DataFrame
 # noinspection PyUnresolvedReferences
@@ -46,7 +47,7 @@ class AutoMapperMapDataType(AutoMapperDataTypeExpression):
         )
 
         column_spec: Optional[Column] = None
-        key: AutoMapperAnyDataType
+        key: Union[Column, Union[bool, float, int, str], Decimal]
         value: AutoMapperDataTypeBase
         for key, value in self.mapping.items():
             if column_spec is not None:
@@ -71,4 +72,5 @@ class AutoMapperMapDataType(AutoMapperDataTypeExpression):
                 )
             )
 
+        assert column_spec is not None
         return column_spec

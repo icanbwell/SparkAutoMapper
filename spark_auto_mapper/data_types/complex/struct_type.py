@@ -21,7 +21,7 @@ class AutoMapperDataTypeStruct(AutoMapperDataTypeComplexBase):
         self, source_df: Optional[DataFrame], current_column: Optional[Column]
     ) -> Column:
         return struct(
-            [
+            *[
                 self.get_value(
                     value=value,
                     source_df=source_df,

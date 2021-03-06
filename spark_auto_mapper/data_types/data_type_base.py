@@ -15,6 +15,7 @@ if TYPE_CHECKING:
     from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
     from spark_auto_mapper.data_types.datetime import AutoMapperDateTimeDataType
     from spark_auto_mapper.data_types.date import AutoMapperDateDataType
+    from spark_auto_mapper.data_types.date_format import AutoMapperFormatDateTimeDataType
     from spark_auto_mapper.data_types.float import AutoMapperFloatDataType
 
 _TAutoMapperDataType = TypeVar(
@@ -352,3 +353,19 @@ class AutoMapperDataTypeBase:
     # noinspection PyMethodMayBeStatic
     def get_schema(self, include_extension: bool) -> Optional[StructType]:
         return None
+
+    def to_date_format(
+        self: _TAutoMapperDataType, format_: str
+    ) -> 'AutoMapperFormatDateTimeDataType':
+        """
+        Converts a date or time into string
+
+
+        :param format_: format to use for trying to parse the value otherwise uses:
+                        y-M-d
+                        yyyyMMdd
+                        M/d/y
+        """
+        from spark_auto_mapper.data_types.date_format import AutoMapperFormatDateTimeDataType
+
+        return AutoMapperFormatDateTimeDataType(self, format_)

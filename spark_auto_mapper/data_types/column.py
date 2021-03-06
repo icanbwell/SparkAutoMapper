@@ -27,13 +27,15 @@ class AutoMapperDataTypeColumn(AutoMapperArrayLikeBase):
                 # noinspection RegExpSingleCharAlternation
                 elements: List[str] = re.split(r"\.|\[|]", self.value)
                 my_column: Optional[Column] = None
+                column_default = col("b." + self.value)
                 for element in elements:
                     if element != "_" and element != "":
-                        my_column = my_column[element if not element.isnumeric(
-                        ) else int(element)] if my_column is not None else col(
-                            "b." + self.value
-                        )
-                return my_column
+                        element_ = element if not element.isnumeric(
+                        ) else int(element)
+                        my_column = my_column[
+                            element_
+                        ] if my_column is not None else column_default
+                return my_column if my_column is not None else column_default
             else:
                 return col(self.value)
 

@@ -43,7 +43,7 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
     ) -> Column:
         valid_columns = self.get_child_mappers()
         column_spec: Column = struct(
-            [
+            *[
                 self.get_value(
                     value=value,
                     source_df=source_df,
