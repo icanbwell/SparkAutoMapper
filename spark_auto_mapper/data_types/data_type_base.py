@@ -369,3 +369,18 @@ class AutoMapperDataTypeBase:
         from spark_auto_mapper.data_types.date_format import AutoMapperFormatDateTimeDataType
 
         return AutoMapperFormatDateTimeDataType(self, format_)
+
+    # noinspection PyMethodMayBeStatic
+    def empty_to_null(self: _TAutoMapperDataType) -> _TAutoMapperDataType:
+        """
+        returns the first element in array
+
+
+        :return: a filter automapper type
+        """
+        from spark_auto_mapper.data_types.empty_to_null import AutoMapperEmptyToNullDataType
+
+        # cast it to the inner type so type checking is happy
+        return cast(
+            _TAutoMapperDataType, AutoMapperEmptyToNullDataType(value=self)
+        )
