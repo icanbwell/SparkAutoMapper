@@ -59,4 +59,5 @@ def test_auto_mapper_date_format(spark_session: SparkSession) -> None:
     assert result_df.where("member_id == 2").select("openingTime").collect(
     )[0][0] == "06:30:00"
 
+    # check type
     assert dict(result_df.dtypes)["openingTime"] == "string"
