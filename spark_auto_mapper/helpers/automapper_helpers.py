@@ -9,6 +9,7 @@ from spark_auto_mapper.data_types.field import AutoMapperDataTypeField
 from spark_auto_mapper.data_types.filter import AutoMapperFilterDataType
 from spark_auto_mapper.data_types.hash import AutoMapperHashDataType
 from spark_auto_mapper.data_types.if_ import AutoMapperIfDataType
+from spark_auto_mapper.data_types.if_not import AutoMapperIfNotDataType
 from spark_auto_mapper.data_types.if_not_null_or_empty import AutoMapperIfNotNullOrEmptyDataType
 from spark_auto_mapper.data_types.if_regex import AutoMapperIfRegExDataType
 from spark_auto_mapper.data_types.join_using_delimiter import AutoMapperJoinUsingDelimiterDataType
@@ -189,6 +190,28 @@ class AutoMapperHelpers:
             AutoMapperIfDataType(
                 column=column, check=check, value=value, else_=else_
             )
+        )
+
+    @staticmethod
+    def if_not(
+        column: AutoMapperColumnOrColumnLikeType,
+        check: Union[AutoMapperAnyDataType,
+                     List[AutoMapperAnyDataType]], value: _TAutoMapperDataType
+    ) -> _TAutoMapperDataType:
+        """
+        Checks if column matches check_value.  Returns value if it does not match
+
+
+        :param column: column to check
+        :param check: value to compare the column to
+        :param value: what to return if the value matches
+        :return: an if automapper type
+        """
+
+        # cast it to the inner type so type checking is happy
+        return cast(
+            _TAutoMapperDataType,
+            AutoMapperIfNotDataType(column=column, check=check, value=value)
         )
 
     @staticmethod
