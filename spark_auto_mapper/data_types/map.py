@@ -72,5 +72,5 @@ class AutoMapperMapDataType(AutoMapperDataTypeExpression):
                 )
             )
 
-        assert column_spec
+        assert column_spec is not None
         return column_spec
