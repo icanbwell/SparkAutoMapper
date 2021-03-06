@@ -33,6 +33,7 @@ class AutoMapperDataTypeColumn(AutoMapperArrayLikeBase):
                         ) else int(element)] if my_column is not None else col(
                             "b." + self.value
                         )
+                assert my_column
                 return my_column
             else:
                 return col(self.value)

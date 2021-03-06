@@ -1,6 +1,6 @@
 from typing import Optional, Dict, List
 
-from pyspark.sql.types import StructType, StructField
+from pyspark.sql.types import StructType, StructField, DataType
 
 from spark_auto_mapper.automappers.container import AutoMapperContainer
 from spark_auto_mapper.data_types.complex.complex_base import AutoMapperDataTypeComplexBase
@@ -26,7 +26,7 @@ class AutoMapperWithComplex(AutoMapperContainer):
             mapper: AutoMapperDataTypeBase
             for column_name, mapper in entity.get_child_mappers().items():
                 if column_name == "extension":
-                    extension_schema: StructType = mapper.get_schema(
+                    extension_schema: DataType = mapper.get_schema(
                         include_extension=include_extension
                     )
                     if extension_schema is not None and len(

@@ -3,7 +3,7 @@ from typing import List, Dict, Optional
 from pyspark.sql import Column, DataFrame
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import col, when, lit
-from pyspark.sql.types import StructField, StructType
+from pyspark.sql.types import DataType, StructField
 from spark_data_frame_comparer.schema_comparer import SchemaComparer
 
 from spark_auto_mapper.automappers.automapper_base import AutoMapperBase
@@ -73,8 +73,9 @@ class AutoMapperWithColumnBase(AutoMapperBase):
 
     # noinspection PyMethodMayBeStatic
     def transform_with_data_frame(
-        self, df: DataFrame, source_df: DataFrame, keys: List[str]
+        self, df: DataFrame, source_df: Optional[DataFrame], keys: List[str]
     ) -> DataFrame:
+        assert source_df
         # now add on my stuff
         column_spec: Column = self.get_column_spec(source_df=source_df)
         conditions = [col(f'b.{key}') == col(f'a.{key}') for key in keys]
@@ -100,8 +101,8 @@ class AutoMapperWithColumnBase(AutoMapperBase):
             first_few_rows_df: DataFrame = source_df.alias("b").select(
                 column_spec
             ).limit(100)
-            source_schema: StructType = first_few_rows_df.schema[0].dataType
-            desired_schema: StructType = self.column_schema.dataType
+            source_schema: DataType = first_few_rows_df.schema[0].dataType
+            desired_schema: DataType = self.column_schema.dataType
             result = SchemaComparer.compare_schema(
                 parent_column_name=self.dst_column,
                 source_schema=source_schema,

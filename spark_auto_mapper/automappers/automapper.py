@@ -184,7 +184,7 @@ class AutoMapper(AutoMapperContainer):
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
     def transform_with_data_frame(
-        self, df: DataFrame, source_df: DataFrame, keys: List[str]
+        self, df: DataFrame, source_df: Optional[DataFrame], keys: List[str]
     ) -> DataFrame:
         current_child_number: int = 0
         # iterate over each child mapper and run it
@@ -406,7 +406,7 @@ class AutoMapper(AutoMapperContainer):
         :return dictionary of column specs
         """
         return {
-            column_name: ColumnSpecWrapper(column_spec)
+            column_name: str(ColumnSpecWrapper(column_spec))
             for column_name, column_spec in
             self.get_column_specs(source_df=None).items()
         }

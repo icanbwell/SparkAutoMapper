@@ -39,12 +39,10 @@ def test_automapper_map(spark_session: SparkSession) -> None:
                 "N": "No"
             }, "[has_kids]"
         ),
-        lit_col=A.map(
-            A.column("has_kids"), {
-                "Y": "Yes",
-                "N": "No"
-            }, lit("TRUE")
-        ),
+        lit_col=A.map(A.column("has_kids"), {
+            "Y": "Yes",
+            "N": "No"
+        }, "TRUE"),
         blank_col=A.map(A.column("has_kids"), {
             "Y": "Yes",
             "N": "No"
