@@ -373,10 +373,10 @@ class AutoMapperDataTypeBase:
     # noinspection PyMethodMayBeStatic
     def to_null_if_empty(self: _TAutoMapperDataType) -> _TAutoMapperDataType:
         """
-        returns the first element in array
+        returns null if the column is an empty string
 
 
-        :return: a filter automapper type
+        :return: an automapper type
         """
         from spark_auto_mapper.data_types.null_if_empty import AutoMapperNullIfEmptyDataType
 
@@ -389,7 +389,7 @@ class AutoMapperDataTypeBase:
         self: _TAutoMapperDataType, pattern: str, replacement: str
     ) -> _TAutoMapperDataType:
         """
-        Replace all substrings of the specified string value that match regexp with rep.
+        Replace all substrings of the specified string value that match regexp with replacement.
 
         :param pattern: pattern to search for
         :param replacement: string to replace with
