@@ -28,7 +28,7 @@ def test_auto_mapper_regex_replace_unicode(
     df = source_df.select("member_id")
     df.createOrReplaceTempView("members")
 
-    not_normal_characters: str = r"[^ \r\n\tA-Za-z]"
+    not_normal_characters: str = r"[^\w\r\n\t _.,!\"'/$-]"
 
     # source_df.select(regexp_extract('last_name', not_normal_characters, 1).alias('d')).show()
 
