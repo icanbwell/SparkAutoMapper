@@ -60,7 +60,7 @@ class AutoMapperDataTypeBase:
         pass  # sub-classes can implement if they support this
 
     # noinspection PyMethodMayBeStatic
-    def transform(self,
+    def transform(self: 'AutoMapperDataTypeBase',
                   value: _TAutoMapperDataType) -> List[_TAutoMapperDataType]:
         """
         transforms a column into another type or struct
@@ -371,16 +371,38 @@ class AutoMapperDataTypeBase:
         return AutoMapperFormatDateTimeDataType(self, format_)
 
     # noinspection PyMethodMayBeStatic
-    def empty_to_null(self: _TAutoMapperDataType) -> _TAutoMapperDataType:
+    def to_null_if_empty(self: _TAutoMapperDataType) -> _TAutoMapperDataType:
         """
         returns the first element in array
 
 
         :return: a filter automapper type
         """
-        from spark_auto_mapper.data_types.empty_to_null import AutoMapperEmptyToNullDataType
+        from spark_auto_mapper.data_types.null_if_empty import AutoMapperNullIfEmptyDataType
 
         # cast it to the inner type so type checking is happy
         return cast(
-            _TAutoMapperDataType, AutoMapperEmptyToNullDataType(value=self)
+            _TAutoMapperDataType, AutoMapperNullIfEmptyDataType(value=self)
+        )
+
+    def regex_replace(
+        self: _TAutoMapperDataType, pattern: str, replacement: str
+    ) -> _TAutoMapperDataType:
+        """
+        Replace all substrings of the specified string value that match regexp with rep.
+
+        :param pattern: pattern to search for
+        :param replacement: string to replace with
+        :return: a regex_replace automapper type
+        """
+
+        from spark_auto_mapper.data_types.regex_replace import AutoMapperRegExReplaceDataType
+
+        # cast it to the inner type so type checking is happy
+        # noinspection Mypy
+        return cast(
+            _TAutoMapperDataType,
+            AutoMapperRegExReplaceDataType(
+                column=self, pattern=pattern, replacement=replacement
+            )
         )
