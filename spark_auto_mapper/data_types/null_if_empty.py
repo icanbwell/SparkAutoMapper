@@ -12,7 +12,7 @@ _TAutoMapperDataType = TypeVar(
 )
 
 
-class AutoMapperEmptyToNullDataType(
+class AutoMapperNullIfEmptyDataType(
     AutoMapperDataTypeBase, Generic[_TAutoMapperDataType]
 ):
     """

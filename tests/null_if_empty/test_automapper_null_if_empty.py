@@ -10,7 +10,7 @@ from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 from tests.conftest import clean_spark_session
 
 
-def test_automapper_empty_to_null(spark_session: SparkSession) -> None:
+def test_automapper_null_if_empty(spark_session: SparkSession) -> None:
     # Arrange
     clean_spark_session(session=spark_session)
     spark_session.createDataFrame(
@@ -33,7 +33,7 @@ def test_automapper_empty_to_null(spark_session: SparkSession) -> None:
         source_view="patients",
         keys=["member_id"],
         drop_key_columns=False
-    ).columns(age=A.column("my_age").empty_to_null())
+    ).columns(age=A.column("my_age").to_null_if_empty())
 
     assert isinstance(mapper, AutoMapper)
     sql_expressions: Dict[str, Column] = mapper.get_column_specs(
