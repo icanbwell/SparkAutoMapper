@@ -406,3 +406,40 @@ class AutoMapperDataTypeBase:
                 column=self, pattern=pattern, replacement=replacement
             )
         )
+
+    def sanitize(
+        self: _TAutoMapperDataType,
+        replacement: str = " "
+    ) -> _TAutoMapperDataType:
+        """
+        Replaces all "non-normal" characters with specified replacement
+
+        We're using the FHIR definition of valid string
+        https://www.hl7.org/fhir/datatypes.html#string
+        Valid characters are (regex='[ \r\n\t\\S]'):
+        \\S - Any character that is not a whitespace character
+           - space
+        \r - carriage return
+        \n - line feed
+        \t - tab
+
+        :param replacement: (Optional) string to replace with.  Defaults to space.
+        :return: a regex_replace automapper type
+        """
+
+        from spark_auto_mapper.data_types.regex_replace import AutoMapperRegExReplaceDataType
+
+        # https://www.hl7.org/fhir/datatypes.html#string
+        # So we replace any character that is not normal per our definition above
+        not_normal_characters: str = r"[^ \r\n\t\S]"
+
+        # cast it to the inner type so type checking is happy
+        # noinspection Mypy
+        return cast(
+            _TAutoMapperDataType,
+            AutoMapperRegExReplaceDataType(
+                column=self,
+                pattern=not_normal_characters,
+                replacement=replacement
+            )
+        )
