@@ -10,9 +10,9 @@ def test_auto_mapper_full(spark_session: SparkSession) -> None:
     # Arrange
     spark_session.createDataFrame(
         [
-            (1, 'Qureshi', 'Imran'),
-            (2, 'Vidal', 'Michael'),
-        ], ['member_id', 'last_name', 'first_name']
+            (1, 'Qureshi', 'Imran', 'First'),
+            (2, 'Vidal', 'Michael', 'Second'),
+        ], ['member_id', 'last_name', 'first_name', 'class']
     ).createOrReplaceTempView("patients")
 
     source_df: DataFrame = spark_session.table("patients")
@@ -29,7 +29,8 @@ def test_auto_mapper_full(spark_session: SparkSession) -> None:
     ).columns(
         dst1="src1",
         dst2=AutoMapperList([client_address_variable]),
-        dst3=AutoMapperList([client_address_variable, "address2"])
+        dst3=AutoMapperList([client_address_variable, "address2"]),
+        class_=A.column("class"),
     )
 
     company_name: str = "Microsoft"
@@ -54,7 +55,7 @@ def test_auto_mapper_full(spark_session: SparkSession) -> None:
     result_df.printSchema()
     result_df.show()
 
-    assert len(result_df.columns) == 5
+    assert len(result_df.columns) == 6
     assert result_df.where("member_id == 1").select("dst1"
                                                     ).collect()[0][0] == "src1"
     assert result_df.where("member_id == 1"
@@ -69,3 +70,7 @@ def test_auto_mapper_full(spark_session: SparkSession) -> None:
                            ).select("dst4").collect()[0][0][0][0] == "usual"
     assert result_df.where("member_id == 1"
                            ).select("dst4").collect()[0][0][0][1] == "Qureshi"
+
+    assert result_df.columns[4] == "class"
+    assert result_df.where("member_id == 1"
+                           ).select("class").collect()[0][0] == "First"

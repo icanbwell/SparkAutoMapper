@@ -354,7 +354,14 @@ class AutoMapper(AutoMapperContainer):
     # noinspection PyMethodMayBeStatic,PyPep8Naming
     def columns(self, **kwargs: AutoMapperAnyDataType) -> 'AutoMapper':
         from spark_auto_mapper.automappers.columns import AutoMapperColumns
-        columns_mapper: AutoMapperColumns = AutoMapperColumns(**kwargs)
+        # To work around protected keywords as column names, allow a trailing underscore in the definition that gets
+        # stripped at registration time.
+        col_spec = {
+            column_name[:-1] if column_name and column_name != '_'
+            and column_name.endswith("_") else column_name: column_def
+            for column_name, column_def in kwargs.items()
+        }
+        columns_mapper: AutoMapperColumns = AutoMapperColumns(**col_spec)
         for column_name, child_mapper in columns_mapper.mappers.items():
             self.register_child(dst_column=column_name, child=child_mapper)
         return self
