@@ -19,8 +19,6 @@ from spark_auto_mapper.type_definitions.defined_types import AutoMapperAnyDataTy
 
 TEMPORARY_KEY = "__row_id"
 
-raise KeyError("WTF!?!?!?!?!")
-
 
 class AutoMapper(AutoMapperContainer):
     # noinspection PyDefaultArgument
