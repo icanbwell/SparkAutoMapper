@@ -3,7 +3,7 @@ from typing import Union, List, Optional, Generic, TypeVar
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import array
 from pyspark.sql.functions import lit
-from pyspark.sql.types import StructType, ArrayType, StructField
+from pyspark.sql.types import StructType, ArrayType, StructField, DataType
 
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
@@ -103,7 +103,9 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
         raise ValueError(f"value: {self.value} is neither str nor AutoMapper")
 
     # noinspection PyMethodMayBeStatic
-    def get_schema(self, include_extension: bool) -> Optional[StructType]:
+    def get_schema(
+        self, include_extension: bool
+    ) -> Optional[Union[StructType, DataType]]:
         if isinstance(self.value, list):
             # get schema for first element
             if len(self.value) > 0:

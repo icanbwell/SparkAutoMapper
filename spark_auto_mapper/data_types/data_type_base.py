@@ -4,7 +4,7 @@ from pyspark.sql import Column, DataFrame
 
 from typing import TYPE_CHECKING
 
-from pyspark.sql.types import StructType, StringType
+from pyspark.sql.types import StructType, StringType, DataType
 
 if TYPE_CHECKING:
     from spark_auto_mapper.data_types.amount import AutoMapperAmountDataType
@@ -351,7 +351,9 @@ class AutoMapperDataTypeBase:
 
     # override this if your inherited class has a defined schema
     # noinspection PyMethodMayBeStatic
-    def get_schema(self, include_extension: bool) -> Optional[StructType]:
+    def get_schema(
+        self, include_extension: bool
+    ) -> Optional[Union[StructType, DataType]]:
         return None
 
     def to_date_format(

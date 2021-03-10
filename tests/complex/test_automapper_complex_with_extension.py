@@ -1,9 +1,9 @@
-from typing import Dict, Optional
+from typing import Dict, Optional, Union
 
 from pyspark.sql import SparkSession, Column, DataFrame
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import col
-from pyspark.sql.types import ArrayType, IntegerType, StringType, StructField, StructType, TimestampType
+from pyspark.sql.types import ArrayType, IntegerType, StringType, StructField, StructType, TimestampType, DataType
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.data_types.complex.complex_base import AutoMapperDataTypeComplexBase
@@ -66,7 +66,9 @@ class MyProcessingStatusExtension(AutoMapperDataTypeComplexBase):
                 include_null_properties=include_null_properties
             )
 
-    def get_schema(self, include_extension: bool) -> Optional[StructType]:
+    def get_schema(
+        self, include_extension: bool
+    ) -> Optional[Union[StructType, DataType]]:
         return StructType(
             [
                 StructField("url", StringType()),
@@ -101,7 +103,9 @@ class MyClass(AutoMapperDataTypeComplexBase):
     ) -> None:
         super().__init__(name=name, age=age, extension=extension)
 
-    def get_schema(self, include_extension: bool) -> Optional[StructType]:
+    def get_schema(
+        self, include_extension: bool
+    ) -> Optional[Union[StructType, DataType]]:
         schema: StructType = StructType(
             [
                 StructField("name", StringType(), False),

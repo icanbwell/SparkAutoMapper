@@ -1,9 +1,9 @@
-from typing import Dict, Optional
+from typing import Dict, Optional, Union
 
 from pyspark.sql import SparkSession, Column, DataFrame
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import col, when, lit
-from pyspark.sql.types import StructType, StructField, StringType, IntegerType
+from pyspark.sql.types import StructType, StructField, StringType, IntegerType, DataType
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.data_types.complex.complex_base import AutoMapperDataTypeComplexBase
@@ -19,7 +19,9 @@ class MyClass(AutoMapperDataTypeComplexBase):
     ) -> None:
         super().__init__(id_=id_, name=name, age=age)
 
-    def get_schema(self, include_extension: bool) -> Optional[StructType]:
+    def get_schema(
+        self, include_extension: bool
+    ) -> Optional[Union[StructType, DataType]]:
         schema: StructType = StructType(
             [
                 StructField("id", StringType(), False),

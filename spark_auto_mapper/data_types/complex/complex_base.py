@@ -1,8 +1,8 @@
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, Union
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import struct
-from pyspark.sql.types import StructType
+from pyspark.sql.types import StructType, DataType
 
 from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
 from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
@@ -67,5 +67,7 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
 
     # override this if your inherited class has a defined schema
     # noinspection PyMethodMayBeStatic
-    def get_schema(self, include_extension: bool) -> Optional[StructType]:
+    def get_schema(
+        self, include_extension: bool
+    ) -> Optional[Union[StructType, DataType]]:
         return None
