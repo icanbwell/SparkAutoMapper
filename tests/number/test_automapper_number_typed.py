@@ -49,4 +49,4 @@ def test_auto_mapper_number_typed(spark_session: SparkSession) -> None:
     assert result_df.where("member_id == 2").select("age"
                                                     ).collect()[0][0] == 67
 
-    assert dict(result_df.dtypes)["age"] == "int"
+    assert dict(result_df.dtypes)["age"] in ("int", "long", "bigint")

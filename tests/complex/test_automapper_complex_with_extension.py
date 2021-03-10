@@ -3,7 +3,7 @@ from typing import Dict, Optional, Union
 from pyspark.sql import SparkSession, Column, DataFrame
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import col
-from pyspark.sql.types import ArrayType, IntegerType, StringType, StructField, StructType, TimestampType, DataType
+from pyspark.sql.types import ArrayType, LongType, StringType, StructField, StructType, TimestampType, DataType
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.data_types.complex.complex_base import AutoMapperDataTypeComplexBase
@@ -109,7 +109,7 @@ class MyClass(AutoMapperDataTypeComplexBase):
         schema: StructType = StructType(
             [
                 StructField("name", StringType(), False),
-                StructField("age", IntegerType(), True),
+                StructField("age", LongType(), True),
             ]
         )
         return schema
@@ -166,7 +166,7 @@ def test_auto_mapper_complex_with_extension(
     assert str(sql_expressions["name"]
                ) == str(col("b.last_name").cast("string").alias("name"))
     assert str(sql_expressions["age"]
-               ) == str(col("b.my_age").cast("int").alias("age"))
+               ) == str(col("b.my_age").cast("long").alias("age"))
 
     result_df.printSchema()
     result_df.show(truncate=False)
@@ -174,4 +174,4 @@ def test_auto_mapper_complex_with_extension(
     assert result_df.where("member_id == 1"
                            ).select("name").collect()[0][0] == "Qureshi"
 
-    assert dict(result_df.dtypes)["age"] == "int"
+    assert dict(result_df.dtypes)["age"] in ("int", "long", "bigint")
