@@ -1,6 +1,7 @@
 from typing import Dict
 
 from pyspark.sql import SparkSession, Column, DataFrame
+
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import col
 
@@ -12,10 +13,11 @@ def test_auto_mapper_number(spark_session: SparkSession) -> None:
     # Arrange
     spark_session.createDataFrame(
         [
-            (1, 'Qureshi', 'Imran', "54"),
-            (2, 'Vidal', 'Michael', "67"),
-            (3, 'Old', 'Methusela', "131026061001")
-        ], ['member_id', 'last_name', 'first_name', "my_age"]
+            (1, "Qureshi", "Imran", "54"),
+            (2, "Vidal", "Michael", "67"),
+            (3, "Old", "Methusela", "131026061001"),
+        ],
+        ["member_id", "last_name", "first_name", "my_age"],
     ).createOrReplaceTempView("patients")
 
     source_df: DataFrame = spark_session.table("patients")
@@ -25,7 +27,10 @@ def test_auto_mapper_number(spark_session: SparkSession) -> None:
 
     # Act
     mapper = AutoMapper(
-        view="members", source_view="patients", keys=["member_id"], drop_key_columns=False,
+        view="members",
+        source_view="patients",
+        keys=["member_id"],
+        drop_key_columns=False,
     ).columns(age=A.number(A.column("my_age")))
 
     assert isinstance(mapper, AutoMapper)
@@ -35,11 +40,10 @@ def test_auto_mapper_number(spark_session: SparkSession) -> None:
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
-    assert str(sql_expressions["age"]
-               ) in \
-           (str(col("b.my_age").cast("int").alias("age")),
-            str(col("b.my_age").cast("long").alias("age")),
-        )
+    assert str(sql_expressions["age"]) in (
+        str(col("b.my_age").cast("int").alias("age")),
+        str(col("b.my_age").cast("long").alias("age")),
+    )
 
     result_df: DataFrame = mapper.transform(df=df)
 
@@ -51,7 +55,9 @@ def test_auto_mapper_number(spark_session: SparkSession) -> None:
                                                     ).collect()[0][0] == 54
     assert result_df.where("member_id == 2").select("age"
                                                     ).collect()[0][0] == 67
-    assert result_df.where("member_id == 3").select("age"
-                                                    ).collect()[0][0] == 131026061001
+    assert (
+        result_df.where("member_id == 3").select("age").collect()[0][0] ==
+        131026061001
+    )
 
     assert dict(result_df.dtypes)["age"] in ("int", "long", "bigint")
