@@ -4,7 +4,7 @@ from pyspark.sql import SparkSession, Column, DataFrame
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import col, when
 from pyspark.sql.functions import lit
-from pyspark.sql.types import StringType, IntegerType
+from pyspark.sql.types import StringType, LongType
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
@@ -45,8 +45,8 @@ def test_automapper_if_regex(spark_session: SparkSession) -> None:
 
     assert str(sql_expressions["age"]) == str(
         when(col("b.my_age").rlike("5*"),
-             col("b.my_age").cast(IntegerType())).otherwise(
-                 lit("100").cast(StringType()).cast(IntegerType())
+             col("b.my_age").cast(LongType())).otherwise(
+                 lit("100").cast(StringType()).cast(LongType())
              ).alias("age")
     )
 
@@ -61,4 +61,4 @@ def test_automapper_if_regex(spark_session: SparkSession) -> None:
     assert result_df.where("member_id == 2").select("age"
                                                     ).collect()[0][0] == 100
 
-    assert dict(result_df.dtypes)["age"] == "int"
+    assert dict(result_df.dtypes)["age"] in ("int", "long", "bigint")
