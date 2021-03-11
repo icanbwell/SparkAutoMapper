@@ -23,6 +23,7 @@ from spark_auto_mapper.data_types.complex.complex import AutoMapperDataTypeCompl
 from spark_auto_mapper.data_types.concat import AutoMapperConcatDataType
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 from spark_auto_mapper.data_types.date import AutoMapperDateDataType
+from spark_auto_mapper.data_types.decimal import AutoMapperDecimalDataType
 from spark_auto_mapper.data_types.expression import AutoMapperDataTypeExpression
 from spark_auto_mapper.data_types.if_not_null import AutoMapperIfNotNullDataType
 from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
@@ -124,6 +125,19 @@ class AutoMapperHelpers:
         :param formats: (Optional) formats to use for trying to parse the value otherwise uses Spark defaults
         """
         return AutoMapperDateTimeDataType(value, formats)
+
+    @staticmethod
+    def decimal(
+        value: AutoMapperAmountInputType, precision: int, scale: int
+    ) -> AutoMapperDecimalDataType:
+        """
+        Specifies the value should be used as a decimal
+        :param value:
+        :param precision: the maximum total number of digits (on both sides of dot)
+        :param scale: the number of digits on right side of dot
+        :return: a decimal automapper type
+        """
+        return AutoMapperDecimalDataType(value, precision, scale)
 
     @staticmethod
     def amount(value: AutoMapperAmountInputType) -> AutoMapperAmountDataType:
