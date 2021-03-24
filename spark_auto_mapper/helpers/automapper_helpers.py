@@ -31,6 +31,7 @@ from spark_auto_mapper.data_types.map import AutoMapperMapDataType
 from spark_auto_mapper.data_types.number import AutoMapperNumberDataType
 from spark_auto_mapper.data_types.complex.struct_type import AutoMapperDataTypeStruct
 from spark_auto_mapper.data_types.regex_replace import AutoMapperRegExReplaceDataType
+from spark_auto_mapper.data_types.regex_extract import AutoMapperRegExExtractDataType
 from spark_auto_mapper.data_types.substring import AutoMapperSubstringDataType
 from spark_auto_mapper.data_types.substring_by_delimiter import AutoMapperSubstringByDelimiterDataType
 from spark_auto_mapper.data_types.transform import AutoMapperTransformDataType
@@ -411,6 +412,23 @@ class AutoMapperHelpers:
         """
         return AutoMapperRegExReplaceDataType(
             column=column, pattern=pattern, replacement=replacement
+        )
+
+    @staticmethod
+    def regex_extract(
+        column: AutoMapperColumnOrColumnLikeType, pattern: str, index: int
+    ) -> AutoMapperRegExExtractDataType:
+        """
+        Extracts a specific group matched by a regex from a specified column. If there
+        was no match or the requested group does not exist, an empty string is returned.
+
+        :param column: column whose contents to replace
+        :param pattern: pattern containing groups to match
+        :param index: index of the group to return (1-indexed, use 0 to return the whole matched string)
+        :return: a regex_extract automapper type
+        """
+        return AutoMapperRegExExtractDataType(
+            column=column, pattern=pattern, index=index
         )
 
     @staticmethod
