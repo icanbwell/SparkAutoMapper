@@ -10,10 +10,17 @@ from spark_auto_mapper.data_types.filter import AutoMapperFilterDataType
 from spark_auto_mapper.data_types.hash import AutoMapperHashDataType
 from spark_auto_mapper.data_types.if_ import AutoMapperIfDataType
 from spark_auto_mapper.data_types.if_not import AutoMapperIfNotDataType
-from spark_auto_mapper.data_types.if_not_null_or_empty import AutoMapperIfNotNullOrEmptyDataType
+from spark_auto_mapper.data_types.if_not_null_or_empty import (
+    AutoMapperIfNotNullOrEmptyDataType,
+)
 from spark_auto_mapper.data_types.if_regex import AutoMapperIfRegExDataType
-from spark_auto_mapper.data_types.join_using_delimiter import AutoMapperJoinUsingDelimiterDataType
-from spark_auto_mapper.data_types.split_by_delimiter import AutoMapperSplitByDelimiterDataType
+from spark_auto_mapper.data_types.join_using_delimiter import (
+    AutoMapperJoinUsingDelimiterDataType,
+)
+from spark_auto_mapper.data_types.lpad import AutoMapperLPadDataType
+from spark_auto_mapper.data_types.split_by_delimiter import (
+    AutoMapperSplitByDelimiterDataType,
+)
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
 
 from spark_auto_mapper.data_types.amount import AutoMapperAmountDataType
@@ -33,17 +40,31 @@ from spark_auto_mapper.data_types.complex.struct_type import AutoMapperDataTypeS
 from spark_auto_mapper.data_types.regex_replace import AutoMapperRegExReplaceDataType
 from spark_auto_mapper.data_types.regex_extract import AutoMapperRegExExtractDataType
 from spark_auto_mapper.data_types.substring import AutoMapperSubstringDataType
-from spark_auto_mapper.data_types.substring_by_delimiter import AutoMapperSubstringByDelimiterDataType
+from spark_auto_mapper.data_types.substring_by_delimiter import (
+    AutoMapperSubstringByDelimiterDataType,
+)
 from spark_auto_mapper.data_types.transform import AutoMapperTransformDataType
 from spark_auto_mapper.data_types.trim import AutoMapperTrimDataType
-from spark_auto_mapper.type_definitions.defined_types import AutoMapperAnyDataType, AutoMapperBooleanInputType, \
-    AutoMapperAmountInputType, AutoMapperNumberInputType, AutoMapperDateInputType, AutoMapperTextInputType
-from spark_auto_mapper.type_definitions.native_types import AutoMapperNativeTextType, AutoMapperNativeSimpleType
-from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperWrapperType, AutoMapperColumnOrColumnLikeType
+from spark_auto_mapper.type_definitions.defined_types import (
+    AutoMapperAnyDataType,
+    AutoMapperBooleanInputType,
+    AutoMapperAmountInputType,
+    AutoMapperNumberInputType,
+    AutoMapperDateInputType,
+    AutoMapperTextInputType,
+)
+from spark_auto_mapper.type_definitions.native_types import (
+    AutoMapperNativeTextType,
+    AutoMapperNativeSimpleType,
+)
+from spark_auto_mapper.type_definitions.wrapper_types import (
+    AutoMapperWrapperType,
+    AutoMapperColumnOrColumnLikeType,
+)
 
 _TAutoMapperDataType = TypeVar(
     "_TAutoMapperDataType",
-    bound=Union[AutoMapperNativeSimpleType, AutoMapperDataTypeBase]
+    bound=Union[AutoMapperNativeSimpleType, AutoMapperDataTypeBase],
 )
 
 
@@ -172,7 +193,7 @@ class AutoMapperHelpers:
     @staticmethod
     def concat(
         *args: Union[AutoMapperNativeTextType, AutoMapperWrapperType,
-                     AutoMapperTextLikeBase, AutoMapperDataTypeBase]
+                     AutoMapperTextLikeBase, AutoMapperDataTypeBase, ]
     ) -> AutoMapperConcatDataType:
         """
         concatenates a list of values.  Each value can be a string or a column
@@ -186,7 +207,7 @@ class AutoMapperHelpers:
         column: AutoMapperColumnOrColumnLikeType,
         check: Union[AutoMapperAnyDataType, List[AutoMapperAnyDataType]],
         value: _TAutoMapperDataType,
-        else_: Optional[_TAutoMapperDataType] = None
+        else_: Optional[_TAutoMapperDataType] = None,
     ) -> _TAutoMapperDataType:
         """
         Checks if column matches check_value.  Returns value if it matches else else_
@@ -204,14 +225,14 @@ class AutoMapperHelpers:
             _TAutoMapperDataType,
             AutoMapperIfDataType(
                 column=column, check=check, value=value, else_=else_
-            )
+            ),
         )
 
     @staticmethod
     def if_not(
         column: AutoMapperColumnOrColumnLikeType,
-        check: Union[AutoMapperAnyDataType,
-                     List[AutoMapperAnyDataType]], value: _TAutoMapperDataType
+        check: Union[AutoMapperAnyDataType, List[AutoMapperAnyDataType]],
+        value: _TAutoMapperDataType,
     ) -> _TAutoMapperDataType:
         """
         Checks if column matches check_value.  Returns value if it does not match
@@ -226,14 +247,14 @@ class AutoMapperHelpers:
         # cast it to the inner type so type checking is happy
         return cast(
             _TAutoMapperDataType,
-            AutoMapperIfNotDataType(column=column, check=check, value=value)
+            AutoMapperIfNotDataType(column=column, check=check, value=value),
         )
 
     @staticmethod
     def if_not_null(
         check: AutoMapperColumnOrColumnLikeType,
         value: _TAutoMapperDataType,
-        when_null: Optional[_TAutoMapperDataType] = None
+        when_null: Optional[_TAutoMapperDataType] = None,
     ) -> _TAutoMapperDataType:
         """
         Checks if `check` is null
@@ -250,14 +271,14 @@ class AutoMapperHelpers:
             _TAutoMapperDataType,
             AutoMapperIfNotNullDataType(
                 check=check, value=value, when_null=when_null
-            )
+            ),
         )
 
     @staticmethod
     def if_not_null_or_empty(
         check: AutoMapperColumnOrColumnLikeType,
         value: _TAutoMapperDataType,
-        when_null_or_empty: Optional[_TAutoMapperDataType] = None
+        when_null_or_empty: Optional[_TAutoMapperDataType] = None,
     ) -> _TAutoMapperDataType:
         """
         Checks if `check` is null or empty.
@@ -276,7 +297,7 @@ class AutoMapperHelpers:
                 check=check,
                 value=value,
                 when_null_or_empty=when_null_or_empty
-            )
+            ),
         )
 
     @staticmethod
@@ -284,7 +305,7 @@ class AutoMapperHelpers:
         column: AutoMapperColumnOrColumnLikeType,
         mapping: Dict[Optional[AutoMapperTextInputType],
                       AutoMapperAnyDataType],
-        default: Optional[AutoMapperAnyDataType] = None
+        default: Optional[AutoMapperAnyDataType] = None,
     ) -> AutoMapperDataTypeExpression:
         """
         maps the contents of a column to values
@@ -444,6 +465,20 @@ class AutoMapperHelpers:
         return AutoMapperTrimDataType(column=column)
 
     @staticmethod
+    def lpad(
+        column: AutoMapperColumnOrColumnLikeType, length: int, pad: str
+    ) -> AutoMapperLPadDataType:
+        """
+        Returns column value, left-padded with pad to a length of length. If column value is longer than length,
+        the return value is shortened to length characters.
+
+        :param column: column whose contents to left pad
+        :param length: the desired length of the final string
+        :param pad: the character to use to pad the string to the desired length
+        """
+        return AutoMapperLPadDataType(column=column, length=length, pad=pad)
+
+    @staticmethod
     def hash(
         *args: Union[AutoMapperNativeTextType, AutoMapperWrapperType,
                      AutoMapperTextLikeBase]
@@ -473,7 +508,7 @@ class AutoMapperHelpers:
         column: AutoMapperColumnOrColumnLikeType,
         check: Union[str, List[str]],
         value: _TAutoMapperDataType,
-        else_: Optional[_TAutoMapperDataType] = None
+        else_: Optional[_TAutoMapperDataType] = None,
     ) -> _TAutoMapperDataType:
         """
         Checks if column matches check_value.  Returns value if it matches else else_
@@ -491,7 +526,7 @@ class AutoMapperHelpers:
             _TAutoMapperDataType,
             AutoMapperIfRegExDataType(
                 column=column, check=check, value=value, else_=else_
-            )
+            ),
         )
 
     @staticmethod
@@ -529,7 +564,7 @@ class AutoMapperHelpers:
         # cast it to the inner type so type checking is happy
         return cast(
             List[_TAutoMapperDataType],
-            AutoMapperTransformDataType(column=column, value=value)
+            AutoMapperTransformDataType(column=column, value=value),
         )
 
     @staticmethod
@@ -565,7 +600,7 @@ class AutoMapperHelpers:
         )
 
     @staticmethod
-    def float(value: AutoMapperDataTypeBase) -> 'AutoMapperDataTypeBase':
+    def float(value: AutoMapperDataTypeBase) -> "AutoMapperDataTypeBase":
         """
         Converts column to float
 
@@ -575,7 +610,7 @@ class AutoMapperHelpers:
         from spark_auto_mapper.data_types.float import AutoMapperFloatDataType
 
         return cast(
-            'AutoMapperDataTypeBase', AutoMapperFloatDataType(value=value)
+            "AutoMapperDataTypeBase", AutoMapperFloatDataType(value=value)
         )
 
     @staticmethod
@@ -602,10 +637,10 @@ class AutoMapperHelpers:
         default: Optional[AutoMapperColumnOrColumnLikeType],
     ) -> "AutoMapperDataTypeBase":
         """
-       Allows for columns to be defined based in which a source column may not exist. If the optional source column does
-        not exist, the "default" column definition is used instead.
+        Allows for columns to be defined based in which a source column may not exist. If the optional source column does
+         not exist, the "default" column definition is used instead.
 
-        :return: a optional automapper type
+         :return: a optional automapper type
         """
         from spark_auto_mapper.data_types.optional import AutoMapperOptionalType
 
