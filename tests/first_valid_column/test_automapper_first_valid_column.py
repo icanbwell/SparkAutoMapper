@@ -8,7 +8,7 @@ from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 
-def test_automapper_first_provided_column(spark_session: SparkSession) -> None:
+def test_automapper_first_valid_column(spark_session: SparkSession) -> None:
     # Arrange
     spark_session.createDataFrame(
         [
@@ -33,18 +33,18 @@ def test_automapper_first_provided_column(spark_session: SparkSession) -> None:
         drop_key_columns=False
     ).columns(
         last_name=A.column("last_name"),
-        age=A.first_provided_column(
+        age=A.first_valid_column(
             A.number(A.column("age")),
             A.number(A.column("my_age")),
             lit(None),
         ),
-        age2=A.first_provided_column(
+        age2=A.first_valid_column(
             A.if_not_null(
-                A.first_provided_column(
+                A.first_valid_column(
                     A.number(A.column("age")), A.number(A.column("my_age")),
                     lit(None)
                 ),
-                A.first_provided_column(
+                A.first_valid_column(
                     A.number(A.column("age")), A.number(A.column("my_age")),
                     lit(None)
                 ), A.number(A.text("100"))

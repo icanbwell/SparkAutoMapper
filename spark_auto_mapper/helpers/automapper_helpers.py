@@ -632,7 +632,7 @@ class AutoMapperHelpers:
         )
 
     @staticmethod
-    def first_provided_column(
+    def first_valid_column(
         *columns: AutoMapperColumnOrColumnLikeType,
     ) -> "AutoMapperDataTypeBase":
         """
@@ -641,9 +641,9 @@ class AutoMapperHelpers:
 
          :return: a optional automapper type
         """
-        from spark_auto_mapper.data_types.first_provided_column import AutoMapperFirstProvidedColumnType
+        from spark_auto_mapper.data_types.first_valid_column import AutoMapperFirstValidColumnType
 
-        return AutoMapperFirstProvidedColumnType(*columns)
+        return AutoMapperFirstValidColumnType(*columns)
 
     @staticmethod
     def optional(

@@ -12,7 +12,7 @@ _TAutoMapperDataType = TypeVar(
 )
 
 
-class AutoMapperFirstProvidedColumnType(
+class AutoMapperFirstValidColumnType(
     AutoMapperDataTypeBase, Generic[_TAutoMapperDataType]
 ):
     """
@@ -56,7 +56,7 @@ class AutoMapperFirstProvidedColumnType(
                 # If SparkSQL AnalysisException is thrown, continue to next column definition
                 if source_df:
                     source_df.selectExpr(col_name.replace("b.", ""))
-                    break  # Break as soon as the above query doesn't error as we want the FIRST provided column
+                    break  # Break as soon as the above query doesn't error as we want the FIRST valid column
             except AnalysisException:
                 continue
 
