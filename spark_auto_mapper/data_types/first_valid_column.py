@@ -42,7 +42,6 @@ class AutoMapperFirstValidColumnType(
                 column_spec = column.get_column_spec(
                     source_df=source_df, current_column=current_column
                 )
-                break
             except Exception:
                 # By definition, if we are unable to resolve a column spec, for whatever reason, the column definition
                 # is not valid and should try the next column.
