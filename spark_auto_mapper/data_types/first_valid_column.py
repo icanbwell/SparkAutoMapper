@@ -47,8 +47,8 @@ class AutoMapperFirstValidColumnType(
                 # is not valid and should try the next column.
                 continue
 
-            col_name = column_spec._jc.toString(
-            )  # Get spark representation of the column
+            col_name = column_spec._jc.expr().sql(
+            )  # Get spark representation of the column as an expression
             try:
                 # Force spark analyzer to confirm that column/expression is possible. This does not actually compute
                 # anything, just triggers the analyzer to check validity, which is what we want.

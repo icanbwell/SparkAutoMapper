@@ -38,6 +38,24 @@ def test_automapper_first_valid_column(spark_session: SparkSession) -> None:
             A.number(A.expression("CAST (my_age AS BIGINT)")),
             lit(None),
         ),
+        is_young=A.first_valid_column(
+            A.map(
+                A.column("age"), {
+                    "21": "yes",
+                    "33": "yes",
+                    "54": "no comment",
+                    None: "not provided"
+                }
+            ),
+            A.map(
+                A.column("my_age"), {
+                    "21": "yes",
+                    "33": "yes",
+                    "54": "no comment",
+                    None: "not provided"
+                }
+            ),
+        )
     )
 
     assert isinstance(mapper, AutoMapper)
@@ -55,7 +73,9 @@ def test_automapper_first_valid_column(spark_session: SparkSession) -> None:
     result_df.printSchema()
     result_df.show()
 
-    assert result_df.where("member_id == 1").select("age"
-                                                    ).collect()[0][0] == 54
-    assert result_df.where("member_id == 2").select("age"
-                                                    ).collect()[0][0] == 33
+    assert result_df.where("member_id == 1").select(
+        "age", "is_young"
+    ).collect()[0][:] == (54, "no comment")
+    assert result_df.where("member_id == 2"
+                           ).select("age",
+                                    "is_young").collect()[0][:] == (33, "yes")
