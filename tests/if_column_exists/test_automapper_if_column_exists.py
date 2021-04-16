@@ -1,23 +1,22 @@
 from typing import Dict
 
 from pyspark.sql import SparkSession, Column, DataFrame
+
 # noinspection PyUnresolvedReferences
-from pyspark.sql.functions import col
-from pyspark.sql.functions import lit
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
+from spark_auto_mapper.data_types.if_column_exists import AutoMapperIfColumnExistsType
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
-from spark_auto_mapper.data_types.optional import AutoMapperOptionalType
 
-
-def test_automapper_optional(spark_session: SparkSession) -> None:
+def test_automapper_optional_ifexists(spark_session: SparkSession) -> None:
     # Arrange
     spark_session.createDataFrame(
         [
-            (1, 'Qureshi', 'Imran', "54"),
-            (2, 'Vidal', 'Michael', None),
-        ], ['member_id', 'last_name', 'first_name', "my_age"]
+            (1, "Qureshi", "Imran", "54"),
+            (2, "Vidal", "Michael", None),
+        ],
+        ["member_id", "last_name", "first_name", "my_age"],
     ).createOrReplaceTempView("patients")
 
     source_df: DataFrame = spark_session.table("patients")
@@ -30,13 +29,18 @@ def test_automapper_optional(spark_session: SparkSession) -> None:
         view="members",
         source_view="patients",
         keys=["member_id"],
-        drop_key_columns=False
+        drop_key_columns=False,
     ).columns(
-        last_name=A.column("last_name"),
-        optional_age=AutoMapperOptionalType(
-            A.number(A.column("my_age")), A.text("my_age")
+        optional_age=AutoMapperIfColumnExistsType(
+            column=A.column("my_age"),
+            if_exists=A.number(A.column("my_age")),
+            if_not_exists=A.text("no age"),
         ),
-        optional_foo=AutoMapperOptionalType(A.column("foo"), A.text("foo")),
+        optional_foo=AutoMapperIfColumnExistsType(
+            column=A.column("foo"),
+            if_exists=A.text("foo col is there"),
+            if_not_exists=A.text("no foo"),
+        ),
     )
 
     assert isinstance(mapper, AutoMapper)
@@ -46,11 +50,6 @@ def test_automapper_optional(spark_session: SparkSession) -> None:
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
-    assert str(sql_expressions["optional_age"]
-               ) == str(col("b.my_age").cast("long").alias("optional_age"))
-    assert str(sql_expressions["optional_foo"]
-               ) == str(lit("foo").cast("string").alias("optional_foo"))
-
     result_df: DataFrame = mapper.transform(df=df)
 
     # Assert
@@ -59,7 +58,7 @@ def test_automapper_optional(spark_session: SparkSession) -> None:
 
     assert result_df.where("member_id == 1").select(
         "optional_age", "optional_foo"
-    ).collect()[0][:] == (54, "foo")
+    ).collect()[0][:] == (54, "no foo")
     assert result_df.where("member_id == 2").select(
         "optional_age", "optional_foo"
-    ).collect()[0][:] == (None, "foo")
+    ).collect()[0][:] == (None, "no foo")

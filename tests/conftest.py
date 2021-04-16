@@ -91,6 +91,7 @@ def spark_session(request: FixtureRequest) -> SparkSession:
         config("spark.ui.showConsoleProgress", "false"). \
         config("spark.sql.shuffle.partitions", "2"). \
         config("spark.default.parallelism", "4"). \
+        config("spark.driver.bindAddress", "127.0.0.1"). \
         config("spark.sql.broadcastTimeout", "2400"). \
         enableHiveSupport(). \
         getOrCreate()
@@ -121,6 +122,7 @@ def spark_session_per_function(request: FixtureRequest) -> SparkSession:
         config("spark.ui.showConsoleProgress", "false"). \
         config("spark.sql.shuffle.partitions", "2"). \
         config("spark.default.parallelism", "4"). \
+        config("spark.driver.bindAddress", "127.0.0.1"). \
         config("spark.sql.broadcastTimeout", "2400"). \
         enableHiveSupport(). \
         getOrCreate()
