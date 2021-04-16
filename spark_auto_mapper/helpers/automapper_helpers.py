@@ -646,21 +646,19 @@ class AutoMapperHelpers:
         return AutoMapperFirstValidColumnType(*columns)
 
     @staticmethod
-    def optional(
+    def if_column_exists(
         column: AutoMapperColumnOrColumnLikeType,
-        default: Optional[AutoMapperColumnOrColumnLikeType],
-        if_exists: Optional[_TAutoMapperDataType] = None,
+        if_exists: Optional[_TAutoMapperDataType],
+        if_not_exists: Optional[_TAutoMapperDataType]
     ) -> "AutoMapperDataTypeBase":
         """
-        Allows for columns to be defined based in which a source column may not exist. If the optional source column does
-         not exist, the "default" column definition is used instead. if_exists will be returned if provided and column exists
-
-         :return: a optional automapper type
+        check the if the column exists if exists returns if_exists if not if_not_exists
+        :return: a optional automapper type
         """
-        from spark_auto_mapper.data_types.optional import AutoMapperOptionalType
+        from spark_auto_mapper.data_types.if_column_exists import AutoMapperIfColumnExistsType
 
-        return AutoMapperOptionalType(
-            column=column, default=default, if_exists=if_exists
+        return AutoMapperIfColumnExistsType(
+            column=column, if_exists=if_exists, if_not_exists=if_not_exists
         )
 
     @staticmethod

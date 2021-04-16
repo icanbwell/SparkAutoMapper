@@ -15,7 +15,7 @@ _TAutoMapperDataType = TypeVar(
 )
 
 
-class AutoMapperOptionalType(
+class AutoMapperIfColumnExistsType(
     AutoMapperDataTypeBase, Generic[_TAutoMapperDataType]
 ):
     """
@@ -23,25 +23,26 @@ class AutoMapperOptionalType(
     not exist, the "default" column definition is used instead.
     """
     def __init__(
-        self,
-        column: AutoMapperColumnOrColumnLikeType,
-        default: Optional[AutoMapperColumnOrColumnLikeType],
-        if_exists: Optional[_TAutoMapperDataType] = None,
+        self, column: AutoMapperColumnOrColumnLikeType,
+        if_exists: Optional[_TAutoMapperDataType],
+        if_not_exists: Optional[_TAutoMapperDataType]
     ):
         super().__init__()
 
         self.column: AutoMapperColumnOrColumnLikeType = (
             AutoMapperValueParser.parse_value(column)
         )
-        self.default: AutoMapperColumnOrColumnLikeType = (
-            AutoMapperValueParser.parse_value(default)
-        )
-
         self.if_exists: Optional[AutoMapperDataTypeBase] = None
         if if_exists:
             self.if_exists = if_exists \
                 if isinstance(if_exists, AutoMapperDataTypeBase) \
                 else AutoMapperValueParser.parse_value(if_exists)
+
+        self.if_not_exists: Optional[AutoMapperDataTypeBase] = None
+        if if_not_exists:
+            self.if_not_exists = if_not_exists \
+                if isinstance(if_not_exists, AutoMapperDataTypeBase) \
+                else AutoMapperValueParser.parse_value(if_not_exists)
 
     def get_column_spec(
         self, source_df: Optional[DataFrame], current_column: Optional[Column]
@@ -63,7 +64,8 @@ class AutoMapperOptionalType(
                         source_df=source_df, current_column=current_column
                     )
         except AnalysisException:
-            column_spec = self.default.get_column_spec(
-                source_df=source_df, current_column=current_column
-            )
+            if self.if_not_exists:
+                column_spec = self.if_not_exists.get_column_spec(
+                    source_df=source_df, current_column=current_column
+                )
         return column_spec
