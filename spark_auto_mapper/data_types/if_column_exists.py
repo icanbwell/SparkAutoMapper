@@ -4,6 +4,7 @@ from pyspark.sql import Column, DataFrame
 from pyspark.sql.utils import AnalysisException
 
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
+from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
 from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
 from spark_auto_mapper.type_definitions.wrapper_types import (
     AutoMapperColumnOrColumnLikeType,
@@ -66,6 +67,10 @@ class AutoMapperIfColumnExistsType(
         except AnalysisException:
             if self.if_not_exists:
                 column_spec = self.if_not_exists.get_column_spec(
+                    source_df=source_df, current_column=current_column
+                )
+            else:
+                column_spec = AutoMapperDataTypeLiteral(None).get_column_spec(
                     source_df=source_df, current_column=current_column
                 )
         return column_spec
