@@ -13,8 +13,8 @@ def test_auto_mapper_amount(spark_session: SparkSession) -> None:
     # Arrange
     spark_session.createDataFrame(
         [
-            (1, 'Qureshi', 'Imran', "54.45"),
-            (2, 'Vidal', 'Michael', "67.67"),
+            (1, 'Qureshi', 'Imran', "54.45"), (2, 'Vidal', 'Michael', "67.67"),
+            (3, 'Alex', 'Hearn', "1286782.17")
         ], ['member_id', 'last_name', 'first_name', "my_age"]
     ).createOrReplaceTempView("patients")
 
@@ -39,7 +39,7 @@ def test_auto_mapper_amount(spark_session: SparkSession) -> None:
         print(f"{column_name}: {sql_expression}")
 
     assert str(sql_expressions["age"]
-               ) == str(col("b.my_age").cast("float").alias("age"))
+               ) == str(col("b.my_age").cast("double").alias("age"))
 
     result_df: DataFrame = mapper.transform(df=df)
 
@@ -53,5 +53,9 @@ def test_auto_mapper_amount(spark_session: SparkSession) -> None:
     assert approx(
         result_df.where("member_id == 2").select("age").collect()[0][0]
     ) == approx(67.67)
+    # Ensuring exact match in situations in which float arithmetic errors might occur
+    assert str(
+        result_df.where("member_id == 3").select("age").collect()[0][0]
+    ) == "1286782.17"
 
-    assert dict(result_df.dtypes)["age"] == "float"
+    assert dict(result_df.dtypes)["age"] == "double"

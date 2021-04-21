@@ -51,4 +51,4 @@ def test_auto_mapper_amount_typed(spark_session: SparkSession) -> None:
         result_df.where("member_id == 2").select("age").collect()[0][0]
     ) == approx(67.67)
 
-    assert dict(result_df.dtypes)["age"] == "float"
+    assert dict(result_df.dtypes)["age"] == "double"
