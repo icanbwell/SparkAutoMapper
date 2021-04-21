@@ -28,14 +28,14 @@ class AutoMapperAmountDataType(AutoMapperDataTypeBase):
             # parse the amount here
             column_spec = self.value.get_column_spec(
                 source_df=source_df, current_column=current_column
-            ).cast("float")
+            ).cast("double")
             return column_spec
         if source_df is not None and isinstance(self.value, AutoMapperDataTypeColumn) \
                 and dict(source_df.dtypes)[self.value.value] == "string":
             # parse the amount here
             column_spec = self.value.get_column_spec(
                 source_df=source_df, current_column=current_column
-            ).cast("float")
+            ).cast("double")
             return column_spec
         else:
             column_spec = self.value.get_column_spec(
