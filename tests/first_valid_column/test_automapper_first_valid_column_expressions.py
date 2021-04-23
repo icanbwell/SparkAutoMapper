@@ -66,7 +66,7 @@ def test_automapper_first_valid_column(spark_session: SparkSession) -> None:
         print(f"{column_name}: {sql_expression}")
 
     assert str(sql_expressions["age"]
-               ) == str(col("my_age").cast("long").alias("age"))
+               ) == str(col("my_age").cast("long").cast("long").alias("age"))
     result_df: DataFrame = mapper.transform(df=df)
 
     # Assert

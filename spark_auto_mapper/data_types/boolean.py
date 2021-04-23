@@ -1,7 +1,6 @@
 from typing import Optional
 
 from pyspark.sql import Column, DataFrame
-from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
 
 from spark_auto_mapper.data_types.column import AutoMapperDataTypeColumn
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
@@ -19,14 +18,8 @@ class AutoMapperBooleanDataType(AutoMapperDataTypeBase):
     def get_column_spec(
         self, source_df: Optional[DataFrame], current_column: Optional[Column]
     ) -> Column:
-        if isinstance(self.value, AutoMapperDataTypeLiteral):
-            # parse the boolean here
-            column_spec = self.value.get_column_spec(
-                source_df=source_df, current_column=current_column
-            ).cast("boolean")
-            return column_spec
-        elif source_df is not None and isinstance(self.value, AutoMapperDataTypeColumn) \
-                and dict(source_df.dtypes)[self.value.value] == "string":
+        if source_df is not None and isinstance(self.value, AutoMapperDataTypeColumn) \
+                and dict(source_df.dtypes)[self.value.value] != "boolean":
             # parse the boolean here
             column_spec = self.value.get_column_spec(
                 source_df=source_df, current_column=current_column
