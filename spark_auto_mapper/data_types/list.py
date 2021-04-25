@@ -119,3 +119,14 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
                     [StructField("extension", ArrayType(schema))]
                 )
         return None
+
+    def __add__(self, other: 'AutoMapperList[_T]') -> 'AutoMapperList[_T]':
+        # iterate through both lists and return a new one
+        result: AutoMapperList[_T] = AutoMapperList(
+            value=(
+                self.value if isinstance(self.value, list) else [self.value]
+            ) +
+            (other.value if isinstance(other.value, list) else [other.value]),
+            remove_nulls=self.remove_nulls,
+        )
+        return result
