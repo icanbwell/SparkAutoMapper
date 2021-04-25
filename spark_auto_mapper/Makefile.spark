@@ -5,7 +5,7 @@ export LANG
 BRANCH=$(shell git rev-parse --abbrev-ref HEAD)
 VERSION=$(shell cat VERSION)
 GIT_HASH=${CIRCLE_SHA1}
-SPARK_VER=3.0.1
+SPARK_VER=3.1.1
 HADOOP_VER=3.2
 
 .PHONY:sdkman
