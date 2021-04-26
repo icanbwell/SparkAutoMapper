@@ -1,5 +1,5 @@
 numpy>=1.19.2
 pyspark>=2.4.0
 logger
-sparkdataframecomparer>=0.1.60
-Deprecated==1.2.11
+sparkdataframecomparer>=0.1.63
+Deprecated==1.2.12
