@@ -23,15 +23,12 @@ class AutoMapperAmountDataType(AutoMapperDataTypeBase):
     def get_column_spec(
         self, source_df: Optional[DataFrame], current_column: Optional[Column]
     ) -> Column:
-        if source_df is not None and isinstance(self.value, AutoMapperDataTypeColumn) \
-                and dict(source_df.dtypes)[self.value.value] not in ("float", "double"):
-            # parse the amount here
-            column_spec = self.value.get_column_spec(
-                source_df=source_df, current_column=current_column
-            ).cast("double")
-            return column_spec
-        else:
-            column_spec = self.value.get_column_spec(
-                source_df=source_df, current_column=current_column
-            )
-            return column_spec
+        column_spec = self.value.get_column_spec(
+            source_df=source_df, current_column=current_column
+        )
+        if not (
+            isinstance(self.value, AutoMapperDataTypeColumn) and source_df and
+            dict(source_df.dtypes)[self.value.value] in ("float", "double")
+        ):
+            column_spec = column_spec.cast("double")
+        return column_spec
