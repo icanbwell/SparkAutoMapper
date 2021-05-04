@@ -2,12 +2,11 @@ from typing import Union, List, Optional, Generic, TypeVar
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import array
-from pyspark.sql.functions import lit
+from pyspark.sql.functions import lit, filter
 from pyspark.sql.types import StructType, ArrayType, StructField, DataType
 
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
-from spark_auto_mapper.helpers.spark_higher_order_functions import filter
 from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
 from spark_auto_mapper.type_definitions.native_types import AutoMapperNativeSimpleType
 

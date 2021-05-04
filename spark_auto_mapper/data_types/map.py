@@ -1,9 +1,8 @@
-from decimal import Decimal
-from typing import Dict, Optional, Union
+from typing import Dict, Optional
 
 from pyspark.sql import Column, DataFrame
-# noinspection PyUnresolvedReferences
 from pyspark.sql.functions import when
+
 from spark_auto_mapper.type_definitions.defined_types import AutoMapperTextInputType
 
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
@@ -47,19 +46,19 @@ class AutoMapperMapDataType(AutoMapperDataTypeExpression):
         )
 
         column_spec: Optional[Column] = None
-        key: Union[Column, Union[bool, float, int, str], Decimal]
+        key: AutoMapperAnyDataType
         value: AutoMapperDataTypeBase
         for key, value in self.mapping.items():
             if column_spec is not None:
                 column_spec = column_spec.when(
-                    inner_column_spec.eqNullSafe(key),
+                    inner_column_spec.eqNullSafe(key),  # type: ignore
                     value.get_column_spec(
                         source_df=source_df, current_column=current_column
                     )
                 )
             else:
                 column_spec = when(
-                    inner_column_spec.eqNullSafe(key),
+                    inner_column_spec.eqNullSafe(key),  # type: ignore
                     value.get_column_spec(
                         source_df=source_df, current_column=current_column
                     )

@@ -1,11 +1,10 @@
 from typing import Dict
 
 from pyspark.sql import SparkSession, Column, DataFrame
-from pyspark.sql.functions import array, expr
+from pyspark.sql.functions import array, expr, filter
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.data_types.list import AutoMapperList
-from spark_auto_mapper.helpers.spark_higher_order_functions import filter
 
 
 def test_auto_mapper_array_single_item(spark_session: SparkSession) -> None:

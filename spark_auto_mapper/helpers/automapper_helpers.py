@@ -1,6 +1,7 @@
 from typing import Any, Dict, Union, TypeVar, cast, Optional, List, Callable
 
 from pyspark.sql.types import StringType
+from pyspark.sql import Column
 
 from spark_auto_mapper.data_types.array_base import AutoMapperArrayLikeBase
 from spark_auto_mapper.data_types.coalesce import AutoMapperCoalesceDataType
@@ -531,8 +532,8 @@ class AutoMapperHelpers:
 
     @staticmethod
     def filter(
-        column: AutoMapperColumnOrColumnLikeType,
-        func: Callable[[Dict[str, Any]], Any]
+        column: AutoMapperColumnOrColumnLikeType, func: Callable[[Column],
+                                                                 Column]
     ) -> AutoMapperFilterDataType:
         """
         Filters a column by a function

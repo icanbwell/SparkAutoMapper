@@ -2,9 +2,9 @@ from pathlib import Path
 from typing import Dict
 
 from pyspark.sql import SparkSession, DataFrame, Column
-from tests.conftest import clean_spark_session
+from pyspark.sql.functions import filter
 
-from spark_auto_mapper.helpers.spark_higher_order_functions import filter
+from tests.conftest import clean_spark_session
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A

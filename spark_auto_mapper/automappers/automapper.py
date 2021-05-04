@@ -225,14 +225,15 @@ class AutoMapper(AutoMapperContainer):
                           "All items in an array should have the exact same structure.  " \
                           "You can pass in include_nulls to AutoMapperDataTypeComplexBase to force it to create " \
                           "null values for each element in the structure. "
-                msg += self.get_message_for_exception(
-                    column_name, df, e, source_df
-                )
+                if source_df is not None:
+                    msg += self.get_message_for_exception(
+                        column_name, df, e, source_df
+                    )
                 raise Exception(msg) from e
             except Exception as e:
                 msg = self.get_message_for_exception(
                     column_name, df, e, source_df
-                )
+                ) if source_df is not None else ""
                 raise Exception(msg) from e
 
         # write out final checkpoint for this automapper
@@ -413,7 +414,7 @@ class AutoMapper(AutoMapperContainer):
         :return dictionary of column specs
         """
         return {
-            column_name: str(ColumnSpecWrapper(column_spec))
+            column_name: ColumnSpecWrapper(column_spec).column_spec
             for column_name, column_spec in
             self.get_column_specs(source_df=None).items()
         }

@@ -1,4 +1,4 @@
-from typing import Optional, TypeVar, Union, List, cast, Callable, Dict, Any
+from typing import Callable, List, Optional, TypeVar, Union, cast
 
 from pyspark.sql import Column, DataFrame
 
@@ -96,7 +96,7 @@ class AutoMapperDataTypeBase:
 
     # noinspection PyMethodMayBeStatic
     def filter(
-        self: _TAutoMapperDataType, func: Callable[[Dict[str, Any]], Any]
+        self: _TAutoMapperDataType, func: Callable[[Column], Column]
     ) -> _TAutoMapperDataType:
         """
         filters an array column

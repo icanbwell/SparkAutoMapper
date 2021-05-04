@@ -1,10 +1,10 @@
-from typing import Callable, Any, Dict, Optional, Union
+from typing import Callable, Optional, Union
 
 from pyspark.sql import DataFrame, Column
+from pyspark.sql.functions import filter
 
 from spark_auto_mapper.data_types.array_base import AutoMapperArrayLikeBase
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
-from spark_auto_mapper.helpers.spark_higher_order_functions import filter
 from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperColumnOrColumnLikeType
 
 
@@ -12,13 +12,13 @@ class AutoMapperFilterDataType(AutoMapperArrayLikeBase):
     def __init__(
         self, column: Union[AutoMapperDataTypeBase,
                             AutoMapperColumnOrColumnLikeType],
-        func: Callable[[Dict[str, Any]], Any]
+        func: Callable[[Column], Column]
     ) -> None:
         super().__init__()
 
         self.column: Union[AutoMapperDataTypeBase,
                            AutoMapperColumnOrColumnLikeType] = column
-        self.func: Callable[[Dict[str, Any]], Any] = func
+        self.func: Callable[[Column], Column] = func
 
     def include_null_properties(self, include_null_properties: bool) -> None:
         self.column.include_null_properties(

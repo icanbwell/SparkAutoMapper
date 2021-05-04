@@ -2,9 +2,9 @@ from pathlib import Path
 from typing import Dict, List
 
 from pyspark.sql import SparkSession, DataFrame, Column
+from pyspark.sql.functions import filter, transform
 
 from spark_auto_mapper.data_types.complex.complex_base import AutoMapperDataTypeComplexBase
-from spark_auto_mapper.helpers.spark_higher_order_functions import transform, filter
 
 from tests.conftest import clean_spark_session
 
