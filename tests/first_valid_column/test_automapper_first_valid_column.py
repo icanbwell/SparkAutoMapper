@@ -1,8 +1,7 @@
 from typing import Dict
 
 from pyspark.sql import SparkSession, Column, DataFrame
-# noinspection PyUnresolvedReferences
-from pyspark.sql.functions import lit, col
+from pyspark.sql.functions import col
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
@@ -36,20 +35,20 @@ def test_automapper_first_valid_column(spark_session: SparkSession) -> None:
         age=A.first_valid_column(
             A.number(A.column("age")),
             A.number(A.column("my_age")),
-            lit(None),
+            A.text(None),
         ),
         age2=A.first_valid_column(
             A.if_not_null(
                 A.first_valid_column(
                     A.number(A.column("age")), A.number(A.column("my_age")),
-                    lit(None)
+                    A.text(None)
                 ),
                 A.first_valid_column(
                     A.number(A.column("age")), A.number(A.column("my_age")),
-                    lit(None)
+                    A.text(None)
                 ), A.number(A.text("100"))
             ), A.number(A.column("age")), A.number(A.column("his_age")),
-            lit(99999)
+            A.number(99999)
         ),
     )
 

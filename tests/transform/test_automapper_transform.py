@@ -2,16 +2,15 @@ from pathlib import Path
 from typing import Dict, List
 
 from pyspark.sql import SparkSession, DataFrame, Column
+from pyspark.sql.functions import transform
 
 from spark_auto_mapper.data_types.complex.complex_base import AutoMapperDataTypeComplexBase
-from spark_auto_mapper.helpers.spark_higher_order_functions import transform
 
 from tests.conftest import clean_spark_session
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 from pyspark.sql.functions import struct
-# noinspection PyUnresolvedReferences
 from pyspark.sql.functions import col
 
 

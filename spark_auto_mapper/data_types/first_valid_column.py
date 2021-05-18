@@ -38,6 +38,7 @@ class AutoMapperFirstValidColumnType(
         column_spec = None
 
         for column in self.columns:
+            # noinspection PyBroadException
             try:
                 column_spec = column.get_column_spec(
                     source_df=source_df, current_column=current_column
@@ -47,7 +48,8 @@ class AutoMapperFirstValidColumnType(
                 # is not valid and should try the next column.
                 continue
 
-            col_name = column_spec._jc.expr().sql(
+            # noinspection Mypy,PyProtectedMember
+            col_name = column_spec._jc.expr().sql(  # type: ignore
             )  # Get spark representation of the column as an expression
             try:
                 # Force spark analyzer to confirm that column/expression is possible. This does not actually compute
@@ -59,4 +61,5 @@ class AutoMapperFirstValidColumnType(
             except AnalysisException:
                 continue
 
+        assert column_spec is not None
         return column_spec

@@ -2,7 +2,7 @@ from typing import Dict
 
 from pyspark.sql import SparkSession, Column, DataFrame
 # noinspection PyUnresolvedReferences
-from pyspark.sql.functions import lit, col
+from pyspark.sql.functions import col
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
@@ -36,7 +36,7 @@ def test_automapper_first_valid_column(spark_session: SparkSession) -> None:
         age=A.first_valid_column(
             A.number(A.expression("CAST (age AS BIGINT)")),
             A.number(A.expression("CAST (my_age AS BIGINT)")),
-            lit(None),
+            A.text(None),
         ),
         is_young=A.first_valid_column(
             A.map(

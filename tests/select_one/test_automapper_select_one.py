@@ -2,8 +2,8 @@ from pathlib import Path
 from typing import Dict
 
 from pyspark.sql import SparkSession, DataFrame, Column
+from pyspark.sql.functions import transform, filter
 
-from spark_auto_mapper.helpers.spark_higher_order_functions import transform, filter
 from tests.conftest import clean_spark_session
 
 from spark_auto_mapper.automappers.automapper import AutoMapper

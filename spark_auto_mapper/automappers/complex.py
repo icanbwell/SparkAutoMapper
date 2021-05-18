@@ -1,4 +1,4 @@
-from typing import Optional, Dict, List
+from typing import Optional, Dict, List, Union
 
 from pyspark.sql.types import StructType, StructField, DataType
 
@@ -17,31 +17,32 @@ class AutoMapperWithComplex(AutoMapperContainer):
         super().__init__()
 
         # ask entity for its schema
-        schema: Optional[StructType] = entity.get_schema(
+        schema: Union[StructType, DataType, None] = entity.get_schema(
             include_extension=include_extension
         )
-        if schema is not None:
+        column_schema: Dict[str, StructField] = {}
+        if schema is not None and isinstance(schema, StructType):
             # if entity has an extension then ask the extension for its schema
             column_name: str
             mapper: AutoMapperDataTypeBase
             for column_name, mapper in entity.get_child_mappers().items():
                 if column_name == "extension":
-                    extension_schema: DataType = mapper.get_schema(
+                    extension_schema: Union[StructType, DataType, None]
+                    extension_schema = mapper.get_schema(
                         include_extension=include_extension
                     )
-                    if extension_schema is not None and len(
-                        extension_schema.fields
-                    ) > 0:
-                        schema = StructType(
-                            [
-                                f
-                                for f in schema.fields if f.name != "extension"
-                            ] + [extension_schema.fields[0]]
-                        )
-        column_schema: Dict[str,
-                            StructField] = {f.name: f
-                                            for f in schema
-                                            } if schema and use_schema else {}
+                    if extension_schema is not None:
+                        if isinstance(extension_schema, StructType
+                                      ) and len(extension_schema.fields) > 0:
+                            schema = StructType(
+                                [
+                                    f for f in schema.fields
+                                    if f.name != "extension"
+                                ] + [extension_schema.fields[0]]
+                            )
+            column_schema = {f.name: f
+                             for f in schema.fields
+                             } if schema and use_schema else {}
 
         self.generate_mappers(
             mappers_dict={

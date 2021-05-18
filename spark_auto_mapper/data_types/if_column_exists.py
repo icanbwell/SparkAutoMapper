@@ -51,7 +51,8 @@ class AutoMapperIfColumnExistsType(
         column_spec = self.column.get_column_spec(
             source_df=source_df, current_column=current_column
         )
-        col_name = column_spec._jc.toString(
+        # noinspection Mypy,PyProtectedMember
+        col_name: str = column_spec._jc.toString(  # type: ignore
         )  # Get spark representation of the column
         try:
             # Force spark analyzer to confirm that column/expression is possible. This does not actually compute
