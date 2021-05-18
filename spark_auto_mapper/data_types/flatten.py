@@ -1,7 +1,7 @@
 from typing import Optional, Union
 
 from pyspark.sql import DataFrame, Column
-from pyspark.sql.functions import flatten
+from pyspark.sql.functions import flatten, filter
 
 from spark_auto_mapper.data_types.array_base import AutoMapperArrayLikeBase
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
@@ -27,7 +27,9 @@ class AutoMapperFlattenDataType(AutoMapperArrayLikeBase):
         self, source_df: Optional[DataFrame], current_column: Optional[Column]
     ) -> Column:
         return flatten(
-            self.column.get_column_spec(
-                source_df=source_df, current_column=current_column
+            filter(
+                self.column.get_column_spec(
+                    source_df=source_df, current_column=current_column
+                ), lambda x: x.isNotNull()
             )
         )
