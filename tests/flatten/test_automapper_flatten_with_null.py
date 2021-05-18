@@ -8,7 +8,7 @@ from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 from tests.conftest import clean_spark_session
 
 
-def test_automapper_flatten_null(spark_session: SparkSession) -> None:
+def test_automapper_flatten_with_null(spark_session: SparkSession) -> None:
     clean_spark_session(spark_session)
 
     source_view_name = "cascaded_list_view"
@@ -22,7 +22,7 @@ def test_automapper_flatten_null(spark_session: SparkSession) -> None:
         ]
     )
     source_df = spark_session.createDataFrame(
-        [([[1], [2, 3, 4], [3, 5]], )], schema=schema
+        [([[1], [2, 3, 4], [3, 5], None], )], schema=schema
     )
     source_df.printSchema()
     source_df.createOrReplaceTempView(source_view_name)
