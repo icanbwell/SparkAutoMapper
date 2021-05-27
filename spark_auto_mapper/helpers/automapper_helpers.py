@@ -3,6 +3,7 @@ from typing import Any, Dict, Union, TypeVar, cast, Optional, List, Callable
 from pyspark.sql.types import StringType
 from pyspark.sql import Column
 
+from spark_auto_mapper.data_types.array_max import AutoMapperArrayMaxDataType
 from spark_auto_mapper.data_types.array_base import AutoMapperArrayLikeBase
 from spark_auto_mapper.data_types.coalesce import AutoMapperCoalesceDataType
 from spark_auto_mapper.data_types.datetime import AutoMapperDateTimeDataType
@@ -503,6 +504,17 @@ class AutoMapperHelpers:
 
         # cast it to the inner type so type checking is happy
         return cast(_TAutoMapperDataType, AutoMapperCoalesceDataType(*args))
+
+    @staticmethod
+    def array_max(*args: _TAutoMapperDataType) -> _TAutoMapperDataType:
+        """
+        Returns the first value that is not null.
+
+        :return: a coalesce automapper type
+        """
+
+        # cast it to the inner type so type checking is happy
+        return cast(_TAutoMapperDataType, AutoMapperArrayMaxDataType(*args))
 
     @staticmethod
     def if_regex(
