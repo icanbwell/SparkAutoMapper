@@ -3,7 +3,6 @@ import os
 import shutil
 import random
 import string
-from os import path
 
 import pytest
 from _pytest.fixtures import FixtureRequest
@@ -77,14 +76,7 @@ def spark_session(request: FixtureRequest) -> SparkSession:
         os.environ["SPARK_HOME"] = "/usr/local/opt/spark"
 
     clean_spark_dir()
-
     master = "local[2]"
-    # master: str = "spark://localhost:7077"
-    if not path.exists("/Applications/Docker.app"):
-        master = "local[2]"
-        print(f"++++++ Running on local spark: {master} ++++")
-    else:
-        print(f"++++++ Running on docker spark: {master} ++++")
 
     session = (
         SparkSession.builder.appName(
@@ -113,13 +105,7 @@ def spark_session_per_function(request: FixtureRequest) -> SparkSession:
 
     clean_spark_dir()
 
-    master: str = "spark://spark:7077"
     master = "local[2]"
-    if not path.exists("/Applications/Docker.app"):
-        master = "local[2]"
-        print(f"++++++ Running on local spark: {master} ++++")
-    else:
-        print(f"++++++ Running on docker spark: {master} ++++")
 
     session = (
         SparkSession.builder.appName("pytest-pyspark-local-testing")

@@ -30,8 +30,11 @@ jobs:
         run: |
           pip install wheel
 
+      - name: pre-commit
+        run: make run-pre-commit
+
       # setup and install everything and run tests
-      - name: install_spark
-        run: make download_spark
-      - name: continuous_integration
-        run: make continuous_integration
+      - name: up
+        run: make up
+      - name: tests
+        run: make tests
