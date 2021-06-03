@@ -270,10 +270,13 @@ class AutoMapper(AutoMapperContainer):
             assert not self.view or not SparkHelpers.spark_table_exists(
                 sql_ctx=df.sql_ctx, view=self.view
             )
-            self.keys = [TEMPORARY_KEY]
-            source_df = source_df.withColumn(
-                TEMPORARY_KEY, monotonically_increasing_id()
-            )
+            if self.use_single_select:
+                self.keys = []
+            else:
+                self.keys = [TEMPORARY_KEY]
+                source_df = source_df.withColumn(
+                    TEMPORARY_KEY, monotonically_increasing_id()
+                )
 
         # if view is specified then check if it exists
         destination_df: DataFrame = df.sql_ctx.table(self.view) \
