@@ -10,7 +10,7 @@ from spark_auto_mapper.type_definitions.native_types import AutoMapperNativeSimp
 
 _TAutoMapperDataType = TypeVar(
     "_TAutoMapperDataType",
-    bound=Union[AutoMapperNativeSimpleType, 'AutoMapperDataTypeBase']
+    bound=Union[AutoMapperNativeSimpleType, "AutoMapperDataTypeBase"],
 )
 
 

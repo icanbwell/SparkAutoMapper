@@ -2,6 +2,7 @@ import re
 from typing import Optional, List
 
 from pyspark.sql import Column, DataFrame
+
 # noinspection PyUnresolvedReferences
 
 from spark_auto_mapper.data_types.array_base import AutoMapperArrayLikeBase
@@ -25,8 +26,9 @@ class AutoMapperDataTypeField(AutoMapperArrayLikeBase):
                 my_column: Column = current_column
                 for element in elements:
                     if element != "_" and element != "":
-                        my_column = my_column[element if not element.isnumeric(
-                        ) else int(element)]
+                        my_column = my_column[
+                            element if not element.isnumeric() else int(element)
+                        ]
                 return my_column
             else:
                 raise ValueError(

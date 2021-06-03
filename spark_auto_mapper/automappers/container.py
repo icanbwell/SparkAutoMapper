@@ -16,10 +16,12 @@ class AutoMapperContainer(AutoMapperBase):
         self.mappers: Dict[str, AutoMapperBase] = {}
 
     def generate_mappers(
-        self, mappers_dict: Dict[str, AutoMapperAnyDataType],
-        column_schema: Dict[str, StructField], include_null_properties: bool,
+        self,
+        mappers_dict: Dict[str, AutoMapperAnyDataType],
+        column_schema: Dict[str, StructField],
+        include_null_properties: bool,
         skip_schema_validation: List[str],
-        skip_if_columns_null_or_empty: Optional[List[str]]
+        skip_if_columns_null_or_empty: Optional[List[str]],
     ) -> None:
         column: str
         value: AutoMapperAnyDataType
@@ -28,14 +30,14 @@ class AutoMapperContainer(AutoMapperBase):
             automapper = AutoMapperWithColumnBase(
                 dst_column=column,
                 value=value,
-                column_schema=column_schema[column] if column in column_schema
-                and column not in skip_schema_validation else None,
+                column_schema=column_schema[column]
+                if column in column_schema and column not in skip_schema_validation
+                else None,
                 include_null_properties=include_null_properties
                 and column not in skip_schema_validation,
-                skip_if_columns_null_or_empty=skip_if_columns_null_or_empty
+                skip_if_columns_null_or_empty=skip_if_columns_null_or_empty,
             )
-            assert isinstance(automapper,
-                              AutoMapperWithColumnBase), type(automapper)
+            assert isinstance(automapper, AutoMapperWithColumnBase), type(automapper)
             self.mappers[column] = automapper
 
     def transform_with_data_frame(
@@ -43,10 +45,8 @@ class AutoMapperContainer(AutoMapperBase):
     ) -> DataFrame:
         return df  # we do nothing since self.mappers do all the work
 
-    def get_column_specs(self,
-                         source_df: Optional[DataFrame]) -> Dict[str, Column]:
+    def get_column_specs(self, source_df: Optional[DataFrame]) -> Dict[str, Column]:
         return {
-            column_name:
-            mapper.get_column_specs(source_df=source_df)[column_name]
+            column_name: mapper.get_column_specs(source_df=source_df)[column_name]
             for column_name, mapper in self.mappers.items()
         }

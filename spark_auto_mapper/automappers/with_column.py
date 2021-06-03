@@ -12,5 +12,5 @@ class AutoMapperWithColumn(AutoMapperWithColumnBase):
             dst_column=dst_column,
             value=value,
             column_schema=None,
-            include_null_properties=False
+            include_null_properties=False,
         )

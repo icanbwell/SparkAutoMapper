@@ -7,47 +7,53 @@ from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
 
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
-from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperColumnOrColumnLikeType, AutoMapperAnyDataType
-
-_TAutoMapperDataType = TypeVar(
-    "_TAutoMapperDataType", bound=AutoMapperAnyDataType
+from spark_auto_mapper.type_definitions.wrapper_types import (
+    AutoMapperColumnOrColumnLikeType,
+    AutoMapperAnyDataType,
 )
 
+_TAutoMapperDataType = TypeVar("_TAutoMapperDataType", bound=AutoMapperAnyDataType)
 
-class AutoMapperIfDataType(
-    AutoMapperDataTypeBase, Generic[_TAutoMapperDataType]
-):
+
+class AutoMapperIfDataType(AutoMapperDataTypeBase, Generic[_TAutoMapperDataType]):
     """
     If check returns value if the checks passes else when_not
     """
+
     def __init__(
         self,
         column: AutoMapperColumnOrColumnLikeType,
         check: Union[AutoMapperAnyDataType, List[AutoMapperAnyDataType]],
         value: _TAutoMapperDataType,
-        else_: Optional[_TAutoMapperDataType] = None
+        else_: Optional[_TAutoMapperDataType] = None,
     ):
         super().__init__()
 
         self.column: AutoMapperColumnOrColumnLikeType = column
         if isinstance(check, list):
-            self.check: Union[AutoMapperDataTypeBase,
-                              List[AutoMapperDataTypeBase]] = [
-                                  a if isinstance(a, AutoMapperDataTypeBase)
-                                  else AutoMapperValueParser.parse_value(a)
-                                  for a in check
-                              ]
+            self.check: Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]] = [
+                a
+                if isinstance(a, AutoMapperDataTypeBase)
+                else AutoMapperValueParser.parse_value(a)
+                for a in check
+            ]
         else:
-            self.check = check \
-                if isinstance(check, AutoMapperDataTypeBase) \
+            self.check = (
+                check
+                if isinstance(check, AutoMapperDataTypeBase)
                 else AutoMapperValueParser.parse_value(check)
-        self.value: AutoMapperDataTypeBase = value \
-            if isinstance(value, AutoMapperDataTypeBase) \
+            )
+        self.value: AutoMapperDataTypeBase = (
+            value
+            if isinstance(value, AutoMapperDataTypeBase)
             else AutoMapperValueParser.parse_value(value)
+        )
         if else_:
-            self.else_: AutoMapperDataTypeBase = cast(AutoMapperDataTypeBase, else_) \
-                if isinstance(value, AutoMapperDataTypeBase) \
+            self.else_: AutoMapperDataTypeBase = (
+                cast(AutoMapperDataTypeBase, else_)
+                if isinstance(value, AutoMapperDataTypeBase)
                 else AutoMapperValueParser.parse_value(value)
+            )
         else:
             self.else_ = AutoMapperDataTypeLiteral(None)
 
@@ -67,12 +73,13 @@ class AutoMapperIfDataType(
                     *[
                         c.get_column_spec(
                             source_df=source_df, current_column=current_column
-                        ) for c in self.check
+                        )
+                        for c in self.check
                     ]
                 ),
                 self.value.get_column_spec(
                     source_df=source_df, current_column=current_column
-                )
+                ),
             ).otherwise(
                 self.else_.get_column_spec(
                     source_df=source_df, current_column=current_column
@@ -89,7 +96,7 @@ class AutoMapperIfDataType(
                 ),
                 self.value.get_column_spec(
                     source_df=source_df, current_column=current_column
-                )
+                ),
             ).otherwise(
                 self.else_.get_column_spec(
                     source_df=source_df, current_column=current_column

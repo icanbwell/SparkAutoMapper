@@ -11,9 +11,10 @@ def test_auto_mapper_struct(spark_session: SparkSession) -> None:
     # Arrange
     spark_session.createDataFrame(
         [
-            (1, 'Qureshi', 'Imran'),
-            (2, 'Vidal', 'Michael'),
-        ], ['member_id', 'last_name', 'first_name']
+            (1, "Qureshi", "Imran"),
+            (2, "Vidal", "Michael"),
+        ],
+        ["member_id", "last_name", "first_name"],
     ).createOrReplaceTempView("patients")
 
     source_df: DataFrame = spark_session.table("patients")
@@ -26,16 +27,11 @@ def test_auto_mapper_struct(spark_session: SparkSession) -> None:
         view="members",
         source_view="patients",
         keys=["member_id"],
-        drop_key_columns=False
-    ).columns(dst2=A.struct({
-        "use": "usual",
-        "family": "imran"
-    }))
+        drop_key_columns=False,
+    ).columns(dst2=A.struct({"use": "usual", "family": "imran"}))
 
     assert isinstance(mapper, AutoMapper)
-    sql_expressions: Dict[str, Column] = mapper.get_column_specs(
-        source_df=source_df
-    )
+    sql_expressions: Dict[str, Column] = mapper.get_column_specs(source_df=source_df)
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
@@ -43,8 +39,7 @@ def test_auto_mapper_struct(spark_session: SparkSession) -> None:
 
     # Assert
     assert str(sql_expressions["dst2"]) == str(
-        struct(lit("usual").alias("use"),
-               lit("imran").alias("family")).alias("dst2")
+        struct(lit("usual").alias("use"), lit("imran").alias("family")).alias("dst2")
     )
 
     result_df.printSchema()

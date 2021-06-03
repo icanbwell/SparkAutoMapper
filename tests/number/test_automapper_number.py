@@ -34,13 +34,11 @@ def test_auto_mapper_number(spark_session: SparkSession) -> None:
         drop_key_columns=False,
     ).columns(
         age=A.number(A.column("my_age")),
-        null_field=A.number(AutoMapperDataTypeLiteral(None))
+        null_field=A.number(AutoMapperDataTypeLiteral(None)),
     )
 
     assert isinstance(mapper, AutoMapper)
-    sql_expressions: Dict[str, Column] = mapper.get_column_specs(
-        source_df=source_df
-    )
+    sql_expressions: Dict[str, Column] = mapper.get_column_specs(source_df=source_df)
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
@@ -49,8 +47,9 @@ def test_auto_mapper_number(spark_session: SparkSession) -> None:
         str(col("b.my_age").cast("long").alias("age")),
     )
 
-    assert str(sql_expressions["null_field"]
-               ) == str(lit(None).cast("long").alias("null_field"))
+    assert str(sql_expressions["null_field"]) == str(
+        lit(None).cast("long").alias("null_field")
+    )
 
     result_df: DataFrame = mapper.transform(df=df)
 
@@ -58,15 +57,13 @@ def test_auto_mapper_number(spark_session: SparkSession) -> None:
     result_df.printSchema()
     result_df.show()
 
-    assert result_df.where("member_id == 1").select("age"
-                                                    ).collect()[0][0] == 54
-    assert result_df.where("member_id == 2").select("age"
-                                                    ).collect()[0][0] == 67
+    assert result_df.where("member_id == 1").select("age").collect()[0][0] == 54
+    assert result_df.where("member_id == 2").select("age").collect()[0][0] == 67
     assert (
-        result_df.where("member_id == 3").select("age").collect()[0][0] ==
-        131026061001
+        result_df.where("member_id == 3").select("age").collect()[0][0] == 131026061001
     )
-    assert result_df.where("member_id == 1").select("null_field"
-                                                    ).collect()[0][0] is None
+    assert (
+        result_df.where("member_id == 1").select("null_field").collect()[0][0] is None
+    )
 
     assert dict(result_df.dtypes)["age"] in ("int", "long", "bigint")

@@ -4,7 +4,9 @@ from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import substring_index
 
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
-from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperColumnOrColumnLikeType
+from spark_auto_mapper.type_definitions.wrapper_types import (
+    AutoMapperColumnOrColumnLikeType,
+)
 
 
 class AutoMapperSubstringByDelimiterDataType(AutoMapperTextLikeBase):
@@ -14,9 +16,12 @@ class AutoMapperSubstringByDelimiterDataType(AutoMapperTextLikeBase):
     If count is negative, every to the right of the final delimiter (counting from the right) is returned.
     substring_index performs a case-sensitive match when searching for delimiter.
     """
+
     def __init__(
-        self, column: AutoMapperColumnOrColumnLikeType, delimiter: str,
-        delimiter_count: int
+        self,
+        column: AutoMapperColumnOrColumnLikeType,
+        delimiter: str,
+        delimiter_count: int,
     ):
         super().__init__()
 
@@ -30,6 +35,8 @@ class AutoMapperSubstringByDelimiterDataType(AutoMapperTextLikeBase):
         column_spec = substring_index(
             self.column.get_column_spec(
                 source_df=source_df, current_column=current_column
-            ), self.delimiter, self.delimiter_count
+            ),
+            self.delimiter,
+            self.delimiter_count,
         )
         return column_spec

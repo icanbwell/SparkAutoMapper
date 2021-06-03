@@ -1,6 +1,7 @@
 from typing import Dict
 
 from pyspark.sql import SparkSession, Column, DataFrame
+
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import col
 
@@ -12,9 +13,10 @@ def test_automapper_first_valid_column(spark_session: SparkSession) -> None:
     # Arrange
     spark_session.createDataFrame(
         [
-            (1, 'Qureshi', 'Imran', '54'),
-            (2, 'Vidal', 'Michael', '33'),
-        ], ['member_id', 'last_name', 'first_name', "my_age"]
+            (1, "Qureshi", "Imran", "54"),
+            (2, "Vidal", "Michael", "33"),
+        ],
+        ["member_id", "last_name", "first_name", "my_age"],
     ).createOrReplaceTempView("patients")
 
     source_df: DataFrame = spark_session.table("patients")
@@ -30,7 +32,7 @@ def test_automapper_first_valid_column(spark_session: SparkSession) -> None:
         view="members",
         source_view="patients",
         keys=["member_id"],
-        drop_key_columns=False
+        drop_key_columns=False,
     ).columns(
         last_name=A.column("last_name"),
         age=A.first_valid_column(
@@ -40,42 +42,33 @@ def test_automapper_first_valid_column(spark_session: SparkSession) -> None:
         ),
         is_young=A.first_valid_column(
             A.map(
-                A.column("age"), {
-                    "21": "yes",
-                    "33": "yes",
-                    "54": "no comment",
-                    None: "not provided"
-                }
+                A.column("age"),
+                {"21": "yes", "33": "yes", "54": "no comment", None: "not provided"},
             ),
             A.map(
-                A.column("my_age"), {
-                    "21": "yes",
-                    "33": "yes",
-                    "54": "no comment",
-                    None: "not provided"
-                }
+                A.column("my_age"),
+                {"21": "yes", "33": "yes", "54": "no comment", None: "not provided"},
             ),
-        )
+        ),
     )
 
     assert isinstance(mapper, AutoMapper)
-    sql_expressions: Dict[str, Column] = mapper.get_column_specs(
-        source_df=source_df
-    )
+    sql_expressions: Dict[str, Column] = mapper.get_column_specs(source_df=source_df)
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
-    assert str(sql_expressions["age"]
-               ) == str(col("my_age").cast("long").cast("long").alias("age"))
+    assert str(sql_expressions["age"]) == str(
+        col("my_age").cast("long").cast("long").alias("age")
+    )
     result_df: DataFrame = mapper.transform(df=df)
 
     # Assert
     result_df.printSchema()
     result_df.show()
 
-    assert result_df.where("member_id == 1").select(
-        "age", "is_young"
-    ).collect()[0][:] == (54, "no comment")
-    assert result_df.where("member_id == 2"
-                           ).select("age",
-                                    "is_young").collect()[0][:] == (33, "yes")
+    assert result_df.where("member_id == 1").select("age", "is_young").collect()[0][
+        :
+    ] == (54, "no comment")
+    assert result_df.where("member_id == 2").select("age", "is_young").collect()[0][
+        :
+    ] == (33, "yes")

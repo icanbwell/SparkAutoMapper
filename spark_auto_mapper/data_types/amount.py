@@ -10,15 +10,16 @@ from spark_auto_mapper.type_definitions.defined_types import AutoMapperAmountInp
 
 
 @deprecated(
-    version="0.2.15",
-    reason="Use DecimalType instead to provide a fixed precision"
+    version="0.2.15", reason="Use DecimalType instead to provide a fixed precision"
 )
 class AutoMapperAmountDataType(AutoMapperDataTypeBase):
     def __init__(self, value: AutoMapperAmountInputType):
         super().__init__()
-        self.value: AutoMapperDataTypeBase = value \
-            if isinstance(value, AutoMapperDataTypeBase) \
+        self.value: AutoMapperDataTypeBase = (
+            value
+            if isinstance(value, AutoMapperDataTypeBase)
             else AutoMapperValueParser.parse_value(value)
+        )
 
     def get_column_spec(
         self, source_df: Optional[DataFrame], current_column: Optional[Column]
@@ -27,8 +28,9 @@ class AutoMapperAmountDataType(AutoMapperDataTypeBase):
             source_df=source_df, current_column=current_column
         )
         if not (
-            isinstance(self.value, AutoMapperDataTypeColumn) and source_df and
-            dict(source_df.dtypes)[self.value.value] in ("float", "double")
+            isinstance(self.value, AutoMapperDataTypeColumn)
+            and source_df
+            and dict(source_df.dtypes)[self.value.value] in ("float", "double")
         ):
             column_spec = column_spec.cast("double")
         return column_spec

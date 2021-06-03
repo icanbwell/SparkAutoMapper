@@ -8,7 +8,7 @@ from spark_auto_mapper.type_definitions.native_types import AutoMapperNativeSimp
 
 _TAutoMapperDataType = TypeVar(
     "_TAutoMapperDataType",
-    bound=Union[AutoMapperNativeSimpleType, AutoMapperDataTypeBase]
+    bound=Union[AutoMapperNativeSimpleType, AutoMapperDataTypeBase],
 )
 
 
@@ -18,6 +18,7 @@ class AutoMapperNullIfEmptyDataType(
     """
     If value returns empty then return null else return value
     """
+
     def __init__(
         self,
         value: _TAutoMapperDataType,
@@ -37,7 +38,8 @@ class AutoMapperNullIfEmptyDataType(
         column_spec = when(
             self.value.get_column_spec(
                 source_df=source_df, current_column=current_column
-            ).eqNullSafe(""), lit(None)
+            ).eqNullSafe(""),
+            lit(None),
         ).otherwise(
             self.value.get_column_spec(
                 source_df=source_df, current_column=current_column

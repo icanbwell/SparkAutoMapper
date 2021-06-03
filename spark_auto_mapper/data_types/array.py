@@ -11,9 +11,11 @@ from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
 class AutoMapperArrayDataType(AutoMapperArrayLikeBase):
     def __init__(self, value: AutoMapperDataTypeBase):
         super().__init__()
-        self.value: AutoMapperDataTypeBase = value \
-            if isinstance(value, AutoMapperDataTypeBase) \
+        self.value: AutoMapperDataTypeBase = (
+            value
+            if isinstance(value, AutoMapperDataTypeBase)
             else AutoMapperValueParser.parse_value(value)
+        )
 
     def include_null_properties(self, include_null_properties: bool) -> None:
         self.value.include_null_properties(

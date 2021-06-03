@@ -120,8 +120,7 @@ class AutoMapperHelpers:
 
     @staticmethod
     def date(
-        value: AutoMapperDateInputType,
-        formats: Optional[List[str]] = None
+        value: AutoMapperDateInputType, formats: Optional[List[str]] = None
     ) -> AutoMapperDateDataType:
         """
         Converts a value to date only
@@ -138,8 +137,7 @@ class AutoMapperHelpers:
 
     @staticmethod
     def datetime(
-        value: AutoMapperDateInputType,
-        formats: Optional[List[str]] = None
+        value: AutoMapperDateInputType, formats: Optional[List[str]] = None
     ) -> AutoMapperDateTimeDataType:
         """
         Converts the value to a timestamp type in Spark
@@ -173,9 +171,7 @@ class AutoMapperHelpers:
         return AutoMapperAmountDataType(value)
 
     @staticmethod
-    def boolean(
-        value: AutoMapperBooleanInputType
-    ) -> AutoMapperBooleanDataType:
+    def boolean(value: AutoMapperBooleanInputType) -> AutoMapperBooleanDataType:
         """
         Specifies the value should be used as a boolean
         :param value:
@@ -194,8 +190,12 @@ class AutoMapperHelpers:
 
     @staticmethod
     def concat(
-        *args: Union[AutoMapperNativeTextType, AutoMapperWrapperType,
-                     AutoMapperTextLikeBase, AutoMapperDataTypeBase, ]
+        *args: Union[
+            AutoMapperNativeTextType,
+            AutoMapperWrapperType,
+            AutoMapperTextLikeBase,
+            AutoMapperDataTypeBase,
+        ]
     ) -> AutoMapperConcatDataType:
         """
         concatenates a list of values.  Each value can be a string or a column
@@ -225,9 +225,7 @@ class AutoMapperHelpers:
         # cast it to the inner type so type checking is happy
         return cast(
             _TAutoMapperDataType,
-            AutoMapperIfDataType(
-                column=column, check=check, value=value, else_=else_
-            ),
+            AutoMapperIfDataType(column=column, check=check, value=value, else_=else_),
         )
 
     @staticmethod
@@ -271,9 +269,7 @@ class AutoMapperHelpers:
         # cast it to the inner type so type checking is happy
         return cast(
             _TAutoMapperDataType,
-            AutoMapperIfNotNullDataType(
-                check=check, value=value, when_null=when_null
-            ),
+            AutoMapperIfNotNullDataType(check=check, value=value, when_null=when_null),
         )
 
     @staticmethod
@@ -296,17 +292,14 @@ class AutoMapperHelpers:
         return cast(
             _TAutoMapperDataType,
             AutoMapperIfNotNullOrEmptyDataType(
-                check=check,
-                value=value,
-                when_null_or_empty=when_null_or_empty
+                check=check, value=value, when_null_or_empty=when_null_or_empty
             ),
         )
 
     @staticmethod
     def map(
         column: AutoMapperColumnOrColumnLikeType,
-        mapping: Dict[Optional[AutoMapperTextInputType],
-                      AutoMapperAnyDataType],
+        mapping: Dict[Optional[AutoMapperTextInputType], AutoMapperAnyDataType],
         default: Optional[AutoMapperAnyDataType] = None,
     ) -> AutoMapperDataTypeExpression:
         """
@@ -317,9 +310,7 @@ class AutoMapperHelpers:
         :param default: the value to assign if no value matches
         :return: a map automapper type
         """
-        return AutoMapperMapDataType(
-            column=column, mapping=mapping, default=default
-        )
+        return AutoMapperMapDataType(column=column, mapping=mapping, default=default)
 
     @staticmethod
     def left(
@@ -332,9 +323,7 @@ class AutoMapperHelpers:
         :param length: number of characters to take from left
         :return: a concat automapper type
         """
-        return AutoMapperSubstringDataType(
-            column=column, start=0, length=length
-        )
+        return AutoMapperSubstringDataType(column=column, start=0, length=length)
 
     @staticmethod
     def right(
@@ -347,9 +336,7 @@ class AutoMapperHelpers:
         :param length: number of characters to take from right
         :return: a concat automapper type
         """
-        return AutoMapperSubstringDataType(
-            column=column, start=-length, length=length
-        )
+        return AutoMapperSubstringDataType(column=column, start=-length, length=length)
 
     @staticmethod
     def substring(
@@ -363,9 +350,7 @@ class AutoMapperHelpers:
         :param length: number of characters to take
         :return: a concat automapper type
         """
-        return AutoMapperSubstringDataType(
-            column=column, start=start, length=length
-        )
+        return AutoMapperSubstringDataType(column=column, start=start, length=length)
 
     @staticmethod
     def string_before_delimiter(
@@ -399,8 +384,7 @@ class AutoMapperHelpers:
 
     @staticmethod
     def substring_by_delimiter(
-        column: AutoMapperColumnOrColumnLikeType, delimiter: str,
-        delimiter_count: int
+        column: AutoMapperColumnOrColumnLikeType, delimiter: str, delimiter_count: int
     ) -> AutoMapperSubstringByDelimiterDataType:
         """
         Returns the substring from string str before count occurrences of the delimiter.
@@ -415,15 +399,12 @@ class AutoMapperHelpers:
         :return: a concat automapper type
         """
         return AutoMapperSubstringByDelimiterDataType(
-            column=column,
-            delimiter=delimiter,
-            delimiter_count=delimiter_count
+            column=column, delimiter=delimiter, delimiter_count=delimiter_count
         )
 
     @staticmethod
     def regex_replace(
-        column: AutoMapperColumnOrColumnLikeType, pattern: str,
-        replacement: str
+        column: AutoMapperColumnOrColumnLikeType, pattern: str, replacement: str
     ) -> AutoMapperRegExReplaceDataType:
         """
         Replace all substrings of the specified string value that match regexp with rep.
@@ -455,9 +436,7 @@ class AutoMapperHelpers:
         )
 
     @staticmethod
-    def trim(
-        column: AutoMapperColumnOrColumnLikeType
-    ) -> AutoMapperTrimDataType:
+    def trim(column: AutoMapperColumnOrColumnLikeType) -> AutoMapperTrimDataType:
         """
         Trim the spaces from both ends for the specified string column.
 
@@ -482,8 +461,9 @@ class AutoMapperHelpers:
 
     @staticmethod
     def hash(
-        *args: Union[AutoMapperNativeTextType, AutoMapperWrapperType,
-                     AutoMapperTextLikeBase]
+        *args: Union[
+            AutoMapperNativeTextType, AutoMapperWrapperType, AutoMapperTextLikeBase
+        ]
     ) -> AutoMapperHashDataType:
         """
         Calculates the hash code of given columns, and returns the result as an int column.
@@ -544,8 +524,7 @@ class AutoMapperHelpers:
 
     @staticmethod
     def filter(
-        column: AutoMapperColumnOrColumnLikeType, func: Callable[[Column],
-                                                                 Column]
+        column: AutoMapperColumnOrColumnLikeType, func: Callable[[Column], Column]
     ) -> AutoMapperFilterDataType:
         """
         Filters a column by a function
@@ -608,9 +587,7 @@ class AutoMapperHelpers:
         :param delimiter: string to use as delimiter
         :return: a concat automapper type
         """
-        return AutoMapperSplitByDelimiterDataType(
-            column=column, delimiter=delimiter
-        )
+        return AutoMapperSplitByDelimiterDataType(column=column, delimiter=delimiter)
 
     @staticmethod
     def float(value: AutoMapperDataTypeBase) -> "AutoMapperDataTypeBase":
@@ -622,14 +599,10 @@ class AutoMapperHelpers:
         """
         from spark_auto_mapper.data_types.float import AutoMapperFloatDataType
 
-        return cast(
-            "AutoMapperDataTypeBase", AutoMapperFloatDataType(value=value)
-        )
+        return cast("AutoMapperDataTypeBase", AutoMapperFloatDataType(value=value))
 
     @staticmethod
-    def flatten(
-        column: AutoMapperColumnOrColumnLikeType
-    ) -> "AutoMapperDataTypeBase":
+    def flatten(column: AutoMapperColumnOrColumnLikeType) -> "AutoMapperDataTypeBase":
         """
         creates a single array from an array of arrays.
         If a structure of nested arrays is deeper than two levels, only one level of nesting is removed.
@@ -640,9 +613,7 @@ class AutoMapperHelpers:
         from spark_auto_mapper.data_types.flatten import AutoMapperFlattenDataType
 
         # cast it to the inner type so type checking is happy
-        return cast(
-            "AutoMapperDataTypeBase", AutoMapperFlattenDataType(column=column)
-        )
+        return cast("AutoMapperDataTypeBase", AutoMapperFlattenDataType(column=column))
 
     @staticmethod
     def first_valid_column(
@@ -654,7 +625,9 @@ class AutoMapperHelpers:
 
          :return: a optional automapper type
         """
-        from spark_auto_mapper.data_types.first_valid_column import AutoMapperFirstValidColumnType
+        from spark_auto_mapper.data_types.first_valid_column import (
+            AutoMapperFirstValidColumnType,
+        )
 
         return AutoMapperFirstValidColumnType(*columns)
 
@@ -662,13 +635,15 @@ class AutoMapperHelpers:
     def if_column_exists(
         column: AutoMapperColumnOrColumnLikeType,
         if_exists: Optional[_TAutoMapperDataType],
-        if_not_exists: Optional[_TAutoMapperDataType]
+        if_not_exists: Optional[_TAutoMapperDataType],
     ) -> "AutoMapperDataTypeBase":
         """
         check the if the column exists if exists returns if_exists if not if_not_exists
         :return: a optional automapper type
         """
-        from spark_auto_mapper.data_types.if_column_exists import AutoMapperIfColumnExistsType
+        from spark_auto_mapper.data_types.if_column_exists import (
+            AutoMapperIfColumnExistsType,
+        )
 
         return AutoMapperIfColumnExistsType(
             column=column, if_exists=if_exists, if_not_exists=if_not_exists
@@ -685,9 +660,7 @@ class AutoMapperHelpers:
         from spark_auto_mapper.data_types.array import AutoMapperArrayDataType
 
         # cast it to the inner type so type checking is happy
-        return cast(
-            "AutoMapperDataTypeBase", AutoMapperArrayDataType(value=value)
-        )
+        return cast("AutoMapperDataTypeBase", AutoMapperArrayDataType(value=value))
 
     @staticmethod
     def join_using_delimiter(
@@ -699,6 +672,4 @@ class AutoMapperHelpers:
         :param delimiter: string to use as delimiter
         :return: a join automapper type
         """
-        return AutoMapperJoinUsingDelimiterDataType(
-            column=column, delimiter=delimiter
-        )
+        return AutoMapperJoinUsingDelimiterDataType(column=column, delimiter=delimiter)

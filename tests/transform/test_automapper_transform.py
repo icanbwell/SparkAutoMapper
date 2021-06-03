@@ -4,7 +4,9 @@ from typing import Dict, List
 from pyspark.sql import SparkSession, DataFrame, Column
 from pyspark.sql.functions import transform
 
-from spark_auto_mapper.data_types.complex.complex_base import AutoMapperDataTypeComplexBase
+from spark_auto_mapper.data_types.complex.complex_base import (
+    AutoMapperDataTypeComplexBase,
+)
 
 from tests.conftest import clean_spark_session
 
@@ -25,9 +27,7 @@ def test_automapper_transform(spark_session: SparkSession) -> None:
 
     data_json_file: Path = data_dir.joinpath("data.json")
 
-    source_df: DataFrame = spark_session.read.json(
-        str(data_json_file), multiLine=True
-    )
+    source_df: DataFrame = spark_session.read.json(str(data_json_file), multiLine=True)
 
     source_df.createOrReplaceTempView("patients")
 
@@ -38,24 +38,22 @@ def test_automapper_transform(spark_session: SparkSession) -> None:
         MyObject(
             age=A.transform(
                 A.column("identifier"),
-                A.complex(bar=A.field("value"), bar2=A.field("system"))
+                A.complex(bar=A.field("value"), bar2=A.field("system")),
             )
         )
     )
 
     assert isinstance(mapper, AutoMapper)
-    sql_expressions: Dict[str, Column] = mapper.get_column_specs(
-        source_df=source_df
-    )
+    sql_expressions: Dict[str, Column] = mapper.get_column_specs(source_df=source_df)
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
     assert str(sql_expressions["age"]) == str(
         transform(
-            "b.identifier", lambda x: struct(
-                col("x[value]").alias("bar"),
-                col("x[system]").alias("bar2")
-            )
+            "b.identifier",
+            lambda x: struct(
+                col("x[value]").alias("bar"), col("x[system]").alias("bar2")
+            ),
         ).alias("age")
     )
     result_df: DataFrame = mapper.transform(df=source_df)

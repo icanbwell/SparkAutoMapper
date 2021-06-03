@@ -14,15 +14,20 @@ class AutoMapperHashDataType(AutoMapperTextLikeBase):
     """
     Calculates the hash code of given columns, and returns the result as an int column.
     """
+
     def __init__(
-        self, *args: Union[AutoMapperNativeTextType, AutoMapperWrapperType,
-                           AutoMapperTextLikeBase]
+        self,
+        *args: Union[
+            AutoMapperNativeTextType, AutoMapperWrapperType, AutoMapperTextLikeBase
+        ]
     ):
         super().__init__()
 
         self.value: List[AutoMapperDataTypeBase] = [
-            value if isinstance(value, AutoMapperDataTypeBase) else
-            AutoMapperValueParser.parse_value(value) for value in args
+            value
+            if isinstance(value, AutoMapperDataTypeBase)
+            else AutoMapperValueParser.parse_value(value)
+            for value in args
         ]
 
     def get_column_spec(
@@ -30,9 +35,8 @@ class AutoMapperHashDataType(AutoMapperTextLikeBase):
     ) -> Column:
         column_spec = hash(
             *[
-                col.get_column_spec(
-                    source_df=source_df, current_column=current_column
-                ) for col in self.value
+                col.get_column_spec(source_df=source_df, current_column=current_column)
+                for col in self.value
             ]
         ).cast("string")
         return column_spec

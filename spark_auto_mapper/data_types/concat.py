@@ -14,15 +14,23 @@ class AutoMapperConcatDataType(AutoMapperTextLikeBase):
     """
     Concatenates multiple strings together
     """
+
     def __init__(
-        self, *args: Union[AutoMapperNativeTextType, AutoMapperWrapperType,
-                           AutoMapperTextLikeBase, AutoMapperDataTypeBase]
+        self,
+        *args: Union[
+            AutoMapperNativeTextType,
+            AutoMapperWrapperType,
+            AutoMapperTextLikeBase,
+            AutoMapperDataTypeBase,
+        ]
     ):
         super().__init__()
 
         self.value: List[AutoMapperDataTypeBase] = [
-            value if isinstance(value, AutoMapperDataTypeBase) else
-            AutoMapperValueParser.parse_value(value) for value in args
+            value
+            if isinstance(value, AutoMapperDataTypeBase)
+            else AutoMapperValueParser.parse_value(value)
+            for value in args
         ]
 
     def include_null_properties(self, include_null_properties: bool) -> None:
@@ -36,9 +44,8 @@ class AutoMapperConcatDataType(AutoMapperTextLikeBase):
     ) -> Column:
         column_spec = concat(
             *[
-                col.get_column_spec(
-                    source_df=source_df, current_column=current_column
-                ) for col in self.value
+                col.get_column_spec(source_df=source_df, current_column=current_column)
+                for col in self.value
             ]
         )
         return column_spec

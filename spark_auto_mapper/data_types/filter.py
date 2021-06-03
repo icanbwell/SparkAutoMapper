@@ -5,19 +5,22 @@ from pyspark.sql.functions import filter
 
 from spark_auto_mapper.data_types.array_base import AutoMapperArrayLikeBase
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
-from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperColumnOrColumnLikeType
+from spark_auto_mapper.type_definitions.wrapper_types import (
+    AutoMapperColumnOrColumnLikeType,
+)
 
 
 class AutoMapperFilterDataType(AutoMapperArrayLikeBase):
     def __init__(
-        self, column: Union[AutoMapperDataTypeBase,
-                            AutoMapperColumnOrColumnLikeType],
-        func: Callable[[Column], Column]
+        self,
+        column: Union[AutoMapperDataTypeBase, AutoMapperColumnOrColumnLikeType],
+        func: Callable[[Column], Column],
     ) -> None:
         super().__init__()
 
-        self.column: Union[AutoMapperDataTypeBase,
-                           AutoMapperColumnOrColumnLikeType] = column
+        self.column: Union[
+            AutoMapperDataTypeBase, AutoMapperColumnOrColumnLikeType
+        ] = column
         self.func: Callable[[Column], Column] = func
 
     def include_null_properties(self, include_null_properties: bool) -> None:
@@ -31,5 +34,6 @@ class AutoMapperFilterDataType(AutoMapperArrayLikeBase):
         return filter(
             self.column.get_column_spec(
                 source_df=source_df, current_column=current_column
-            ), self.func
+            ),
+            self.func,
         )

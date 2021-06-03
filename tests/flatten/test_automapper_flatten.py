@@ -12,27 +12,20 @@ def test_automapper_flatten(spark_session: SparkSession) -> None:
 
     source_view_name = "cascaded_list_view"
     result_view_name = "flatten_list_view"
-    source_df = spark_session.createDataFrame(
-        [([[1], [2, 3, 4], [3, 5]], )], ["column"]
-    )
+    source_df = spark_session.createDataFrame([([[1], [2, 3, 4], [3, 5]],)], ["column"])
     source_df.printSchema()
     source_df.createOrReplaceTempView(source_view_name)
 
     # Act
-    mapper = AutoMapper(view=result_view_name,
-                        source_view=source_view_name).columns(
-                            column_flat=A.flatten(A.column("column"))
-                        )
-
-    sql_expressions: Dict[str, Column] = mapper.get_column_specs(
-        source_df=source_df
+    mapper = AutoMapper(view=result_view_name, source_view=source_view_name).columns(
+        column_flat=A.flatten(A.column("column"))
     )
+
+    sql_expressions: Dict[str, Column] = mapper.get_column_specs(source_df=source_df)
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
     result_df: DataFrame = mapper.transform(df=source_df)
 
     # assert
-    assert result_df.select("column_flat").collect()[0][0] == [
-        1, 2, 3, 4, 3, 5
-    ]
+    assert result_df.select("column_flat").collect()[0][0] == [1, 2, 3, 4, 3, 5]

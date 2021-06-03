@@ -22,11 +22,11 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
         self.include_nulls: bool = "include_nulls" in kwargs
 
         self.value: Dict[str, AutoMapperDataTypeBase] = {
-            parameter_name if not parameter_name.endswith(
+            parameter_name
+            if not parameter_name.endswith(
                 "_"
             )  # some property names are python keywords so we have to append with _
-            else parameter_name[:-1]:
-            AutoMapperValueParser.parse_value(parameter_value)
+            else parameter_name[:-1]: AutoMapperValueParser.parse_value(parameter_value)
             for parameter_name, parameter_value in kwargs.items()
         }
 
@@ -45,10 +45,9 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
         column_spec: Column = struct(
             *[
                 self.get_value(
-                    value=value,
-                    source_df=source_df,
-                    current_column=current_column
-                ).alias(key) for key, value in valid_columns.items()
+                    value=value, source_df=source_df, current_column=current_column
+                ).alias(key)
+                for key, value in valid_columns.items()
             ]
         )
         return column_spec
@@ -56,10 +55,12 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
     def get_child_mappers(self) -> Dict[str, AutoMapperDataTypeBase]:
         valid_columns: Dict[str, AutoMapperDataTypeBase] = {
             key: value
-            for key, value in self.value.items() if self.include_nulls or (
-                value is not None and not (
-                    isinstance(value, AutoMapperDataTypeLiteral)
-                    and value.value is None
+            for key, value in self.value.items()
+            if self.include_nulls
+            or (
+                value is not None
+                and not (
+                    isinstance(value, AutoMapperDataTypeLiteral) and value.value is None
                 )
             )
         }

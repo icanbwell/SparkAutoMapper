@@ -4,7 +4,9 @@ from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import regexp_extract
 
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
-from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperColumnOrColumnLikeType
+from spark_auto_mapper.type_definitions.wrapper_types import (
+    AutoMapperColumnOrColumnLikeType,
+)
 
 
 class AutoMapperRegExExtractDataType(AutoMapperTextLikeBase):
@@ -14,9 +16,9 @@ class AutoMapperRegExExtractDataType(AutoMapperTextLikeBase):
     Note that regexp_extract requires that the pattern match the *entire* string - it does
     the equivalent of a python re.match, not re.search
     """
+
     def __init__(
-        self, column: AutoMapperColumnOrColumnLikeType, pattern: str,
-        index: int
+        self, column: AutoMapperColumnOrColumnLikeType, pattern: str, index: int
     ):
         super().__init__()
 
@@ -32,6 +34,6 @@ class AutoMapperRegExExtractDataType(AutoMapperTextLikeBase):
                 source_df=source_df, current_column=current_column
             ),
             pattern=self.pattern,
-            idx=self.index
+            idx=self.index,
         )
         return column_spec
