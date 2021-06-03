@@ -22,6 +22,22 @@ devsetup:venv
     pre-commit install && \
     python setup.py install
 
+.PHONY:devdocker
+devdocker: ## Builds the docker for dev
+	docker-compose build
+
+.PHONY: up
+up: Pipfile.lock
+	docker-compose up --build -d --remove-orphans
+
+.PHONY: down
+down:
+	docker-compose down
+
+.PHONY:tests
+tests:
+	docker-compose run --rm --name sam_tests dev pytest tests
+
 .PHONY:checks
 checks:venv
 	. $(VENV_NAME)/bin/activate && \
@@ -58,12 +74,12 @@ package:venv build
 	python3 -m twine upload -u __token__ --repository pypi dist/*
 # password can be set in TWINE_PASSWORD. https://twine.readthedocs.io/en/latest/
 
-.PHONY:tests
-tests:
-	. $(VENV_NAME)/bin/activate && \
-    pip install --upgrade -r requirements.txt && \
-	pip install --upgrade -r requirements-test.txt && \
-	pytest tests
+#.PHONY:tests
+#tests:
+#	. $(VENV_NAME)/bin/activate && \
+#    pip install --upgrade -r requirements.txt && \
+#	pip install --upgrade -r requirements-test.txt && \
+#	pytest tests
 
 
 .PHONY:clean-pre-commit

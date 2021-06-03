@@ -1,5 +1,14 @@
 version: '2'
 services:
+  dev:
+    user: root
+    build:
+      dockerfile: Dockerfile
+      context: .
+    volumes:
+      - ./:/SparkAutoMapper/
+    container_name: sam_dev
+    working_dir: /SparkAutoMapper
   spark:
     image: docker.io/bitnami/spark:3.1.1-debian-10-r46
     environment:
