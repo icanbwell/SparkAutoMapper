@@ -6,9 +6,9 @@ services:
       dockerfile: spark.Dockerfile
       context: .
     volumes:
-      - ./:/SparkAutoMapper/
+      - ./:/sam/
     container_name: sam_dev
-    working_dir: /SparkAutoMapper
+    working_dir: /sam
 
   spark:
     user: root
