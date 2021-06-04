@@ -2,6 +2,7 @@ from typing import Dict
 
 from pyspark.sql import SparkSession, Column, DataFrame
 from pyspark.sql.functions import concat
+
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import lit, col
 
@@ -13,9 +14,10 @@ def test_auto_mapper_concat_column(spark_session: SparkSession) -> None:
     # Arrange
     spark_session.createDataFrame(
         [
-            (1, 'Qureshi', 'Imran', "1970-01-01"),
-            (2, 'Vidal', 'Michael', "1970-02-02"),
-        ], ['member_id', 'last_name', 'first_name', "date_of_birth"]
+            (1, "Qureshi", "Imran", "1970-01-01"),
+            (2, "Vidal", "Michael", "1970-02-02"),
+        ],
+        ["member_id", "last_name", "first_name", "date_of_birth"],
     ).createOrReplaceTempView("patients")
 
     source_df: DataFrame = spark_session.table("patients")
@@ -29,15 +31,12 @@ def test_auto_mapper_concat_column(spark_session: SparkSession) -> None:
     ).columns(my_column=A.concat("pre-", A.column("last_name"), "-post"))
 
     assert isinstance(mapper, AutoMapper)
-    sql_expressions: Dict[str, Column] = mapper.get_column_specs(
-        source_df=source_df
-    )
+    sql_expressions: Dict[str, Column] = mapper.get_column_specs(source_df=source_df)
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
     assert str(sql_expressions["my_column"]) == str(
-        concat(lit("pre-"), col("b.last_name"),
-               lit("-post")).alias("my_column")
+        concat(lit("pre-"), col("b.last_name"), lit("-post")).alias("my_column")
     )
 
     result_df: DataFrame = mapper.transform(df=df)
@@ -46,7 +45,11 @@ def test_auto_mapper_concat_column(spark_session: SparkSession) -> None:
     result_df.printSchema()
     result_df.show()
 
-    assert result_df.where("member_id == 1").select("my_column").collect(
-    )[0][0] == "pre-Qureshi-post"
-    assert result_df.where("member_id == 2").select("my_column").collect(
-    )[0][0] == "pre-Vidal-post"
+    assert (
+        result_df.where("member_id == 1").select("my_column").collect()[0][0]
+        == "pre-Qureshi-post"
+    )
+    assert (
+        result_df.where("member_id == 2").select("my_column").collect()[0][0]
+        == "pre-Vidal-post"
+    )

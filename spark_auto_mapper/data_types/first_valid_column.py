@@ -5,11 +5,12 @@ from pyspark.sql.utils import AnalysisException
 
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
-from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperColumnOrColumnLikeType, AutoMapperAnyDataType
-
-_TAutoMapperDataType = TypeVar(
-    "_TAutoMapperDataType", bound=AutoMapperAnyDataType
+from spark_auto_mapper.type_definitions.wrapper_types import (
+    AutoMapperColumnOrColumnLikeType,
+    AutoMapperAnyDataType,
 )
+
+_TAutoMapperDataType = TypeVar("_TAutoMapperDataType", bound=AutoMapperAnyDataType)
 
 
 class AutoMapperFirstValidColumnType(
@@ -22,6 +23,7 @@ class AutoMapperFirstValidColumnType(
     Useful for data sources in which columns may be renamed at some point and you want to process files from before and
     after the name change or when columns are added at a point and are missing from earlier files.
     """
+
     def __init__(
         self,
         *columns: AutoMapperColumnOrColumnLikeType,
@@ -49,7 +51,8 @@ class AutoMapperFirstValidColumnType(
                 continue
 
             # noinspection Mypy,PyProtectedMember
-            col_name = column_spec._jc.expr().sql(  # type: ignore
+            col_name = (
+                column_spec._jc.expr().sql()  # type: ignore
             )  # Get spark representation of the column as an expression
             try:
                 # Force spark analyzer to confirm that column/expression is possible. This does not actually compute

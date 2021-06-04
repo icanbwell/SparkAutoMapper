@@ -1,6 +1,7 @@
 from typing import List, Dict, Optional
 
 from pyspark.sql import Column, DataFrame
+
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import col, when, lit
 from pyspark.sql.types import DataType, StructField
@@ -20,17 +21,20 @@ class AutoMapperWithColumnBase(AutoMapperBase):
         value: AutoMapperAnyDataType,
         column_schema: Optional[StructField],
         include_null_properties: bool,
-        skip_if_columns_null_or_empty: Optional[List[str]] = None
+        skip_if_columns_null_or_empty: Optional[List[str]] = None,
     ) -> None:
         super().__init__()
         # should only have one parameter
         self.dst_column: str = dst_column
         self.column_schema: Optional[StructField] = column_schema
-        self.value: AutoMapperDataTypeBase = AutoMapperValueParser.parse_value(value) \
-            if not isinstance(value, AutoMapperDataTypeBase) \
+        self.value: AutoMapperDataTypeBase = (
+            AutoMapperValueParser.parse_value(value)
+            if not isinstance(value, AutoMapperDataTypeBase)
             else value
+        )
         self.skip_if_columns_null_or_empty: Optional[
-            List[str]] = skip_if_columns_null_or_empty
+            List[str]
+        ] = skip_if_columns_null_or_empty
         if include_null_properties:
             self.value.include_null_properties(
                 include_null_properties=include_null_properties
@@ -48,11 +52,10 @@ class AutoMapperWithColumnBase(AutoMapperBase):
                 # wrap column spec in when
                 column_spec = when(
                     col(columns_to_check).isNull()
-                    | col(columns_to_check).eqNullSafe(""), lit(None)
+                    | col(columns_to_check).eqNullSafe(""),
+                    lit(None),
                 ).otherwise(
-                    self.value.get_column_spec(
-                        source_df=source_df, current_column=None
-                    )
+                    self.value.get_column_spec(source_df=source_df, current_column=None)
                 )
             # if the type has a schema then apply it
             if self.column_schema:
@@ -63,12 +66,9 @@ class AutoMapperWithColumnBase(AutoMapperBase):
             else:
                 return column_spec.alias(self.dst_column)
 
-        raise ValueError(
-            f"{type(self.value)} is not supported for {self.value}"
-        )
+        raise ValueError(f"{type(self.value)} is not supported for {self.value}")
 
-    def get_column_specs(self,
-                         source_df: Optional[DataFrame]) -> Dict[str, Column]:
+    def get_column_specs(self, source_df: Optional[DataFrame]) -> Dict[str, Column]:
         return {self.dst_column: self.get_column_spec(source_df=source_df)}
 
     # noinspection PyMethodMayBeStatic
@@ -78,15 +78,17 @@ class AutoMapperWithColumnBase(AutoMapperBase):
         assert source_df
         # now add on my stuff
         column_spec: Column = self.get_column_spec(source_df=source_df)
-        conditions = [col(f'b.{key}') == col(f'a.{key}') for key in keys]
+        conditions = [col(f"b.{key}") == col(f"a.{key}") for key in keys]
 
         existing_columns: List[Column] = [
-            col('a.' + column_name) for column_name in df.columns
+            col("a." + column_name) for column_name in df.columns
         ]
 
-        result_df: DataFrame = df.alias('a').join(
-            source_df.alias('b'), conditions
-        ).select(existing_columns + [column_spec])
+        result_df: DataFrame = (
+            df.alias("a")
+            .join(source_df.alias("b"), conditions)
+            .select(existing_columns + [column_spec])
+        )
         return result_df
 
     def check_schema(
@@ -98,15 +100,15 @@ class AutoMapperWithColumnBase(AutoMapperBase):
                 source_df=source_df, current_column=None
             )
             # get just a few rows so Spark can infer the schema
-            first_few_rows_df: DataFrame = source_df.alias("b").select(
-                column_spec
-            ).limit(100)
+            first_few_rows_df: DataFrame = (
+                source_df.alias("b").select(column_spec).limit(100)
+            )
             source_schema: DataType = first_few_rows_df.schema[0].dataType
             desired_schema: DataType = self.column_schema.dataType
             result = SchemaComparer.compare_schema(
                 parent_column_name=self.dst_column,
                 source_schema=source_schema,
-                desired_schema=desired_schema
+                desired_schema=desired_schema,
             )
             return CheckSchemaResult(result=result)
         else:

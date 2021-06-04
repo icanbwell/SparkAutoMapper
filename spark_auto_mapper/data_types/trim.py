@@ -1,17 +1,21 @@
 from typing import Optional
 
 from pyspark.sql import Column, DataFrame
+
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import trim
 
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
-from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperColumnOrColumnLikeType
+from spark_auto_mapper.type_definitions.wrapper_types import (
+    AutoMapperColumnOrColumnLikeType,
+)
 
 
 class AutoMapperTrimDataType(AutoMapperTextLikeBase):
     """
     Concatenates multiple strings together
     """
+
     def __init__(self, column: AutoMapperColumnOrColumnLikeType):
         super().__init__()
 

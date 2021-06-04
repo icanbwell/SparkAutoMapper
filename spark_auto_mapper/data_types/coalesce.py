@@ -8,15 +8,14 @@ from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
 from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
 from spark_auto_mapper.type_definitions.native_types import AutoMapperNativeSimpleType
 
-_T = TypeVar(
-    "_T", bound=Union[AutoMapperNativeSimpleType, AutoMapperDataTypeBase]
-)
+_T = TypeVar("_T", bound=Union[AutoMapperNativeSimpleType, AutoMapperDataTypeBase])
 
 
 class AutoMapperCoalesceDataType(AutoMapperTextLikeBase):
     """
     Returns the first column that is not null.
     """
+
     def __init__(
         self,
         *args: _T,
@@ -24,8 +23,10 @@ class AutoMapperCoalesceDataType(AutoMapperTextLikeBase):
         super().__init__()
 
         self.value: List[AutoMapperDataTypeBase] = [
-            value if isinstance(value, AutoMapperDataTypeBase) else
-            AutoMapperValueParser.parse_value(value) for value in args
+            value
+            if isinstance(value, AutoMapperDataTypeBase)
+            else AutoMapperValueParser.parse_value(value)
+            for value in args
         ]
 
     def get_column_spec(
@@ -33,9 +34,8 @@ class AutoMapperCoalesceDataType(AutoMapperTextLikeBase):
     ) -> Column:
         column_spec = coalesce(
             *[
-                col.get_column_spec(
-                    source_df=source_df, current_column=current_column
-                ) for col in self.value
+                col.get_column_spec(source_df=source_df, current_column=current_column)
+                for col in self.value
             ]
         )
         return column_spec

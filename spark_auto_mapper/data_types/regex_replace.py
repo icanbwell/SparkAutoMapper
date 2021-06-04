@@ -4,16 +4,18 @@ from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import regexp_replace
 
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
-from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperColumnOrColumnLikeType
+from spark_auto_mapper.type_definitions.wrapper_types import (
+    AutoMapperColumnOrColumnLikeType,
+)
 
 
 class AutoMapperRegExReplaceDataType(AutoMapperTextLikeBase):
     """
     Concatenates multiple strings together
     """
+
     def __init__(
-        self, column: AutoMapperColumnOrColumnLikeType, pattern: str,
-        replacement: str
+        self, column: AutoMapperColumnOrColumnLikeType, pattern: str, replacement: str
     ):
         super().__init__()
 
@@ -29,6 +31,6 @@ class AutoMapperRegExReplaceDataType(AutoMapperTextLikeBase):
                 source_df=source_df, current_column=current_column
             ),
             pattern=self.pattern,
-            replacement=self.replacement
+            replacement=self.replacement,
         )
         return column_spec

@@ -3,6 +3,7 @@ from typing import List, Optional, Union, Dict
 
 from pyspark.sql import DataFrame, Column
 from pyspark.sql.functions import monotonically_increasing_id
+
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import col
 from pyspark.sql.utils import AnalysisException
@@ -13,7 +14,9 @@ from spark_auto_mapper.automappers.automapper_exception import AutoMapperExcepti
 from spark_auto_mapper.automappers.column_spec_wrapper import ColumnSpecWrapper
 from spark_auto_mapper.automappers.container import AutoMapperContainer
 from spark_auto_mapper.automappers.complex import AutoMapperWithComplex
-from spark_auto_mapper.data_types.complex.complex_base import AutoMapperDataTypeComplexBase
+from spark_auto_mapper.data_types.complex.complex_base import (
+    AutoMapperDataTypeComplexBase,
+)
 from spark_auto_mapper.helpers.spark_helpers import SparkHelpers
 from spark_auto_mapper.type_definitions.defined_types import AutoMapperAnyDataType
 
@@ -42,7 +45,7 @@ class AutoMapper(AutoMapperContainer):
         keep_null_rows: bool = False,
         filter_by: Optional[str] = None,
         enable_logging: bool = True,
-        check_schema_for_all_columns: bool = False
+        check_schema_for_all_columns: bool = False,
     ):
         """
         Creates an AutoMapper
@@ -84,7 +87,8 @@ class AutoMapper(AutoMapperContainer):
         self.verify_row_count: bool = verify_row_count
         self.skip_schema_validation: List[str] = skip_schema_validation
         self.skip_if_columns_null_or_empty: Optional[
-            List[str]] = skip_if_columns_null_or_empty
+            List[str]
+        ] = skip_if_columns_null_or_empty
         self.keep_null_rows: bool = keep_null_rows
         self.filter_by: Optional[str] = filter_by
         self.enable_logging: bool = enable_logging
@@ -108,9 +112,7 @@ class AutoMapper(AutoMapperContainer):
             if self.enable_logging:
                 print(f"-------- automapper ({self.view}) column specs ------")
                 print(self.to_debug_string(source_df=source_df))
-                print(
-                    f"-------- end automapper ({self.view}) column specs ------"
-                )
+                print(f"-------- end automapper ({self.view}) column specs ------")
                 print(
                     f"-------- automapper ({self.source_view}) source_df schema ------"
                 )
@@ -121,14 +123,13 @@ class AutoMapper(AutoMapperContainer):
 
             if self.check_schema_for_all_columns:
                 for column_name, mapper in self.mappers.items():
-                    check_schema_result: Optional[CheckSchemaResult
-                                                  ] = mapper.check_schema(
-                                                      parent_column=None,
-                                                      source_df=source_df
-                                                  )
-                    if check_schema_result and len(
-                        check_schema_result.result.errors
-                    ) > 0:
+                    check_schema_result: Optional[
+                        CheckSchemaResult
+                    ] = mapper.check_schema(parent_column=None, source_df=source_df)
+                    if (
+                        check_schema_result
+                        and len(check_schema_result.result.errors) > 0
+                    ):
                         print(
                             f"==== ERROR: Schema Mismatch [{column_name}] ==="
                             f"{str(check_schema_result)}"
@@ -140,9 +141,11 @@ class AutoMapper(AutoMapperContainer):
             df = source_df.alias("b").select(*column_specs)
             # write out final checkpoint for this automapper
             if self.checkpoint_path:
-                checkpoint_path = Path(self.checkpoint_path
-                                       ).joinpath(self.view
-                                                  or "df").joinpath("final")
+                checkpoint_path = (
+                    Path(self.checkpoint_path)
+                    .joinpath(self.view or "df")
+                    .joinpath("final")
+                )
                 df.write.parquet(str(checkpoint_path))
                 df = df.sql_ctx.read.parquet(str(checkpoint_path))
         except AnalysisException:
@@ -150,28 +153,26 @@ class AutoMapper(AutoMapperContainer):
             for column_name, mapper in self.mappers.items():
                 try:
                     print(f"========= Processing {column_name} =========== ")
-                    column_spec = mapper.get_column_specs(source_df=source_df
-                                                          )[column_name]
+                    column_spec = mapper.get_column_specs(source_df=source_df)[
+                        column_name
+                    ]
                     source_df.alias("b").select(column_spec).limit(1).count()
-                    print(
-                        f"========= Done Processing {column_name} =========== "
-                    )
+                    print(f"========= Done Processing {column_name} =========== ")
                 except AnalysisException as e2:
-                    print(
-                        f"========= checking Schema {column_name} =========== "
-                    )
+                    print(f"========= checking Schema {column_name} =========== ")
                     check_schema_result = mapper.check_schema(
                         parent_column=None, source_df=source_df
                     )
                     msg: str = ""
                     if e2.desc.startswith("cannot resolve 'array"):
-                        msg = "Looks like the elements of the array have different structures.  " \
-                              "All items in an array should have the exact same structure.  " \
-                              "You can pass in include_nulls to AutoMapperDataTypeComplexBase to force it to create " \
-                              "null values for each element in the structure. "
+                        msg = (
+                            "Looks like the elements of the array have different structures.  "
+                            "All items in an array should have the exact same structure.  "
+                            "You can pass in include_nulls to AutoMapperDataTypeComplexBase to force it to create "
+                            "null values for each element in the structure. "
+                        )
                     msg += self.get_message_for_exception(
-                        column_name + ": " + str(check_schema_result), df, e2,
-                        source_df
+                        column_name + ": " + str(check_schema_result), df, e2, source_df
                     )
                     raise AutoMapperException(msg) from e2
         except Exception as e:
@@ -194,16 +195,15 @@ class AutoMapper(AutoMapperContainer):
                 # checkpoint if specified
                 # https://livebook.manning.com/book/spark-in-action-second-edition/16-cache-and-checkpoint-enhancing-spark-s-performances/v-14/43
                 if self.checkpoint_after_columns:
-                    if (
-                        current_child_number % self.checkpoint_after_columns
-                    ) == 0:
+                    if (current_child_number % self.checkpoint_after_columns) == 0:
                         if not self.checkpoint_path:
                             df = df.checkpoint(eager=True)
                         else:
-                            checkpoint_path: Path = Path(
-                                self.checkpoint_path
-                            ).joinpath(self.view or "df"
-                                       ).joinpath(str(current_child_number))
+                            checkpoint_path: Path = (
+                                Path(self.checkpoint_path)
+                                .joinpath(self.view or "df")
+                                .joinpath(str(current_child_number))
+                            )
                             df.write.parquet(str(checkpoint_path))
                             df = df.sql_ctx.read.parquet(str(checkpoint_path))
 
@@ -221,26 +221,28 @@ class AutoMapper(AutoMapperContainer):
             except AnalysisException as e:
                 msg: str = ""
                 if e.desc.startswith("cannot resolve 'array"):
-                    msg = "Looks like the elements of the array have different structures.  " \
-                          "All items in an array should have the exact same structure.  " \
-                          "You can pass in include_nulls to AutoMapperDataTypeComplexBase to force it to create " \
-                          "null values for each element in the structure. "
-                if source_df is not None:
-                    msg += self.get_message_for_exception(
-                        column_name, df, e, source_df
+                    msg = (
+                        "Looks like the elements of the array have different structures.  "
+                        "All items in an array should have the exact same structure.  "
+                        "You can pass in include_nulls to AutoMapperDataTypeComplexBase to force it to create "
+                        "null values for each element in the structure. "
                     )
+                if source_df is not None:
+                    msg += self.get_message_for_exception(column_name, df, e, source_df)
                 raise Exception(msg) from e
             except Exception as e:
-                msg = self.get_message_for_exception(
-                    column_name, df, e, source_df
-                ) if source_df is not None else ""
+                msg = (
+                    self.get_message_for_exception(column_name, df, e, source_df)
+                    if source_df is not None
+                    else ""
+                )
                 raise Exception(msg) from e
 
         # write out final checkpoint for this automapper
         if self.checkpoint_path:
-            checkpoint_path = Path(self.checkpoint_path
-                                   ).joinpath(self.view
-                                              or "df").joinpath("final")
+            checkpoint_path = (
+                Path(self.checkpoint_path).joinpath(self.view or "df").joinpath("final")
+            )
             df.write.parquet(str(checkpoint_path))
             df = df.sql_ctx.read.parquet(str(checkpoint_path))
 
@@ -261,25 +263,31 @@ class AutoMapper(AutoMapperContainer):
 
     def transform(self, df: DataFrame) -> DataFrame:
         # if source_view is specified then load that else assume that df is the source view
-        source_df: DataFrame = df.sql_ctx.table(
-            self.source_view
-        ) if self.source_view else df
+        source_df: DataFrame = (
+            df.sql_ctx.table(self.source_view) if self.source_view else df
+        )
         # if keys are not specified then add a __row_id column to both the source and the destination
         #   and use that as key
         if not self.keys or len(self.keys) == 0:
             assert not self.view or not SparkHelpers.spark_table_exists(
                 sql_ctx=df.sql_ctx, view=self.view
             )
-            self.keys = [TEMPORARY_KEY]
-            source_df = source_df.withColumn(
-                TEMPORARY_KEY, monotonically_increasing_id()
-            )
+            if self.use_single_select:
+                self.keys = []
+            else:
+                self.keys = [TEMPORARY_KEY]
+                source_df = source_df.withColumn(
+                    TEMPORARY_KEY, monotonically_increasing_id()
+                )
 
         # if view is specified then check if it exists
-        destination_df: DataFrame = df.sql_ctx.table(self.view) \
-            if self.view and self.reuse_existing_view and SparkHelpers.spark_table_exists(sql_ctx=df.sql_ctx,
-                                                                                          view=self.view) \
+        destination_df: DataFrame = (
+            df.sql_ctx.table(self.view)
+            if self.view
+            and self.reuse_existing_view
+            and SparkHelpers.spark_table_exists(sql_ctx=df.sql_ctx, view=self.view)
             else source_df.select(self.keys)
+        )
 
         # if filter is specified then run it
         if self.filter_by is not None:
@@ -291,15 +299,11 @@ class AutoMapper(AutoMapperContainer):
             renamed_key_column: str = f"__{key}"
             source_df = source_df.withColumn(renamed_key_column, col(key))
             try:
-                destination_df = destination_df.withColumn(
-                    renamed_key_column, col(key)
-                )
+                destination_df = destination_df.withColumn(renamed_key_column, col(key))
             except Exception as e:
                 # write out the full list of columns
                 columns_in_source: List[str] = list(source_df.columns)
-                columns_in_destination: List[str] = list(
-                    destination_df.columns
-                )
+                columns_in_destination: List[str] = list(destination_df.columns)
                 msg: str = str(e)
                 msg += f", Source columns:[{','.join(columns_in_source)}]"
                 msg += f", Destination columns:[{','.join(columns_in_destination)}]"
@@ -313,9 +317,7 @@ class AutoMapper(AutoMapperContainer):
             )
         else:
             result_df = self.transform_with_data_frame(
-                df=destination_df,
-                source_df=source_df,
-                keys=renamed_key_columns
+                df=destination_df, source_df=source_df, keys=renamed_key_columns
             )
 
         # now drop the __row_id if we added it
@@ -329,9 +331,7 @@ class AutoMapper(AutoMapperContainer):
         result_df = result_df.drop(*renamed_key_columns)
 
         # replace any columns we had prepended with "___" to avoid a name clash with key columns
-        for column_name in [
-            c for c in result_df.columns if c.startswith("___")
-        ]:
+        for column_name in [c for c in result_df.columns if c.startswith("___")]:
             result_df = result_df.withColumnRenamed(
                 column_name, column_name.replace("___", "")
             )
@@ -349,17 +349,19 @@ class AutoMapper(AutoMapperContainer):
             result_df.createOrReplaceTempView(self.view)
         return result_df
 
-    def register_child(self, dst_column: str, child: 'AutoMapperBase') -> None:
+    def register_child(self, dst_column: str, child: "AutoMapperBase") -> None:
         self.mappers[dst_column] = child
 
     # noinspection PyMethodMayBeStatic,PyPep8Naming
-    def columns(self, **kwargs: AutoMapperAnyDataType) -> 'AutoMapper':
+    def columns(self, **kwargs: AutoMapperAnyDataType) -> "AutoMapper":
         from spark_auto_mapper.automappers.columns import AutoMapperColumns
+
         # To work around protected keywords as column names, allow a trailing underscore in the definition that gets
         # stripped at registration time.
         col_spec = {
-            column_name[:-1] if column_name and column_name != '_'
-            and column_name.endswith("_") else column_name: column_def
+            column_name[:-1]
+            if column_name and column_name != "_" and column_name.endswith("_")
+            else column_name: column_def
             for column_name, column_def in kwargs.items()
         }
         columns_mapper: AutoMapperColumns = AutoMapperColumns(**col_spec)
@@ -368,14 +370,14 @@ class AutoMapper(AutoMapperContainer):
         return self
 
     # noinspection PyPep8Naming,PyMethodMayBeStatic
-    def complex(self, entity: AutoMapperDataTypeComplexBase) -> 'AutoMapper':
+    def complex(self, entity: AutoMapperDataTypeComplexBase) -> "AutoMapper":
         resource_mapper: AutoMapperWithComplex = AutoMapperWithComplex(
             entity=entity,
             use_schema=self.use_schema,
             include_extension=self.include_extension,
             include_null_properties=self.include_null_properties,
             skip_schema_validation=self.skip_schema_validation,
-            skip_if_columns_null_or_empty=self.skip_if_columns_null_or_empty
+            skip_if_columns_null_or_empty=self.skip_if_columns_null_or_empty,
         )
 
         for column_name, child_mapper in resource_mapper.mappers.items():
@@ -397,9 +399,7 @@ class AutoMapper(AutoMapperContainer):
         :param source_df: (Optional) source data frame
         :return: string representation
         """
-        column_specs: Dict[str, Column] = self.get_column_specs(
-            source_df=source_df
-        )
+        column_specs: Dict[str, Column] = self.get_column_specs(source_df=source_df)
         output: str = f"view={self.view}\n" if self.view else ""
         for column_name, column_spec in column_specs.items():
             output += ColumnSpecWrapper(column_spec).to_debug_string()
@@ -415,6 +415,7 @@ class AutoMapper(AutoMapperContainer):
         """
         return {
             column_name: ColumnSpecWrapper(column_spec).column_spec
-            for column_name, column_spec in
-            self.get_column_specs(source_df=None).items()
+            for column_name, column_spec in self.get_column_specs(
+                source_df=None
+            ).items()
         }

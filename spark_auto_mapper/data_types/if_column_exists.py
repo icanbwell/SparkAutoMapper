@@ -11,9 +11,7 @@ from spark_auto_mapper.type_definitions.wrapper_types import (
     AutoMapperAnyDataType,
 )
 
-_TAutoMapperDataType = TypeVar(
-    "_TAutoMapperDataType", bound=AutoMapperAnyDataType
-)
+_TAutoMapperDataType = TypeVar("_TAutoMapperDataType", bound=AutoMapperAnyDataType)
 
 
 class AutoMapperIfColumnExistsType(
@@ -23,10 +21,12 @@ class AutoMapperIfColumnExistsType(
     Allows for columns to be defined based in which a source column may not exist. If the optional source column does
     not exist, the "default" column definition is used instead.
     """
+
     def __init__(
-        self, column: AutoMapperColumnOrColumnLikeType,
+        self,
+        column: AutoMapperColumnOrColumnLikeType,
         if_exists: Optional[_TAutoMapperDataType],
-        if_not_exists: Optional[_TAutoMapperDataType]
+        if_not_exists: Optional[_TAutoMapperDataType],
     ):
         super().__init__()
 
@@ -35,15 +35,19 @@ class AutoMapperIfColumnExistsType(
         )
         self.if_exists: Optional[AutoMapperDataTypeBase] = None
         if if_exists:
-            self.if_exists = if_exists \
-                if isinstance(if_exists, AutoMapperDataTypeBase) \
+            self.if_exists = (
+                if_exists
+                if isinstance(if_exists, AutoMapperDataTypeBase)
                 else AutoMapperValueParser.parse_value(if_exists)
+            )
 
         self.if_not_exists: Optional[AutoMapperDataTypeBase] = None
         if if_not_exists:
-            self.if_not_exists = if_not_exists \
-                if isinstance(if_not_exists, AutoMapperDataTypeBase) \
+            self.if_not_exists = (
+                if_not_exists
+                if isinstance(if_not_exists, AutoMapperDataTypeBase)
                 else AutoMapperValueParser.parse_value(if_not_exists)
+            )
 
     def get_column_spec(
         self, source_df: Optional[DataFrame], current_column: Optional[Column]
@@ -52,7 +56,8 @@ class AutoMapperIfColumnExistsType(
             source_df=source_df, current_column=current_column
         )
         # noinspection Mypy,PyProtectedMember
-        col_name: str = column_spec._jc.toString(  # type: ignore
+        col_name: str = (
+            column_spec._jc.toString()  # type: ignore
         )  # Get spark representation of the column
         try:
             # Force spark analyzer to confirm that column/expression is possible. This does not actually compute

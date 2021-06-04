@@ -13,10 +13,11 @@ def test_auto_mapper_lpad(spark_session: SparkSession) -> None:
     # Arrange
     spark_session.createDataFrame(
         [
-            (1, '1234'),
-            (2, '1234567'),
-            (3, '123456789'),
-        ], ['member_id', 'empi']
+            (1, "1234"),
+            (2, "1234567"),
+            (3, "123456789"),
+        ],
+        ["member_id", "empi"],
     ).createOrReplaceTempView("patients")
 
     source_df: DataFrame = spark_session.table("patients")
@@ -31,9 +32,7 @@ def test_auto_mapper_lpad(spark_session: SparkSession) -> None:
 
     # Assert
     assert isinstance(mapper, AutoMapper)
-    sql_expressions: Dict[str, Column] = mapper.get_column_specs(
-        source_df=source_df
-    )
+    sql_expressions: Dict[str, Column] = mapper.get_column_specs(source_df=source_df)
 
     assert str(sql_expressions["my_column"]) == str(
         lpad(col=col("b.empi"), len=9, pad="0").alias("my_column")
@@ -42,12 +41,18 @@ def test_auto_mapper_lpad(spark_session: SparkSession) -> None:
     result_df: DataFrame = mapper.transform(df=df)
 
     # noinspection SpellCheckingInspection
-    assert result_df.where("member_id == 1"
-                           ).select("my_column").collect()[0][0] == "000001234"
+    assert (
+        result_df.where("member_id == 1").select("my_column").collect()[0][0]
+        == "000001234"
+    )
     # noinspection SpellCheckingInspection
-    assert result_df.where("member_id == 2"
-                           ).select("my_column").collect()[0][0] == "001234567"
+    assert (
+        result_df.where("member_id == 2").select("my_column").collect()[0][0]
+        == "001234567"
+    )
 
     # noinspection SpellCheckingInspection
-    assert result_df.where("member_id == 3"
-                           ).select("my_column").collect()[0][0] == "123456789"
+    assert (
+        result_df.where("member_id == 3").select("my_column").collect()[0][0]
+        == "123456789"
+    )

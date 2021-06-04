@@ -1,6 +1,7 @@
 from typing import Dict
 
 from pyspark.sql import SparkSession, Column, DataFrame
+
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import col
 from pytest import approx
@@ -13,9 +14,10 @@ def test_auto_mapper_amount_typed(spark_session: SparkSession) -> None:
     # Arrange
     spark_session.createDataFrame(
         [
-            (1, 'Qureshi', 'Imran', "54.45"),
-            (2, 'Vidal', 'Michael', "67.67"),
-        ], ['member_id', 'last_name', 'first_name', "my_age"]
+            (1, "Qureshi", "Imran", "54.45"),
+            (2, "Vidal", "Michael", "67.67"),
+        ],
+        ["member_id", "last_name", "first_name", "my_age"],
     ).createOrReplaceTempView("patients")
 
     source_df: DataFrame = spark_session.table("patients")
@@ -30,9 +32,7 @@ def test_auto_mapper_amount_typed(spark_session: SparkSession) -> None:
     ).columns(age=A.amount(A.column("my_age")))
 
     assert isinstance(mapper, AutoMapper)
-    sql_expressions: Dict[str, Column] = mapper.get_column_specs(
-        source_df=source_df
-    )
+    sql_expressions: Dict[str, Column] = mapper.get_column_specs(source_df=source_df)
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 

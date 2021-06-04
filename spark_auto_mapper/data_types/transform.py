@@ -5,25 +5,27 @@ from pyspark.sql.functions import transform
 
 from spark_auto_mapper.data_types.array_base import AutoMapperArrayLikeBase
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
-from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperAnyDataType, AutoMapperColumnOrColumnLikeType
-
-_TAutoMapperDataType = TypeVar(
-    "_TAutoMapperDataType", bound=AutoMapperAnyDataType
+from spark_auto_mapper.type_definitions.wrapper_types import (
+    AutoMapperAnyDataType,
+    AutoMapperColumnOrColumnLikeType,
 )
+
+_TAutoMapperDataType = TypeVar("_TAutoMapperDataType", bound=AutoMapperAnyDataType)
 
 
 class AutoMapperTransformDataType(
     AutoMapperArrayLikeBase, Generic[_TAutoMapperDataType]
 ):
     def __init__(
-        self, column: Union[AutoMapperDataTypeBase,
-                            AutoMapperColumnOrColumnLikeType],
-        value: _TAutoMapperDataType
+        self,
+        column: Union[AutoMapperDataTypeBase, AutoMapperColumnOrColumnLikeType],
+        value: _TAutoMapperDataType,
     ) -> None:
         super().__init__()
 
-        self.column: Union[AutoMapperDataTypeBase,
-                           AutoMapperColumnOrColumnLikeType] = column
+        self.column: Union[
+            AutoMapperDataTypeBase, AutoMapperColumnOrColumnLikeType
+        ] = column
         self.value: _TAutoMapperDataType = value
 
     def include_null_properties(self, include_null_properties: bool) -> None:

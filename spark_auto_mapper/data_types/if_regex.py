@@ -7,37 +7,41 @@ from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
 
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
-from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperColumnOrColumnLikeType, AutoMapperAnyDataType
-
-_TAutoMapperDataType = TypeVar(
-    "_TAutoMapperDataType", bound=AutoMapperAnyDataType
+from spark_auto_mapper.type_definitions.wrapper_types import (
+    AutoMapperColumnOrColumnLikeType,
+    AutoMapperAnyDataType,
 )
 
+_TAutoMapperDataType = TypeVar("_TAutoMapperDataType", bound=AutoMapperAnyDataType)
 
-class AutoMapperIfRegExDataType(
-    AutoMapperDataTypeBase, Generic[_TAutoMapperDataType]
-):
+
+class AutoMapperIfRegExDataType(AutoMapperDataTypeBase, Generic[_TAutoMapperDataType]):
     """
     If check returns value if the checks passes else when_not
     """
+
     def __init__(
         self,
         column: AutoMapperColumnOrColumnLikeType,
         check: Union[str, List[str]],
         value: _TAutoMapperDataType,
-        else_: Optional[_TAutoMapperDataType] = None
+        else_: Optional[_TAutoMapperDataType] = None,
     ):
         super().__init__()
 
         self.column: AutoMapperColumnOrColumnLikeType = column
         self.check: Union[str, List[str]] = check
-        self.value: AutoMapperDataTypeBase = value \
-            if isinstance(value, AutoMapperDataTypeBase) \
+        self.value: AutoMapperDataTypeBase = (
+            value
+            if isinstance(value, AutoMapperDataTypeBase)
             else AutoMapperValueParser.parse_value(value)
+        )
         if else_:
-            self.else_: AutoMapperDataTypeBase = cast(AutoMapperDataTypeBase, else_) \
-                if isinstance(value, AutoMapperDataTypeBase) \
+            self.else_: AutoMapperDataTypeBase = (
+                cast(AutoMapperDataTypeBase, else_)
+                if isinstance(value, AutoMapperDataTypeBase)
                 else AutoMapperValueParser.parse_value(value)
+            )
         else:
             self.else_ = AutoMapperDataTypeLiteral(None)
 
@@ -58,7 +62,7 @@ class AutoMapperIfRegExDataType(
                 ).rlike(value),
                 self.value.get_column_spec(
                     source_df=source_df, current_column=current_column
-                )
+                ),
             ).otherwise(
                 self.else_.get_column_spec(
                     source_df=source_df, current_column=current_column
@@ -72,7 +76,7 @@ class AutoMapperIfRegExDataType(
                 ).rlike(value),
                 self.value.get_column_spec(
                     source_df=source_df, current_column=current_column
-                )
+                ),
             ).otherwise(
                 self.else_.get_column_spec(
                     source_df=source_df, current_column=current_column

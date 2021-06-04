@@ -1,6 +1,7 @@
 from typing import Dict
 
 from pyspark.sql import SparkSession, Column, DataFrame, Row
+
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import lit
 
@@ -12,9 +13,10 @@ def test_auto_mapper_datatype_literal(spark_session: SparkSession) -> None:
     # Arrange
     spark_session.createDataFrame(
         [
-            (1, 'Qureshi', 'Imran'),
-            (2, 'Vidal', 'Michael'),
-        ], ['member_id', 'last_name', 'first_name']
+            (1, "Qureshi", "Imran"),
+            (2, "Vidal", "Michael"),
+        ],
+        ["member_id", "last_name", "first_name"],
     ).createOrReplaceTempView("patients")
 
     source_df: DataFrame = spark_session.table("patients")
@@ -24,7 +26,7 @@ def test_auto_mapper_datatype_literal(spark_session: SparkSession) -> None:
         view="members",
         source_view="patients",
         keys=["member_id"],
-        drop_key_columns=False
+        drop_key_columns=False,
     ).columns(
         dst1="src1",
         dst2=AutoMapperDataTypeLiteral(None),
@@ -36,9 +38,7 @@ def test_auto_mapper_datatype_literal(spark_session: SparkSession) -> None:
 
     assert isinstance(mapper, AutoMapper)
 
-    sql_expressions: Dict[str, Column] = mapper.get_column_specs(
-        source_df=source_df
-    )
+    sql_expressions: Dict[str, Column] = mapper.get_column_specs(source_df=source_df)
 
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
@@ -61,20 +61,20 @@ def test_auto_mapper_datatype_literal(spark_session: SparkSession) -> None:
     assert result == [
         Row(
             member_id=1,
-            dst1='src1',
+            dst1="src1",
             dst2=None,
-            dst3='',
-            dst4='literal',
+            dst3="",
+            dst4="literal",
             dst5=1234,
-            dst6=0
+            dst6=0,
         ),
         Row(
             member_id=2,
-            dst1='src1',
+            dst1="src1",
             dst2=None,
-            dst3='',
-            dst4='literal',
+            dst3="",
+            dst4="literal",
             dst5=1234,
-            dst6=0
+            dst6=0,
         ),
     ]

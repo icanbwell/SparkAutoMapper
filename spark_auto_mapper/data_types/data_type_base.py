@@ -15,7 +15,9 @@ if TYPE_CHECKING:
     from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
     from spark_auto_mapper.data_types.datetime import AutoMapperDateTimeDataType
     from spark_auto_mapper.data_types.date import AutoMapperDateDataType
-    from spark_auto_mapper.data_types.date_format import AutoMapperFormatDateTimeDataType
+    from spark_auto_mapper.data_types.date_format import (
+        AutoMapperFormatDateTimeDataType,
+    )
     from spark_auto_mapper.data_types.float import AutoMapperFloatDataType
 
 _TAutoMapperDataType = TypeVar(
@@ -52,16 +54,15 @@ class AutoMapperDataTypeBase:
         """
         assert isinstance(value, AutoMapperDataTypeBase)
         child: AutoMapperDataTypeBase = value
-        return child.get_column_spec(
-            source_df=source_df, current_column=current_column
-        )
+        return child.get_column_spec(source_df=source_df, current_column=current_column)
 
     def include_null_properties(self, include_null_properties: bool) -> None:
         pass  # sub-classes can implement if they support this
 
     # noinspection PyMethodMayBeStatic
-    def transform(self: 'AutoMapperDataTypeBase',
-                  value: _TAutoMapperDataType) -> List[_TAutoMapperDataType]:
+    def transform(
+        self: "AutoMapperDataTypeBase", value: _TAutoMapperDataType
+    ) -> List[_TAutoMapperDataType]:
         """
         transforms a column into another type or struct
 
@@ -109,8 +110,7 @@ class AutoMapperDataTypeBase:
 
         # cast it to the inner type so type checking is happy
         return cast(
-            _TAutoMapperDataType,
-            AutoMapperFilterDataType(column=self, func=func)
+            _TAutoMapperDataType, AutoMapperFilterDataType(column=self, func=func)
         )
 
     # noinspection PyMethodMayBeStatic
@@ -131,9 +131,7 @@ class AutoMapperDataTypeBase:
         # cast it to the inner type so type checking is happy
         return cast(
             _TAutoMapperDataType,
-            AutoMapperSplitByDelimiterDataType(
-                column=self, delimiter=delimiter
-            ),
+            AutoMapperSplitByDelimiterDataType(column=self, delimiter=delimiter),
         )
 
     def select_one(self, value: _TAutoMapperDataType) -> _TAutoMapperDataType:
@@ -169,9 +167,7 @@ class AutoMapperDataTypeBase:
         return cast(_TAutoMapperDataType, AutoMapperFirstDataType(column=self))
 
     # noinspection PyMethodMayBeStatic
-    def expression(
-        self: _TAutoMapperDataType, value: str
-    ) -> _TAutoMapperDataType:
+    def expression(self: _TAutoMapperDataType, value: str) -> _TAutoMapperDataType:
         """
         Specifies that the value parameter should be executed as a sql expression in Spark
 
@@ -213,12 +209,10 @@ class AutoMapperDataTypeBase:
         from spark_auto_mapper.data_types.flatten import AutoMapperFlattenDataType
 
         # cast it to the inner type so type checking is happy
-        return cast(
-            "AutoMapperDataTypeBase", AutoMapperFlattenDataType(column=self)
-        )
+        return cast("AutoMapperDataTypeBase", AutoMapperFlattenDataType(column=self))
 
     # noinspection PyMethodMayBeStatic
-    def to_array(self) -> 'AutoMapperArrayLikeBase':
+    def to_array(self) -> "AutoMapperArrayLikeBase":
         """
         converts single element into an array
 
@@ -229,7 +223,7 @@ class AutoMapperDataTypeBase:
 
         # cast it to the inner type so type checking is happy
         return cast(
-            'AutoMapperArrayLikeBase',
+            "AutoMapperArrayLikeBase",
             AutoMapperArrayDataType(value=self),
         )
 
@@ -247,11 +241,9 @@ class AutoMapperDataTypeBase:
         from spark_auto_mapper.data_types.concat import AutoMapperConcatDataType
 
         # cast it to the inner type so type checking is happy
-        return cast(
-            _TAutoMapperDataType, AutoMapperConcatDataType(self, list2)
-        )
+        return cast(_TAutoMapperDataType, AutoMapperConcatDataType(self, list2))
 
-    def to_float(self: _TAutoMapperDataType) -> 'AutoMapperFloatDataType':
+    def to_float(self: _TAutoMapperDataType) -> "AutoMapperFloatDataType":
         """
         Converts column to float
 
@@ -263,9 +255,8 @@ class AutoMapperDataTypeBase:
         return AutoMapperFloatDataType(value=self)
 
     def to_date(
-        self: _TAutoMapperDataType,
-        formats: Optional[List[str]] = None
-    ) -> 'AutoMapperDateDataType':
+        self: _TAutoMapperDataType, formats: Optional[List[str]] = None
+    ) -> "AutoMapperDateDataType":
         """
         Converts a value to date only
         For datetime use the datetime mapper type
@@ -281,9 +272,8 @@ class AutoMapperDataTypeBase:
         return AutoMapperDateDataType(self, formats)
 
     def to_datetime(
-        self: _TAutoMapperDataType,
-        formats: Optional[List[str]] = None
-    ) -> 'AutoMapperDateTimeDataType':
+        self: _TAutoMapperDataType, formats: Optional[List[str]] = None
+    ) -> "AutoMapperDateTimeDataType":
         """
         Converts the value to a timestamp type in Spark
 
@@ -294,7 +284,7 @@ class AutoMapperDataTypeBase:
 
         return AutoMapperDateTimeDataType(self, formats)
 
-    def to_amount(self: _TAutoMapperDataType) -> 'AutoMapperAmountDataType':
+    def to_amount(self: _TAutoMapperDataType) -> "AutoMapperAmountDataType":
         """
         Specifies the value should be used as an amount
         :return: an amount automapper type
@@ -303,7 +293,7 @@ class AutoMapperDataTypeBase:
 
         return AutoMapperAmountDataType(self)
 
-    def to_boolean(self: _TAutoMapperDataType) -> 'AutoMapperBooleanDataType':
+    def to_boolean(self: _TAutoMapperDataType) -> "AutoMapperBooleanDataType":
         """
         Specifies the value should be used as a boolean
         :return: a boolean automapper type
@@ -312,7 +302,7 @@ class AutoMapperDataTypeBase:
 
         return AutoMapperBooleanDataType(self)
 
-    def to_number(self: _TAutoMapperDataType) -> 'AutoMapperNumberDataType':
+    def to_number(self: _TAutoMapperDataType) -> "AutoMapperNumberDataType":
         """
         Specifies value should be used as a number
         :return: a number automapper type
@@ -321,7 +311,7 @@ class AutoMapperDataTypeBase:
 
         return AutoMapperNumberDataType(self)
 
-    def to_text(self: _TAutoMapperDataType) -> 'AutoMapperTextLikeBase':
+    def to_text(self: _TAutoMapperDataType) -> "AutoMapperTextLikeBase":
         """
         Specifies that the value parameter should be used as a literal text
         :return: a text automapper type
@@ -344,9 +334,7 @@ class AutoMapperDataTypeBase:
         # cast it to the inner type so type checking is happy
         return cast(
             _TAutoMapperDataType,
-            AutoMapperJoinUsingDelimiterDataType(
-                column=self, delimiter=delimiter
-            ),
+            AutoMapperJoinUsingDelimiterDataType(column=self, delimiter=delimiter),
         )
 
     # override this if your inherited class has a defined schema
@@ -358,7 +346,7 @@ class AutoMapperDataTypeBase:
 
     def to_date_format(
         self: _TAutoMapperDataType, format_: str
-    ) -> 'AutoMapperFormatDateTimeDataType':
+    ) -> "AutoMapperFormatDateTimeDataType":
         """
         Converts a date or time into string
 
@@ -368,7 +356,9 @@ class AutoMapperDataTypeBase:
                         yyyyMMdd
                         M/d/y
         """
-        from spark_auto_mapper.data_types.date_format import AutoMapperFormatDateTimeDataType
+        from spark_auto_mapper.data_types.date_format import (
+            AutoMapperFormatDateTimeDataType,
+        )
 
         return AutoMapperFormatDateTimeDataType(self, format_)
 
@@ -380,12 +370,12 @@ class AutoMapperDataTypeBase:
 
         :return: an automapper type
         """
-        from spark_auto_mapper.data_types.null_if_empty import AutoMapperNullIfEmptyDataType
+        from spark_auto_mapper.data_types.null_if_empty import (
+            AutoMapperNullIfEmptyDataType,
+        )
 
         # cast it to the inner type so type checking is happy
-        return cast(
-            _TAutoMapperDataType, AutoMapperNullIfEmptyDataType(value=self)
-        )
+        return cast(_TAutoMapperDataType, AutoMapperNullIfEmptyDataType(value=self))
 
     def regex_replace(
         self: _TAutoMapperDataType, pattern: str, replacement: str
@@ -398,7 +388,9 @@ class AutoMapperDataTypeBase:
         :return: a regex_replace automapper type
         """
 
-        from spark_auto_mapper.data_types.regex_replace import AutoMapperRegExReplaceDataType
+        from spark_auto_mapper.data_types.regex_replace import (
+            AutoMapperRegExReplaceDataType,
+        )
 
         # cast it to the inner type so type checking is happy
         # noinspection Mypy
@@ -406,13 +398,13 @@ class AutoMapperDataTypeBase:
             _TAutoMapperDataType,
             AutoMapperRegExReplaceDataType(
                 column=self, pattern=pattern, replacement=replacement
-            )
+            ),
         )
 
     def sanitize(
         self: _TAutoMapperDataType,
         pattern: str = r"[^\w\r\n\t _.,!\"'/$-]",
-        replacement: str = " "
+        replacement: str = " ",
     ) -> _TAutoMapperDataType:
         """
         Replaces all "non-normal" characters with specified replacement
@@ -432,7 +424,9 @@ class AutoMapperDataTypeBase:
         :return: a regex_replace automapper type
         """
 
-        from spark_auto_mapper.data_types.regex_replace import AutoMapperRegExReplaceDataType
+        from spark_auto_mapper.data_types.regex_replace import (
+            AutoMapperRegExReplaceDataType,
+        )
 
         # cast it to the inner type so type checking is happy
         # noinspection Mypy
@@ -440,5 +434,5 @@ class AutoMapperDataTypeBase:
             _TAutoMapperDataType,
             AutoMapperRegExReplaceDataType(
                 column=self, pattern=pattern, replacement=replacement
-            )
+            ),
         )

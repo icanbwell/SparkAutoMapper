@@ -19,9 +19,11 @@ class AutoMapperFormatDateTimeDataType(AutoMapperDataTypeBase):
         """
         super().__init__()
 
-        self.value: AutoMapperDataTypeBase = value \
-            if isinstance(value, AutoMapperDataTypeBase) \
+        self.value: AutoMapperDataTypeBase = (
+            value
+            if isinstance(value, AutoMapperDataTypeBase)
             else AutoMapperValueParser.parse_value(value)
+        )
         self.format_: str = format_
 
     def get_column_spec(
@@ -31,5 +33,5 @@ class AutoMapperFormatDateTimeDataType(AutoMapperDataTypeBase):
             self.value.get_column_spec(
                 source_df=source_df, current_column=current_column
             ),
-            format=self.format_
+            format=self.format_,
         )

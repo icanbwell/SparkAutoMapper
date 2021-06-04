@@ -10,9 +10,11 @@ from spark_auto_mapper.type_definitions.defined_types import AutoMapperBooleanIn
 class AutoMapperBooleanDataType(AutoMapperDataTypeBase):
     def __init__(self, value: AutoMapperBooleanInputType):
         super().__init__()
-        self.value: AutoMapperDataTypeBase = value \
-            if isinstance(value, AutoMapperDataTypeBase) \
+        self.value: AutoMapperDataTypeBase = (
+            value
+            if isinstance(value, AutoMapperDataTypeBase)
             else AutoMapperValueParser.parse_value(value)
+        )
 
     def get_column_spec(
         self, source_df: Optional[DataFrame], current_column: Optional[Column]

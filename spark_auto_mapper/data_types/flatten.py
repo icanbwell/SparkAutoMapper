@@ -5,18 +5,20 @@ from pyspark.sql.functions import flatten, filter
 
 from spark_auto_mapper.data_types.array_base import AutoMapperArrayLikeBase
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
-from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperColumnOrColumnLikeType
+from spark_auto_mapper.type_definitions.wrapper_types import (
+    AutoMapperColumnOrColumnLikeType,
+)
 
 
 class AutoMapperFlattenDataType(AutoMapperArrayLikeBase):
     def __init__(
-        self, column: Union[AutoMapperDataTypeBase,
-                            AutoMapperColumnOrColumnLikeType]
+        self, column: Union[AutoMapperDataTypeBase, AutoMapperColumnOrColumnLikeType]
     ) -> None:
         super().__init__()
 
-        self.column: Union[AutoMapperDataTypeBase,
-                           AutoMapperColumnOrColumnLikeType] = column
+        self.column: Union[
+            AutoMapperDataTypeBase, AutoMapperColumnOrColumnLikeType
+        ] = column
 
     def include_null_properties(self, include_null_properties: bool) -> None:
         self.column.include_null_properties(
@@ -30,6 +32,7 @@ class AutoMapperFlattenDataType(AutoMapperArrayLikeBase):
             filter(
                 self.column.get_column_spec(
                     source_df=source_df, current_column=current_column
-                ), lambda x: x.isNotNull()
+                ),
+                lambda x: x.isNotNull(),
             )
         )

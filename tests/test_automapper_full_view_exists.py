@@ -10,9 +10,10 @@ def test_auto_mapper_full(spark_session: SparkSession) -> None:
     # Arrange
     spark_session.createDataFrame(
         [
-            (1, 'Qureshi', 'Imran'),
-            (2, 'Vidal', 'Michael'),
-        ], ['member_id', 'last_name', 'first_name']
+            (1, "Qureshi", "Imran"),
+            (2, "Vidal", "Michael"),
+        ],
+        ["member_id", "last_name", "first_name"],
     ).createOrReplaceTempView("patients")
 
     source_df: DataFrame = spark_session.table("patients")
@@ -28,25 +29,21 @@ def test_auto_mapper_full(spark_session: SparkSession) -> None:
         view="members",
         source_view="patients",
         keys=["member_id"],
-        drop_key_columns=False
+        drop_key_columns=False,
     ).columns(
         dst1="src1",
         dst2=AutoMapperList([client_address_variable]),
-        dst3=AutoMapperList([client_address_variable, "address2"])
+        dst3=AutoMapperList([client_address_variable, "address2"]),
     )
 
     company_name: str = "Microsoft"
 
     if company_name == "Microsoft":
         mapper = mapper.columns(
-            dst4=AutoMapperList(
-                [A.complex(use="usual", family=A.column("last_name"))]
-            )
+            dst4=AutoMapperList([A.complex(use="usual", family=A.column("last_name"))])
         )
 
-    sql_expressions: Dict[str, Column] = mapper.get_column_specs(
-        source_df=source_df
-    )
+    sql_expressions: Dict[str, Column] = mapper.get_column_specs(source_df=source_df)
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
@@ -58,17 +55,26 @@ def test_auto_mapper_full(spark_session: SparkSession) -> None:
     result_df.show()
 
     assert len(result_df.columns) == 5
-    assert result_df.where("member_id == 1").select("dst1"
-                                                    ).collect()[0][0] == "src1"
-    assert result_df.where("member_id == 1"
-                           ).select("dst2").collect()[0][0][0] == "address1"
+    assert result_df.where("member_id == 1").select("dst1").collect()[0][0] == "src1"
+    assert (
+        result_df.where("member_id == 1").select("dst2").collect()[0][0][0]
+        == "address1"
+    )
 
-    assert result_df.where("member_id == 1"
-                           ).select("dst3").collect()[0][0][0] == "address1"
-    assert result_df.where("member_id == 1"
-                           ).select("dst3").collect()[0][0][1] == "address2"
+    assert (
+        result_df.where("member_id == 1").select("dst3").collect()[0][0][0]
+        == "address1"
+    )
+    assert (
+        result_df.where("member_id == 1").select("dst3").collect()[0][0][1]
+        == "address2"
+    )
 
-    assert result_df.where("member_id == 1"
-                           ).select("dst4").collect()[0][0][0][0] == "usual"
-    assert result_df.where("member_id == 1"
-                           ).select("dst4").collect()[0][0][0][1] == "Qureshi"
+    assert (
+        result_df.where("member_id == 1").select("dst4").collect()[0][0][0][0]
+        == "usual"
+    )
+    assert (
+        result_df.where("member_id == 1").select("dst4").collect()[0][0][0][1]
+        == "Qureshi"
+    )

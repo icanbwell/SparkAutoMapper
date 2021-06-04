@@ -5,7 +5,9 @@ from pyspark.sql.functions import struct
 
 from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
-from spark_auto_mapper.data_types.complex.complex_base import AutoMapperDataTypeComplexBase
+from spark_auto_mapper.data_types.complex.complex_base import (
+    AutoMapperDataTypeComplexBase,
+)
 
 
 class AutoMapperDataTypeStruct(AutoMapperDataTypeComplexBase):
@@ -23,9 +25,8 @@ class AutoMapperDataTypeStruct(AutoMapperDataTypeComplexBase):
         return struct(
             *[
                 self.get_value(
-                    value=value,
-                    source_df=source_df,
-                    current_column=current_column
-                ).alias(key) for key, value in self.value.items()
+                    value=value, source_df=source_df, current_column=current_column
+                ).alias(key)
+                for key, value in self.value.items()
             ]
         )

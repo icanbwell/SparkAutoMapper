@@ -2,6 +2,7 @@ import re
 from typing import Optional, List
 
 from pyspark.sql import Column, DataFrame
+
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import col
 
@@ -20,9 +21,7 @@ class AutoMapperDataTypeColumn(AutoMapperArrayLikeBase):
         self, source_df: Optional[DataFrame], current_column: Optional[Column]
     ) -> Column:
         if isinstance(self.value, str):
-            if not self.value.startswith("a.") and not self.value.startswith(
-                "b."
-            ):
+            if not self.value.startswith("a.") and not self.value.startswith("b."):
                 # prepend with "b." in case the column exists in both a and b tables
                 # noinspection RegExpSingleCharAlternation
                 elements: List[str] = re.split(r"\.|\[|]", self.value)
@@ -30,11 +29,12 @@ class AutoMapperDataTypeColumn(AutoMapperArrayLikeBase):
                 column_default = col("b." + self.value)
                 for element in elements:
                     if element != "_" and element != "":
-                        element_ = element if not element.isnumeric(
-                        ) else int(element)
-                        my_column = my_column[
-                            element_
-                        ] if my_column is not None else column_default
+                        element_ = element if not element.isnumeric() else int(element)
+                        my_column = (
+                            my_column[element_]
+                            if my_column is not None
+                            else column_default
+                        )
                 return my_column if my_column is not None else column_default
             else:
                 return col(self.value)

@@ -10,9 +10,7 @@ from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
 from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
 from spark_auto_mapper.type_definitions.native_types import AutoMapperNativeSimpleType
 
-_T = TypeVar(
-    "_T", bound=Union[AutoMapperNativeSimpleType, AutoMapperDataTypeBase]
-)
+_T = TypeVar("_T", bound=Union[AutoMapperNativeSimpleType, AutoMapperDataTypeBase])
 
 
 class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
@@ -22,13 +20,19 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
     Multiple Inheritance:
     https://stackoverflow.com/questions/52754339/how-to-express-multiple-inheritance-in-python-type-hint
     """
+
     def __init__(
         self,
-        value: Optional[Union[List[_T], AutoMapperDataTypeBase,
-                              List[AutoMapperDataTypeBase],
-                              List[AutoMapperTextLikeBase]]],
+        value: Optional[
+            Union[
+                List[_T],
+                AutoMapperDataTypeBase,
+                List[AutoMapperDataTypeBase],
+                List[AutoMapperTextLikeBase],
+            ]
+        ],
         remove_nulls: bool = True,
-        include_null_properties: bool = True
+        include_null_properties: bool = True,
     ) -> None:
         """
         Generates a list (array) in Spark
@@ -75,21 +79,28 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
         ):  # if the src column is just string then consider it a sql expression
             return array(lit(self.value))
 
-        if isinstance(
-            self.value, list
-        ):  # if the src column is a list then iterate
-            return filter(array(
-                *[
-                    self.get_value(item, source_df=source_df, current_column=current_column)
-                    for item in self.value
-                ]
-            ), lambda x: x.isNotNull()) \
-                if self.remove_nulls \
+        if isinstance(self.value, list):  # if the src column is a list then iterate
+            return (
+                filter(
+                    array(
+                        *[
+                            self.get_value(
+                                item, source_df=source_df, current_column=current_column
+                            )
+                            for item in self.value
+                        ]
+                    ),
+                    lambda x: x.isNotNull(),
+                )
+                if self.remove_nulls
                 else array(
-                *[
-                    self.get_value(item, source_df=source_df, current_column=current_column)
-                    for item in self.value
-                ]
+                    *[
+                        self.get_value(
+                            item, source_df=source_df, current_column=current_column
+                        )
+                        for item in self.value
+                    ]
+                )
             )
 
         # if value is an AutoMapper then ask it for its column spec
@@ -109,23 +120,17 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
             # get schema for first element
             if len(self.value) > 0:
                 first_element = self.value[0]
-                schema = first_element.get_schema(
-                    include_extension=include_extension
-                )
+                schema = first_element.get_schema(include_extension=include_extension)
                 if schema is None:
                     return None
-                return StructType(
-                    [StructField("extension", ArrayType(schema))]
-                )
+                return StructType([StructField("extension", ArrayType(schema))])
         return None
 
-    def __add__(self, other: 'AutoMapperList[_T]') -> 'AutoMapperList[_T]':
+    def __add__(self, other: "AutoMapperList[_T]") -> "AutoMapperList[_T]":
         # iterate through both lists and return a new one
         result: AutoMapperList[_T] = AutoMapperList(
-            value=(
-                self.value if isinstance(self.value, list) else [self.value]
-            ) +
-            (other.value if isinstance(other.value, list) else [other.value]),
+            value=(self.value if isinstance(self.value, list) else [self.value])
+            + (other.value if isinstance(other.value, list) else [other.value]),
             remove_nulls=self.remove_nulls,
         )
         return result

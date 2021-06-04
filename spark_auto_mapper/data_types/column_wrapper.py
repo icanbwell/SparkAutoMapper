@@ -1,6 +1,7 @@
 from typing import Optional
 
 from pyspark.sql import Column, DataFrame
+
 # noinspection PyUnresolvedReferences
 
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase

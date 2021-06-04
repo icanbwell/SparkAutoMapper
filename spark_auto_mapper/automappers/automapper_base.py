@@ -15,8 +15,7 @@ class AutoMapperBase:
         # implement in subclasses
         raise NotImplementedError
 
-    def get_column_specs(self,
-                         source_df: Optional[DataFrame]) -> Dict[str, Column]:
+    def get_column_specs(self, source_df: Optional[DataFrame]) -> Dict[str, Column]:
         raise NotImplementedError
 
     def check_schema(

@@ -11,5 +11,5 @@ class AutoMapperColumns(AutoMapperContainer):
             column_schema={},
             include_null_properties=False,
             skip_schema_validation=[],
-            skip_if_columns_null_or_empty=None
+            skip_if_columns_null_or_empty=None,
         )
