@@ -3,6 +3,7 @@ from typing import Any, Dict, Union, TypeVar, cast, Optional, List, Callable
 from pyspark.sql.types import StringType
 from pyspark.sql import Column
 
+from spark_auto_mapper.data_types.array_distinct import AutoMapperArrayDistinctDataType
 from spark_auto_mapper.data_types.array_max import AutoMapperArrayMaxDataType
 from spark_auto_mapper.data_types.array_base import AutoMapperArrayLikeBase
 from spark_auto_mapper.data_types.coalesce import AutoMapperCoalesceDataType
@@ -495,6 +496,17 @@ class AutoMapperHelpers:
 
         # cast it to the inner type so type checking is happy
         return cast(_TAutoMapperDataType, AutoMapperArrayMaxDataType(*args))
+
+    @staticmethod
+    def array_distinct(*args: _TAutoMapperDataType) -> _TAutoMapperDataType:
+        """
+        Returns the distinct items in the array.
+
+        :return: a coalesce automapper type
+        """
+
+        # cast it to the inner type so type checking is happy
+        return cast(_TAutoMapperDataType, AutoMapperArrayDistinctDataType(*args))
 
     @staticmethod
     def if_regex(
