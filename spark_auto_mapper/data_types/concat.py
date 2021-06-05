@@ -12,7 +12,7 @@ from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperWrapperTy
 
 class AutoMapperConcatDataType(AutoMapperTextLikeBase):
     """
-    Concatenates multiple strings together
+    Concatenates multiple strings or arrays together
     """
 
     def __init__(
