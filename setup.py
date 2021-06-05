@@ -1,5 +1,5 @@
 # noinspection Mypy
-from typing import Any, List
+from typing import Any
 
 from setuptools import setup, find_packages
 from os import path, getcwd
@@ -41,23 +41,6 @@ def fix_setuptools() -> None:
 # Fix bugs in setuptools.
 fix_setuptools()
 
-
-def parse_requirements(file: str) -> List[str]:
-    with open(file, "r") as fs:
-        return [
-            r
-            for r in fs.read().splitlines()
-            if (
-                len(r.strip()) > 0
-                and not r.strip().startswith("#")
-                and not r.strip().startswith("--")
-            )
-        ]
-
-
-requirements: List[str] = parse_requirements("requirements.txt")
-test_requirements: List[str] = parse_requirements("requirements-test.txt")
-
 # classifiers list is here: https://pypi.org/classifiers/
 
 # create the package setup
@@ -71,8 +54,6 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/imranq2/SparkAutoMapper",
     packages=find_packages(),
-    install_requires=requirements,
-    tests_require=test_requirements,
     classifiers=[
         "Development Status :: 4 - Beta",
         "Programming Language :: Python :: 3",

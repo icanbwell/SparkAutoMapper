@@ -33,9 +33,9 @@ class AutoMapperIfColumnExistsType(
         self.column: AutoMapperColumnOrColumnLikeType = (
             AutoMapperValueParser.parse_value(column)
         )
-        self.if_exists: Optional[AutoMapperDataTypeBase] = None
+        self.if_exists_column: Optional[AutoMapperDataTypeBase] = None
         if if_exists:
-            self.if_exists = (
+            self.if_exists_column = (
                 if_exists
                 if isinstance(if_exists, AutoMapperDataTypeBase)
                 else AutoMapperValueParser.parse_value(if_exists)
@@ -66,8 +66,8 @@ class AutoMapperIfColumnExistsType(
             if source_df:
                 source_df.selectExpr(col_name.replace("b.", ""))
                 # col exists so we use the if_exists
-                if self.if_exists:
-                    column_spec = self.if_exists.get_column_spec(
+                if self.if_exists_column:
+                    column_spec = self.if_exists_column.get_column_spec(
                         source_df=source_df, current_column=current_column
                     )
         except AnalysisException:

@@ -1,4 +1,4 @@
-from typing import Callable, List, Optional, TypeVar, Union, cast
+from typing import Callable, List, Optional, TypeVar, Union, cast, Type
 
 from pyspark.sql import Column, DataFrame
 
@@ -22,6 +22,11 @@ if TYPE_CHECKING:
 
 _TAutoMapperDataType = TypeVar(
     "_TAutoMapperDataType", bound=Union["AutoMapperDataTypeBase"]
+)
+
+# used for casting
+_TAutoMapperDataType2 = TypeVar(
+    "_TAutoMapperDataType2", bound=Union["AutoMapperDataTypeBase"]
 )
 
 
@@ -436,3 +441,37 @@ class AutoMapperDataTypeBase:
                 column=self, pattern=pattern, replacement=replacement
             ),
         )
+
+    # noinspection PyMethodMayBeStatic
+    def if_exists(self: _TAutoMapperDataType) -> _TAutoMapperDataType:
+        """
+        returns column if it exists else returns null
+
+
+        :return: an automapper type
+        """
+        from spark_auto_mapper.data_types.if_column_exists import (
+            AutoMapperIfColumnExistsType,
+        )
+
+        # cast it to the inner type so type checking is happy
+        return cast(
+            _TAutoMapperDataType,
+            AutoMapperIfColumnExistsType(
+                column=self, if_exists=self, if_not_exists=None
+            ),
+        )
+
+    # noinspection PyMethodMayBeStatic,PyUnusedLocal
+    def cast(
+        self: _TAutoMapperDataType, type_: Type[_TAutoMapperDataType2]
+    ) -> _TAutoMapperDataType2:
+        """
+        returns column if it exists else returns null
+
+
+        :return: an automapper type
+        """
+
+        # cast it to the inner type so type checking is happy
+        return cast(_TAutoMapperDataType2, self)
