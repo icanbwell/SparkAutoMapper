@@ -1,20 +1,27 @@
 from pathlib import Path
-from typing import List, Optional, Union, Dict
+from typing import List, Optional, Union, Dict, Any
 
+# noinspection PyPackageRequirements
 from pyspark.sql import DataFrame, Column
+
+# noinspection PyPackageRequirements
+from pyspark.sql.functions import col
+
+# noinspection PyPackageRequirements
 from pyspark.sql.functions import monotonically_increasing_id
 
-# noinspection PyUnresolvedReferences
-from pyspark.sql.functions import col
+# noinspection PyPackageRequirements
 from pyspark.sql.utils import AnalysisException
-from spark_auto_mapper.data_types.column import AutoMapperDataTypeColumn
 
+from spark_auto_mapper.automappers.automapper_analysis_exception import (
+    AutoMapperAnalysisException,
+)
 from spark_auto_mapper.automappers.automapper_base import AutoMapperBase
 from spark_auto_mapper.automappers.check_schema_result import CheckSchemaResult
-from spark_auto_mapper.automappers.automapper_exception import AutoMapperException
 from spark_auto_mapper.automappers.column_spec_wrapper import ColumnSpecWrapper
-from spark_auto_mapper.automappers.container import AutoMapperContainer
 from spark_auto_mapper.automappers.complex import AutoMapperWithComplex
+from spark_auto_mapper.automappers.container import AutoMapperContainer
+from spark_auto_mapper.data_types.column import AutoMapperDataTypeColumn
 from spark_auto_mapper.data_types.complex.complex_base import (
     AutoMapperDataTypeComplexBase,
 )
@@ -66,7 +73,8 @@ class AutoMapper(AutoMapperContainer):
         :param include_extension: By default we don't include extension elements since they take up a lot of schema.
                 If you're using extensions then set this
         :param include_null_properties: If you want to include null properties
-        :param use_single_select: This is a faster way to run the AutoMapper since it will select all the columns at once.
+        :param use_single_select: This is a faster way to run the AutoMapper since it will select
+                all the columns at once.
                 However this makes it harder to debug since you don't know what column failed
         :param verify_row_count: verifies that the count of rows remains the same before and after the transformation
         :param skip_schema_validation: skip schema checks on these columns
@@ -189,6 +197,7 @@ class AutoMapper(AutoMapperContainer):
                     source_df.alias("b").select(column_spec).limit(1).count()
                     print(f"========= Done Processing {column_name} =========== ")
                 except AnalysisException as e2:
+                    print(f"=========  Processing {column_name} FAILED =========== ")
                     print(f"========= checking Schema {column_name} =========== ")
                     check_schema_result = mapper.check_schema(
                         parent_column=None, source_df=source_df
@@ -201,13 +210,33 @@ class AutoMapper(AutoMapperContainer):
                             "You can pass in include_nulls to AutoMapperDataTypeComplexBase to force it to create "
                             "null values for each element in the structure. "
                         )
-                    msg += self.get_message_for_exception(
-                        column_name + ": " + str(check_schema_result), df, e2, source_df
+                    # get column value in first row
+                    column_values: Optional[List[Any]] = (
+                        [
+                            row.asDict(recursive=True)[column_name]
+                            for row in source_df.select(column_name).limit(5).collect()
+                        ]
+                        if bool(source_df.head(1))  # df is not empty
+                        else None
                     )
-                    raise AutoMapperException(msg) from e2
+                    msg += self.get_message_for_exception(
+                        column_name=column_name + ": " + str(check_schema_result),
+                        df=df,
+                        e=e2,
+                        source_df=source_df,
+                        column_values=column_values,
+                    )
+                    raise AutoMapperAnalysisException(
+                        msg=msg,
+                        column_name=column_name,
+                        check_schema_result=check_schema_result,
+                        column_values=column_values,
+                    ) from e2
         except Exception as e:
             print("====  OOPS ===========")
-            msg = self.get_message_for_exception("", df, e, source_df)
+            msg = self.get_message_for_exception(
+                column_name="", df=df, e=e, source_df=source_df, column_values=None
+            )
             raise Exception(msg) from e
 
         print(f"========= Finished AutoMapper {self.view} =========== ")
@@ -258,11 +287,23 @@ class AutoMapper(AutoMapperContainer):
                         "null values for each element in the structure. "
                     )
                 if source_df is not None:
-                    msg += self.get_message_for_exception(column_name, df, e, source_df)
+                    msg += self.get_message_for_exception(
+                        column_name=column_name,
+                        df=df,
+                        e=e,
+                        source_df=source_df,
+                        column_values=None,
+                    )
                 raise Exception(msg) from e
             except Exception as e:
                 msg = (
-                    self.get_message_for_exception(column_name, df, e, source_df)
+                    self.get_message_for_exception(
+                        column_name=column_name,
+                        df=df,
+                        e=e,
+                        source_df=source_df,
+                        column_values=None,
+                    )
                     if source_df is not None
                     else ""
                 )
@@ -280,12 +321,18 @@ class AutoMapper(AutoMapperContainer):
 
     @staticmethod
     def get_message_for_exception(
-        column_name: str, df: DataFrame, e: Exception, source_df: DataFrame
+        *,
+        column_name: str,
+        df: DataFrame,
+        e: Exception,
+        source_df: DataFrame,
+        column_values: Optional[List[Any]],
     ) -> str:
         # write out the full list of columns
         columns_in_source: List[str] = list(source_df.columns)
         columns_in_destination: List[str] = list(df.columns)
         msg: str = f", Processing column:[{column_name}]"
+        msg += f"column values: [{','.join(str(column_values))}]"
         msg += str(e)
         msg += f", Source columns:[{','.join(columns_in_source)}]"
         msg += f", Destination columns:[{','.join(columns_in_destination)}]"
