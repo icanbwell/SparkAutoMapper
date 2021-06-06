@@ -33,7 +33,7 @@ _TAutoMapperDataType2 = TypeVar(
 class AutoMapperDataTypeBase:
     # noinspection PyMethodMayBeStatic
     def get_column_spec(
-            self, source_df: Optional[DataFrame], current_column: Optional[Column]
+        self, source_df: Optional[DataFrame], current_column: Optional[Column]
     ) -> Column:
         """
         Gets the column spec for this automapper data type
@@ -45,10 +45,10 @@ class AutoMapperDataTypeBase:
 
     # noinspection PyMethodMayBeStatic
     def get_value(
-            self,
-            value: "AutoMapperDataTypeBase",
-            source_df: Optional[DataFrame],
-            current_column: Optional[Column],
+        self,
+        value: "AutoMapperDataTypeBase",
+        source_df: Optional[DataFrame],
+        current_column: Optional[Column],
     ) -> Column:
         """
         Gets the value for this automapper
@@ -66,7 +66,7 @@ class AutoMapperDataTypeBase:
 
     # noinspection PyMethodMayBeStatic
     def transform(
-            self: "AutoMapperDataTypeBase", value: _TAutoMapperDataType
+        self: "AutoMapperDataTypeBase", value: _TAutoMapperDataType
     ) -> List[_TAutoMapperDataType]:
         """
         transforms a column into another type or struct
@@ -102,7 +102,7 @@ class AutoMapperDataTypeBase:
 
     # noinspection PyMethodMayBeStatic
     def filter(
-            self: _TAutoMapperDataType, func: Callable[[Column], Column]
+        self: _TAutoMapperDataType, func: Callable[[Column], Column]
     ) -> _TAutoMapperDataType:
         """
         filters an array column
@@ -120,7 +120,7 @@ class AutoMapperDataTypeBase:
 
     # noinspection PyMethodMayBeStatic
     def split_by_delimiter(
-            self: _TAutoMapperDataType, delimiter: str
+        self: _TAutoMapperDataType, delimiter: str
     ) -> _TAutoMapperDataType:
         """
         splits a text column by the delimiter to create an array
@@ -234,7 +234,7 @@ class AutoMapperDataTypeBase:
 
     # noinspection PyMethodMayBeStatic
     def concat(
-            self: _TAutoMapperDataType, list2: _TAutoMapperDataType
+        self: _TAutoMapperDataType, list2: _TAutoMapperDataType
     ) -> _TAutoMapperDataType:
         """
         concatenates two arrays or strings
@@ -260,7 +260,7 @@ class AutoMapperDataTypeBase:
         return AutoMapperFloatDataType(value=self)
 
     def to_date(
-            self: _TAutoMapperDataType, formats: Optional[List[str]] = None
+        self: _TAutoMapperDataType, formats: Optional[List[str]] = None
     ) -> "AutoMapperDateDataType":
         """
         Converts a value to date only
@@ -277,7 +277,7 @@ class AutoMapperDataTypeBase:
         return AutoMapperDateDataType(self, formats)
 
     def to_datetime(
-            self: _TAutoMapperDataType, formats: Optional[List[str]] = None
+        self: _TAutoMapperDataType, formats: Optional[List[str]] = None
     ) -> "AutoMapperDateTimeDataType":
         """
         Converts the value to a timestamp type in Spark
@@ -325,7 +325,7 @@ class AutoMapperDataTypeBase:
 
     # noinspection PyMethodMayBeStatic
     def join_using_delimiter(
-            self: _TAutoMapperDataType, delimiter: str
+        self: _TAutoMapperDataType, delimiter: str
     ) -> _TAutoMapperDataType:
         """
         Joins an array and forms a string using the delimiter
@@ -345,12 +345,12 @@ class AutoMapperDataTypeBase:
     # override this if your inherited class has a defined schema
     # noinspection PyMethodMayBeStatic
     def get_schema(
-            self, include_extension: bool
+        self, include_extension: bool
     ) -> Optional[Union[StructType, DataType]]:
         return None
 
     def to_date_format(
-            self: _TAutoMapperDataType, format_: str
+        self: _TAutoMapperDataType, format_: str
     ) -> "AutoMapperFormatDateTimeDataType":
         """
         Converts a date or time into string
@@ -383,7 +383,7 @@ class AutoMapperDataTypeBase:
         return cast(_TAutoMapperDataType, AutoMapperNullIfEmptyDataType(value=self))
 
     def regex_replace(
-            self: _TAutoMapperDataType, pattern: str, replacement: str
+        self: _TAutoMapperDataType, pattern: str, replacement: str
     ) -> _TAutoMapperDataType:
         """
         Replace all substrings of the specified string value that match regexp with replacement.
@@ -407,9 +407,9 @@ class AutoMapperDataTypeBase:
         )
 
     def sanitize(
-            self: _TAutoMapperDataType,
-            pattern: str = r"[^\w\r\n\t _.,!\"'/$-]",
-            replacement: str = " ",
+        self: _TAutoMapperDataType,
+        pattern: str = r"[^\w\r\n\t _.,!\"'/$-]",
+        replacement: str = " ",
     ) -> _TAutoMapperDataType:
         """
         Replaces all "non-normal" characters with specified replacement
@@ -443,10 +443,11 @@ class AutoMapperDataTypeBase:
         )
 
     # noinspection PyMethodMayBeStatic
-    def if_exists(self: _TAutoMapperDataType,
-                  if_exists: Optional[_TAutoMapperDataType] = None,
-                  if_not_exists: Optional[_TAutoMapperDataType] = None
-                  ) -> _TAutoMapperDataType:
+    def if_exists(
+        self: _TAutoMapperDataType,
+        if_exists: Optional[_TAutoMapperDataType] = None,
+        if_not_exists: Optional[_TAutoMapperDataType] = None,
+    ) -> _TAutoMapperDataType:
         """
         returns column if it exists else returns null
 
@@ -456,6 +457,7 @@ class AutoMapperDataTypeBase:
         from spark_auto_mapper.data_types.if_column_exists import (
             AutoMapperIfColumnExistsType,
         )
+
         if not if_exists:
             if_exists = self
 
@@ -469,10 +471,10 @@ class AutoMapperDataTypeBase:
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
     def cast(
-            self: _TAutoMapperDataType, type_: _TAutoMapperDataType2
+        self: _TAutoMapperDataType, type_: Type[_TAutoMapperDataType2]
     ) -> _TAutoMapperDataType2:
         """
-        returns column if it exists else returns null
+        casts columns to type
 
 
         :return: an automapper type

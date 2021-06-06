@@ -2,8 +2,6 @@ from typing import Dict
 
 from pyspark.sql import SparkSession, Column, DataFrame
 from spark_auto_mapper.automappers.automapper import AutoMapper
-from spark_auto_mapper.data_types.list import AutoMapperList
-from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 from tests.conftest import clean_spark_session
 
 
@@ -21,9 +19,12 @@ def test_auto_mapper_full_no_keys(spark_session: SparkSession) -> None:
     source_df: DataFrame = spark_session.table("patients")
 
     # Act
-    mapper = AutoMapper(view="members", source_view="patients", copy_all_unmapped_properties=True,
-                        copy_all_unmapped_properties_exclude=["first_name"]
-                        ).columns(
+    mapper = AutoMapper(
+        view="members",
+        source_view="patients",
+        copy_all_unmapped_properties=True,
+        copy_all_unmapped_properties_exclude=["first_name"],
+    ).columns(
         last_name="last_name",
     )
 
@@ -40,4 +41,4 @@ def test_auto_mapper_full_no_keys(spark_session: SparkSession) -> None:
 
     assert len(result_df.columns) == 2, list(result_df.columns)
 
-    assert result_df.columns == ["last_name",  "middle_name"]
+    assert result_df.columns == ["last_name", "middle_name"]

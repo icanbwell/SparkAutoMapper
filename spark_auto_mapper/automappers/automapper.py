@@ -48,7 +48,7 @@ class AutoMapper(AutoMapperContainer):
         enable_logging: bool = True,
         check_schema_for_all_columns: bool = False,
         copy_all_unmapped_properties: bool = False,
-        copy_all_unmapped_properties_exclude: Optional[List[str]] = None
+        copy_all_unmapped_properties_exclude: Optional[List[str]] = None,
     ):
         """
         Creates an AutoMapper
@@ -99,7 +99,9 @@ class AutoMapper(AutoMapperContainer):
         self.enable_logging: bool = enable_logging
         self.check_schema_for_all_columns: bool = check_schema_for_all_columns
         self.copy_all_unmapped_properties: bool = copy_all_unmapped_properties
-        self.copy_all_unmapped_properties_exclude: Optional[List[str]] = copy_all_unmapped_properties_exclude
+        self.copy_all_unmapped_properties_exclude: Optional[
+            List[str]
+        ] = copy_all_unmapped_properties_exclude
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
     def transform_with_data_frame_single_select(
@@ -117,12 +119,18 @@ class AutoMapper(AutoMapperContainer):
                 # find all source properties not mapped
                 source_properties: List[str] = source_df.columns
                 mapped_properties: List[str] = list(self.mappers.keys())
-                unmapped_properties: List[str] = [p for p in source_properties if p not in mapped_properties]
-                copy_all_unmapped_properties_exclude: List[str] = self.copy_all_unmapped_properties_exclude or []
+                unmapped_properties: List[str] = [
+                    p for p in source_properties if p not in mapped_properties
+                ]
+                copy_all_unmapped_properties_exclude: List[str] = (
+                    self.copy_all_unmapped_properties_exclude or []
+                )
                 # for each unmapped property add a simple A.column()
                 column_specs.extend(
                     [
-                        AutoMapperDataTypeColumn(p).get_column_spec(source_df=source_df, current_column=None)
+                        AutoMapperDataTypeColumn(p).get_column_spec(
+                            source_df=source_df, current_column=None
+                        )
                         for p in unmapped_properties
                         if p not in copy_all_unmapped_properties_exclude
                     ]
