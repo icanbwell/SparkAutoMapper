@@ -482,3 +482,8 @@ class AutoMapperDataTypeBase:
 
         # cast it to the inner type so type checking is happy
         return cast(_TAutoMapperDataType2, self)
+
+    def __add__(
+        self: _TAutoMapperDataType, other: _TAutoMapperDataType
+    ) -> _TAutoMapperDataType:
+        return self.concat(other)
