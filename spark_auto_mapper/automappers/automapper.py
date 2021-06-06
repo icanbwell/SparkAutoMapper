@@ -7,6 +7,7 @@ from pyspark.sql.functions import monotonically_increasing_id
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import col
 from pyspark.sql.utils import AnalysisException
+from spark_auto_mapper.data_types.column import AutoMapperDataTypeColumn
 
 from spark_auto_mapper.automappers.automapper_base import AutoMapperBase
 from spark_auto_mapper.automappers.check_schema_result import CheckSchemaResult
@@ -46,6 +47,8 @@ class AutoMapper(AutoMapperContainer):
         filter_by: Optional[str] = None,
         enable_logging: bool = True,
         check_schema_for_all_columns: bool = False,
+        copy_all_unmapped_properties: bool = False,
+        copy_all_unmapped_properties_exclude: Optional[List[str]] = None,
     ):
         """
         Creates an AutoMapper
@@ -70,6 +73,8 @@ class AutoMapper(AutoMapperContainer):
         :param skip_if_columns_null_or_empty: skip creating the record if any of these columns are null or empty
         :param keep_null_rows: whether to keep the null rows instead of removing them
         :param filter_by: (Optional) SQL expression that is used to filter
+        :param copy_all_unmapped_properties: copy any property that is not explicitly mapped
+        :param copy_all_unmapped_properties_exclude: exclude these columns when copy_all_unmapped_properties is set
         """
         super().__init__()
         self.view: Optional[str] = view
@@ -93,6 +98,10 @@ class AutoMapper(AutoMapperContainer):
         self.filter_by: Optional[str] = filter_by
         self.enable_logging: bool = enable_logging
         self.check_schema_for_all_columns: bool = check_schema_for_all_columns
+        self.copy_all_unmapped_properties: bool = copy_all_unmapped_properties
+        self.copy_all_unmapped_properties_exclude: Optional[
+            List[str]
+        ] = copy_all_unmapped_properties_exclude
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
     def transform_with_data_frame_single_select(
@@ -106,6 +115,27 @@ class AutoMapper(AutoMapperContainer):
 
         try:
             # print("========== NEW 2 ==============")
+            if self.copy_all_unmapped_properties:
+                # find all source properties not mapped
+                source_properties: List[str] = source_df.columns
+                mapped_properties: List[str] = list(self.mappers.keys())
+                unmapped_properties: List[str] = [
+                    p for p in source_properties if p not in mapped_properties
+                ]
+                copy_all_unmapped_properties_exclude: List[str] = (
+                    self.copy_all_unmapped_properties_exclude or []
+                )
+                # for each unmapped property add a simple A.column()
+                column_specs.extend(
+                    [
+                        AutoMapperDataTypeColumn(p).get_column_spec(
+                            source_df=source_df, current_column=None
+                        )
+                        for p in unmapped_properties
+                        if p not in copy_all_unmapped_properties_exclude
+                    ]
+                )
+
             if not self.drop_key_columns:
                 column_specs = [col(f"b.{c}") for c in keys] + column_specs
 

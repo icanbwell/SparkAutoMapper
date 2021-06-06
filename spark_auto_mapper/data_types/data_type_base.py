@@ -443,7 +443,11 @@ class AutoMapperDataTypeBase:
         )
 
     # noinspection PyMethodMayBeStatic
-    def if_exists(self: _TAutoMapperDataType) -> _TAutoMapperDataType:
+    def if_exists(
+        self: _TAutoMapperDataType,
+        if_exists: Optional[_TAutoMapperDataType] = None,
+        if_not_exists: Optional[_TAutoMapperDataType] = None,
+    ) -> _TAutoMapperDataType:
         """
         returns column if it exists else returns null
 
@@ -454,11 +458,14 @@ class AutoMapperDataTypeBase:
             AutoMapperIfColumnExistsType,
         )
 
+        if not if_exists:
+            if_exists = self
+
         # cast it to the inner type so type checking is happy
         return cast(
             _TAutoMapperDataType,
             AutoMapperIfColumnExistsType(
-                column=self, if_exists=self, if_not_exists=None
+                column=self, if_exists=self, if_not_exists=if_not_exists
             ),
         )
 
@@ -467,7 +474,7 @@ class AutoMapperDataTypeBase:
         self: _TAutoMapperDataType, type_: Type[_TAutoMapperDataType2]
     ) -> _TAutoMapperDataType2:
         """
-        returns column if it exists else returns null
+        casts columns to type
 
 
         :return: an automapper type
@@ -475,3 +482,8 @@ class AutoMapperDataTypeBase:
 
         # cast it to the inner type so type checking is happy
         return cast(_TAutoMapperDataType2, self)
+
+    def __add__(
+        self: _TAutoMapperDataType, other: _TAutoMapperDataType
+    ) -> _TAutoMapperDataType:
+        return self.concat(other)
