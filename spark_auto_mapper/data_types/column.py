@@ -33,7 +33,7 @@ class AutoMapperDataTypeColumn(AutoMapperArrayLikeBase):
                         my_column = (
                             my_column[element_]
                             if my_column is not None
-                            else column_default
+                            else col(f"b.{element_}")
                         )
                 return my_column if my_column is not None else column_default
             else:
