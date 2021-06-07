@@ -207,6 +207,10 @@ class AutoMapper(AutoMapperContainer):
                     print(f"========= Done Processing {column_name} =========== ")
                 except AnalysisException as e2:
                     print(f"=========  Processing {column_name} FAILED =========== ")
+                    column_spec = mapper.get_column_specs(source_df=source_df)[
+                        column_name
+                    ]
+                    print(ColumnSpecWrapper(column_spec).to_debug_string())
                     print(f"========= checking Schema {column_name} =========== ")
                     check_schema_result = mapper.check_schema(
                         parent_column=None, source_df=source_df
