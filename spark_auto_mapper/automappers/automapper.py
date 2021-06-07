@@ -11,6 +11,7 @@ from pyspark.sql.functions import col
 from pyspark.sql.functions import monotonically_increasing_id
 
 # noinspection PyPackageRequirements
+from pyspark.sql.types import StructField
 from pyspark.sql.utils import AnalysisException
 
 from spark_auto_mapper.automappers.automapper_analysis_exception import (
@@ -133,14 +134,22 @@ class AutoMapper(AutoMapperContainer):
                 copy_all_unmapped_properties_exclude: List[str] = (
                     self.copy_all_unmapped_properties_exclude or []
                 )
+                column_schema: Dict[str, StructField] = (
+                    {f.name: f for f in source_df.schema} if self.use_schema else {}
+                )
+
                 # for each unmapped property add a simple A.column()
                 column_specs.extend(
                     [
-                        AutoMapperDataTypeColumn(p).get_column_spec(
+                        AutoMapperDataTypeColumn(column_name)
+                        .get_column_spec(source_df=source_df, current_column=None)
+                        .cast(column_schema[column_name].dataType)
+                        if column_name in column_schema
+                        else AutoMapperDataTypeColumn(column_name).get_column_spec(
                             source_df=source_df, current_column=None
                         )
-                        for p in unmapped_properties
-                        if p not in copy_all_unmapped_properties_exclude
+                        for column_name in unmapped_properties
+                        if column_name not in copy_all_unmapped_properties_exclude
                     ]
                 )
 
@@ -198,6 +207,10 @@ class AutoMapper(AutoMapperContainer):
                     print(f"========= Done Processing {column_name} =========== ")
                 except AnalysisException as e2:
                     print(f"=========  Processing {column_name} FAILED =========== ")
+                    column_spec = mapper.get_column_specs(source_df=source_df)[
+                        column_name
+                    ]
+                    print(ColumnSpecWrapper(column_spec).to_debug_string())
                     print(f"========= checking Schema {column_name} =========== ")
                     check_schema_result = mapper.check_schema(
                         parent_column=None, source_df=source_df
