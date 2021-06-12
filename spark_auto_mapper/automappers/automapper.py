@@ -12,6 +12,8 @@ from pyspark.sql.functions import monotonically_increasing_id
 
 # noinspection PyPackageRequirements
 from pyspark.sql.types import StructField
+
+# noinspection PyPackageRequirements
 from pyspark.sql.utils import AnalysisException
 
 from spark_auto_mapper.automappers.automapper_analysis_exception import (

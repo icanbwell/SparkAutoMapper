@@ -465,7 +465,7 @@ class AutoMapperDataTypeBase:
         return cast(
             _TAutoMapperDataType,
             AutoMapperIfColumnExistsType(
-                column=self, if_exists=self, if_not_exists=if_not_exists
+                column=self, if_exists=if_exists, if_not_exists=if_not_exists
             ),
         )
 
