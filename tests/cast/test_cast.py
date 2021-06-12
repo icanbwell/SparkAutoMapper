@@ -3,8 +3,10 @@ from typing import Dict, Optional, Union
 # noinspection PyPackageRequirements
 from pyspark.sql import SparkSession, Column, DataFrame
 
-# noinspection PyUnresolvedReferences
+# noinspection PyPackageRequirements
 from pyspark.sql.functions import col, array
+
+# noinspection PyPackageRequirements
 from pyspark.sql.types import (
     StructType,
     StructField,
