@@ -26,10 +26,10 @@ repos:
         types: [python]
         require_serial: true
         entry: black
-      - id: mypy
-        name: mypy
+      - id: pyre-check
+        name: pyre-check
         language: system
         types: [ python ]
-        entry: mypy
-        require_serial: true
-        args: [ --strict, --python-version=3.7, --show-error-codes, --allow-untyped-decorators ]
+        entry: pyre --source-directory . check
+        pass_filenames: false
+        additional_dependencies: []
