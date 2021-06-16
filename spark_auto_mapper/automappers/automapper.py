@@ -225,15 +225,22 @@ class AutoMapper(AutoMapperContainer):
                             "You can pass in include_nulls to AutoMapperDataTypeComplexBase to force it to create "
                             "null values for each element in the structure. "
                         )
-                    # get column value in first row
-                    column_values: Optional[List[Any]] = (
-                        [
-                            row.asDict(recursive=True)[column_name]
-                            for row in source_df.select(column_name).limit(5).collect()
-                        ]
-                        if bool(source_df.head(1))  # df is not empty
-                        else None
-                    )
+                    try:
+                        # get column value in first row
+                        column_values: Optional[List[Any]] = (
+                            [
+                                row.asDict(recursive=True)[column_name]
+                                for row in source_df.select(column_name)
+                                .limit(5)
+                                .collect()
+                            ]
+                            if bool(source_df.head(1))  # df is not empty
+                            else None
+                        )
+                    except Exception as e3:
+                        print(e3)
+                        column_values = None
+
                     msg += self.get_message_for_exception(
                         column_name=column_name + ": " + str(check_schema_result),
                         df=df,
