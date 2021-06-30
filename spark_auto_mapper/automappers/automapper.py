@@ -1,3 +1,4 @@
+from logging import Logger, getLogger
 from pathlib import Path
 from typing import List, Optional, Union, Dict, Any
 
@@ -55,7 +56,7 @@ class AutoMapper(AutoMapperContainer):
         skip_if_columns_null_or_empty: Optional[List[str]] = None,
         keep_null_rows: bool = False,
         filter_by: Optional[str] = None,
-        enable_logging: bool = True,
+        logger: Optional[Logger] = None,
         check_schema_for_all_columns: bool = False,
         copy_all_unmapped_properties: bool = False,
         copy_all_unmapped_properties_exclude: Optional[List[str]] = None,
@@ -107,7 +108,7 @@ class AutoMapper(AutoMapperContainer):
         ] = skip_if_columns_null_or_empty
         self.keep_null_rows: bool = keep_null_rows
         self.filter_by: Optional[str] = filter_by
-        self.enable_logging: bool = enable_logging
+        self.logger: Logger = logger or getLogger(__name__)
         self.check_schema_for_all_columns: bool = check_schema_for_all_columns
         self.copy_all_unmapped_properties: bool = copy_all_unmapped_properties
         self.copy_all_unmapped_properties_exclude: Optional[
@@ -158,17 +159,18 @@ class AutoMapper(AutoMapperContainer):
             if not self.drop_key_columns:
                 column_specs = [col(f"b.{c}") for c in keys] + column_specs
 
-            if self.enable_logging:
-                print(f"-------- automapper ({self.view}) column specs ------")
-                print(self.to_debug_string(source_df=source_df))
-                print(f"-------- end automapper ({self.view}) column specs ------")
-                print(
-                    f"-------- automapper ({self.source_view}) source_df schema ------"
-                )
-                source_df.printSchema()
-                print(
-                    f"-------- end automapper ({self.source_view}) source_df schema ------"
-                )
+            self.logger.debug(f"-------- automapper ({self.view}) column specs ------")
+            self.logger.debug(self.to_debug_string(source_df=source_df))
+            self.logger.debug(
+                f"-------- end automapper ({self.view}) column specs ------"
+            )
+            self.logger.debug(
+                f"-------- automapper ({self.source_view}) source_df schema ------"
+            )
+            self.logger.debug(source_df._jdf.schema().treeString())  # type: ignore
+            self.logger.debug(
+                f"-------- end automapper ({self.source_view}) source_df schema ------"
+            )
 
             if self.check_schema_for_all_columns:
                 for column_name, mapper in self.mappers.items():
@@ -179,12 +181,12 @@ class AutoMapper(AutoMapperContainer):
                         check_schema_result
                         and len(check_schema_result.result.errors) > 0
                     ):
-                        print(
-                            f"==== ERROR: Schema Mismatch [{column_name}] ==="
+                        self.logger.error(
+                            f"==== Schema Mismatch [{column_name}] ==="
                             f"{str(check_schema_result)}"
                         )
                     else:
-                        print(f"==== Schema Matches: [{column_name}] ====")
+                        self.logger.debug(f"==== Schema Matches: [{column_name}] ====")
 
             # run all the selects
             df = source_df.alias("b").select(*column_specs)
@@ -201,19 +203,27 @@ class AutoMapper(AutoMapperContainer):
             # iterate through each column to find the problem child
             for column_name, mapper in self.mappers.items():
                 try:
-                    print(f"========= Processing {column_name} =========== ")
+                    self.logger.debug(
+                        f"========= Processing {column_name} =========== "
+                    )
                     column_spec = mapper.get_column_specs(source_df=source_df)[
                         column_name
                     ]
                     source_df.alias("b").select(column_spec).limit(1).count()
-                    print(f"========= Done Processing {column_name} =========== ")
+                    self.logger.debug(
+                        f"========= Done Processing {column_name} =========== "
+                    )
                 except AnalysisException as e2:
-                    print(f"=========  Processing {column_name} FAILED =========== ")
+                    self.logger.error(
+                        f"=========  Processing {column_name} FAILED =========== "
+                    )
                     column_spec = mapper.get_column_specs(source_df=source_df)[
                         column_name
                     ]
-                    print(ColumnSpecWrapper(column_spec).to_debug_string())
-                    print(f"========= checking Schema {column_name} =========== ")
+                    self.logger.debug(ColumnSpecWrapper(column_spec).to_debug_string())
+                    self.logger.error(
+                        f"========= checking schema for failed column {column_name} =========== "
+                    )
                     check_schema_result = mapper.check_schema(
                         parent_column=None, source_df=source_df
                     )
@@ -257,13 +267,13 @@ class AutoMapper(AutoMapperContainer):
                         column_values=column_values,
                     ) from e2
         except Exception as e:
-            print("====  OOPS ===========")
+            self.logger.error("====  OOPS ===========")
             msg = self.get_message_for_exception(
                 column_name="", df=df, e=e, source_df=source_df, column_values=None
             )
             raise Exception(msg) from e
 
-        print(f"========= Finished AutoMapper {self.view} =========== ")
+        self.logger.debug(f"========= Finished AutoMapper {self.view} =========== ")
         return df
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
