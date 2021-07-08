@@ -109,6 +109,7 @@ class AutoMapper(AutoMapperContainer):
         self.keep_null_rows: bool = keep_null_rows
         self.filter_by: Optional[str] = filter_by
         self.logger: Logger = logger or getLogger(__name__)
+        self.error_logger: Logger = getLogger(__name__)
         self.check_schema_for_all_columns: bool = check_schema_for_all_columns
         self.copy_all_unmapped_properties: bool = copy_all_unmapped_properties
         self.copy_all_unmapped_properties_exclude: Optional[
@@ -181,12 +182,14 @@ class AutoMapper(AutoMapperContainer):
                         check_schema_result
                         and len(check_schema_result.result.errors) > 0
                     ):
-                        self.logger.error(
+                        self.error_logger.error(
                             f"==== Schema Mismatch [{column_name}] ==="
                             f"{str(check_schema_result)}"
                         )
                     else:
-                        self.logger.debug(f"==== Schema Matches: [{column_name}] ====")
+                        self.error_logger.debug(
+                            f"==== Schema Matches: [{column_name}] ===="
+                        )
 
             # run all the selects
             df = source_df.alias("b").select(*column_specs)
@@ -200,6 +203,21 @@ class AutoMapper(AutoMapperContainer):
                 df.write.parquet(str(checkpoint_path))
                 df = df.sql_ctx.read.parquet(str(checkpoint_path))
         except AnalysisException:
+            self.error_logger.info(
+                f"-------- automapper ({self.view}) column specs ------"
+            )
+            self.error_logger.info(self.to_debug_string(source_df=source_df))
+            self.error_logger.info(
+                f"-------- end automapper ({self.view}) column specs ------"
+            )
+            self.error_logger.info(
+                f"-------- automapper ({self.source_view}) source_df schema ------"
+            )
+            # noinspection PyProtectedMember
+            self.error_logger.info(source_df._jdf.schema().treeString())  # type: ignore
+            self.error_logger.info(
+                f"-------- end automapper ({self.source_view}) source_df schema ------"
+            )
             # iterate through each column to find the problem child
             for column_name, mapper in self.mappers.items():
                 try:
@@ -214,14 +232,16 @@ class AutoMapper(AutoMapperContainer):
                         f"========= Done Processing {column_name} =========== "
                     )
                 except AnalysisException as e2:
-                    self.logger.error(
+                    self.error_logger.error(
                         f"=========  Processing {column_name} FAILED =========== "
                     )
                     column_spec = mapper.get_column_specs(source_df=source_df)[
                         column_name
                     ]
-                    self.logger.debug(ColumnSpecWrapper(column_spec).to_debug_string())
-                    self.logger.error(
+                    self.error_logger.info(
+                        ColumnSpecWrapper(column_spec).to_debug_string()
+                    )
+                    self.error_logger.error(
                         f"========= checking schema for failed column {column_name} =========== "
                     )
                     check_schema_result = mapper.check_schema(
@@ -267,7 +287,7 @@ class AutoMapper(AutoMapperContainer):
                         column_values=column_values,
                     ) from e2
         except Exception as e:
-            self.logger.error("====  OOPS ===========")
+            self.error_logger.error("====  OOPS ===========")
             msg = self.get_message_for_exception(
                 column_name="", df=df, e=e, source_df=source_df, column_values=None
             )
