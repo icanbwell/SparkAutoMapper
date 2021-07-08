@@ -57,6 +57,7 @@ class AutoMapper(AutoMapperContainer):
         keep_null_rows: bool = False,
         filter_by: Optional[str] = None,
         logger: Optional[Logger] = None,
+        error_logger: Optional[Logger] = None,
         check_schema_for_all_columns: bool = False,
         copy_all_unmapped_properties: bool = False,
         copy_all_unmapped_properties_exclude: Optional[List[str]] = None,
@@ -87,6 +88,8 @@ class AutoMapper(AutoMapperContainer):
         :param filter_by: (Optional) SQL expression that is used to filter
         :param copy_all_unmapped_properties: copy any property that is not explicitly mapped
         :param copy_all_unmapped_properties_exclude: exclude these columns when copy_all_unmapped_properties is set
+        :param logger: logger used to log informational messages
+        :param error_logger: logger to override the error logger
         """
         super().__init__()
         self.view: Optional[str] = view
@@ -109,7 +112,11 @@ class AutoMapper(AutoMapperContainer):
         self.keep_null_rows: bool = keep_null_rows
         self.filter_by: Optional[str] = filter_by
         self.logger: Logger = logger or getLogger(__name__)
-        self.error_logger: Logger = getLogger(__name__)
+        if error_logger:
+            self.error_logger: Logger = error_logger
+        else:
+            self.error_logger = getLogger(__name__)
+            self.error_logger.setLevel("INFO")
         self.check_schema_for_all_columns: bool = check_schema_for_all_columns
         self.copy_all_unmapped_properties: bool = copy_all_unmapped_properties
         self.copy_all_unmapped_properties_exclude: Optional[
