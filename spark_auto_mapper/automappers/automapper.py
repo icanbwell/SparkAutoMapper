@@ -1,5 +1,7 @@
-from logging import Logger, getLogger
+import os
+from logging import Logger, getLogger, StreamHandler, Formatter
 from pathlib import Path
+from sys import stderr
 from typing import List, Optional, Union, Dict, Any
 
 # noinspection PyPackageRequirements
@@ -57,10 +59,10 @@ class AutoMapper(AutoMapperContainer):
         keep_null_rows: bool = False,
         filter_by: Optional[str] = None,
         logger: Optional[Logger] = None,
-        error_logger: Optional[Logger] = None,
         check_schema_for_all_columns: bool = False,
         copy_all_unmapped_properties: bool = False,
         copy_all_unmapped_properties_exclude: Optional[List[str]] = None,
+        log_level: Optional[Union[int, str]] = None,
     ):
         """
         Creates an AutoMapper
@@ -111,12 +113,25 @@ class AutoMapper(AutoMapperContainer):
         ] = skip_if_columns_null_or_empty
         self.keep_null_rows: bool = keep_null_rows
         self.filter_by: Optional[str] = filter_by
-        self.logger: Logger = logger or getLogger(__name__)
-        if error_logger:
-            self.error_logger: Logger = error_logger
-        else:
-            self.error_logger = getLogger(__name__)
-            self.error_logger.setLevel("INFO")
+        self.logger: Logger = logger  # type: ignore
+        if not self.logger:
+            self.logger = getLogger(__name__)
+            log_level = log_level or os.environ.get("LOGLEVEL")
+            if log_level:
+                self.logger.setLevel(log_level)
+            if self.logger.handlers:
+                pass
+            else:
+                stream_handler: StreamHandler = StreamHandler(stderr)
+                if log_level:
+                    stream_handler.setLevel(level=log_level)
+                # noinspection SpellCheckingInspection
+                formatter: Formatter = Formatter(
+                    "%(asctime)s.%(msecs)03d %(levelname)s %(module)s %(lineno)d - %(funcName)s: %(message)s"
+                )
+                stream_handler.setFormatter(formatter)
+                self.logger.addHandler(stream_handler)
+
         self.check_schema_for_all_columns: bool = check_schema_for_all_columns
         self.copy_all_unmapped_properties: bool = copy_all_unmapped_properties
         self.copy_all_unmapped_properties_exclude: Optional[
@@ -189,14 +204,12 @@ class AutoMapper(AutoMapperContainer):
                         check_schema_result
                         and len(check_schema_result.result.errors) > 0
                     ):
-                        self.error_logger.error(
+                        self.logger.info(
                             f"==== Schema Mismatch [{column_name}] ==="
                             f"{str(check_schema_result)}"
                         )
                     else:
-                        self.error_logger.debug(
-                            f"==== Schema Matches: [{column_name}] ===="
-                        )
+                        self.logger.debug(f"==== Schema Matches: [{column_name}] ====")
 
             # run all the selects
             df = source_df.alias("b").select(*column_specs)
@@ -210,19 +223,19 @@ class AutoMapper(AutoMapperContainer):
                 df.write.parquet(str(checkpoint_path))
                 df = df.sql_ctx.read.parquet(str(checkpoint_path))
         except AnalysisException:
-            self.error_logger.info(
+            self.logger.warning(
                 f"-------- automapper ({self.view}) column specs ------"
             )
-            self.error_logger.info(self.to_debug_string(source_df=source_df))
-            self.error_logger.info(
+            self.logger.warning(self.to_debug_string(source_df=source_df))
+            self.logger.warning(
                 f"-------- end automapper ({self.view}) column specs ------"
             )
-            self.error_logger.info(
+            self.logger.warning(
                 f"-------- automapper ({self.source_view}) source_df schema ------"
             )
             # noinspection PyProtectedMember
-            self.error_logger.info(source_df._jdf.schema().treeString())  # type: ignore
-            self.error_logger.info(
+            self.logger.warning(source_df._jdf.schema().treeString())  # type: ignore
+            self.logger.warning(
                 f"-------- end automapper ({self.source_view}) source_df schema ------"
             )
             # iterate through each column to find the problem child
@@ -239,16 +252,16 @@ class AutoMapper(AutoMapperContainer):
                         f"========= Done Processing {column_name} =========== "
                     )
                 except AnalysisException as e2:
-                    self.error_logger.error(
+                    self.logger.error(
                         f"=========  Processing {column_name} FAILED =========== "
                     )
                     column_spec = mapper.get_column_specs(source_df=source_df)[
                         column_name
                     ]
-                    self.error_logger.info(
+                    self.logger.warning(
                         ColumnSpecWrapper(column_spec).to_debug_string()
                     )
-                    self.error_logger.error(
+                    self.logger.error(
                         f"========= checking schema for failed column {column_name} =========== "
                     )
                     check_schema_result = mapper.check_schema(
@@ -294,7 +307,7 @@ class AutoMapper(AutoMapperContainer):
                         column_values=column_values,
                     ) from e2
         except Exception as e:
-            self.error_logger.error("====  OOPS ===========")
+            self.logger.error("====  OOPS ===========")
             msg = self.get_message_for_exception(
                 column_name="", df=df, e=e, source_df=source_df, column_values=None
             )
