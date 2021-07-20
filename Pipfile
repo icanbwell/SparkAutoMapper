@@ -7,7 +7,7 @@ name = "pypi"
 numpy = ">=1.19.2"
 pyspark = "==3.1.1"
 logger = ">=1.4"
-sparkdataframecomparer = ">=0.1.66"
+sparkdataframecomparer = ">=0.1.68"
 Deprecated = "==1.2.12"
 
 [dev-packages]
@@ -23,11 +23,11 @@ py4j = "==0.10.9"
 pyspark="==3.1.1"  # should match the version of spark we use for testing
 pygments = ">=2.8.1" # not directly required, pinned by Snyk to avoid a vulnerability
 autoflake=">=1.4"
-black = ">=21.5b0"
+black = "==21.7b0"
 types-Deprecated=">=0.1.2"
 
 [requires]
 python_version = "3.7"
 
 [pipenv]
-allow_prereleases = true
+allow_prereleases = false
