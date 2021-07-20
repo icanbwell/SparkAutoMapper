@@ -91,7 +91,6 @@ class AutoMapper(AutoMapperContainer):
         :param copy_all_unmapped_properties: copy any property that is not explicitly mapped
         :param copy_all_unmapped_properties_exclude: exclude these columns when copy_all_unmapped_properties is set
         :param logger: logger used to log informational messages
-        :param error_logger: logger to override the error logger
         """
         super().__init__()
         self.view: Optional[str] = view
@@ -137,6 +136,8 @@ class AutoMapper(AutoMapperContainer):
         self.copy_all_unmapped_properties_exclude: Optional[
             List[str]
         ] = copy_all_unmapped_properties_exclude
+
+        self.entity_name: Optional[str] = None
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
     def transform_with_data_frame_single_select(
@@ -190,6 +191,7 @@ class AutoMapper(AutoMapperContainer):
             self.logger.debug(
                 f"-------- automapper ({self.source_view}) source_df schema ------"
             )
+            # noinspection PyProtectedMember
             self.logger.debug(source_df._jdf.schema().treeString())  # type: ignore
             self.logger.debug(
                 f"-------- end automapper ({self.source_view}) source_df schema ------"
@@ -531,6 +533,7 @@ class AutoMapper(AutoMapperContainer):
             skip_if_columns_null_or_empty=self.skip_if_columns_null_or_empty,
         )
 
+        self.entity_name = entity.__class__.__name__
         for column_name, child_mapper in resource_mapper.mappers.items():
             self.register_child(dst_column=column_name, child=child_mapper)
         return self
@@ -570,3 +573,6 @@ class AutoMapper(AutoMapperContainer):
                 source_df=None
             ).items()
         }
+
+    def __str__(self) -> str:
+        return f"AutoMapper: view={self.view} for entity={self.entity_name}"
