@@ -74,7 +74,11 @@ class AutoMapperDateDataType(AutoMapperDataTypeBase):
         if (
             source_df is not None
             and isinstance(self.value, AutoMapperDataTypeColumn)
-            and not dict(source_df.dtypes)[self.value.value] == "date"
+            and (
+                "."
+                in self.value.value  # TODO: iterate into nested schema to find type for subfields
+                or not dict(source_df.dtypes)[self.value.value] == "date"
+            )
         ):
             return coalesce(*formats_column_specs)
         elif isinstance(self.value, AutoMapperDataTypeLiteral):
