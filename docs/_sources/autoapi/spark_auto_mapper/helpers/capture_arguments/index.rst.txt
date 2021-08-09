@@ -1,0 +1,26 @@
+:mod:`spark_auto_mapper.helpers.capture_arguments`
+==================================================
+
+.. py:module:: spark_auto_mapper.helpers.capture_arguments
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   spark_auto_mapper.helpers.capture_arguments.capture_arguments
+
+
+.. function:: capture_arguments(func: Any) -> Any
+
+   A decorator that forces keyword arguments in the wrapped method
+   and saves actual input keyword arguments in `_input_kwargs`.
+
+   .. note:: Should only be used to wrap a method where first arg is `self`
+
+

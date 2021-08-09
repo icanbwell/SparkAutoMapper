@@ -1,0 +1,27 @@
+:mod:`spark_auto_mapper.automappers.check_schema_result`
+========================================================
+
+.. py:module:: spark_auto_mapper.automappers.check_schema_result
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   spark_auto_mapper.automappers.check_schema_result.CheckSchemaResult
+
+
+
+.. class:: CheckSchemaResult(result: spark_data_frame_comparer.schema_comparer.SchemaComparerResult)
+
+
+   .. method:: __str__(self) -> str
+
+      Return str(self).
+
+
+

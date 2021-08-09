@@ -1,0 +1,32 @@
+:mod:`spark_auto_mapper.data_types.complex.complex`
+===================================================
+
+.. py:module:: spark_auto_mapper.data_types.complex.complex
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   spark_auto_mapper.data_types.complex.complex.AutoMapperDataTypeComplex
+
+
+
+.. class:: AutoMapperDataTypeComplex(**kwargs: spark_auto_mapper.type_definitions.defined_types.AutoMapperAnyDataType)
+
+
+   Bases: :class:`spark_auto_mapper.data_types.complex.complex_base.AutoMapperDataTypeComplexBase`
+
+   .. method:: get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column]) -> pyspark.sql.Column
+
+      Gets the column spec for this automapper data type
+
+      :param source_df: source data frame in case the automapper type needs that data to decide what to do
+      :param current_column: (Optional) this is set when we are inside an array
+
+
+

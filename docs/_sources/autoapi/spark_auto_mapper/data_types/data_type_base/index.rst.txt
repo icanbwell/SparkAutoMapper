@@ -1,0 +1,296 @@
+:mod:`spark_auto_mapper.data_types.data_type_base`
+==================================================
+
+.. py:module:: spark_auto_mapper.data_types.data_type_base
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase
+
+
+
+.. data:: _TAutoMapperDataType
+   
+
+   
+
+.. data:: _TAutoMapperDataType2
+   
+
+   
+
+.. class:: AutoMapperDataTypeBase
+
+   .. method:: get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column]) -> pyspark.sql.Column
+      :abstractmethod:
+
+      Gets the column spec for this automapper data type
+
+      :param source_df: source data frame in case the automapper type needs that data to decide what to do
+      :param current_column: (Optional) this is set when we are inside an array
+
+
+   .. method:: get_value(self, value: spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase, source_df: Optional[DataFrame], current_column: Optional[Column]) -> pyspark.sql.Column
+
+      Gets the value for this automapper
+
+      :param value: current value
+      :param source_df: source data frame in case the automapper type needs that data to decide what to do
+      :param current_column: (Optional) this is set when we are inside an array
+
+
+   .. method:: include_null_properties(self, include_null_properties: bool) -> None
+
+
+   .. method:: transform(self: spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase, value: _TAutoMapperDataType) -> List[_TAutoMapperDataType]
+
+      transforms a column into another type or struct
+
+
+      :param value: Complex or Simple Type to create for each item in the array
+      :return: a transform automapper type
+      :Example:
+      This is an example
+
+
+   .. method:: select(self, value: _TAutoMapperDataType) -> _TAutoMapperDataType
+
+      transforms a column into another type or struct
+
+
+      :param value: Complex or Simple Type to create for each item in the array
+      :return: a transform automapper type
+
+
+   .. method:: filter(self: _TAutoMapperDataType, func: Callable[([Column], Column)]) -> _TAutoMapperDataType
+
+      filters an array column
+
+
+      :param func: func to create type or struct
+      :return: a filter automapper type
+
+
+   .. method:: split_by_delimiter(self: _TAutoMapperDataType, delimiter: str) -> _TAutoMapperDataType
+
+      splits a text column by the delimiter to create an array
+
+
+      :param delimiter: delimiter
+      :return: a split_by_delimiter automapper type
+
+
+   .. method:: select_one(self, value: _TAutoMapperDataType) -> _TAutoMapperDataType
+
+      selects first item from array
+
+
+      :param value: Complex or Simple Type to create for each item in the array
+      :return: a transform automapper type
+
+
+   .. method:: first(self: _TAutoMapperDataType) -> _TAutoMapperDataType
+
+      returns the first element in array
+
+      :return: a filter automapper type
+
+
+   .. method:: expression(self: _TAutoMapperDataType, value: str) -> _TAutoMapperDataType
+
+      Specifies that the value parameter should be executed as a sql expression in Spark
+
+      :param value: sql
+      :return: an expression automapper type
+
+
+   .. method:: current(self) -> _TAutoMapperDataType
+
+      Specifies to use the current item
+
+      :return: A column automapper type
+
+
+   .. method:: field(self, value: str) -> _TAutoMapperDataType
+
+      Specifies that the value parameter should be used as a field name
+
+      :param value: name of column
+      :return: A column automapper type
+
+
+   .. method:: flatten(self) -> spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase
+
+      creates a single array from an array of arrays.
+      If a structure of nested arrays is deeper than two levels, only one level of nesting is removed.
+      source: http://spark.apache.org/docs/latest/api/python/_modules/pyspark/sql/functions.html#flatten
+
+      :return: a flatten automapper type
+
+
+   .. method:: to_array(self) -> spark_auto_mapper.data_types.array_base.AutoMapperArrayLikeBase
+
+      converts single element into an array
+
+
+      :return: an automapper type
+
+
+   .. method:: concat(self: _TAutoMapperDataType, list2: _TAutoMapperDataType) -> _TAutoMapperDataType
+
+      concatenates two arrays or strings
+
+
+      :param list2:
+      :return: a filter automapper type
+
+
+   .. method:: to_float(self: _TAutoMapperDataType) -> spark_auto_mapper.data_types.float.AutoMapperFloatDataType
+
+      Converts column to float
+
+      :return: a float automapper type
+
+
+   .. method:: to_date(self: _TAutoMapperDataType, formats: Optional[List[str]] = None) -> spark_auto_mapper.data_types.date.AutoMapperDateDataType
+
+      Converts a value to date only
+      For datetime use the datetime mapper type
+
+
+      :param formats: (Optional) formats to use for trying to parse the value otherwise uses:
+                      y-M-d,
+                      yyyyMMdd,
+                      M/d/y
+
+
+   .. method:: to_datetime(self: _TAutoMapperDataType, formats: Optional[List[str]] = None) -> spark_auto_mapper.data_types.datetime.AutoMapperDateTimeDataType
+
+      Converts the value to a timestamp type in Spark
+
+
+      :param formats: (Optional) formats to use for trying to parse the value otherwise uses Spark defaults
+
+
+   .. method:: to_amount(self: _TAutoMapperDataType) -> spark_auto_mapper.data_types.amount.AutoMapperAmountDataType
+
+      Specifies the value should be used as an amount
+
+      :return: an amount automapper type
+
+
+   .. method:: to_boolean(self: _TAutoMapperDataType) -> spark_auto_mapper.data_types.boolean.AutoMapperBooleanDataType
+
+      Specifies the value should be used as a boolean
+
+      :return: a boolean automapper type
+
+
+   .. method:: to_number(self: _TAutoMapperDataType) -> spark_auto_mapper.data_types.number.AutoMapperNumberDataType
+
+      Specifies value should be used as a number
+
+      :return: a number automapper type
+
+
+   .. method:: to_text(self: _TAutoMapperDataType) -> spark_auto_mapper.data_types.text_like_base.AutoMapperTextLikeBase
+
+      Specifies that the value parameter should be used as a literal text
+
+      :return: a text automapper type
+
+
+   .. method:: join_using_delimiter(self: _TAutoMapperDataType, delimiter: str) -> _TAutoMapperDataType
+
+      Joins an array and forms a string using the delimiter
+
+      :param delimiter: string to use as delimiter
+      :return: a join_using_delimiter automapper type
+
+
+   .. method:: get_schema(self, include_extension: bool) -> Optional[Union[StructType, DataType]]
+
+
+   .. method:: to_date_format(self: _TAutoMapperDataType, format_: str) -> spark_auto_mapper.data_types.date_format.AutoMapperFormatDateTimeDataType
+
+      Converts a date or time into string
+
+
+      :param format_: format to use for trying to parse the value otherwise uses:
+                      y-M-d
+                      yyyyMMdd
+                      M/d/y
+
+
+   .. method:: to_null_if_empty(self: _TAutoMapperDataType) -> _TAutoMapperDataType
+
+      returns null if the column is an empty string
+
+
+      :return: an automapper type
+
+
+   .. method:: regex_replace(self: _TAutoMapperDataType, pattern: str, replacement: str) -> _TAutoMapperDataType
+
+      Replace all substrings of the specified string value that match regexp with replacement.
+
+      :param pattern: pattern to search for
+      :param replacement: string to replace with
+      :return: a regex_replace automapper type
+
+
+   .. method:: sanitize(self: _TAutoMapperDataType, pattern: str = '[^\\w\\r\\n\\t _.,!\\"\'/$-]', replacement: str = ' ') -> _TAutoMapperDataType
+
+      Replaces all "non-normal" characters with specified replacement
+
+             By default, We're using the FHIR definition of valid string
+             (except /S does not seem to work properly in Spark)
+             https://www.hl7.org/fhir/datatypes.html#string
+             Valid characters are (regex='[ 
+             \S]'):
+
+             \S - Any character that is not a whitespace character
+
+                - space
+
+             
+      - carriage return
+
+             
+      - line feed
+
+                      - tab
+
+             :param pattern: regex pattern of characters to replace
+             :param replacement: (Optional) string to replace with.  Defaults to space.
+             :return: a regex_replace automapper type
+             
+
+
+   .. method:: if_exists(self: _TAutoMapperDataType, if_exists: Optional[_TAutoMapperDataType] = None, if_not_exists: Optional[_TAutoMapperDataType] = None) -> _TAutoMapperDataType
+
+      returns column if it exists else returns null
+
+
+      :return: an automapper type
+
+
+   .. method:: cast(self: _TAutoMapperDataType, type_: Type[_TAutoMapperDataType2]) -> _TAutoMapperDataType2
+
+      casts columns to type
+
+      :param type_: type to cast to
+      :return: an automapper type
+
+
+   .. method:: __add__(self: _TAutoMapperDataType, other: _TAutoMapperDataType) -> _TAutoMapperDataType
+
+
+

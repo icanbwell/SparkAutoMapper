@@ -1,0 +1,22 @@
+:mod:`spark_auto_mapper.automappers.automapper_analysis_exception`
+==================================================================
+
+.. py:module:: spark_auto_mapper.automappers.automapper_analysis_exception
+
+
+Module Contents
+---------------
+
+.. exception:: AutoMapperAnalysisException(msg: str, column_name: str, check_schema_result: Optional[CheckSchemaResult], column_values: Optional[List[Any]])
+
+
+   Bases: :class:`Exception`
+
+   Common base class for all non-exit exceptions.
+
+   .. method:: __str__(self) -> str
+
+      Return str(self).
+
+
+

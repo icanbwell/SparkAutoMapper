@@ -1,0 +1,24 @@
+:mod:`spark_auto_mapper.type_definitions.wrapper_types`
+=======================================================
+
+.. py:module:: spark_auto_mapper.type_definitions.wrapper_types
+
+
+Module Contents
+---------------
+
+.. data:: AutoMapperWrapperType
+   
+
+   
+
+.. data:: AutoMapperAnyDataType
+   
+
+   
+
+.. data:: AutoMapperColumnOrColumnLikeType
+   
+
+   
+

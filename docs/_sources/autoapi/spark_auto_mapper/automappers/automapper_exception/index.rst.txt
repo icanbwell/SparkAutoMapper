@@ -1,0 +1,17 @@
+:mod:`spark_auto_mapper.automappers.automapper_exception`
+=========================================================
+
+.. py:module:: spark_auto_mapper.automappers.automapper_exception
+
+
+Module Contents
+---------------
+
+.. exception:: AutoMapperException(msg: str)
+
+
+   Bases: :class:`Exception`
+
+   Common base class for all non-exit exceptions.
+
+

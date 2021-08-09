@@ -1,0 +1,79 @@
+:mod:`spark_auto_mapper.automappers.automapper`
+===============================================
+
+.. py:module:: spark_auto_mapper.automappers.automapper
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   spark_auto_mapper.automappers.automapper.AutoMapper
+
+
+
+.. data:: TEMPORARY_KEY
+   :annotation: = __row_id
+
+   
+
+.. class:: AutoMapper(keys: Optional[List[str]] = None, view: Optional[str] = None, source_view: Optional[str] = None, keep_duplicates: bool = False, drop_key_columns: bool = True, checkpoint_after_columns: Optional[int] = None, checkpoint_path: Optional[Union[str, Path]] = None, reuse_existing_view: bool = False, use_schema: bool = True, include_extension: bool = False, include_null_properties: bool = False, use_single_select: bool = True, verify_row_count: bool = True, skip_schema_validation: List[str] = ['extension'], skip_if_columns_null_or_empty: Optional[List[str]] = None, keep_null_rows: bool = False, filter_by: Optional[str] = None, logger: Optional[Logger] = None, check_schema_for_all_columns: bool = False, copy_all_unmapped_properties: bool = False, copy_all_unmapped_properties_exclude: Optional[List[str]] = None, log_level: Optional[Union[int, str]] = None)
+
+
+   Bases: :class:`spark_auto_mapper.automappers.container.AutoMapperContainer`
+
+   .. method:: transform_with_data_frame_single_select(self, df: pyspark.sql.DataFrame, source_df: pyspark.sql.DataFrame, keys: List[str]) -> pyspark.sql.DataFrame
+
+
+   .. method:: transform_with_data_frame(self, df: pyspark.sql.DataFrame, source_df: Optional[DataFrame], keys: List[str]) -> pyspark.sql.DataFrame
+
+
+   .. method:: get_message_for_exception(*, column_name: str, df: pyspark.sql.DataFrame, e: Exception, source_df: pyspark.sql.DataFrame, column_values: Optional[List[Any]]) -> str
+      :staticmethod:
+
+
+   .. method:: transform(self, df: pyspark.sql.DataFrame) -> pyspark.sql.DataFrame
+
+
+   .. method:: register_child(self, dst_column: str, child: spark_auto_mapper.automappers.automapper_base.AutoMapperBase) -> None
+
+
+   .. method:: columns(self, **kwargs: spark_auto_mapper.type_definitions.defined_types.AutoMapperAnyDataType) -> spark_auto_mapper.automappers.automapper.AutoMapper
+
+
+   .. method:: complex(self, entity: spark_auto_mapper.data_types.complex.complex_base.AutoMapperDataTypeComplexBase) -> spark_auto_mapper.automappers.automapper.AutoMapper
+
+
+   .. method:: __repr__(self) -> str
+
+      Display for debugger
+
+      :return: string representation for debugger
+
+
+   .. method:: to_debug_string(self, source_df: Optional[DataFrame] = None) -> str
+
+      Displays the automapper as a string
+
+      :param source_df: (Optional) source data frame
+      :return: string representation
+
+
+   .. method:: column_specs(self) -> Dict[(str, Column)]
+      :property:
+
+      Useful to show in debugger
+
+      :return dictionary of column specs
+
+
+   .. method:: __str__(self) -> str
+
+      Return str(self).
+
+
+

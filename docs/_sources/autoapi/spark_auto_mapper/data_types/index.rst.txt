@@ -1,0 +1,67 @@
+:mod:`spark_auto_mapper.data_types`
+===================================
+
+.. py:module:: spark_auto_mapper.data_types
+
+
+Subpackages
+-----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 3
+
+   complex/index.rst
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   amount/index.rst
+   array/index.rst
+   array_base/index.rst
+   array_distinct/index.rst
+   array_max/index.rst
+   boolean/index.rst
+   coalesce/index.rst
+   column/index.rst
+   column_wrapper/index.rst
+   concat/index.rst
+   data_type_base/index.rst
+   date/index.rst
+   date_format/index.rst
+   datetime/index.rst
+   decimal/index.rst
+   expression/index.rst
+   field/index.rst
+   filter/index.rst
+   first/index.rst
+   first_valid_column/index.rst
+   flatten/index.rst
+   float/index.rst
+   hash/index.rst
+   if_/index.rst
+   if_column_exists/index.rst
+   if_not/index.rst
+   if_not_null/index.rst
+   if_not_null_or_empty/index.rst
+   if_regex/index.rst
+   join_using_delimiter/index.rst
+   list/index.rst
+   literal/index.rst
+   lpad/index.rst
+   map/index.rst
+   null_if_empty/index.rst
+   number/index.rst
+   regex_extract/index.rst
+   regex_replace/index.rst
+   split_by_delimiter/index.rst
+   substring/index.rst
+   substring_by_delimiter/index.rst
+   text_like_base/index.rst
+   transform/index.rst
+   trim/index.rst
+
+
