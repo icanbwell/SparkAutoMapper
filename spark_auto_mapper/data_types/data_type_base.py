@@ -74,6 +74,8 @@ class AutoMapperDataTypeBase:
 
         :param value: Complex or Simple Type to create for each item in the array
         :return: a transform automapper type
+        :Example:
+        This is an example
         """
         from spark_auto_mapper.data_types.transform import AutoMapperTransformDataType
 
@@ -163,7 +165,6 @@ class AutoMapperDataTypeBase:
         """
         returns the first element in array
 
-
         :return: a filter automapper type
         """
         from spark_auto_mapper.data_types.first import AutoMapperFirstDataType
@@ -176,7 +177,6 @@ class AutoMapperDataTypeBase:
         """
         Specifies that the value parameter should be executed as a sql expression in Spark
 
-
         :param value: sql
         :return: an expression automapper type
         """
@@ -187,6 +187,7 @@ class AutoMapperDataTypeBase:
     def current(self) -> _TAutoMapperDataType:
         """
         Specifies to use the current item
+
         :return: A column automapper type
         """
         return self.field("_")
@@ -195,6 +196,7 @@ class AutoMapperDataTypeBase:
     def field(self, value: str) -> _TAutoMapperDataType:
         """
         Specifies that the value parameter should be used as a field name
+
         :param value: name of column
         :return: A column automapper type
         """
@@ -252,8 +254,7 @@ class AutoMapperDataTypeBase:
         """
         Converts column to float
 
-        :return:
-        :rtype:
+        :return: a float automapper type
         """
         from spark_auto_mapper.data_types.float import AutoMapperFloatDataType
 
@@ -268,8 +269,8 @@ class AutoMapperDataTypeBase:
 
 
         :param formats: (Optional) formats to use for trying to parse the value otherwise uses:
-                        y-M-d
-                        yyyyMMdd
+                        y-M-d,
+                        yyyyMMdd,
                         M/d/y
         """
         from spark_auto_mapper.data_types.date import AutoMapperDateDataType
@@ -292,6 +293,7 @@ class AutoMapperDataTypeBase:
     def to_amount(self: _TAutoMapperDataType) -> "AutoMapperAmountDataType":
         """
         Specifies the value should be used as an amount
+
         :return: an amount automapper type
         """
         from spark_auto_mapper.data_types.amount import AutoMapperAmountDataType
@@ -301,6 +303,7 @@ class AutoMapperDataTypeBase:
     def to_boolean(self: _TAutoMapperDataType) -> "AutoMapperBooleanDataType":
         """
         Specifies the value should be used as a boolean
+
         :return: a boolean automapper type
         """
         from spark_auto_mapper.data_types.boolean import AutoMapperBooleanDataType
@@ -310,6 +313,7 @@ class AutoMapperDataTypeBase:
     def to_number(self: _TAutoMapperDataType) -> "AutoMapperNumberDataType":
         """
         Specifies value should be used as a number
+
         :return: a number automapper type
         """
         from spark_auto_mapper.data_types.number import AutoMapperNumberDataType
@@ -319,6 +323,7 @@ class AutoMapperDataTypeBase:
     def to_text(self: _TAutoMapperDataType) -> "AutoMapperTextLikeBase":
         """
         Specifies that the value parameter should be used as a literal text
+
         :return: a text automapper type
         """
         return AutoMapperDataTypeLiteral(self, StringType())
@@ -329,6 +334,7 @@ class AutoMapperDataTypeBase:
     ) -> _TAutoMapperDataType:
         """
         Joins an array and forms a string using the delimiter
+
         :param delimiter: string to use as delimiter
         :return: a join_using_delimiter automapper type
         """
@@ -418,10 +424,15 @@ class AutoMapperDataTypeBase:
         (except /S does not seem to work properly in Spark)
         https://www.hl7.org/fhir/datatypes.html#string
         Valid characters are (regex='[ \r\n\t\\S]'):
+
         \\S - Any character that is not a whitespace character
+
            - space
+
         \r - carriage return
+
         \n - line feed
+
         \t - tab
 
         :param pattern: regex pattern of characters to replace
@@ -476,7 +487,7 @@ class AutoMapperDataTypeBase:
         """
         casts columns to type
 
-
+        :param type_: type to cast to
         :return: an automapper type
         """
 
