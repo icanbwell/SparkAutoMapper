@@ -17,7 +17,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = "Helix Pipeline"
+project = "SparkAutoMapper"
 copyright = "2021, Helix Team"
 author = "Helix Team"
 
