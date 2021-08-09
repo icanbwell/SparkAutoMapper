@@ -1,0 +1,18 @@
+:mod:`spark_auto_mapper`
+========================
+
+.. py:module:: spark_auto_mapper
+
+
+Subpackages
+-----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 3
+
+   automappers/index.rst
+   data_types/index.rst
+   helpers/index.rst
+   type_definitions/index.rst
+
+

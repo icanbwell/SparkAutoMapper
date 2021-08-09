@@ -1,0 +1,37 @@
+:mod:`spark_auto_mapper.data_types.substring_by_delimiter`
+==========================================================
+
+.. py:module:: spark_auto_mapper.data_types.substring_by_delimiter
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   spark_auto_mapper.data_types.substring_by_delimiter.AutoMapperSubstringByDelimiterDataType
+
+
+
+.. class:: AutoMapperSubstringByDelimiterDataType(column: spark_auto_mapper.type_definitions.wrapper_types.AutoMapperColumnOrColumnLikeType, delimiter: str, delimiter_count: int)
+
+
+   Bases: :class:`spark_auto_mapper.data_types.text_like_base.AutoMapperTextLikeBase`
+
+   Returns the substring from string str before count occurrences of the delimiter.
+   If count is positive, everything the left of the final delimiter (counting from left) is returned.
+   If count is negative, every to the right of the final delimiter (counting from the right) is returned.
+   substring_index performs a case-sensitive match when searching for delimiter.
+
+   .. method:: get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column]) -> pyspark.sql.Column
+
+      Gets the column spec for this automapper data type
+
+      :param source_df: source data frame in case the automapper type needs that data to decide what to do
+      :param current_column: (Optional) this is set when we are inside an array
+
+
+

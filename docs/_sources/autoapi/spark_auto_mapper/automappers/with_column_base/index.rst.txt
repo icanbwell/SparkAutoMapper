@@ -1,0 +1,36 @@
+:mod:`spark_auto_mapper.automappers.with_column_base`
+=====================================================
+
+.. py:module:: spark_auto_mapper.automappers.with_column_base
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   spark_auto_mapper.automappers.with_column_base.AutoMapperWithColumnBase
+
+
+
+.. class:: AutoMapperWithColumnBase(dst_column: str, value: spark_auto_mapper.type_definitions.defined_types.AutoMapperAnyDataType, column_schema: Optional[StructField], include_null_properties: bool, skip_if_columns_null_or_empty: Optional[List[str]] = None)
+
+
+   Bases: :class:`spark_auto_mapper.automappers.automapper_base.AutoMapperBase`
+
+   .. method:: get_column_spec(self, source_df: Optional[DataFrame]) -> pyspark.sql.Column
+
+
+   .. method:: get_column_specs(self, source_df: Optional[DataFrame]) -> Dict[(str, Column)]
+
+
+   .. method:: transform_with_data_frame(self, df: pyspark.sql.DataFrame, source_df: Optional[DataFrame], keys: List[str]) -> pyspark.sql.DataFrame
+
+
+   .. method:: check_schema(self, parent_column: Optional[str], source_df: Optional[DataFrame]) -> Optional[CheckSchemaResult]
+
+
+

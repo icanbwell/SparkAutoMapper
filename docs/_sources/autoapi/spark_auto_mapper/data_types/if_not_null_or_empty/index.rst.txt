@@ -1,0 +1,42 @@
+:mod:`spark_auto_mapper.data_types.if_not_null_or_empty`
+========================================================
+
+.. py:module:: spark_auto_mapper.data_types.if_not_null_or_empty
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   spark_auto_mapper.data_types.if_not_null_or_empty.AutoMapperIfNotNullOrEmptyDataType
+
+
+
+.. data:: _TAutoMapperDataType
+   
+
+   
+
+.. class:: AutoMapperIfNotNullOrEmptyDataType(check: spark_auto_mapper.type_definitions.wrapper_types.AutoMapperColumnOrColumnLikeType, value: _TAutoMapperDataType, when_null_or_empty: Optional[_TAutoMapperDataType] = None)
+
+
+   Bases: :class:`spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase`, :class:`Generic[_TAutoMapperDataType]`
+
+   If check returns null then return null else return value
+
+   .. method:: include_null_properties(self, include_null_properties: bool) -> None
+
+
+   .. method:: get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column]) -> pyspark.sql.Column
+
+      Gets the column spec for this automapper data type
+
+      :param source_df: source data frame in case the automapper type needs that data to decide what to do
+      :param current_column: (Optional) this is set when we are inside an array
+
+
+

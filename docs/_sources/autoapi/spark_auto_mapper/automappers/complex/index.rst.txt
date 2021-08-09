@@ -1,0 +1,24 @@
+:mod:`spark_auto_mapper.automappers.complex`
+============================================
+
+.. py:module:: spark_auto_mapper.automappers.complex
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   spark_auto_mapper.automappers.complex.AutoMapperWithComplex
+
+
+
+.. class:: AutoMapperWithComplex(entity: spark_auto_mapper.data_types.complex.complex_base.AutoMapperDataTypeComplexBase, use_schema: bool, include_extension: bool, include_null_properties: bool, skip_schema_validation: List[str], skip_if_columns_null_or_empty: Optional[List[str]])
+
+
+   Bases: :class:`spark_auto_mapper.automappers.container.AutoMapperContainer`
+
+

@@ -1,0 +1,42 @@
+:mod:`spark_auto_mapper.data_types.array_distinct`
+==================================================
+
+.. py:module:: spark_auto_mapper.data_types.array_distinct
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   spark_auto_mapper.data_types.array_distinct.AutoMapperArrayDistinctDataType
+
+
+
+.. data:: _T
+   
+
+   
+
+.. class:: AutoMapperArrayDistinctDataType(*args: _T)
+
+
+   Bases: :class:`spark_auto_mapper.data_types.text_like_base.AutoMapperTextLikeBase`
+
+   Returns the distinct items in the array. NULL elements are skipped
+
+   .. method:: get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column]) -> pyspark.sql.Column
+
+      Gets the column spec for this automapper data type
+
+      :param source_df: source data frame in case the automapper type needs that data to decide what to do
+      :param current_column: (Optional) this is set when we are inside an array
+
+
+   .. method:: include_null_properties(self, include_null_properties: bool) -> None
+
+
+

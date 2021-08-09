@@ -1,0 +1,51 @@
+:mod:`spark_auto_mapper.data_types.list`
+========================================
+
+.. py:module:: spark_auto_mapper.data_types.list
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   spark_auto_mapper.data_types.list.AutoMapperList
+
+
+
+.. data:: _T
+   
+
+   
+
+.. class:: AutoMapperList(value: Optional[Union[List[_T], AutoMapperDataTypeBase, List[AutoMapperDataTypeBase], List[AutoMapperTextLikeBase]]], remove_nulls: bool = True, include_null_properties: bool = True)
+
+
+   Bases: :class:`spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase`, :class:`Generic[_T]`
+
+   Base class for lists
+   Generics:  https://mypy.readthedocs.io/en/stable/generics.html
+   Multiple Inheritance:
+   https://stackoverflow.com/questions/52754339/how-to-express-multiple-inheritance-in-python-type-hint
+
+   .. method:: include_null_properties(self, include_null_properties: bool) -> None
+
+
+   .. method:: get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column]) -> pyspark.sql.Column
+
+      Gets the column spec for this automapper data type
+
+      :param source_df: source data frame in case the automapper type needs that data to decide what to do
+      :param current_column: (Optional) this is set when we are inside an array
+
+
+   .. method:: get_schema(self, include_extension: bool) -> Optional[Union[StructType, DataType]]
+
+
+   .. method:: __add__(self, other: AutoMapperList[_T]) -> AutoMapperList[_T]
+
+
+

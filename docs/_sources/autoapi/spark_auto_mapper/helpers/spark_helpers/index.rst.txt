@@ -1,0 +1,27 @@
+:mod:`spark_auto_mapper.helpers.spark_helpers`
+==============================================
+
+.. py:module:: spark_auto_mapper.helpers.spark_helpers
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   spark_auto_mapper.helpers.spark_helpers.SparkHelpers
+
+
+
+.. class:: SparkHelpers
+
+   .. method:: spark_table_exists(sql_ctx: pyspark.SQLContext, view: str) -> bool
+      :staticmethod:
+
+      :return:
+
+
+

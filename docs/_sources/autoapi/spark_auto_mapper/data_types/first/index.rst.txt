@@ -1,0 +1,56 @@
+:mod:`spark_auto_mapper.data_types.first`
+=========================================
+
+.. py:module:: spark_auto_mapper.data_types.first
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   spark_auto_mapper.data_types.first.AutoMapperFirstDataType
+
+
+
+.. data:: _TAutoMapperDataType
+   
+
+   
+
+.. class:: AutoMapperFirstDataType(column: Union[(AutoMapperDataTypeBase, AutoMapperColumnOrColumnLikeType)])
+
+
+   Bases: :class:`spark_auto_mapper.data_types.array_base.AutoMapperArrayLikeBase`, :class:`Generic[_TAutoMapperDataType]`
+
+   Abstract base class for generic types.
+
+   A generic type is typically declared by inheriting from
+   this class parameterized with one or more type variables.
+   For example, a generic mapping type might be defined as::
+
+     class Mapping(Generic[KT, VT]):
+         def __getitem__(self, key: KT) -> VT:
+             ...
+         # Etc.
+
+   This class can then be used as follows::
+
+     def lookup_name(mapping: Mapping[KT, VT], key: KT, default: VT) -> VT:
+         try:
+             return mapping[key]
+         except KeyError:
+             return default
+
+   .. method:: get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column]) -> pyspark.sql.Column
+
+      Gets the column spec for this automapper data type
+
+      :param source_df: source data frame in case the automapper type needs that data to decide what to do
+      :param current_column: (Optional) this is set when we are inside an array
+
+
+

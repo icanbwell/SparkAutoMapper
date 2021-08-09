@@ -1,0 +1,44 @@
+:mod:`spark_auto_mapper.type_definitions.native_types`
+======================================================
+
+.. py:module:: spark_auto_mapper.type_definitions.native_types
+
+
+Module Contents
+---------------
+
+.. data:: AutoMapperNativeSimpleType
+   
+
+   
+
+.. data:: AutoMapperNativeTextType
+   
+
+   
+
+.. data:: AutoMapperNativeNumberType
+   
+
+   
+
+.. data:: AutoMapperNativeBooleanType
+   
+
+   
+
+.. data:: AutoMapperNativeDateType
+   
+
+   
+
+.. data:: AutoMapperNativeAmountType
+   
+
+   
+
+.. data:: AutoMapperNativeListType
+   
+
+   
+

@@ -1,0 +1,33 @@
+:mod:`spark_auto_mapper.automappers.automapper_base`
+====================================================
+
+.. py:module:: spark_auto_mapper.automappers.automapper_base
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   spark_auto_mapper.automappers.automapper_base.AutoMapperBase
+
+
+
+.. class:: AutoMapperBase
+
+
+   .. method:: transform_with_data_frame(self, df: pyspark.sql.DataFrame, source_df: Optional[DataFrame], keys: List[str]) -> pyspark.sql.DataFrame
+      :abstractmethod:
+
+
+   .. method:: get_column_specs(self, source_df: Optional[DataFrame]) -> Dict[(str, Column)]
+      :abstractmethod:
+
+
+   .. method:: check_schema(self, parent_column: Optional[str], source_df: Optional[DataFrame]) -> Optional[CheckSchemaResult]
+
+
+

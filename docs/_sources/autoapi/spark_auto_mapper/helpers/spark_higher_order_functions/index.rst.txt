@@ -1,0 +1,6 @@
+:mod:`spark_auto_mapper.helpers.spark_higher_order_functions`
+=============================================================
+
+.. py:module:: spark_auto_mapper.helpers.spark_higher_order_functions
+
+

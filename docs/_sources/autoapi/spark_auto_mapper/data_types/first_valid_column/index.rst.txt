@@ -1,0 +1,43 @@
+:mod:`spark_auto_mapper.data_types.first_valid_column`
+======================================================
+
+.. py:module:: spark_auto_mapper.data_types.first_valid_column
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   spark_auto_mapper.data_types.first_valid_column.AutoMapperFirstValidColumnType
+
+
+
+.. data:: _TAutoMapperDataType
+   
+
+   
+
+.. class:: AutoMapperFirstValidColumnType(*columns: spark_auto_mapper.type_definitions.wrapper_types.AutoMapperColumnOrColumnLikeType)
+
+
+   Bases: :class:`spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase`, :class:`Generic[_TAutoMapperDataType]`
+
+   Accepts any number of column definitions and will return the first valid column definition, similar to how
+   coalesce works, but with the existence of columns rather than null values inside the columns.
+
+   Useful for data sources in which columns may be renamed at some point and you want to process files from before and
+   after the name change or when columns are added at a point and are missing from earlier files.
+
+   .. method:: get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column]) -> pyspark.sql.Column
+
+      Gets the column spec for this automapper data type
+
+      :param source_df: source data frame in case the automapper type needs that data to decide what to do
+      :param current_column: (Optional) this is set when we are inside an array
+
+
+
