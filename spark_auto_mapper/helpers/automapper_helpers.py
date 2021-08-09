@@ -76,6 +76,7 @@ class AutoMapperHelpers:
     def struct(value: Dict[str, Any]) -> AutoMapperDataTypeStruct:
         """
         Creates a struct
+
         :param value: A dictionary to be converted to a struct
         :return: A struct automapper type
         """
@@ -85,6 +86,7 @@ class AutoMapperHelpers:
     def complex(**kwargs: AutoMapperAnyDataType) -> AutoMapperDataTypeComplex:
         """
         Creates a complex type.
+
         :param kwargs: parameters to be used to create the complex type
         :return: A complex automapper type
         """
@@ -94,6 +96,7 @@ class AutoMapperHelpers:
     def column(value: str) -> AutoMapperArrayLikeBase:
         """
         Specifies that the value parameter should be used as a column name
+
         :param value: name of column
         :return: A column automapper type
         """
@@ -105,6 +108,7 @@ class AutoMapperHelpers:
     ) -> AutoMapperTextLikeBase:
         """
         Specifies that the value parameter should be used as a literal text
+
         :param value: text value
         :return: a text automapper type
         """
@@ -114,6 +118,7 @@ class AutoMapperHelpers:
     def expression(value: str) -> AutoMapperArrayLikeBase:
         """
         Specifies that the value parameter should be executed as a sql expression in Spark
+
         :param value: sql
         :return: an expression automapper type
         """
@@ -155,6 +160,7 @@ class AutoMapperHelpers:
     ) -> AutoMapperDecimalDataType:
         """
         Specifies the value should be used as a decimal
+
         :param value:
         :param precision: the maximum total number of digits (on both sides of dot)
         :param scale: the number of digits on right side of dot
@@ -166,6 +172,7 @@ class AutoMapperHelpers:
     def amount(value: AutoMapperAmountInputType) -> AutoMapperAmountDataType:
         """
         Specifies the value should be used as an amount
+
         :param value:
         :return: an amount automapper type
         """
@@ -175,6 +182,7 @@ class AutoMapperHelpers:
     def boolean(value: AutoMapperBooleanInputType) -> AutoMapperBooleanDataType:
         """
         Specifies the value should be used as a boolean
+
         :param value:
         :return: a boolean automapper type
         """
@@ -184,6 +192,7 @@ class AutoMapperHelpers:
     def number(value: AutoMapperNumberInputType) -> AutoMapperNumberDataType:
         """
         Specifies value should be used as a number
+
         :param value:
         :return: a number automapper type
         """
@@ -200,6 +209,7 @@ class AutoMapperHelpers:
     ) -> AutoMapperConcatDataType:
         """
         concatenates a list of values.  Each value can be a string or a column
+
         :param args: string or column
         :return: a concat automapper type
         """
@@ -305,6 +315,7 @@ class AutoMapperHelpers:
     ) -> AutoMapperDataTypeExpression:
         """
         maps the contents of a column to values
+
         :param column: column
         :param mapping: A dictionary mapping the contents of the column to other values
                         e.g., {"Y":"Yes", "N": "No"}
@@ -575,6 +586,7 @@ class AutoMapperHelpers:
     def field(value: str) -> AutoMapperTextLikeBase:
         """
         Specifies that the value parameter should be used as a field name
+
         :param value: name of column
         :return: A column automapper type
         """
@@ -584,6 +596,7 @@ class AutoMapperHelpers:
     def current() -> AutoMapperTextLikeBase:
         """
         Specifies to use the current item
+
         :return: A column automapper type
         """
         return AutoMapperDataTypeField("_")
@@ -651,6 +664,7 @@ class AutoMapperHelpers:
     ) -> "AutoMapperDataTypeBase":
         """
         check the if the column exists if exists returns if_exists if not if_not_exists
+
         :return: a optional automapper type
         """
         from spark_auto_mapper.data_types.if_column_exists import (
@@ -680,6 +694,7 @@ class AutoMapperHelpers:
     ) -> AutoMapperJoinUsingDelimiterDataType:
         """
         Joins an array and forms a string using the delimiter
+
         :param column: column whose contents to use
         :param delimiter: string to use as delimiter
         :return: a join automapper type
