@@ -5,6 +5,7 @@ services:
     build:
       dockerfile: spark.Dockerfile
       context: .
+    image: sparkautomapper_dev
     volumes:
       - ./:/sam/
     container_name: sam_dev
