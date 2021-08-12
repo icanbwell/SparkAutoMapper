@@ -33,6 +33,9 @@ class AutoMapperConcatDataType(AutoMapperTextLikeBase):
             for value in args
         ]
 
+        # always include null properties in a concat operation
+        self.include_null_properties(include_null_properties=True)
+
     def include_null_properties(self, include_null_properties: bool) -> None:
         for item in self.value:
             item.include_null_properties(

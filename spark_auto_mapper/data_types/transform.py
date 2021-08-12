@@ -27,6 +27,8 @@ class AutoMapperTransformDataType(
             AutoMapperDataTypeBase, AutoMapperColumnOrColumnLikeType
         ] = column
         self.value: _TAutoMapperDataType = value
+        # always include null properties in a transform operation
+        self.include_null_properties(include_null_properties=True)
 
     def include_null_properties(self, include_null_properties: bool) -> None:
         self.value.include_null_properties(
