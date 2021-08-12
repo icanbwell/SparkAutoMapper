@@ -13,6 +13,7 @@ from spark_auto_mapper.data_types.filter import AutoMapperFilterDataType
 from spark_auto_mapper.data_types.hash import AutoMapperHashDataType
 from spark_auto_mapper.data_types.if_ import AutoMapperIfDataType
 from spark_auto_mapper.data_types.if_not import AutoMapperIfNotDataType
+from spark_auto_mapper.data_types.unix_timestamp import AutoMapperUnixTimestampType
 from spark_auto_mapper.data_types.if_not_null_or_empty import (
     AutoMapperIfNotNullOrEmptyDataType,
 )
@@ -700,3 +701,14 @@ class AutoMapperHelpers:
         :return: a join automapper type
         """
         return AutoMapperJoinUsingDelimiterDataType(column=column, delimiter=delimiter)
+
+    @staticmethod
+    def unix_timestamp(value: AutoMapperNumberInputType) -> AutoMapperUnixTimestampType:
+        """
+        Joins an array and forms a string using the delimiter
+
+        :param column: column whose contents to use
+        :param delimiter: string to use as delimiter
+        :return: a join automapper type
+        """
+        return AutoMapperUnixTimestampType(value=value)
