@@ -28,7 +28,7 @@ Classes
 
 .. class:: AutoMapperDataTypeBase
 
-   .. method:: get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column]) -> pyspark.sql.Column
+   .. method:: get_column_spec(self, source_df: Optional[pyspark.sql.DataFrame], current_column: Optional[pyspark.sql.Column]) -> pyspark.sql.Column
       :abstractmethod:
 
       Gets the column spec for this automapper data type
@@ -37,7 +37,7 @@ Classes
       :param current_column: (Optional) this is set when we are inside an array
 
 
-   .. method:: get_value(self, value: spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase, source_df: Optional[DataFrame], current_column: Optional[Column]) -> pyspark.sql.Column
+   .. method:: get_value(self, value: spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase, source_df: Optional[pyspark.sql.DataFrame], current_column: Optional[pyspark.sql.Column]) -> pyspark.sql.Column
 
       Gets the value for this automapper
 
@@ -69,7 +69,7 @@ Classes
       :return: a transform automapper type
 
 
-   .. method:: filter(self: _TAutoMapperDataType, func: Callable[([Column], Column)]) -> _TAutoMapperDataType
+   .. method:: filter(self: _TAutoMapperDataType, func: Callable[([pyspark.sql.Column], pyspark.sql.Column)]) -> _TAutoMapperDataType
 
       filters an array column
 
@@ -215,7 +215,7 @@ Classes
       :return: a join_using_delimiter automapper type
 
 
-   .. method:: get_schema(self, include_extension: bool) -> Optional[Union[StructType, DataType]]
+   .. method:: get_schema(self, include_extension: bool) -> Optional[Union[(pyspark.sql.types.StructType, pyspark.sql.types.DataType)]]
 
 
    .. method:: to_date_format(self: _TAutoMapperDataType, format_: str) -> spark_auto_mapper.data_types.date_format.AutoMapperFormatDateTimeDataType

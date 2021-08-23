@@ -26,7 +26,7 @@ Classes
    Note that regexp_extract requires that the pattern match the *entire* string - it does
    the equivalent of a python re.match, not re.search
 
-   .. method:: get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column]) -> pyspark.sql.Column
+   .. method:: get_column_spec(self, source_df: Optional[pyspark.sql.DataFrame], current_column: Optional[pyspark.sql.Column]) -> pyspark.sql.Column
 
       Gets the column spec for this automapper data type
 

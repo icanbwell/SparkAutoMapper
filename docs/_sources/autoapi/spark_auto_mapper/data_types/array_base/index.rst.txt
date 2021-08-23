@@ -25,7 +25,7 @@ Classes
 
    Bases: :class:`spark_auto_mapper.data_types.text_like_base.AutoMapperTextLikeBase`
 
-   .. method:: get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column]) -> pyspark.sql.Column
+   .. method:: get_column_spec(self, source_df: Optional[pyspark.sql.DataFrame], current_column: Optional[pyspark.sql.Column]) -> pyspark.sql.Column
       :abstractmethod:
 
       Gets the column spec for this automapper data type

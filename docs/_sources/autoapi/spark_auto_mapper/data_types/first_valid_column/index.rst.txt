@@ -32,7 +32,7 @@ Classes
    Useful for data sources in which columns may be renamed at some point and you want to process files from before and
    after the name change or when columns are added at a point and are missing from earlier files.
 
-   .. method:: get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column]) -> pyspark.sql.Column
+   .. method:: get_column_spec(self, source_df: Optional[pyspark.sql.DataFrame], current_column: Optional[pyspark.sql.Column]) -> pyspark.sql.Column
 
       Gets the column spec for this automapper data type
 

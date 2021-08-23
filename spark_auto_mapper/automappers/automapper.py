@@ -38,6 +38,36 @@ TEMPORARY_KEY = "__row_id"
 
 
 class AutoMapper(AutoMapperContainer):
+    """
+    This is the main AutoMapper class.  It is used to create an AutoMapper and then you can add mappings.
+
+    Creates an AutoMapper
+
+    :param keys: joining keys
+    :param view: view to return
+    :param source_view: where to load the data from
+    :param keep_duplicates: whether to leave duplicates at the end
+    :param drop_key_columns: whether to drop the key columns at the end
+    :param checkpoint_after_columns: checkpoint after how many columns have been processed
+    :param checkpoint_path: Path where to store the checkpoints
+    :param reuse_existing_view: If view already exists, whether to reuse it or create a new one
+    :param use_schema: apply schema to columns
+    :param include_extension: By default we don't include extension elements since they take up a lot of schema.
+            If you're using extensions then set this
+    :param include_null_properties: If you want to include null properties
+    :param use_single_select: This is a faster way to run the AutoMapper since it will select
+            all the columns at once.
+            However this makes it harder to debug since you don't know what column failed
+    :param verify_row_count: verifies that the count of rows remains the same before and after the transformation
+    :param skip_schema_validation: skip schema checks on these columns
+    :param skip_if_columns_null_or_empty: skip creating the record if any of these columns are null or empty
+    :param keep_null_rows: whether to keep the null rows instead of removing them
+    :param filter_by: (Optional) SQL expression that is used to filter
+    :param copy_all_unmapped_properties: copy any property that is not explicitly mapped
+    :param copy_all_unmapped_properties_exclude: exclude these columns when copy_all_unmapped_properties is set
+    :param logger: logger used to log informational messages
+    """
+
     # noinspection PyDefaultArgument
     def __init__(
         self,
@@ -64,34 +94,6 @@ class AutoMapper(AutoMapperContainer):
         copy_all_unmapped_properties_exclude: Optional[List[str]] = None,
         log_level: Optional[Union[int, str]] = None,
     ):
-        """
-        Creates an AutoMapper
-
-
-        :param keys: joining keys
-        :param view: view to return
-        :param source_view: where to load the data from
-        :param keep_duplicates: whether to leave duplicates at the end
-        :param drop_key_columns: whether to drop the key columns at the end
-        :param checkpoint_after_columns: checkpoint after how many columns have been processed
-        :param checkpoint_path: Path where to store the checkpoints
-        :param reuse_existing_view: If view already exists, whether to reuse it or create a new one
-        :param use_schema: apply schema to columns
-        :param include_extension: By default we don't include extension elements since they take up a lot of schema.
-                If you're using extensions then set this
-        :param include_null_properties: If you want to include null properties
-        :param use_single_select: This is a faster way to run the AutoMapper since it will select
-                all the columns at once.
-                However this makes it harder to debug since you don't know what column failed
-        :param verify_row_count: verifies that the count of rows remains the same before and after the transformation
-        :param skip_schema_validation: skip schema checks on these columns
-        :param skip_if_columns_null_or_empty: skip creating the record if any of these columns are null or empty
-        :param keep_null_rows: whether to keep the null rows instead of removing them
-        :param filter_by: (Optional) SQL expression that is used to filter
-        :param copy_all_unmapped_properties: copy any property that is not explicitly mapped
-        :param copy_all_unmapped_properties_exclude: exclude these columns when copy_all_unmapped_properties is set
-        :param logger: logger used to log informational messages
-        """
         super().__init__()
         self.view: Optional[str] = view
         self.source_view: Optional[str] = source_view
@@ -140,9 +142,12 @@ class AutoMapper(AutoMapperContainer):
         self.entity_name: Optional[str] = None
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
-    def transform_with_data_frame_single_select(
+    def _transform_with_data_frame_single_select(
         self, df: DataFrame, source_df: DataFrame, keys: List[str]
     ) -> DataFrame:
+        """
+        This functions transforms the data frame using the mappings in a single select command
+        """
         # get all the column specs
         column_specs: List[Column] = [
             child_mapper.get_column_specs(source_df=source_df)[column_name]
@@ -465,7 +470,7 @@ class AutoMapper(AutoMapperContainer):
 
         # run the mapper
         if self.use_single_select:
-            result_df: DataFrame = self.transform_with_data_frame_single_select(
+            result_df: DataFrame = self._transform_with_data_frame_single_select(
                 df=destination_df, source_df=source_df, keys=self.keys
             )
         else:

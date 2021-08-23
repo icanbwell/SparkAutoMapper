@@ -19,15 +19,15 @@ Classes
 .. class:: AutoMapperBase
 
 
-   .. method:: transform_with_data_frame(self, df: pyspark.sql.DataFrame, source_df: Optional[DataFrame], keys: List[str]) -> pyspark.sql.DataFrame
+   .. method:: transform_with_data_frame(self, df: pyspark.sql.DataFrame, source_df: Optional[pyspark.sql.DataFrame], keys: List[str]) -> pyspark.sql.DataFrame
       :abstractmethod:
 
 
-   .. method:: get_column_specs(self, source_df: Optional[DataFrame]) -> Dict[(str, Column)]
+   .. method:: get_column_specs(self, source_df: Optional[pyspark.sql.DataFrame]) -> Dict[(str, pyspark.sql.Column)]
       :abstractmethod:
 
 
-   .. method:: check_schema(self, parent_column: Optional[str], source_df: Optional[DataFrame]) -> Optional[CheckSchemaResult]
+   .. method:: check_schema(self, parent_column: Optional[str], source_df: Optional[pyspark.sql.DataFrame]) -> Optional[spark_auto_mapper.automappers.check_schema_result.CheckSchemaResult]
 
 
 

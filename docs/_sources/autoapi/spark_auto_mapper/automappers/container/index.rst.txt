@@ -21,13 +21,13 @@ Classes
 
    Bases: :class:`spark_auto_mapper.automappers.automapper_base.AutoMapperBase`
 
-   .. method:: generate_mappers(self, mappers_dict: Dict[(str, AutoMapperAnyDataType)], column_schema: Dict[(str, StructField)], include_null_properties: bool, skip_schema_validation: List[str], skip_if_columns_null_or_empty: Optional[List[str]]) -> None
+   .. method:: generate_mappers(self, mappers_dict: Dict[(str, spark_auto_mapper.type_definitions.defined_types.AutoMapperAnyDataType)], column_schema: Dict[(str, pyspark.sql.types.StructField)], include_null_properties: bool, skip_schema_validation: List[str], skip_if_columns_null_or_empty: Optional[List[str]]) -> None
 
 
-   .. method:: transform_with_data_frame(self, df: pyspark.sql.DataFrame, source_df: Optional[DataFrame], keys: List[str]) -> pyspark.sql.DataFrame
+   .. method:: transform_with_data_frame(self, df: pyspark.sql.DataFrame, source_df: Optional[pyspark.sql.DataFrame], keys: List[str]) -> pyspark.sql.DataFrame
 
 
-   .. method:: get_column_specs(self, source_df: Optional[DataFrame]) -> Dict[(str, Column)]
+   .. method:: get_column_specs(self, source_df: Optional[pyspark.sql.DataFrame]) -> Dict[(str, pyspark.sql.Column)]
 
 
 

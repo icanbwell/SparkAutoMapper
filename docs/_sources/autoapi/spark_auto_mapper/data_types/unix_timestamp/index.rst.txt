@@ -1,7 +1,7 @@
-:mod:`spark_auto_mapper.data_types.decimal`
-===========================================
+:mod:`spark_auto_mapper.data_types.unix_timestamp`
+==================================================
 
-.. py:module:: spark_auto_mapper.data_types.decimal
+.. py:module:: spark_auto_mapper.data_types.unix_timestamp
 
 
 Module Contents
@@ -12,11 +12,11 @@ Classes
 
 .. autoapisummary::
 
-   spark_auto_mapper.data_types.decimal.AutoMapperDecimalDataType
+   spark_auto_mapper.data_types.unix_timestamp.AutoMapperUnixTimestampType
 
 
 
-.. class:: AutoMapperDecimalDataType(value: spark_auto_mapper.type_definitions.defined_types.AutoMapperAmountInputType, precision: int, scale: int)
+.. class:: AutoMapperUnixTimestampType(value: spark_auto_mapper.type_definitions.defined_types.AutoMapperNumberInputType)
 
 
    Bases: :class:`spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase`
