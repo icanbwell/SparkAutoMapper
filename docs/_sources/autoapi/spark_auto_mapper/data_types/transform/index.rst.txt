@@ -16,11 +16,6 @@ Classes
 
 
 
-.. data:: _TAutoMapperDataType
-   
-
-   
-
 .. class:: AutoMapperTransformDataType(column: Union[(spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase, spark_auto_mapper.type_definitions.wrapper_types.AutoMapperColumnOrColumnLikeType)], value: _TAutoMapperDataType)
 
 

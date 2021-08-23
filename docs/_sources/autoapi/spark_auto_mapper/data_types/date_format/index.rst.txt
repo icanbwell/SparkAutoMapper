@@ -21,6 +21,12 @@ Classes
 
    Bases: :class:`spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase`
 
+   Converts the date or timestamp to a string in Spark
+
+
+   :param value: value
+   :param format_: (Optional) formats to use for trying to format the value otherwise uses Spark defaults
+
    .. method:: get_column_spec(self, source_df: Optional[pyspark.sql.DataFrame], current_column: Optional[pyspark.sql.Column]) -> pyspark.sql.Column
 
       Gets the column spec for this automapper data type

@@ -16,11 +16,6 @@ Classes
 
 
 
-.. data:: _TAutoMapperDataType
-   
-
-   
-
 .. class:: AutoMapperHelpers
 
    .. method:: struct(value: Dict[(str, Any)]) -> spark_auto_mapper.data_types.complex.struct_type.AutoMapperDataTypeStruct

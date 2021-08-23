@@ -16,11 +16,6 @@ Classes
 
 
 
-.. data:: _T
-   
-
-   
-
 .. class:: AutoMapperArrayMaxDataType(*args: _T)
 
 

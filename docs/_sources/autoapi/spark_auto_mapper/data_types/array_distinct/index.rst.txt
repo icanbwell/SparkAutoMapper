@@ -16,11 +16,6 @@ Classes
 
 
 
-.. data:: _T
-   
-
-   
-
 .. class:: AutoMapperArrayDistinctDataType(*args: _T)
 
 

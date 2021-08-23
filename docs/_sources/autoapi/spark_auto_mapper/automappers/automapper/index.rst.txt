@@ -26,9 +26,8 @@ Classes
 
    Bases: :class:`spark_auto_mapper.automappers.container.AutoMapperContainer`
 
-   This is the main AutoMapper class.  It is used to create an AutoMapper and then you can add mappings.
-
    Creates an AutoMapper
+
 
    :param keys: joining keys
    :param view: view to return
@@ -53,11 +52,6 @@ Classes
    :param copy_all_unmapped_properties: copy any property that is not explicitly mapped
    :param copy_all_unmapped_properties_exclude: exclude these columns when copy_all_unmapped_properties is set
    :param logger: logger used to log informational messages
-
-   .. method:: _transform_with_data_frame_single_select(self, df: pyspark.sql.DataFrame, source_df: pyspark.sql.DataFrame, keys: List[str]) -> pyspark.sql.DataFrame
-
-      This functions transforms the data frame using the mappings in a single select command
-
 
    .. method:: transform_with_data_frame(self, df: pyspark.sql.DataFrame, source_df: Optional[pyspark.sql.DataFrame], keys: List[str]) -> pyspark.sql.DataFrame
 

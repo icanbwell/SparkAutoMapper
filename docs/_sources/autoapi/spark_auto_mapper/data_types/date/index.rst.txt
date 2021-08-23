@@ -21,6 +21,16 @@ Classes
 
    Bases: :class:`spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase`
 
+   Converts a value to date only
+   For datetime use the datetime mapper type
+
+
+   :param value: value
+   :param formats: (Optional) formats to use for trying to parse the value otherwise uses:
+                   y-M-d
+                   yyyyMMdd
+                   M/d/y
+
    .. method:: get_column_spec(self, source_df: Optional[pyspark.sql.DataFrame], current_column: Optional[pyspark.sql.Column]) -> pyspark.sql.Column
 
       Gets the column spec for this automapper data type

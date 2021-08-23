@@ -21,6 +21,9 @@ Classes
 
    Bases: :class:`spark_auto_mapper.data_types.complex.complex_base.AutoMapperDataTypeComplexBase`
 
+   base class for complex types
+   :param kwargs:
+
    .. method:: get_column_spec(self, source_df: Optional[pyspark.sql.DataFrame], current_column: Optional[pyspark.sql.Column]) -> pyspark.sql.Column
 
       Gets the column spec for this automapper data type

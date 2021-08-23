@@ -16,11 +16,6 @@ Classes
 
 
 
-.. data:: _TAutoMapperDataType
-   
-
-   
-
 .. class:: AutoMapperNullIfEmptyDataType(value: _TAutoMapperDataType)
 
 

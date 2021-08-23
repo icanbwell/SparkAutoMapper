@@ -16,11 +16,6 @@ Classes
 
 
 
-.. data:: _T
-   
-
-   
-
 .. class:: AutoMapperCoalesceDataType(*args: _T)
 
 

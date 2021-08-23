@@ -3,6 +3,7 @@
 # This file only contains a selection of the most common options. For a full
 # list see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
+# https://sphinx-autoapi.readthedocs.io/en/latest/reference/config.html
 
 # -- Path setup --------------------------------------------------------------
 
@@ -29,6 +30,15 @@ author = "Helix Team"
 extensions = ["autoapi.extension", "sphinx_rtd_theme", "recommonmark"]
 autoapi_dirs = ["../spark_auto_mapper"]
 autoapi_type = "python"
+autoapi_options = [
+    "members",
+    "undoc-members",
+    "show-inheritance",
+    "show-module-summary",
+    "special-members",
+    "imported-members",
+]
+autoapi_python_class_content = "both"
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
 

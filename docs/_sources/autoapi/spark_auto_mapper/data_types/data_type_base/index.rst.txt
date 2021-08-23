@@ -16,16 +16,6 @@ Classes
 
 
 
-.. data:: _TAutoMapperDataType
-   
-
-   
-
-.. data:: _TAutoMapperDataType2
-   
-
-   
-
 .. class:: AutoMapperDataTypeBase
 
    .. method:: get_column_spec(self, source_df: Optional[pyspark.sql.DataFrame], current_column: Optional[pyspark.sql.Column]) -> pyspark.sql.Column

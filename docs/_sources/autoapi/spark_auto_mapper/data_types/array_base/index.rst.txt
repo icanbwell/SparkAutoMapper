@@ -16,11 +16,6 @@ Classes
 
 
 
-.. data:: _TAutoMapperDataType
-   
-
-   
-
 .. class:: AutoMapperArrayLikeBase
 
    Bases: :class:`spark_auto_mapper.data_types.text_like_base.AutoMapperTextLikeBase`
