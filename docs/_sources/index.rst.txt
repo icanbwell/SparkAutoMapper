@@ -6,7 +6,8 @@
 Welcome to Spark AutoMapper documentation!
 ==========================================
 
-Main classes
+Main Classes
+==================
 
 Use :class:`~spark_auto_mapper.automappers.automapper.AutoMapper` to create a new AutoMapper.
 
@@ -14,6 +15,7 @@ Use :class:`~spark_auto_mapper.helpers.automapper_helpers.AutoMapperHelpers` to 
 
 Use :class:`~spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase` for functions available to use.
 
+NOTE: We recommend using the functions in the AutoMapperDataTypeBase instead of AutoMapperHelpers.  The latter are older and will be removed soon.
 
 .. toctree::
    :maxdepth: 2

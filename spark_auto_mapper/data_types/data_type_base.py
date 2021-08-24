@@ -78,6 +78,7 @@ class AutoMapperDataTypeBase:
         transforms a column into another type or struct
 
 
+        :param self: Set by Python.  No need to pass.
         :param value: Complex or Simple Type to create for each item in the array
         :return: a transform automapper type
         :example: A.column("last_name").transform(A.complex(bar=A.field("value"), bar2=A.field("system")))
@@ -96,6 +97,7 @@ class AutoMapperDataTypeBase:
         transforms a column into another type or struct
 
 
+        :param self: Set by Python.  No need to pass.
         :param value: Complex or Simple Type to create for each item in the array
         :return: a transform automapper type
         :example: A.column("last_name").select(A.complex(bar=A.field("value"), bar2=A.field("system")))

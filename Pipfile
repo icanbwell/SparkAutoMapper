@@ -11,10 +11,10 @@ sparkdataframecomparer = ">=0.1.68"
 Deprecated = "==1.2.12"
 
 [dev-packages]
-setuptools = "*"
+setuptools = ">=40.8.0"
 wheel = ">=0.36.2"
 twine = ">=3.4.1"
-pytest = ">=6.2.2"
+pytest = ">=6.2.4"
 mypy = ">=0.812,<1.000"
 flake8 = ">=3.8.4"
 importlib-metadata = ">=4.0.1"
