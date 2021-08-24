@@ -14,6 +14,8 @@
   
   <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
 
   
@@ -31,6 +33,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/doctools.js"></script>
@@ -84,7 +87,7 @@
               
             
             
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../index.html">API Reference</a></li>
 </ul>
@@ -172,19 +175,27 @@
 </tbody>
 </table>
 <dl class="py class">
-<dt id="spark_auto_mapper.data_types.column.AutoMapperDataTypeColumn">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">spark_auto_mapper.data_types.column.</span></code><code class="sig-name descname"><span class="pre">AutoMapperDataTypeColumn</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.data_types.column.AutoMapperDataTypeColumn" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="../array_base/index.html#spark_auto_mapper.data_types.array_base.AutoMapperArrayLikeBase" title="spark_auto_mapper.data_types.array_base.AutoMapperArrayLikeBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.array_base.AutoMapperArrayLikeBase</span></code></a></p>
+<dt class="sig sig-object py" id="spark_auto_mapper.data_types.column.AutoMapperDataTypeColumn">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spark_auto_mapper.data_types.column.</span></span><span class="sig-name descname"><span class="pre">AutoMapperDataTypeColumn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.data_types.column.AutoMapperDataTypeColumn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../array_base/index.html#spark_auto_mapper.data_types.array_base.AutoMapperArrayLikeBase" title="spark_auto_mapper.data_types.array_base.AutoMapperArrayLikeBase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.array_base.AutoMapperArrayLikeBase</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>str</em>) – </p>
+</dd>
+</dl>
 <dl class="py method">
-<dt id="spark_auto_mapper.data_types.column.AutoMapperDataTypeColumn.get_column_spec">
-<code class="sig-name descname"><span class="pre">get_column_spec</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">pyspark.sql.DataFrame</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_column</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">pyspark.sql.Column</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pyspark.sql.Column</span><a class="headerlink" href="#spark_auto_mapper.data_types.column.AutoMapperDataTypeColumn.get_column_spec" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="spark_auto_mapper.data_types.column.AutoMapperDataTypeColumn.get_column_spec">
+<span class="sig-name descname"><span class="pre">get_column_spec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_column</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.data_types.column.AutoMapperDataTypeColumn.get_column_spec" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the column spec for this automapper data type</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>source_df</strong> – source data frame in case the automapper type needs that data to decide what to do</p></li>
-<li><p><strong>current_column</strong> – (Optional) this is set when we are inside an array</p></li>
+<li><p><strong>source_df</strong> (<em>Optional</em><em>[</em><em>pyspark.sql.DataFrame</em><em>]</em>) – source data frame in case the automapper type needs that data to decide what to do</p></li>
+<li><p><strong>current_column</strong> (<em>Optional</em><em>[</em><em>pyspark.sql.Column</em><em>]</em>) – (Optional) this is set when we are inside an array</p></li>
 </ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pyspark.sql.Column</p>
 </dd>
 </dl>
 </dd></dl>

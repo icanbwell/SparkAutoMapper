@@ -1,5 +1,5 @@
-:mod:`spark_auto_mapper.helpers.automapper_helpers`
-===================================================
+:py:mod:`spark_auto_mapper.helpers.automapper_helpers`
+======================================================
 
 .. py:module:: spark_auto_mapper.helpers.automapper_helpers
 
@@ -16,9 +16,10 @@ Classes
 
 
 
-.. class:: AutoMapperHelpers
 
-   .. method:: struct(value: Dict[(str, Any)]) -> spark_auto_mapper.data_types.complex.struct_type.AutoMapperDataTypeStruct
+.. py:class:: AutoMapperHelpers
+
+   .. py:method:: struct(value)
       :staticmethod:
 
       Creates a struct
@@ -27,7 +28,7 @@ Classes
       :return: A struct automapper type
 
 
-   .. method:: complex(**kwargs: spark_auto_mapper.type_definitions.defined_types.AutoMapperAnyDataType) -> spark_auto_mapper.data_types.complex.complex.AutoMapperDataTypeComplex
+   .. py:method:: complex(**kwargs)
       :staticmethod:
 
       Creates a complex type.
@@ -36,7 +37,7 @@ Classes
       :return: A complex automapper type
 
 
-   .. method:: column(value: str) -> spark_auto_mapper.data_types.array_base.AutoMapperArrayLikeBase
+   .. py:method:: column(value)
       :staticmethod:
 
       Specifies that the value parameter should be used as a column name
@@ -45,7 +46,7 @@ Classes
       :return: A column automapper type
 
 
-   .. method:: text(value: Union[(spark_auto_mapper.type_definitions.native_types.AutoMapperNativeSimpleType, spark_auto_mapper.type_definitions.defined_types.AutoMapperTextInputType)]) -> spark_auto_mapper.data_types.text_like_base.AutoMapperTextLikeBase
+   .. py:method:: text(value)
       :staticmethod:
 
       Specifies that the value parameter should be used as a literal text
@@ -54,7 +55,7 @@ Classes
       :return: a text automapper type
 
 
-   .. method:: expression(value: str) -> spark_auto_mapper.data_types.array_base.AutoMapperArrayLikeBase
+   .. py:method:: expression(value)
       :staticmethod:
 
       Specifies that the value parameter should be executed as a sql expression in Spark
@@ -63,7 +64,7 @@ Classes
       :return: an expression automapper type
 
 
-   .. method:: date(value: spark_auto_mapper.type_definitions.defined_types.AutoMapperDateInputType, formats: Optional[List[str]] = None) -> spark_auto_mapper.data_types.date.AutoMapperDateDataType
+   .. py:method:: date(value, formats = None)
       :staticmethod:
 
       Converts a value to date only
@@ -77,7 +78,7 @@ Classes
                       M/d/y
 
 
-   .. method:: datetime(value: spark_auto_mapper.type_definitions.defined_types.AutoMapperDateInputType, formats: Optional[List[str]] = None) -> spark_auto_mapper.data_types.datetime.AutoMapperDateTimeDataType
+   .. py:method:: datetime(value, formats = None)
       :staticmethod:
 
       Converts the value to a timestamp type in Spark
@@ -87,7 +88,7 @@ Classes
       :param formats: (Optional) formats to use for trying to parse the value otherwise uses Spark defaults
 
 
-   .. method:: decimal(value: spark_auto_mapper.type_definitions.defined_types.AutoMapperAmountInputType, precision: int, scale: int) -> spark_auto_mapper.data_types.decimal.AutoMapperDecimalDataType
+   .. py:method:: decimal(value, precision, scale)
       :staticmethod:
 
       Specifies the value should be used as a decimal
@@ -98,7 +99,7 @@ Classes
       :return: a decimal automapper type
 
 
-   .. method:: amount(value: spark_auto_mapper.type_definitions.defined_types.AutoMapperAmountInputType) -> spark_auto_mapper.data_types.amount.AutoMapperAmountDataType
+   .. py:method:: amount(value)
       :staticmethod:
 
       Specifies the value should be used as an amount
@@ -107,7 +108,7 @@ Classes
       :return: an amount automapper type
 
 
-   .. method:: boolean(value: spark_auto_mapper.type_definitions.defined_types.AutoMapperBooleanInputType) -> spark_auto_mapper.data_types.boolean.AutoMapperBooleanDataType
+   .. py:method:: boolean(value)
       :staticmethod:
 
       Specifies the value should be used as a boolean
@@ -116,7 +117,7 @@ Classes
       :return: a boolean automapper type
 
 
-   .. method:: number(value: spark_auto_mapper.type_definitions.defined_types.AutoMapperNumberInputType) -> spark_auto_mapper.data_types.number.AutoMapperNumberDataType
+   .. py:method:: number(value)
       :staticmethod:
 
       Specifies value should be used as a number
@@ -125,7 +126,7 @@ Classes
       :return: a number automapper type
 
 
-   .. method:: concat(*args: Union[(spark_auto_mapper.type_definitions.native_types.AutoMapperNativeTextType, spark_auto_mapper.type_definitions.wrapper_types.AutoMapperWrapperType, spark_auto_mapper.data_types.text_like_base.AutoMapperTextLikeBase, spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase)]) -> spark_auto_mapper.data_types.concat.AutoMapperConcatDataType
+   .. py:method:: concat(*args)
       :staticmethod:
 
       concatenates a list of values.  Each value can be a string or a column
@@ -134,7 +135,7 @@ Classes
       :return: a concat automapper type
 
 
-   .. method:: if_(column: spark_auto_mapper.type_definitions.wrapper_types.AutoMapperColumnOrColumnLikeType, check: Union[(spark_auto_mapper.type_definitions.defined_types.AutoMapperAnyDataType, List[spark_auto_mapper.type_definitions.defined_types.AutoMapperAnyDataType])], value: _TAutoMapperDataType, else_: Optional[_TAutoMapperDataType] = None) -> _TAutoMapperDataType
+   .. py:method:: if_(column, check, value, else_ = None)
       :staticmethod:
 
       Checks if column matches check_value.  Returns value if it matches else else_
@@ -147,7 +148,7 @@ Classes
       :return: an if automapper type
 
 
-   .. method:: if_not(column: spark_auto_mapper.type_definitions.wrapper_types.AutoMapperColumnOrColumnLikeType, check: Union[(spark_auto_mapper.type_definitions.defined_types.AutoMapperAnyDataType, List[spark_auto_mapper.type_definitions.defined_types.AutoMapperAnyDataType])], value: _TAutoMapperDataType) -> _TAutoMapperDataType
+   .. py:method:: if_not(column, check, value)
       :staticmethod:
 
       Checks if column matches check_value.  Returns value if it does not match
@@ -159,7 +160,7 @@ Classes
       :return: an if automapper type
 
 
-   .. method:: if_not_null(check: spark_auto_mapper.type_definitions.wrapper_types.AutoMapperColumnOrColumnLikeType, value: _TAutoMapperDataType, when_null: Optional[_TAutoMapperDataType] = None) -> _TAutoMapperDataType
+   .. py:method:: if_not_null(check, value, when_null = None)
       :staticmethod:
 
       Checks if `check` is null
@@ -171,7 +172,7 @@ Classes
       :return: an if_not_null automapper type
 
 
-   .. method:: if_not_null_or_empty(check: spark_auto_mapper.type_definitions.wrapper_types.AutoMapperColumnOrColumnLikeType, value: _TAutoMapperDataType, when_null_or_empty: Optional[_TAutoMapperDataType] = None) -> _TAutoMapperDataType
+   .. py:method:: if_not_null_or_empty(check, value, when_null_or_empty = None)
       :staticmethod:
 
       Checks if `check` is null or empty.
@@ -183,7 +184,7 @@ Classes
       :return: an if_not_null automapper type
 
 
-   .. method:: map(column: spark_auto_mapper.type_definitions.wrapper_types.AutoMapperColumnOrColumnLikeType, mapping: Dict[(Optional[spark_auto_mapper.type_definitions.defined_types.AutoMapperTextInputType], spark_auto_mapper.type_definitions.defined_types.AutoMapperAnyDataType)], default: Optional[spark_auto_mapper.type_definitions.defined_types.AutoMapperAnyDataType] = None) -> spark_auto_mapper.data_types.expression.AutoMapperDataTypeExpression
+   .. py:method:: map(column, mapping, default = None)
       :staticmethod:
 
       maps the contents of a column to values
@@ -195,7 +196,7 @@ Classes
       :return: a map automapper type
 
 
-   .. method:: left(column: spark_auto_mapper.type_definitions.wrapper_types.AutoMapperColumnOrColumnLikeType, length: int) -> spark_auto_mapper.data_types.substring.AutoMapperSubstringDataType
+   .. py:method:: left(column, length)
       :staticmethod:
 
       Take the specified number of first characters in a string
@@ -205,7 +206,7 @@ Classes
       :return: a concat automapper type
 
 
-   .. method:: right(column: spark_auto_mapper.type_definitions.wrapper_types.AutoMapperColumnOrColumnLikeType, length: int) -> spark_auto_mapper.data_types.substring.AutoMapperSubstringDataType
+   .. py:method:: right(column, length)
       :staticmethod:
 
       Take the specified number of last characters in a string
@@ -215,7 +216,7 @@ Classes
       :return: a concat automapper type
 
 
-   .. method:: substring(column: spark_auto_mapper.type_definitions.wrapper_types.AutoMapperColumnOrColumnLikeType, start: int, length: int) -> spark_auto_mapper.data_types.substring.AutoMapperSubstringDataType
+   .. py:method:: substring(column, start, length)
       :staticmethod:
 
       Finds a substring in the specified string.
@@ -226,7 +227,7 @@ Classes
       :return: a concat automapper type
 
 
-   .. method:: string_before_delimiter(column: spark_auto_mapper.type_definitions.wrapper_types.AutoMapperColumnOrColumnLikeType, delimiter: str) -> spark_auto_mapper.data_types.substring_by_delimiter.AutoMapperSubstringByDelimiterDataType
+   .. py:method:: string_before_delimiter(column, delimiter)
       :staticmethod:
 
       Take the specified number of first characters in a string
@@ -236,7 +237,7 @@ Classes
       :return: a concat automapper type
 
 
-   .. method:: string_after_delimiter(column: spark_auto_mapper.type_definitions.wrapper_types.AutoMapperColumnOrColumnLikeType, delimiter: str) -> spark_auto_mapper.data_types.substring_by_delimiter.AutoMapperSubstringByDelimiterDataType
+   .. py:method:: string_after_delimiter(column, delimiter)
       :staticmethod:
 
       Take the specified number of first characters in a string
@@ -246,7 +247,7 @@ Classes
       :return: a concat automapper type
 
 
-   .. method:: substring_by_delimiter(column: spark_auto_mapper.type_definitions.wrapper_types.AutoMapperColumnOrColumnLikeType, delimiter: str, delimiter_count: int) -> spark_auto_mapper.data_types.substring_by_delimiter.AutoMapperSubstringByDelimiterDataType
+   .. py:method:: substring_by_delimiter(column, delimiter, delimiter_count)
       :staticmethod:
 
       Returns the substring from string str before count occurrences of the delimiter.
@@ -261,7 +262,7 @@ Classes
       :return: a concat automapper type
 
 
-   .. method:: regex_replace(column: spark_auto_mapper.type_definitions.wrapper_types.AutoMapperColumnOrColumnLikeType, pattern: str, replacement: str) -> spark_auto_mapper.data_types.regex_replace.AutoMapperRegExReplaceDataType
+   .. py:method:: regex_replace(column, pattern, replacement)
       :staticmethod:
 
       Replace all substrings of the specified string value that match regexp with rep.
@@ -272,7 +273,7 @@ Classes
       :return: a regex_replace automapper type
 
 
-   .. method:: regex_extract(column: spark_auto_mapper.type_definitions.wrapper_types.AutoMapperColumnOrColumnLikeType, pattern: str, index: int) -> spark_auto_mapper.data_types.regex_extract.AutoMapperRegExExtractDataType
+   .. py:method:: regex_extract(column, pattern, index)
       :staticmethod:
 
       Extracts a specific group matched by a regex from a specified column. If there
@@ -284,7 +285,7 @@ Classes
       :return: a regex_extract automapper type
 
 
-   .. method:: trim(column: spark_auto_mapper.type_definitions.wrapper_types.AutoMapperColumnOrColumnLikeType) -> spark_auto_mapper.data_types.trim.AutoMapperTrimDataType
+   .. py:method:: trim(column)
       :staticmethod:
 
       Trim the spaces from both ends for the specified string column.
@@ -293,7 +294,7 @@ Classes
       :return: a trim automapper type
 
 
-   .. method:: lpad(column: spark_auto_mapper.type_definitions.wrapper_types.AutoMapperColumnOrColumnLikeType, length: int, pad: str) -> spark_auto_mapper.data_types.lpad.AutoMapperLPadDataType
+   .. py:method:: lpad(column, length, pad)
       :staticmethod:
 
       Returns column value, left-padded with pad to a length of length. If column value is longer than length,
@@ -304,7 +305,7 @@ Classes
       :param pad: the character to use to pad the string to the desired length
 
 
-   .. method:: hash(*args: Union[(spark_auto_mapper.type_definitions.native_types.AutoMapperNativeTextType, spark_auto_mapper.type_definitions.wrapper_types.AutoMapperWrapperType, spark_auto_mapper.data_types.text_like_base.AutoMapperTextLikeBase)]) -> spark_auto_mapper.data_types.hash.AutoMapperHashDataType
+   .. py:method:: hash(*args)
       :staticmethod:
 
       Calculates the hash code of given columns, and returns the result as an int column.
@@ -314,7 +315,7 @@ Classes
       :return: a concat automapper type
 
 
-   .. method:: coalesce(*args: _TAutoMapperDataType) -> _TAutoMapperDataType
+   .. py:method:: coalesce(*args)
       :staticmethod:
 
       Returns the first value that is not null.
@@ -322,7 +323,7 @@ Classes
       :return: a coalesce automapper type
 
 
-   .. method:: array_max(*args: _TAutoMapperDataType) -> _TAutoMapperDataType
+   .. py:method:: array_max(*args)
       :staticmethod:
 
       Returns the first value that is not null.
@@ -330,7 +331,7 @@ Classes
       :return: a coalesce automapper type
 
 
-   .. method:: array_distinct(*args: _TAutoMapperDataType) -> _TAutoMapperDataType
+   .. py:method:: array_distinct(*args)
       :staticmethod:
 
       Returns the distinct items in the array.
@@ -338,7 +339,7 @@ Classes
       :return: a coalesce automapper type
 
 
-   .. method:: if_regex(column: spark_auto_mapper.type_definitions.wrapper_types.AutoMapperColumnOrColumnLikeType, check: Union[(str, List[str])], value: _TAutoMapperDataType, else_: Optional[_TAutoMapperDataType] = None) -> _TAutoMapperDataType
+   .. py:method:: if_regex(column, check, value, else_ = None)
       :staticmethod:
 
       Checks if column matches check_value.  Returns value if it matches else else_
@@ -351,7 +352,7 @@ Classes
       :return: an if automapper type
 
 
-   .. method:: filter(column: spark_auto_mapper.type_definitions.wrapper_types.AutoMapperColumnOrColumnLikeType, func: Callable[([pyspark.sql.Column], pyspark.sql.Column)]) -> spark_auto_mapper.data_types.filter.AutoMapperFilterDataType
+   .. py:method:: filter(column, func)
       :staticmethod:
 
       Filters a column by a function
@@ -362,7 +363,7 @@ Classes
       :return: a filter automapper type
 
 
-   .. method:: transform(column: spark_auto_mapper.type_definitions.wrapper_types.AutoMapperColumnOrColumnLikeType, value: _TAutoMapperDataType) -> List[_TAutoMapperDataType]
+   .. py:method:: transform(column, value)
       :staticmethod:
 
       transforms a column into another type or struct
@@ -373,7 +374,7 @@ Classes
       :return: a transform automapper type
 
 
-   .. method:: field(value: str) -> spark_auto_mapper.data_types.text_like_base.AutoMapperTextLikeBase
+   .. py:method:: field(value)
       :staticmethod:
 
       Specifies that the value parameter should be used as a field name
@@ -382,7 +383,7 @@ Classes
       :return: A column automapper type
 
 
-   .. method:: current() -> spark_auto_mapper.data_types.text_like_base.AutoMapperTextLikeBase
+   .. py:method:: current()
       :staticmethod:
 
       Specifies to use the current item
@@ -390,7 +391,7 @@ Classes
       :return: A column automapper type
 
 
-   .. method:: split_by_delimiter(column: spark_auto_mapper.type_definitions.wrapper_types.AutoMapperColumnOrColumnLikeType, delimiter: str) -> spark_auto_mapper.data_types.split_by_delimiter.AutoMapperSplitByDelimiterDataType
+   .. py:method:: split_by_delimiter(column, delimiter)
       :staticmethod:
 
       Split a string into an array using the delimiter
@@ -400,7 +401,7 @@ Classes
       :return: a concat automapper type
 
 
-   .. method:: float(value: spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase) -> spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase
+   .. py:method:: float(value)
       :staticmethod:
 
       Converts column to float
@@ -409,7 +410,7 @@ Classes
       :rtype:
 
 
-   .. method:: flatten(column: spark_auto_mapper.type_definitions.wrapper_types.AutoMapperColumnOrColumnLikeType) -> spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase
+   .. py:method:: flatten(column)
       :staticmethod:
 
       creates a single array from an array of arrays.
@@ -419,16 +420,16 @@ Classes
       :return: a flatten automapper type
 
 
-   .. method:: first_valid_column(*columns: spark_auto_mapper.type_definitions.wrapper_types.AutoMapperColumnOrColumnLikeType) -> spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase
+   .. py:method:: first_valid_column(*columns)
       :staticmethod:
 
       Allows for columns to be defined based in which a source column may not exist. If the optional source column does
-      not exist, the "default" column definition is used instead.
+       not exist, the "default" column definition is used instead.
 
-      :return: a optional automapper type
+       :return: a optional automapper type
 
 
-   .. method:: if_column_exists(column: spark_auto_mapper.type_definitions.wrapper_types.AutoMapperColumnOrColumnLikeType, if_exists: Optional[_TAutoMapperDataType], if_not_exists: Optional[_TAutoMapperDataType]) -> spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase
+   .. py:method:: if_column_exists(column, if_exists, if_not_exists)
       :staticmethod:
 
       check the if the column exists if exists returns if_exists if not if_not_exists
@@ -436,7 +437,7 @@ Classes
       :return: a optional automapper type
 
 
-   .. method:: array(value: spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase) -> spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase
+   .. py:method:: array(value)
       :staticmethod:
 
       creates an array from a single item.
@@ -445,7 +446,7 @@ Classes
       :return: an array automapper type
 
 
-   .. method:: join_using_delimiter(column: spark_auto_mapper.type_definitions.wrapper_types.AutoMapperColumnOrColumnLikeType, delimiter: str) -> spark_auto_mapper.data_types.join_using_delimiter.AutoMapperJoinUsingDelimiterDataType
+   .. py:method:: join_using_delimiter(column, delimiter)
       :staticmethod:
 
       Joins an array and forms a string using the delimiter
@@ -455,7 +456,7 @@ Classes
       :return: a join automapper type
 
 
-   .. method:: unix_timestamp(value: spark_auto_mapper.type_definitions.defined_types.AutoMapperNumberInputType) -> spark_auto_mapper.data_types.unix_timestamp.AutoMapperUnixTimestampType
+   .. py:method:: unix_timestamp(value)
       :staticmethod:
 
       Joins an array and forms a string using the delimiter

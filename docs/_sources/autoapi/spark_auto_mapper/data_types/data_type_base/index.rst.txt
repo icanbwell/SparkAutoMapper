@@ -1,5 +1,5 @@
-:mod:`spark_auto_mapper.data_types.data_type_base`
-==================================================
+:py:mod:`spark_auto_mapper.data_types.data_type_base`
+=====================================================
 
 .. py:module:: spark_auto_mapper.data_types.data_type_base
 
@@ -16,9 +16,10 @@ Classes
 
 
 
-.. class:: AutoMapperDataTypeBase
 
-   .. method:: get_column_spec(self, source_df: Optional[pyspark.sql.DataFrame], current_column: Optional[pyspark.sql.Column]) -> pyspark.sql.Column
+.. py:class:: AutoMapperDataTypeBase
+
+   .. py:method:: get_column_spec(self, source_df, current_column)
       :abstractmethod:
 
       Gets the column spec for this automapper data type
@@ -27,7 +28,7 @@ Classes
       :param current_column: (Optional) this is set when we are inside an array
 
 
-   .. method:: get_value(self, value: spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase, source_df: Optional[pyspark.sql.DataFrame], current_column: Optional[pyspark.sql.Column]) -> pyspark.sql.Column
+   .. py:method:: get_value(self, value, source_df, current_column)
 
       Gets the value for this automapper
 
@@ -36,10 +37,10 @@ Classes
       :param current_column: (Optional) this is set when we are inside an array
 
 
-   .. method:: include_null_properties(self, include_null_properties: bool) -> None
+   .. py:method:: include_null_properties(self, include_null_properties)
 
 
-   .. method:: transform(self: spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase, value: _TAutoMapperDataType) -> List[_TAutoMapperDataType]
+   .. py:method:: transform(self, value)
 
       transforms a column into another type or struct
 
@@ -50,7 +51,7 @@ Classes
       This is an example
 
 
-   .. method:: select(self, value: _TAutoMapperDataType) -> _TAutoMapperDataType
+   .. py:method:: select(self, value)
 
       transforms a column into another type or struct
 
@@ -59,7 +60,7 @@ Classes
       :return: a transform automapper type
 
 
-   .. method:: filter(self: _TAutoMapperDataType, func: Callable[([pyspark.sql.Column], pyspark.sql.Column)]) -> _TAutoMapperDataType
+   .. py:method:: filter(self, func)
 
       filters an array column
 
@@ -68,7 +69,7 @@ Classes
       :return: a filter automapper type
 
 
-   .. method:: split_by_delimiter(self: _TAutoMapperDataType, delimiter: str) -> _TAutoMapperDataType
+   .. py:method:: split_by_delimiter(self, delimiter)
 
       splits a text column by the delimiter to create an array
 
@@ -77,7 +78,7 @@ Classes
       :return: a split_by_delimiter automapper type
 
 
-   .. method:: select_one(self, value: _TAutoMapperDataType) -> _TAutoMapperDataType
+   .. py:method:: select_one(self, value)
 
       selects first item from array
 
@@ -86,14 +87,14 @@ Classes
       :return: a transform automapper type
 
 
-   .. method:: first(self: _TAutoMapperDataType) -> _TAutoMapperDataType
+   .. py:method:: first(self)
 
       returns the first element in array
 
       :return: a filter automapper type
 
 
-   .. method:: expression(self: _TAutoMapperDataType, value: str) -> _TAutoMapperDataType
+   .. py:method:: expression(self, value)
 
       Specifies that the value parameter should be executed as a sql expression in Spark
 
@@ -101,14 +102,14 @@ Classes
       :return: an expression automapper type
 
 
-   .. method:: current(self) -> _TAutoMapperDataType
+   .. py:method:: current(self)
 
       Specifies to use the current item
 
       :return: A column automapper type
 
 
-   .. method:: field(self, value: str) -> _TAutoMapperDataType
+   .. py:method:: field(self, value)
 
       Specifies that the value parameter should be used as a field name
 
@@ -116,7 +117,7 @@ Classes
       :return: A column automapper type
 
 
-   .. method:: flatten(self) -> spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase
+   .. py:method:: flatten(self)
 
       creates a single array from an array of arrays.
       If a structure of nested arrays is deeper than two levels, only one level of nesting is removed.
@@ -125,7 +126,7 @@ Classes
       :return: a flatten automapper type
 
 
-   .. method:: to_array(self) -> spark_auto_mapper.data_types.array_base.AutoMapperArrayLikeBase
+   .. py:method:: to_array(self)
 
       converts single element into an array
 
@@ -133,7 +134,7 @@ Classes
       :return: an automapper type
 
 
-   .. method:: concat(self: _TAutoMapperDataType, list2: _TAutoMapperDataType) -> _TAutoMapperDataType
+   .. py:method:: concat(self, list2)
 
       concatenates two arrays or strings
 
@@ -142,14 +143,14 @@ Classes
       :return: a filter automapper type
 
 
-   .. method:: to_float(self: _TAutoMapperDataType) -> spark_auto_mapper.data_types.float.AutoMapperFloatDataType
+   .. py:method:: to_float(self)
 
       Converts column to float
 
       :return: a float automapper type
 
 
-   .. method:: to_date(self: _TAutoMapperDataType, formats: Optional[List[str]] = None) -> spark_auto_mapper.data_types.date.AutoMapperDateDataType
+   .. py:method:: to_date(self, formats = None)
 
       Converts a value to date only
       For datetime use the datetime mapper type
@@ -161,7 +162,7 @@ Classes
                       M/d/y
 
 
-   .. method:: to_datetime(self: _TAutoMapperDataType, formats: Optional[List[str]] = None) -> spark_auto_mapper.data_types.datetime.AutoMapperDateTimeDataType
+   .. py:method:: to_datetime(self, formats = None)
 
       Converts the value to a timestamp type in Spark
 
@@ -169,35 +170,35 @@ Classes
       :param formats: (Optional) formats to use for trying to parse the value otherwise uses Spark defaults
 
 
-   .. method:: to_amount(self: _TAutoMapperDataType) -> spark_auto_mapper.data_types.amount.AutoMapperAmountDataType
+   .. py:method:: to_amount(self)
 
       Specifies the value should be used as an amount
 
       :return: an amount automapper type
 
 
-   .. method:: to_boolean(self: _TAutoMapperDataType) -> spark_auto_mapper.data_types.boolean.AutoMapperBooleanDataType
+   .. py:method:: to_boolean(self)
 
       Specifies the value should be used as a boolean
 
       :return: a boolean automapper type
 
 
-   .. method:: to_number(self: _TAutoMapperDataType) -> spark_auto_mapper.data_types.number.AutoMapperNumberDataType
+   .. py:method:: to_number(self)
 
       Specifies value should be used as a number
 
       :return: a number automapper type
 
 
-   .. method:: to_text(self: _TAutoMapperDataType) -> spark_auto_mapper.data_types.text_like_base.AutoMapperTextLikeBase
+   .. py:method:: to_text(self)
 
       Specifies that the value parameter should be used as a literal text
 
       :return: a text automapper type
 
 
-   .. method:: join_using_delimiter(self: _TAutoMapperDataType, delimiter: str) -> _TAutoMapperDataType
+   .. py:method:: join_using_delimiter(self, delimiter)
 
       Joins an array and forms a string using the delimiter
 
@@ -205,10 +206,10 @@ Classes
       :return: a join_using_delimiter automapper type
 
 
-   .. method:: get_schema(self, include_extension: bool) -> Optional[Union[(pyspark.sql.types.StructType, pyspark.sql.types.DataType)]]
+   .. py:method:: get_schema(self, include_extension)
 
 
-   .. method:: to_date_format(self: _TAutoMapperDataType, format_: str) -> spark_auto_mapper.data_types.date_format.AutoMapperFormatDateTimeDataType
+   .. py:method:: to_date_format(self, format_)
 
       Converts a date or time into string
 
@@ -219,7 +220,7 @@ Classes
                       M/d/y
 
 
-   .. method:: to_null_if_empty(self: _TAutoMapperDataType) -> _TAutoMapperDataType
+   .. py:method:: to_null_if_empty(self)
 
       returns null if the column is an empty string
 
@@ -227,7 +228,7 @@ Classes
       :return: an automapper type
 
 
-   .. method:: regex_replace(self: _TAutoMapperDataType, pattern: str, replacement: str) -> _TAutoMapperDataType
+   .. py:method:: regex_replace(self, pattern, replacement)
 
       Replace all substrings of the specified string value that match regexp with replacement.
 
@@ -236,9 +237,9 @@ Classes
       :return: a regex_replace automapper type
 
 
-   .. method:: sanitize(self: _TAutoMapperDataType, pattern: str = '[^\\w\\r\\n\\t _.,!\\"\'/$-]', replacement: str = ' ') -> _TAutoMapperDataType
+   .. py:method:: sanitize(self, pattern = '[^\\w\\r\\n\\t _.,!\\"\'/$-]', replacement = ' ')
 
-      Replaces all "non-normal" characters with specified replacement
+             Replaces all "non-normal" characters with specified replacement
 
              By default, We're using the FHIR definition of valid string
              (except /S does not seem to work properly in Spark)
@@ -264,7 +265,7 @@ Classes
              
 
 
-   .. method:: if_exists(self: _TAutoMapperDataType, if_exists: Optional[_TAutoMapperDataType] = None, if_not_exists: Optional[_TAutoMapperDataType] = None) -> _TAutoMapperDataType
+   .. py:method:: if_exists(self, if_exists = None, if_not_exists = None)
 
       returns column if it exists else returns null
 
@@ -272,7 +273,7 @@ Classes
       :return: an automapper type
 
 
-   .. method:: cast(self: _TAutoMapperDataType, type_: Type[_TAutoMapperDataType2]) -> _TAutoMapperDataType2
+   .. py:method:: cast(self, type_)
 
       casts columns to type
 
@@ -280,7 +281,7 @@ Classes
       :return: an automapper type
 
 
-   .. method:: __add__(self: _TAutoMapperDataType, other: _TAutoMapperDataType) -> _TAutoMapperDataType
+   .. py:method:: __add__(self, other)
 
 
 

@@ -1,5 +1,5 @@
-:mod:`spark_auto_mapper.automappers.with_column_base`
-=====================================================
+:py:mod:`spark_auto_mapper.automappers.with_column_base`
+========================================================
 
 .. py:module:: spark_auto_mapper.automappers.with_column_base
 
@@ -16,21 +16,21 @@ Classes
 
 
 
-.. class:: AutoMapperWithColumnBase(dst_column: str, value: spark_auto_mapper.type_definitions.defined_types.AutoMapperAnyDataType, column_schema: Optional[pyspark.sql.types.StructField], include_null_properties: bool, skip_if_columns_null_or_empty: Optional[List[str]] = None)
+
+.. py:class:: AutoMapperWithColumnBase(dst_column, value, column_schema, include_null_properties, skip_if_columns_null_or_empty = None)
+
+   Bases: :py:obj:`spark_auto_mapper.automappers.automapper_base.AutoMapperBase`
+
+   .. py:method:: get_column_spec(self, source_df)
 
 
-   Bases: :class:`spark_auto_mapper.automappers.automapper_base.AutoMapperBase`
-
-   .. method:: get_column_spec(self, source_df: Optional[pyspark.sql.DataFrame]) -> pyspark.sql.Column
+   .. py:method:: get_column_specs(self, source_df)
 
 
-   .. method:: get_column_specs(self, source_df: Optional[pyspark.sql.DataFrame]) -> Dict[(str, pyspark.sql.Column)]
+   .. py:method:: transform_with_data_frame(self, df, source_df, keys)
 
 
-   .. method:: transform_with_data_frame(self, df: pyspark.sql.DataFrame, source_df: Optional[pyspark.sql.DataFrame], keys: List[str]) -> pyspark.sql.DataFrame
-
-
-   .. method:: check_schema(self, parent_column: Optional[str], source_df: Optional[pyspark.sql.DataFrame]) -> Optional[spark_auto_mapper.automappers.check_schema_result.CheckSchemaResult]
+   .. py:method:: check_schema(self, parent_column, source_df)
 
 
 

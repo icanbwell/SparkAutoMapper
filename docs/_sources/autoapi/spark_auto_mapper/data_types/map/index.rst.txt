@@ -1,5 +1,5 @@
-:mod:`spark_auto_mapper.data_types.map`
-=======================================
+:py:mod:`spark_auto_mapper.data_types.map`
+==========================================
 
 .. py:module:: spark_auto_mapper.data_types.map
 
@@ -16,14 +16,14 @@ Classes
 
 
 
-.. class:: AutoMapperMapDataType(column: spark_auto_mapper.type_definitions.wrapper_types.AutoMapperColumnOrColumnLikeType, mapping: Dict[(Optional[spark_auto_mapper.type_definitions.defined_types.AutoMapperTextInputType], spark_auto_mapper.type_definitions.wrapper_types.AutoMapperAnyDataType)], default: Optional[spark_auto_mapper.type_definitions.wrapper_types.AutoMapperAnyDataType] = None)
 
+.. py:class:: AutoMapperMapDataType(column, mapping, default = None)
 
-   Bases: :class:`spark_auto_mapper.data_types.expression.AutoMapperDataTypeExpression`
+   Bases: :py:obj:`spark_auto_mapper.data_types.expression.AutoMapperDataTypeExpression`
 
    Applies the supplied mapping to the value of column
 
-   .. method:: get_column_spec(self, source_df: Optional[pyspark.sql.DataFrame], current_column: Optional[pyspark.sql.Column]) -> pyspark.sql.Column
+   .. py:method:: get_column_spec(self, source_df, current_column)
 
       Gets the column spec for this automapper data type
 

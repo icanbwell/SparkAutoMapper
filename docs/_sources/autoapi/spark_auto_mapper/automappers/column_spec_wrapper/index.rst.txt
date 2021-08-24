@@ -1,5 +1,5 @@
-:mod:`spark_auto_mapper.automappers.column_spec_wrapper`
-========================================================
+:py:mod:`spark_auto_mapper.automappers.column_spec_wrapper`
+===========================================================
 
 .. py:module:: spark_auto_mapper.automappers.column_spec_wrapper
 
@@ -16,19 +16,20 @@ Classes
 
 
 
-.. class:: ColumnSpecWrapper(column_spec: pyspark.sql.Column)
 
+.. py:class:: ColumnSpecWrapper(column_spec)
 
    This wrapper provides a nicely formatted string for column spec
 
-   .. method:: __repr__(self) -> str
+
+   .. py:method:: __repr__(self)
 
       Display for debugger
 
       :return: string representation for debugger
 
 
-   .. method:: to_debug_string(self) -> str
+   .. py:method:: to_debug_string(self)
 
       Formats the column spec so () are on separate lines for easier reading
       :return:

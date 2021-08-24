@@ -14,6 +14,8 @@
   
   <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
 
   
@@ -31,6 +33,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/doctools.js"></script>
@@ -84,7 +87,7 @@
               
             
             
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../index.html">API Reference</a></li>
 </ul>
@@ -172,23 +175,57 @@
 </tbody>
 </table>
 <dl class="py class">
-<dt id="spark_auto_mapper.automappers.container.AutoMapperContainer">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">spark_auto_mapper.automappers.container.</span></code><code class="sig-name descname"><span class="pre">AutoMapperContainer</span></code><a class="headerlink" href="#spark_auto_mapper.automappers.container.AutoMapperContainer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="../automapper_base/index.html#spark_auto_mapper.automappers.automapper_base.AutoMapperBase" title="spark_auto_mapper.automappers.automapper_base.AutoMapperBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">spark_auto_mapper.automappers.automapper_base.AutoMapperBase</span></code></a></p>
+<dt class="sig sig-object py" id="spark_auto_mapper.automappers.container.AutoMapperContainer">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spark_auto_mapper.automappers.container.</span></span><span class="sig-name descname"><span class="pre">AutoMapperContainer</span></span><a class="headerlink" href="#spark_auto_mapper.automappers.container.AutoMapperContainer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../automapper_base/index.html#spark_auto_mapper.automappers.automapper_base.AutoMapperBase" title="spark_auto_mapper.automappers.automapper_base.AutoMapperBase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spark_auto_mapper.automappers.automapper_base.AutoMapperBase</span></code></a></p>
 <dl class="py method">
-<dt id="spark_auto_mapper.automappers.container.AutoMapperContainer.generate_mappers">
-<code class="sig-name descname"><span class="pre">generate_mappers</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mappers_dict</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><a class="reference internal" href="../../type_definitions/defined_types/index.html#spark_auto_mapper.type_definitions.defined_types.AutoMapperAnyDataType" title="spark_auto_mapper.type_definitions.defined_types.AutoMapperAnyDataType"><span class="pre">spark_auto_mapper.type_definitions.defined_types.AutoMapperAnyDataType</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_schema</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">pyspark.sql.types.StructField</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_null_properties</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_schema_validation</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_if_columns_null_or_empty</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="headerlink" href="#spark_auto_mapper.automappers.container.AutoMapperContainer.generate_mappers" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="spark_auto_mapper.automappers.container.AutoMapperContainer.generate_mappers">
+<span class="sig-name descname"><span class="pre">generate_mappers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mappers_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_schema</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_null_properties</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_schema_validation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_if_columns_null_or_empty</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.automappers.container.AutoMapperContainer.generate_mappers" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mappers_dict</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>spark_auto_mapper.type_definitions.defined_types.AutoMapperAnyDataType</em><em>]</em>) – </p></li>
+<li><p><strong>column_schema</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>pyspark.sql.types.StructField</em><em>]</em>) – </p></li>
+<li><p><strong>include_null_properties</strong> (<em>bool</em>) – </p></li>
+<li><p><strong>skip_schema_validation</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – </p></li>
+<li><p><strong>skip_if_columns_null_or_empty</strong> (<em>Optional</em><em>[</em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
-<dt id="spark_auto_mapper.automappers.container.AutoMapperContainer.transform_with_data_frame">
-<code class="sig-name descname"><span class="pre">transform_with_data_frame</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pyspark.sql.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">pyspark.sql.DataFrame</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keys</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pyspark.sql.DataFrame</span><a class="headerlink" href="#spark_auto_mapper.automappers.container.AutoMapperContainer.transform_with_data_frame" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="spark_auto_mapper.automappers.container.AutoMapperContainer.transform_with_data_frame">
+<span class="sig-name descname"><span class="pre">transform_with_data_frame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keys</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.automappers.container.AutoMapperContainer.transform_with_data_frame" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pyspark.sql.DataFrame</em>) – </p></li>
+<li><p><strong>source_df</strong> (<em>Optional</em><em>[</em><em>pyspark.sql.DataFrame</em><em>]</em>) – </p></li>
+<li><p><strong>keys</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pyspark.sql.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
-<dt id="spark_auto_mapper.automappers.container.AutoMapperContainer.get_column_specs">
-<code class="sig-name descname"><span class="pre">get_column_specs</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">pyspark.sql.DataFrame</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">pyspark.sql.Column</span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#spark_auto_mapper.automappers.container.AutoMapperContainer.get_column_specs" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="spark_auto_mapper.automappers.container.AutoMapperContainer.get_column_specs">
+<span class="sig-name descname"><span class="pre">get_column_specs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.automappers.container.AutoMapperContainer.get_column_specs" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>source_df</strong> (<em>Optional</em><em>[</em><em>pyspark.sql.DataFrame</em><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Dict[str, pyspark.sql.Column]</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 

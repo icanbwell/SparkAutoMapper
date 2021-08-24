@@ -14,6 +14,8 @@
   
   <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
 
   
@@ -31,6 +33,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/doctools.js"></script>
@@ -84,7 +87,7 @@
               
             
             
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../index.html">API Reference</a></li>
 </ul>
@@ -172,168 +175,224 @@
 </tbody>
 </table>
 <dl class="py class">
-<dt id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">spark_auto_mapper.data_types.data_type_base.</span></code><code class="sig-name descname"><span class="pre">AutoMapperDataTypeBase</span></code><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spark_auto_mapper.data_types.data_type_base.</span></span><span class="sig-name descname"><span class="pre">AutoMapperDataTypeBase</span></span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="py method">
-<dt id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.get_column_spec">
-<em class="property"><span class="pre">abstract</span> </em><code class="sig-name descname"><span class="pre">get_column_spec</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">pyspark.sql.DataFrame</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_column</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">pyspark.sql.Column</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pyspark.sql.Column</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.get_column_spec" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.get_column_spec">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">get_column_spec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_column</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.get_column_spec" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the column spec for this automapper data type</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>source_df</strong> – source data frame in case the automapper type needs that data to decide what to do</p></li>
-<li><p><strong>current_column</strong> – (Optional) this is set when we are inside an array</p></li>
+<li><p><strong>source_df</strong> (<em>Optional</em><em>[</em><em>pyspark.sql.DataFrame</em><em>]</em>) – source data frame in case the automapper type needs that data to decide what to do</p></li>
+<li><p><strong>current_column</strong> (<em>Optional</em><em>[</em><em>pyspark.sql.Column</em><em>]</em>) – (Optional) this is set when we are inside an array</p></li>
 </ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pyspark.sql.Column</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.get_value">
-<code class="sig-name descname"><span class="pre">get_value</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase" title="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase"><span class="pre">spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">pyspark.sql.DataFrame</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_column</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">pyspark.sql.Column</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pyspark.sql.Column</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.get_value" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.get_value">
+<span class="sig-name descname"><span class="pre">get_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_column</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.get_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the value for this automapper</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>value</strong> – current value</p></li>
-<li><p><strong>source_df</strong> – source data frame in case the automapper type needs that data to decide what to do</p></li>
-<li><p><strong>current_column</strong> – (Optional) this is set when we are inside an array</p></li>
+<li><p><strong>value</strong> (<a class="reference internal" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase" title="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase"><em>AutoMapperDataTypeBase</em></a>) – current value</p></li>
+<li><p><strong>source_df</strong> (<em>Optional</em><em>[</em><em>pyspark.sql.DataFrame</em><em>]</em>) – source data frame in case the automapper type needs that data to decide what to do</p></li>
+<li><p><strong>current_column</strong> (<em>Optional</em><em>[</em><em>pyspark.sql.Column</em><em>]</em>) – (Optional) this is set when we are inside an array</p></li>
 </ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pyspark.sql.Column</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.include_null_properties">
-<code class="sig-name descname"><span class="pre">include_null_properties</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_null_properties</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.include_null_properties" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.include_null_properties">
+<span class="sig-name descname"><span class="pre">include_null_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_null_properties</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.include_null_properties" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>include_null_properties</strong> (<em>bool</em>) – </p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
-<dt id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.transform">
-<code class="sig-name descname"><span class="pre">transform</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase" title="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase"><span class="pre">spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">_TAutoMapperDataType</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">_TAutoMapperDataType</span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.transform" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.transform">
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>transforms a column into another type or struct</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>value</strong> – Complex or Simple Type to create for each item in the array</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<em>_TAutoMapperDataType</em>) – Complex or Simple Type to create for each item in the array</p></li>
+<li><p><strong>self</strong> (<a class="reference internal" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase" title="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase"><em>AutoMapperDataTypeBase</em></a>) – </p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a transform automapper type</p>
 </dd>
 <dt class="field-odd">Example</dt>
 <dd class="field-odd"><p></p></dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>List[_TAutoMapperDataType]</p>
+</dd>
 </dl>
 <p>This is an example</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.select">
-<code class="sig-name descname"><span class="pre">select</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">_TAutoMapperDataType</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">_TAutoMapperDataType</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.select" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.select">
+<span class="sig-name descname"><span class="pre">select</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.select" title="Permalink to this definition">¶</a></dt>
 <dd><p>transforms a column into another type or struct</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>value</strong> – Complex or Simple Type to create for each item in the array</p>
+<dd class="field-odd"><p><strong>value</strong> (<em>_TAutoMapperDataType</em>) – Complex or Simple Type to create for each item in the array</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a transform automapper type</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>_TAutoMapperDataType</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.filter">
-<code class="sig-name descname"><span class="pre">filter</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">_TAutoMapperDataType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">pyspark.sql.Column</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">pyspark.sql.Column</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">_TAutoMapperDataType</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.filter" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.filter">
+<span class="sig-name descname"><span class="pre">filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.filter" title="Permalink to this definition">¶</a></dt>
 <dd><p>filters an array column</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>func</strong> – func to create type or struct</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func</strong> (<em>Callable</em><em>[</em><em>[</em><em>pyspark.sql.Column</em><em>]</em><em>, </em><em>pyspark.sql.Column</em><em>]</em>) – func to create type or struct</p></li>
+<li><p><strong>self</strong> (<em>_TAutoMapperDataType</em>) – </p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a filter automapper type</p>
 </dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>_TAutoMapperDataType</p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.split_by_delimiter">
-<code class="sig-name descname"><span class="pre">split_by_delimiter</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">_TAutoMapperDataType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delimiter</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">_TAutoMapperDataType</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.split_by_delimiter" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.split_by_delimiter">
+<span class="sig-name descname"><span class="pre">split_by_delimiter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delimiter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.split_by_delimiter" title="Permalink to this definition">¶</a></dt>
 <dd><p>splits a text column by the delimiter to create an array</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>delimiter</strong> – delimiter</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>delimiter</strong> (<em>str</em>) – delimiter</p></li>
+<li><p><strong>self</strong> (<em>_TAutoMapperDataType</em>) – </p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a split_by_delimiter automapper type</p>
 </dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>_TAutoMapperDataType</p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.select_one">
-<code class="sig-name descname"><span class="pre">select_one</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">_TAutoMapperDataType</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">_TAutoMapperDataType</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.select_one" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.select_one">
+<span class="sig-name descname"><span class="pre">select_one</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.select_one" title="Permalink to this definition">¶</a></dt>
 <dd><p>selects first item from array</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>value</strong> – Complex or Simple Type to create for each item in the array</p>
+<dd class="field-odd"><p><strong>value</strong> (<em>_TAutoMapperDataType</em>) – Complex or Simple Type to create for each item in the array</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a transform automapper type</p>
 </dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>_TAutoMapperDataType</p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.first">
-<code class="sig-name descname"><span class="pre">first</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">_TAutoMapperDataType</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">_TAutoMapperDataType</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.first" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.first">
+<span class="sig-name descname"><span class="pre">first</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.first" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns the first element in array</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a filter automapper type</p>
 </dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><p><strong>self</strong> (<em>_TAutoMapperDataType</em>) – </p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>_TAutoMapperDataType</p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.expression">
-<code class="sig-name descname"><span class="pre">expression</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">_TAutoMapperDataType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">_TAutoMapperDataType</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.expression" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.expression">
+<span class="sig-name descname"><span class="pre">expression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.expression" title="Permalink to this definition">¶</a></dt>
 <dd><p>Specifies that the value parameter should be executed as a sql expression in Spark</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>value</strong> – sql</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<em>str</em>) – sql</p></li>
+<li><p><strong>self</strong> (<em>_TAutoMapperDataType</em>) – </p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>an expression automapper type</p>
 </dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>_TAutoMapperDataType</p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.current">
-<code class="sig-name descname"><span class="pre">current</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">_TAutoMapperDataType</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.current" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.current">
+<span class="sig-name descname"><span class="pre">current</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.current" title="Permalink to this definition">¶</a></dt>
 <dd><p>Specifies to use the current item</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>A column automapper type</p>
 </dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>_TAutoMapperDataType</p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.field">
-<code class="sig-name descname"><span class="pre">field</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">_TAutoMapperDataType</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.field" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.field">
+<span class="sig-name descname"><span class="pre">field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.field" title="Permalink to this definition">¶</a></dt>
 <dd><p>Specifies that the value parameter should be used as a field name</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>value</strong> – name of column</p>
+<dd class="field-odd"><p><strong>value</strong> (<em>str</em>) – name of column</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A column automapper type</p>
 </dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>_TAutoMapperDataType</p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.flatten">
-<code class="sig-name descname"><span class="pre">flatten</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase" title="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase"><span class="pre">spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase</span></a><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.flatten" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.flatten">
+<span class="sig-name descname"><span class="pre">flatten</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.flatten" title="Permalink to this definition">¶</a></dt>
 <dd><p>creates a single array from an array of arrays.
 If a structure of nested arrays is deeper than two levels, only one level of nesting is removed.
 source: <a class="reference external" href="http://spark.apache.org/docs/latest/api/python/_modules/pyspark/sql/functions.html#flatten">http://spark.apache.org/docs/latest/api/python/_modules/pyspark/sql/functions.html#flatten</a></p>
@@ -341,182 +400,267 @@ source: <a class="reference external" href="http://spark.apache.org/docs/latest/
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a flatten automapper type</p>
 </dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase" title="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase">AutoMapperDataTypeBase</a></p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.to_array">
-<code class="sig-name descname"><span class="pre">to_array</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="../array_base/index.html#spark_auto_mapper.data_types.array_base.AutoMapperArrayLikeBase" title="spark_auto_mapper.data_types.array_base.AutoMapperArrayLikeBase"><span class="pre">spark_auto_mapper.data_types.array_base.AutoMapperArrayLikeBase</span></a><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.to_array" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.to_array">
+<span class="sig-name descname"><span class="pre">to_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.to_array" title="Permalink to this definition">¶</a></dt>
 <dd><p>converts single element into an array</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>an automapper type</p>
 </dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="../array_base/index.html#spark_auto_mapper.data_types.array_base.AutoMapperArrayLikeBase" title="spark_auto_mapper.data_types.array_base.AutoMapperArrayLikeBase">spark_auto_mapper.data_types.array_base.AutoMapperArrayLikeBase</a></p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.concat">
-<code class="sig-name descname"><span class="pre">concat</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">_TAutoMapperDataType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">list2</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">_TAutoMapperDataType</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">_TAutoMapperDataType</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.concat" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.concat">
+<span class="sig-name descname"><span class="pre">concat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">list2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.concat" title="Permalink to this definition">¶</a></dt>
 <dd><p>concatenates two arrays or strings</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>list2</strong> – </p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>list2</strong> (<em>_TAutoMapperDataType</em>) – </p></li>
+<li><p><strong>self</strong> (<em>_TAutoMapperDataType</em>) – </p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a filter automapper type</p>
 </dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>_TAutoMapperDataType</p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.to_float">
-<code class="sig-name descname"><span class="pre">to_float</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">_TAutoMapperDataType</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="../float/index.html#spark_auto_mapper.data_types.float.AutoMapperFloatDataType" title="spark_auto_mapper.data_types.float.AutoMapperFloatDataType"><span class="pre">spark_auto_mapper.data_types.float.AutoMapperFloatDataType</span></a><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.to_float" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.to_float">
+<span class="sig-name descname"><span class="pre">to_float</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.to_float" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts column to float</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a float automapper type</p>
 </dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><p><strong>self</strong> (<em>_TAutoMapperDataType</em>) – </p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../float/index.html#spark_auto_mapper.data_types.float.AutoMapperFloatDataType" title="spark_auto_mapper.data_types.float.AutoMapperFloatDataType">spark_auto_mapper.data_types.float.AutoMapperFloatDataType</a></p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.to_date">
-<code class="sig-name descname"><span class="pre">to_date</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">_TAutoMapperDataType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">formats</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="../date/index.html#spark_auto_mapper.data_types.date.AutoMapperDateDataType" title="spark_auto_mapper.data_types.date.AutoMapperDateDataType"><span class="pre">spark_auto_mapper.data_types.date.AutoMapperDateDataType</span></a><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.to_date" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.to_date">
+<span class="sig-name descname"><span class="pre">to_date</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">formats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.to_date" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts a value to date only
 For datetime use the datetime mapper type</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>formats</strong> – (Optional) formats to use for trying to parse the value otherwise uses:
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>formats</strong> (<em>Optional</em><em>[</em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em>) – (Optional) formats to use for trying to parse the value otherwise uses:
 y-M-d,
 yyyyMMdd,
-M/d/y</p>
+M/d/y</p></li>
+<li><p><strong>self</strong> (<em>_TAutoMapperDataType</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="../date/index.html#spark_auto_mapper.data_types.date.AutoMapperDateDataType" title="spark_auto_mapper.data_types.date.AutoMapperDateDataType">spark_auto_mapper.data_types.date.AutoMapperDateDataType</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.to_datetime">
-<code class="sig-name descname"><span class="pre">to_datetime</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">_TAutoMapperDataType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">formats</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="../datetime/index.html#spark_auto_mapper.data_types.datetime.AutoMapperDateTimeDataType" title="spark_auto_mapper.data_types.datetime.AutoMapperDateTimeDataType"><span class="pre">spark_auto_mapper.data_types.datetime.AutoMapperDateTimeDataType</span></a><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.to_datetime" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.to_datetime">
+<span class="sig-name descname"><span class="pre">to_datetime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">formats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.to_datetime" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts the value to a timestamp type in Spark</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>formats</strong> – (Optional) formats to use for trying to parse the value otherwise uses Spark defaults</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>formats</strong> (<em>Optional</em><em>[</em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em>) – (Optional) formats to use for trying to parse the value otherwise uses Spark defaults</p></li>
+<li><p><strong>self</strong> (<em>_TAutoMapperDataType</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="../datetime/index.html#spark_auto_mapper.data_types.datetime.AutoMapperDateTimeDataType" title="spark_auto_mapper.data_types.datetime.AutoMapperDateTimeDataType">spark_auto_mapper.data_types.datetime.AutoMapperDateTimeDataType</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.to_amount">
-<code class="sig-name descname"><span class="pre">to_amount</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">_TAutoMapperDataType</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="../amount/index.html#spark_auto_mapper.data_types.amount.AutoMapperAmountDataType" title="spark_auto_mapper.data_types.amount.AutoMapperAmountDataType"><span class="pre">spark_auto_mapper.data_types.amount.AutoMapperAmountDataType</span></a><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.to_amount" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.to_amount">
+<span class="sig-name descname"><span class="pre">to_amount</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.to_amount" title="Permalink to this definition">¶</a></dt>
 <dd><p>Specifies the value should be used as an amount</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>an amount automapper type</p>
 </dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><p><strong>self</strong> (<em>_TAutoMapperDataType</em>) – </p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../amount/index.html#spark_auto_mapper.data_types.amount.AutoMapperAmountDataType" title="spark_auto_mapper.data_types.amount.AutoMapperAmountDataType">spark_auto_mapper.data_types.amount.AutoMapperAmountDataType</a></p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.to_boolean">
-<code class="sig-name descname"><span class="pre">to_boolean</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">_TAutoMapperDataType</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="../boolean/index.html#spark_auto_mapper.data_types.boolean.AutoMapperBooleanDataType" title="spark_auto_mapper.data_types.boolean.AutoMapperBooleanDataType"><span class="pre">spark_auto_mapper.data_types.boolean.AutoMapperBooleanDataType</span></a><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.to_boolean" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.to_boolean">
+<span class="sig-name descname"><span class="pre">to_boolean</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.to_boolean" title="Permalink to this definition">¶</a></dt>
 <dd><p>Specifies the value should be used as a boolean</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a boolean automapper type</p>
 </dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><p><strong>self</strong> (<em>_TAutoMapperDataType</em>) – </p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../boolean/index.html#spark_auto_mapper.data_types.boolean.AutoMapperBooleanDataType" title="spark_auto_mapper.data_types.boolean.AutoMapperBooleanDataType">spark_auto_mapper.data_types.boolean.AutoMapperBooleanDataType</a></p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.to_number">
-<code class="sig-name descname"><span class="pre">to_number</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">_TAutoMapperDataType</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="../number/index.html#spark_auto_mapper.data_types.number.AutoMapperNumberDataType" title="spark_auto_mapper.data_types.number.AutoMapperNumberDataType"><span class="pre">spark_auto_mapper.data_types.number.AutoMapperNumberDataType</span></a><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.to_number" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.to_number">
+<span class="sig-name descname"><span class="pre">to_number</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.to_number" title="Permalink to this definition">¶</a></dt>
 <dd><p>Specifies value should be used as a number</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a number automapper type</p>
 </dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><p><strong>self</strong> (<em>_TAutoMapperDataType</em>) – </p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../number/index.html#spark_auto_mapper.data_types.number.AutoMapperNumberDataType" title="spark_auto_mapper.data_types.number.AutoMapperNumberDataType">spark_auto_mapper.data_types.number.AutoMapperNumberDataType</a></p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.to_text">
-<code class="sig-name descname"><span class="pre">to_text</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">_TAutoMapperDataType</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="../text_like_base/index.html#spark_auto_mapper.data_types.text_like_base.AutoMapperTextLikeBase" title="spark_auto_mapper.data_types.text_like_base.AutoMapperTextLikeBase"><span class="pre">spark_auto_mapper.data_types.text_like_base.AutoMapperTextLikeBase</span></a><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.to_text" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.to_text">
+<span class="sig-name descname"><span class="pre">to_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.to_text" title="Permalink to this definition">¶</a></dt>
 <dd><p>Specifies that the value parameter should be used as a literal text</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a text automapper type</p>
 </dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><p><strong>self</strong> (<em>_TAutoMapperDataType</em>) – </p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../text_like_base/index.html#spark_auto_mapper.data_types.text_like_base.AutoMapperTextLikeBase" title="spark_auto_mapper.data_types.text_like_base.AutoMapperTextLikeBase">spark_auto_mapper.data_types.text_like_base.AutoMapperTextLikeBase</a></p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.join_using_delimiter">
-<code class="sig-name descname"><span class="pre">join_using_delimiter</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">_TAutoMapperDataType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delimiter</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">_TAutoMapperDataType</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.join_using_delimiter" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.join_using_delimiter">
+<span class="sig-name descname"><span class="pre">join_using_delimiter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delimiter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.join_using_delimiter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Joins an array and forms a string using the delimiter</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>delimiter</strong> – string to use as delimiter</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>delimiter</strong> (<em>str</em>) – string to use as delimiter</p></li>
+<li><p><strong>self</strong> (<em>_TAutoMapperDataType</em>) – </p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a join_using_delimiter automapper type</p>
 </dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.get_schema">
-<code class="sig-name descname"><span class="pre">get_schema</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_extension</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">pyspark.sql.types.StructType</span><span class="p"><span class="pre">,</span> </span><span class="pre">pyspark.sql.types.DataType</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.get_schema" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.to_date_format">
-<code class="sig-name descname"><span class="pre">to_date_format</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">_TAutoMapperDataType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format_</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="../date_format/index.html#spark_auto_mapper.data_types.date_format.AutoMapperFormatDateTimeDataType" title="spark_auto_mapper.data_types.date_format.AutoMapperFormatDateTimeDataType"><span class="pre">spark_auto_mapper.data_types.date_format.AutoMapperFormatDateTimeDataType</span></a><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.to_date_format" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts a date or time into string</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>format</strong> – format to use for trying to parse the value otherwise uses:
-y-M-d
-yyyyMMdd
-M/d/y</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>_TAutoMapperDataType</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.to_null_if_empty">
-<code class="sig-name descname"><span class="pre">to_null_if_empty</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">_TAutoMapperDataType</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">_TAutoMapperDataType</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.to_null_if_empty" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.get_schema">
+<span class="sig-name descname"><span class="pre">get_schema</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_extension</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.get_schema" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>include_extension</strong> (<em>bool</em>) – </p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Optional[Union[pyspark.sql.types.StructType, pyspark.sql.types.DataType]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.to_date_format">
+<span class="sig-name descname"><span class="pre">to_date_format</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format_</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.to_date_format" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a date or time into string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>format</strong> – format to use for trying to parse the value otherwise uses:
+y-M-d
+yyyyMMdd
+M/d/y</p></li>
+<li><p><strong>self</strong> (<em>_TAutoMapperDataType</em>) – </p></li>
+<li><p><strong>format_</strong> (<em>str</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="../date_format/index.html#spark_auto_mapper.data_types.date_format.AutoMapperFormatDateTimeDataType" title="spark_auto_mapper.data_types.date_format.AutoMapperFormatDateTimeDataType">spark_auto_mapper.data_types.date_format.AutoMapperFormatDateTimeDataType</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.to_null_if_empty">
+<span class="sig-name descname"><span class="pre">to_null_if_empty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.to_null_if_empty" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns null if the column is an empty string</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>an automapper type</p>
 </dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><p><strong>self</strong> (<em>_TAutoMapperDataType</em>) – </p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>_TAutoMapperDataType</p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.regex_replace">
-<code class="sig-name descname"><span class="pre">regex_replace</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">_TAutoMapperDataType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replacement</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">_TAutoMapperDataType</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.regex_replace" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.regex_replace">
+<span class="sig-name descname"><span class="pre">regex_replace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replacement</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.regex_replace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Replace all substrings of the specified string value that match regexp with replacement.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>pattern</strong> – pattern to search for</p></li>
-<li><p><strong>replacement</strong> – string to replace with</p></li>
+<li><p><strong>pattern</strong> (<em>str</em>) – pattern to search for</p></li>
+<li><p><strong>replacement</strong> (<em>str</em>) – string to replace with</p></li>
+<li><p><strong>self</strong> (<em>_TAutoMapperDataType</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a regex_replace automapper type</p>
 </dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>_TAutoMapperDataType</p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.sanitize">
-<code class="sig-name descname"><span class="pre">sanitize</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">_TAutoMapperDataType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'[^\\w\\r\\n\\t</span> <span class="pre">_.,!\\&quot;\'/$-]'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replacement</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'</span> <span class="pre">'</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">_TAutoMapperDataType</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.sanitize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Replaces all “non-normal” characters with specified replacement</p>
-<blockquote>
-<div><p>By default, We’re using the FHIR definition of valid string
+<dt class="sig sig-object py" id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.sanitize">
+<span class="sig-name descname"><span class="pre">sanitize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'[^\\w\\r\\n\\t</span> <span class="pre">_.,!\\&quot;\'/$-]'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replacement</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'</span> <span class="pre">'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.sanitize" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Replaces all “non-normal” characters with specified replacement</p>
+<p>By default, We’re using the FHIR definition of valid string
 (except /S does not seem to work properly in Spark)
 <a class="reference external" href="https://www.hl7.org/fhir/datatypes.html#string">https://www.hl7.org/fhir/datatypes.html#string</a>
 Valid characters are (regex=’[
@@ -551,37 +695,77 @@ S]’):</p>
 </div></blockquote>
 </li>
 </ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<em>_TAutoMapperDataType</em>) – </p></li>
+<li><p><strong>pattern</strong> (<em>str</em>) – </p></li>
+<li><p><strong>replacement</strong> (<em>str</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>_TAutoMapperDataType</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.if_exists">
-<code class="sig-name descname"><span class="pre">if_exists</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">_TAutoMapperDataType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">if_exists</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">_TAutoMapperDataType</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">if_not_exists</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">_TAutoMapperDataType</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">_TAutoMapperDataType</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.if_exists" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.if_exists">
+<span class="sig-name descname"><span class="pre">if_exists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">if_exists</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">if_not_exists</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.if_exists" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns column if it exists else returns null</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>an automapper type</p>
 </dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>self</strong> (<em>_TAutoMapperDataType</em>) – </p></li>
+<li><p><strong>if_exists</strong> (<em>Optional</em><em>[</em><em>_TAutoMapperDataType</em><em>]</em>) – </p></li>
+<li><p><strong>if_not_exists</strong> (<em>Optional</em><em>[</em><em>_TAutoMapperDataType</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>_TAutoMapperDataType</p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.cast">
-<code class="sig-name descname"><span class="pre">cast</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">_TAutoMapperDataType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><span class="pre">_TAutoMapperDataType2</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">_TAutoMapperDataType2</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.cast" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.cast">
+<span class="sig-name descname"><span class="pre">cast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.cast" title="Permalink to this definition">¶</a></dt>
 <dd><p>casts columns to type</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>type</strong> – type to cast to</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>type</strong> – type to cast to</p></li>
+<li><p><strong>self</strong> (<em>_TAutoMapperDataType</em>) – </p></li>
+<li><p><strong>type_</strong> (<em>Type</em><em>[</em><em>_TAutoMapperDataType2</em><em>]</em>) – </p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>an automapper type</p>
 </dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>_TAutoMapperDataType2</p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.__add__">
-<code class="sig-name descname"><span class="pre">__add__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">_TAutoMapperDataType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">_TAutoMapperDataType</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">_TAutoMapperDataType</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.__add__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.__add__">
+<span class="sig-name descname"><span class="pre">__add__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.__add__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<em>_TAutoMapperDataType</em>) – </p></li>
+<li><p><strong>other</strong> (<em>_TAutoMapperDataType</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>_TAutoMapperDataType</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 

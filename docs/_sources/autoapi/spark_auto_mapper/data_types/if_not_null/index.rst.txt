@@ -1,5 +1,5 @@
-:mod:`spark_auto_mapper.data_types.if_not_null`
-===============================================
+:py:mod:`spark_auto_mapper.data_types.if_not_null`
+==================================================
 
 .. py:module:: spark_auto_mapper.data_types.if_not_null
 
@@ -16,17 +16,17 @@ Classes
 
 
 
-.. class:: AutoMapperIfNotNullDataType(check: spark_auto_mapper.type_definitions.wrapper_types.AutoMapperColumnOrColumnLikeType, value: _TAutoMapperDataType, when_null: Optional[Union[(spark_auto_mapper.data_types.text_like_base.AutoMapperTextLikeBase, _TAutoMapperDataType)]] = None)
 
+.. py:class:: AutoMapperIfNotNullDataType(check, value, when_null = None)
 
-   Bases: :class:`spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase`, :class:`Generic[_TAutoMapperDataType]`
+   Bases: :py:obj:`spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase`, :py:obj:`Generic`\ [\ :py:obj:`_TAutoMapperDataType`\ ]
 
    If check returns null then return null else return value
 
-   .. method:: include_null_properties(self, include_null_properties: bool) -> None
+   .. py:method:: include_null_properties(self, include_null_properties)
 
 
-   .. method:: get_column_spec(self, source_df: Optional[pyspark.sql.DataFrame], current_column: Optional[pyspark.sql.Column]) -> pyspark.sql.Column
+   .. py:method:: get_column_spec(self, source_df, current_column)
 
       Gets the column spec for this automapper data type
 

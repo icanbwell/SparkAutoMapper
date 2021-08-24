@@ -1,5 +1,5 @@
-:mod:`spark_auto_mapper.data_types.filter`
-==========================================
+:py:mod:`spark_auto_mapper.data_types.filter`
+=============================================
 
 .. py:module:: spark_auto_mapper.data_types.filter
 
@@ -16,15 +16,15 @@ Classes
 
 
 
-.. class:: AutoMapperFilterDataType(column: Union[(spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase, spark_auto_mapper.type_definitions.wrapper_types.AutoMapperColumnOrColumnLikeType)], func: Callable[([pyspark.sql.Column], pyspark.sql.Column)])
+
+.. py:class:: AutoMapperFilterDataType(column, func)
+
+   Bases: :py:obj:`spark_auto_mapper.data_types.array_base.AutoMapperArrayLikeBase`
+
+   .. py:method:: include_null_properties(self, include_null_properties)
 
 
-   Bases: :class:`spark_auto_mapper.data_types.array_base.AutoMapperArrayLikeBase`
-
-   .. method:: include_null_properties(self, include_null_properties: bool) -> None
-
-
-   .. method:: get_column_spec(self, source_df: Optional[pyspark.sql.DataFrame], current_column: Optional[pyspark.sql.Column]) -> pyspark.sql.Column
+   .. py:method:: get_column_spec(self, source_df, current_column)
 
       Gets the column spec for this automapper data type
 

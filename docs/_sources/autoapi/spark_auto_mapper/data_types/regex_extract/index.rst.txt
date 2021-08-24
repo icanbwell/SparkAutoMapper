@@ -1,5 +1,5 @@
-:mod:`spark_auto_mapper.data_types.regex_extract`
-=================================================
+:py:mod:`spark_auto_mapper.data_types.regex_extract`
+====================================================
 
 .. py:module:: spark_auto_mapper.data_types.regex_extract
 
@@ -16,17 +16,17 @@ Classes
 
 
 
-.. class:: AutoMapperRegExExtractDataType(column: spark_auto_mapper.type_definitions.wrapper_types.AutoMapperColumnOrColumnLikeType, pattern: str, index: int)
 
+.. py:class:: AutoMapperRegExExtractDataType(column, pattern, index)
 
-   Bases: :class:`spark_auto_mapper.data_types.text_like_base.AutoMapperTextLikeBase`
+   Bases: :py:obj:`spark_auto_mapper.data_types.text_like_base.AutoMapperTextLikeBase`
 
    Extracts a regex from a column. Will return an empty string if no match is found.
 
    Note that regexp_extract requires that the pattern match the *entire* string - it does
    the equivalent of a python re.match, not re.search
 
-   .. method:: get_column_spec(self, source_df: Optional[pyspark.sql.DataFrame], current_column: Optional[pyspark.sql.Column]) -> pyspark.sql.Column
+   .. py:method:: get_column_spec(self, source_df, current_column)
 
       Gets the column spec for this automapper data type
 

@@ -1,5 +1,5 @@
-:mod:`spark_auto_mapper.data_types.split_by_delimiter`
-======================================================
+:py:mod:`spark_auto_mapper.data_types.split_by_delimiter`
+=========================================================
 
 .. py:module:: spark_auto_mapper.data_types.split_by_delimiter
 
@@ -16,14 +16,14 @@ Classes
 
 
 
-.. class:: AutoMapperSplitByDelimiterDataType(column: Union[(spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase, spark_auto_mapper.type_definitions.wrapper_types.AutoMapperColumnOrColumnLikeType)], delimiter: str)
 
+.. py:class:: AutoMapperSplitByDelimiterDataType(column, delimiter)
 
-   Bases: :class:`spark_auto_mapper.data_types.array_base.AutoMapperArrayLikeBase`
+   Bases: :py:obj:`spark_auto_mapper.data_types.array_base.AutoMapperArrayLikeBase`
 
    Splits the string by the delimiter and returns an array
 
-   .. method:: get_column_spec(self, source_df: Optional[pyspark.sql.DataFrame], current_column: Optional[pyspark.sql.Column]) -> pyspark.sql.Column
+   .. py:method:: get_column_spec(self, source_df, current_column)
 
       Gets the column spec for this automapper data type
 

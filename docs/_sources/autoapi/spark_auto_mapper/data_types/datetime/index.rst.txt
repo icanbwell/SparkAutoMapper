@@ -1,5 +1,5 @@
-:mod:`spark_auto_mapper.data_types.datetime`
-============================================
+:py:mod:`spark_auto_mapper.data_types.datetime`
+===============================================
 
 .. py:module:: spark_auto_mapper.data_types.datetime
 
@@ -16,18 +16,19 @@ Classes
 
 
 
-.. class:: AutoMapperDateTimeDataType(value: spark_auto_mapper.type_definitions.defined_types.AutoMapperDateInputType, formats: Optional[List[str]] = None)
 
+.. py:class:: AutoMapperDateTimeDataType(value, formats = None)
 
-   Bases: :class:`spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase`
+   Bases: :py:obj:`spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase`
 
+   
    Converts the value to a timestamp type in Spark
 
 
    :param value: value
    :param formats: (Optional) formats to use for trying to parse the value otherwise uses Spark defaults
 
-   .. method:: get_column_spec(self, source_df: Optional[pyspark.sql.DataFrame], current_column: Optional[pyspark.sql.Column]) -> pyspark.sql.Column
+   .. py:method:: get_column_spec(self, source_df, current_column)
 
       Gets the column spec for this automapper data type
 

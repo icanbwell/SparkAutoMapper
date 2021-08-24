@@ -14,6 +14,8 @@
   
   <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
 
   
@@ -31,6 +33,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/doctools.js"></script>
@@ -84,7 +87,7 @@
               
             
             
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../index.html">API Reference</a></li>
 </ul>
@@ -172,9 +175,21 @@
 </tbody>
 </table>
 <dl class="py class">
-<dt id="spark_auto_mapper.automappers.complex.AutoMapperWithComplex">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">spark_auto_mapper.automappers.complex.</span></code><code class="sig-name descname"><span class="pre">AutoMapperWithComplex</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entity</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="../../data_types/complex/complex_base/index.html#spark_auto_mapper.data_types.complex.complex_base.AutoMapperDataTypeComplexBase" title="spark_auto_mapper.data_types.complex.complex_base.AutoMapperDataTypeComplexBase"><span class="pre">spark_auto_mapper.data_types.complex.complex_base.AutoMapperDataTypeComplexBase</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_schema</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_extension</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_null_properties</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_schema_validation</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_if_columns_null_or_empty</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.automappers.complex.AutoMapperWithComplex" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="../container/index.html#spark_auto_mapper.automappers.container.AutoMapperContainer" title="spark_auto_mapper.automappers.container.AutoMapperContainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">spark_auto_mapper.automappers.container.AutoMapperContainer</span></code></a></p>
+<dt class="sig sig-object py" id="spark_auto_mapper.automappers.complex.AutoMapperWithComplex">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spark_auto_mapper.automappers.complex.</span></span><span class="sig-name descname"><span class="pre">AutoMapperWithComplex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_schema</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_extension</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_null_properties</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_schema_validation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_if_columns_null_or_empty</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.automappers.complex.AutoMapperWithComplex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../container/index.html#spark_auto_mapper.automappers.container.AutoMapperContainer" title="spark_auto_mapper.automappers.container.AutoMapperContainer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spark_auto_mapper.automappers.container.AutoMapperContainer</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>entity</strong> (<a class="reference internal" href="../../data_types/complex/complex_base/index.html#spark_auto_mapper.data_types.complex.complex_base.AutoMapperDataTypeComplexBase" title="spark_auto_mapper.data_types.complex.complex_base.AutoMapperDataTypeComplexBase"><em>spark_auto_mapper.data_types.complex.complex_base.AutoMapperDataTypeComplexBase</em></a>) – </p></li>
+<li><p><strong>use_schema</strong> (<em>bool</em>) – </p></li>
+<li><p><strong>include_extension</strong> (<em>bool</em>) – </p></li>
+<li><p><strong>include_null_properties</strong> (<em>bool</em>) – </p></li>
+<li><p><strong>skip_schema_validation</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – </p></li>
+<li><p><strong>skip_if_columns_null_or_empty</strong> (<em>Optional</em><em>[</em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

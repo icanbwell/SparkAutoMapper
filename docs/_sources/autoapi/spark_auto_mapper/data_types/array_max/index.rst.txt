@@ -1,5 +1,5 @@
-:mod:`spark_auto_mapper.data_types.array_max`
-=============================================
+:py:mod:`spark_auto_mapper.data_types.array_max`
+================================================
 
 .. py:module:: spark_auto_mapper.data_types.array_max
 
@@ -16,14 +16,14 @@ Classes
 
 
 
-.. class:: AutoMapperArrayMaxDataType(*args: _T)
 
+.. py:class:: AutoMapperArrayMaxDataType(*args)
 
-   Bases: :class:`spark_auto_mapper.data_types.text_like_base.AutoMapperTextLikeBase`
+   Bases: :py:obj:`spark_auto_mapper.data_types.text_like_base.AutoMapperTextLikeBase`
 
    Returns the maximum value in the array. NULL elements are skipped
 
-   .. method:: get_column_spec(self, source_df: Optional[pyspark.sql.DataFrame], current_column: Optional[pyspark.sql.Column]) -> pyspark.sql.Column
+   .. py:method:: get_column_spec(self, source_df, current_column)
 
       Gets the column spec for this automapper data type
 
@@ -31,7 +31,7 @@ Classes
       :param current_column: (Optional) this is set when we are inside an array
 
 
-   .. method:: include_null_properties(self, include_null_properties: bool) -> None
+   .. py:method:: include_null_properties(self, include_null_properties)
 
 
 

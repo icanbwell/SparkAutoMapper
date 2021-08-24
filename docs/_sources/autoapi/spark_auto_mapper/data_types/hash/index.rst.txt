@@ -1,5 +1,5 @@
-:mod:`spark_auto_mapper.data_types.hash`
-========================================
+:py:mod:`spark_auto_mapper.data_types.hash`
+===========================================
 
 .. py:module:: spark_auto_mapper.data_types.hash
 
@@ -16,14 +16,14 @@ Classes
 
 
 
-.. class:: AutoMapperHashDataType(*args: Union[(spark_auto_mapper.type_definitions.native_types.AutoMapperNativeTextType, spark_auto_mapper.type_definitions.wrapper_types.AutoMapperWrapperType, spark_auto_mapper.data_types.text_like_base.AutoMapperTextLikeBase)])
 
+.. py:class:: AutoMapperHashDataType(*args)
 
-   Bases: :class:`spark_auto_mapper.data_types.text_like_base.AutoMapperTextLikeBase`
+   Bases: :py:obj:`spark_auto_mapper.data_types.text_like_base.AutoMapperTextLikeBase`
 
    Calculates the hash code of given columns, and returns the result as an int column.
 
-   .. method:: get_column_spec(self, source_df: Optional[pyspark.sql.DataFrame], current_column: Optional[pyspark.sql.Column]) -> pyspark.sql.Column
+   .. py:method:: get_column_spec(self, source_df, current_column)
 
       Gets the column spec for this automapper data type
 
