@@ -232,8 +232,8 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<a class="reference internal" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase" title="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase"><em>AutoMapperDataTypeBase</em></a>) – Set by Python.  No need to pass.</p></li>
 <li><p><strong>value</strong> (<em>_TAutoMapperDataType</em>) – Complex or Simple Type to create for each item in the array</p></li>
-<li><p><strong>self</strong> (<a class="reference internal" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase" title="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase"><em>AutoMapperDataTypeBase</em></a>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -254,7 +254,10 @@
 <dd><p>transforms a column into another type or struct</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>value</strong> (<em>_TAutoMapperDataType</em>) – Complex or Simple Type to create for each item in the array</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> – Set by Python.  No need to pass.</p></li>
+<li><p><strong>value</strong> (<em>_TAutoMapperDataType</em>) – Complex or Simple Type to create for each item in the array</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a transform automapper type</p>
@@ -370,7 +373,7 @@
 <dd class="field-even"><p>an expression automapper type</p>
 </dd>
 <dt class="field-odd">Example</dt>
-<dd class="field-odd"><p>A.column(“identifier”).select(A.field(“_.value”)).first()</p>
+<dd class="field-odd"><p>A.column(“identifier”).expression(“”)</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>_TAutoMapperDataType</p>
@@ -386,8 +389,11 @@
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>A column automapper type</p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>_TAutoMapperDataType</p>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p>A.column(“last_name”).current()</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>_TAutoMapperDataType</p>
 </dd>
 </dl>
 </dd></dl>
@@ -398,13 +404,16 @@
 <dd><p>Specifies that the value parameter should be used as a field name</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>value</strong> (<em>str</em>) – name of column</p>
+<dd class="field-odd"><p><strong>value</strong> (<em>str</em>) – name of field</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A column automapper type</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>_TAutoMapperDataType</p>
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p>A.column(“identifier”).select_one(A.field(“type.coding[0].code”))</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>_TAutoMapperDataType</p>
 </dd>
 </dl>
 </dd></dl>
@@ -419,8 +428,11 @@ source: <a class="reference external" href="http://spark.apache.org/docs/latest/
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a flatten automapper type</p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase" title="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase">AutoMapperDataTypeBase</a></p>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p>A.flatten(A.column(“column”))</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase" title="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase">AutoMapperDataTypeBase</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -433,8 +445,11 @@ source: <a class="reference external" href="http://spark.apache.org/docs/latest/
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>an automapper type</p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="../array_base/index.html#spark_auto_mapper.data_types.array_base.AutoMapperArrayLikeBase" title="spark_auto_mapper.data_types.array_base.AutoMapperArrayLikeBase">spark_auto_mapper.data_types.array_base.AutoMapperArrayLikeBase</a></p>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p>A.column(“identifier”).to_array()</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../array_base/index.html#spark_auto_mapper.data_types.array_base.AutoMapperArrayLikeBase" title="spark_auto_mapper.data_types.array_base.AutoMapperArrayLikeBase">spark_auto_mapper.data_types.array_base.AutoMapperArrayLikeBase</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -446,15 +461,18 @@ source: <a class="reference external" href="http://spark.apache.org/docs/latest/
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>list2</strong> (<em>_TAutoMapperDataType</em>) – </p></li>
+<li><p><strong>list2</strong> (<em>_TAutoMapperDataType</em>) – list to concat into the current column</p></li>
 <li><p><strong>self</strong> (<em>_TAutoMapperDataType</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a filter automapper type</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>_TAutoMapperDataType</p>
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p>A.column(“identifier”).concat(A.text(“foo”).to_array()))</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>_TAutoMapperDataType</p>
 </dd>
 </dl>
 </dd></dl>
@@ -467,11 +485,14 @@ source: <a class="reference external" href="http://spark.apache.org/docs/latest/
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a float automapper type</p>
 </dd>
-<dt class="field-even">Parameters</dt>
-<dd class="field-even"><p><strong>self</strong> (<em>_TAutoMapperDataType</em>) – </p>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p>A.column(“identifier”).to_float()</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="../float/index.html#spark_auto_mapper.data_types.float.AutoMapperFloatDataType" title="spark_auto_mapper.data_types.float.AutoMapperFloatDataType">spark_auto_mapper.data_types.float.AutoMapperFloatDataType</a></p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>self</strong> (<em>_TAutoMapperDataType</em>) – </p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="../float/index.html#spark_auto_mapper.data_types.float.AutoMapperFloatDataType" title="spark_auto_mapper.data_types.float.AutoMapperFloatDataType">spark_auto_mapper.data_types.float.AutoMapperFloatDataType</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -491,6 +512,12 @@ M/d/y</p></li>
 <li><p><strong>self</strong> (<em>_TAutoMapperDataType</em>) – </p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a date type</p>
+</dd>
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p>A.column(“date_of_birth”).to_date()</p>
+</dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../date/index.html#spark_auto_mapper.data_types.date.AutoMapperDateDataType" title="spark_auto_mapper.data_types.date.AutoMapperDateDataType">spark_auto_mapper.data_types.date.AutoMapperDateDataType</a></p>
 </dd>
@@ -508,8 +535,11 @@ M/d/y</p></li>
 <li><p><strong>self</strong> (<em>_TAutoMapperDataType</em>) – </p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="../datetime/index.html#spark_auto_mapper.data_types.datetime.AutoMapperDateTimeDataType" title="spark_auto_mapper.data_types.datetime.AutoMapperDateTimeDataType">spark_auto_mapper.data_types.datetime.AutoMapperDateTimeDataType</a></p>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p>A.column(“date_of_birth”).to_datetime()</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../datetime/index.html#spark_auto_mapper.data_types.datetime.AutoMapperDateTimeDataType" title="spark_auto_mapper.data_types.datetime.AutoMapperDateTimeDataType">spark_auto_mapper.data_types.datetime.AutoMapperDateTimeDataType</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -522,11 +552,14 @@ M/d/y</p></li>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>an amount automapper type</p>
 </dd>
-<dt class="field-even">Parameters</dt>
-<dd class="field-even"><p><strong>self</strong> (<em>_TAutoMapperDataType</em>) – </p>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p>A.column(“payment”).to_amount()</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="../amount/index.html#spark_auto_mapper.data_types.amount.AutoMapperAmountDataType" title="spark_auto_mapper.data_types.amount.AutoMapperAmountDataType">spark_auto_mapper.data_types.amount.AutoMapperAmountDataType</a></p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>self</strong> (<em>_TAutoMapperDataType</em>) – </p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="../amount/index.html#spark_auto_mapper.data_types.amount.AutoMapperAmountDataType" title="spark_auto_mapper.data_types.amount.AutoMapperAmountDataType">spark_auto_mapper.data_types.amount.AutoMapperAmountDataType</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -539,11 +572,14 @@ M/d/y</p></li>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a boolean automapper type</p>
 </dd>
-<dt class="field-even">Parameters</dt>
-<dd class="field-even"><p><strong>self</strong> (<em>_TAutoMapperDataType</em>) – </p>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p>A.column(“paid”).to_boolean()</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="../boolean/index.html#spark_auto_mapper.data_types.boolean.AutoMapperBooleanDataType" title="spark_auto_mapper.data_types.boolean.AutoMapperBooleanDataType">spark_auto_mapper.data_types.boolean.AutoMapperBooleanDataType</a></p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>self</strong> (<em>_TAutoMapperDataType</em>) – </p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="../boolean/index.html#spark_auto_mapper.data_types.boolean.AutoMapperBooleanDataType" title="spark_auto_mapper.data_types.boolean.AutoMapperBooleanDataType">spark_auto_mapper.data_types.boolean.AutoMapperBooleanDataType</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -556,11 +592,14 @@ M/d/y</p></li>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a number automapper type</p>
 </dd>
-<dt class="field-even">Parameters</dt>
-<dd class="field-even"><p><strong>self</strong> (<em>_TAutoMapperDataType</em>) – </p>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p>A.column(“paid”).to_number()</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="../number/index.html#spark_auto_mapper.data_types.number.AutoMapperNumberDataType" title="spark_auto_mapper.data_types.number.AutoMapperNumberDataType">spark_auto_mapper.data_types.number.AutoMapperNumberDataType</a></p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>self</strong> (<em>_TAutoMapperDataType</em>) – </p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="../number/index.html#spark_auto_mapper.data_types.number.AutoMapperNumberDataType" title="spark_auto_mapper.data_types.number.AutoMapperNumberDataType">spark_auto_mapper.data_types.number.AutoMapperNumberDataType</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -573,11 +612,14 @@ M/d/y</p></li>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a text automapper type</p>
 </dd>
-<dt class="field-even">Parameters</dt>
-<dd class="field-even"><p><strong>self</strong> (<em>_TAutoMapperDataType</em>) – </p>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p>A.column(“paid”).to_text()</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="../text_like_base/index.html#spark_auto_mapper.data_types.text_like_base.AutoMapperTextLikeBase" title="spark_auto_mapper.data_types.text_like_base.AutoMapperTextLikeBase">spark_auto_mapper.data_types.text_like_base.AutoMapperTextLikeBase</a></p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>self</strong> (<em>_TAutoMapperDataType</em>) – </p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="../text_like_base/index.html#spark_auto_mapper.data_types.text_like_base.AutoMapperTextLikeBase" title="spark_auto_mapper.data_types.text_like_base.AutoMapperTextLikeBase">spark_auto_mapper.data_types.text_like_base.AutoMapperTextLikeBase</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -596,8 +638,11 @@ M/d/y</p></li>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a join_using_delimiter automapper type</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>_TAutoMapperDataType</p>
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p>A.column(“suffix”).join_using_delimiter(“, “)</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>_TAutoMapperDataType</p>
 </dd>
 </dl>
 </dd></dl>
@@ -630,8 +675,11 @@ M/d/y</p></li>
 <li><p><strong>format_</strong> (<em>str</em>) – </p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="../date_format/index.html#spark_auto_mapper.data_types.date_format.AutoMapperFormatDateTimeDataType" title="spark_auto_mapper.data_types.date_format.AutoMapperFormatDateTimeDataType">spark_auto_mapper.data_types.date_format.AutoMapperFormatDateTimeDataType</a></p>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p>A.column(“birth_date”).to_date_format(“y-M-d”)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../date_format/index.html#spark_auto_mapper.data_types.date_format.AutoMapperFormatDateTimeDataType" title="spark_auto_mapper.data_types.date_format.AutoMapperFormatDateTimeDataType">spark_auto_mapper.data_types.date_format.AutoMapperFormatDateTimeDataType</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -644,11 +692,14 @@ M/d/y</p></li>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>an automapper type</p>
 </dd>
-<dt class="field-even">Parameters</dt>
-<dd class="field-even"><p><strong>self</strong> (<em>_TAutoMapperDataType</em>) – </p>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p>A.column(“my_age”).to_null_if_empty()</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>_TAutoMapperDataType</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>self</strong> (<em>_TAutoMapperDataType</em>) – </p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>_TAutoMapperDataType</p>
 </dd>
 </dl>
 </dd></dl>
@@ -668,8 +719,12 @@ M/d/y</p></li>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a regex_replace automapper type</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>_TAutoMapperDataType</p>
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p>A.column(“last_name”).regex_replace(r”[^w
+_.,!”’/$-]”, “.”)</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>_TAutoMapperDataType</p>
 </dd>
 </dl>
 </dd></dl>
@@ -710,6 +765,9 @@ S]’):</p>
 <dt class="field-odd">return</dt>
 <dd class="field-odd"><p>a regex_replace automapper type</p>
 </dd>
+<dt class="field-even">example</dt>
+<dd class="field-even"><p>A.column(“last_name”).sanitize(replacement=”.”)</p>
+</dd>
 </dl>
 </div></blockquote>
 </li>
@@ -733,18 +791,21 @@ S]’):</p>
 <span class="sig-name descname"><span class="pre">if_exists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">if_exists</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">if_not_exists</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.if_exists" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns column if it exists else returns null</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>an automapper type</p>
-</dd>
-<dt class="field-even">Parameters</dt>
-<dd class="field-even"><ul class="simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>if_exists</strong> (<em>Optional</em><em>[</em><em>_TAutoMapperDataType</em><em>]</em>) – value to return if column exists</p></li>
+<li><p><strong>if_not_exists</strong> (<em>Optional</em><em>[</em><em>_TAutoMapperDataType</em><em>]</em>) – value to return if column does not exist</p></li>
 <li><p><strong>self</strong> (<em>_TAutoMapperDataType</em>) – </p></li>
-<li><p><strong>if_exists</strong> (<em>Optional</em><em>[</em><em>_TAutoMapperDataType</em><em>]</em>) – </p></li>
-<li><p><strong>if_not_exists</strong> (<em>Optional</em><em>[</em><em>_TAutoMapperDataType</em><em>]</em>) – </p></li>
 </ul>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>_TAutoMapperDataType</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>an automapper type</p>
+</dd>
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p>A.column(“foo”).if_exists(A.text(“exists”), A.text(“not exists”))</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>_TAutoMapperDataType</p>
 </dd>
 </dl>
 </dd></dl>
@@ -764,8 +825,11 @@ S]’):</p>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>an automapper type</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>_TAutoMapperDataType2</p>
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p>A.column(“my_age”).cast(AutoMapperNumberDataType)</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>_TAutoMapperDataType2</p>
 </dd>
 </dl>
 </dd></dl>
@@ -773,15 +837,19 @@ S]’):</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.__add__">
 <span class="sig-name descname"><span class="pre">__add__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.__add__" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Allows adding items in an array using the + operation</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>other</strong> (<em>_TAutoMapperDataType</em>) – array to add to the current array</p></li>
 <li><p><strong>self</strong> (<em>_TAutoMapperDataType</em>) – </p></li>
-<li><p><strong>other</strong> (<em>_TAutoMapperDataType</em>) – </p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>_TAutoMapperDataType</p>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p>A.column(“array1”) + [ “foo” ]</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>_TAutoMapperDataType</p>
 </dd>
 </dl>
 </dd></dl>

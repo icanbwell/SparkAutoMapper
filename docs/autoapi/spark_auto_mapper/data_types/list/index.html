@@ -237,12 +237,16 @@ Multiple Inheritance:
 <dl class="py method">
 <dt class="sig sig-object py" id="spark_auto_mapper.data_types.list.AutoMapperList.__add__">
 <span class="sig-name descname"><span class="pre">__add__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.data_types.list.AutoMapperList.__add__" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Allows adding items in an array using the + operation</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#spark_auto_mapper.data_types.list.AutoMapperList" title="spark_auto_mapper.data_types.list.AutoMapperList"><em>AutoMapperList</em></a><em>[</em><em>_T</em><em>]</em>) – </p>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#spark_auto_mapper.data_types.list.AutoMapperList" title="spark_auto_mapper.data_types.list.AutoMapperList"><em>AutoMapperList</em></a><em>[</em><em>_T</em><em>]</em>) – array to add to the current array</p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="#spark_auto_mapper.data_types.list.AutoMapperList" title="spark_auto_mapper.data_types.list.AutoMapperList">AutoMapperList</a>[_T]</p>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p>A.column(“array1”) + [ “foo” ]</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#spark_auto_mapper.data_types.list.AutoMapperList" title="spark_auto_mapper.data_types.list.AutoMapperList">AutoMapperList</a>[_T]</p>
 </dd>
 </dl>
 </dd></dl>

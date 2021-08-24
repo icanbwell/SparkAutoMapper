@@ -192,7 +192,7 @@ class AutoMapperDataTypeBase:
 
         :param value: sql
         :return: an expression automapper type
-        :example: A.column("identifier").select(A.field("_.value")).first()
+        :example: A.column("identifier").expression("")
         """
         from spark_auto_mapper.data_types.expression import AutoMapperDataTypeExpression
 
@@ -203,6 +203,7 @@ class AutoMapperDataTypeBase:
         Specifies to use the current item
 
         :return: A column automapper type
+        :example: A.column("last_name").current()
         """
         return self.field("_")
 
@@ -211,8 +212,9 @@ class AutoMapperDataTypeBase:
         """
         Specifies that the value parameter should be used as a field name
 
-        :param value: name of column
+        :param value: name of field
         :return: A column automapper type
+        :example: A.column("identifier").select_one(A.field("type.coding[0].code"))
         """
         from spark_auto_mapper.data_types.field import AutoMapperDataTypeField
 
@@ -226,6 +228,7 @@ class AutoMapperDataTypeBase:
         source: http://spark.apache.org/docs/latest/api/python/_modules/pyspark/sql/functions.html#flatten
 
         :return: a flatten automapper type
+        :example: A.flatten(A.column("column"))
         """
         from spark_auto_mapper.data_types.flatten import AutoMapperFlattenDataType
 
@@ -239,6 +242,7 @@ class AutoMapperDataTypeBase:
 
 
         :return: an automapper type
+        :example: A.column("identifier").to_array()
         """
         from spark_auto_mapper.data_types.array import AutoMapperArrayDataType
 
@@ -256,8 +260,9 @@ class AutoMapperDataTypeBase:
         concatenates two arrays or strings
 
 
-        :param list2:
+        :param list2: list to concat into the current column
         :return: a filter automapper type
+        :example: A.column("identifier").concat(A.text("foo").to_array()))
         """
         from spark_auto_mapper.data_types.concat import AutoMapperConcatDataType
 
@@ -269,6 +274,7 @@ class AutoMapperDataTypeBase:
         Converts column to float
 
         :return: a float automapper type
+        :example: A.column("identifier").to_float()
         """
         from spark_auto_mapper.data_types.float import AutoMapperFloatDataType
 
@@ -286,6 +292,8 @@ class AutoMapperDataTypeBase:
                         y-M-d,
                         yyyyMMdd,
                         M/d/y
+        :return: a date type
+        :example: A.column("date_of_birth").to_date()
         """
         from spark_auto_mapper.data_types.date import AutoMapperDateDataType
 
@@ -299,6 +307,7 @@ class AutoMapperDataTypeBase:
 
 
         :param formats: (Optional) formats to use for trying to parse the value otherwise uses Spark defaults
+        :example: A.column("date_of_birth").to_datetime()
         """
         from spark_auto_mapper.data_types.datetime import AutoMapperDateTimeDataType
 
@@ -309,6 +318,7 @@ class AutoMapperDataTypeBase:
         Specifies the value should be used as an amount
 
         :return: an amount automapper type
+        :example: A.column("payment").to_amount()
         """
         from spark_auto_mapper.data_types.amount import AutoMapperAmountDataType
 
@@ -319,6 +329,7 @@ class AutoMapperDataTypeBase:
         Specifies the value should be used as a boolean
 
         :return: a boolean automapper type
+        :example: A.column("paid").to_boolean()
         """
         from spark_auto_mapper.data_types.boolean import AutoMapperBooleanDataType
 
@@ -329,6 +340,7 @@ class AutoMapperDataTypeBase:
         Specifies value should be used as a number
 
         :return: a number automapper type
+        :example: A.column("paid").to_number()
         """
         from spark_auto_mapper.data_types.number import AutoMapperNumberDataType
 
@@ -339,6 +351,7 @@ class AutoMapperDataTypeBase:
         Specifies that the value parameter should be used as a literal text
 
         :return: a text automapper type
+        :example: A.column("paid").to_text()
         """
         return AutoMapperDataTypeLiteral(self, StringType())
 
@@ -351,6 +364,7 @@ class AutoMapperDataTypeBase:
 
         :param delimiter: string to use as delimiter
         :return: a join_using_delimiter automapper type
+        :example: A.column("suffix").join_using_delimiter(", ")
         """
         from spark_auto_mapper.data_types.join_using_delimiter import (
             AutoMapperJoinUsingDelimiterDataType,
@@ -380,6 +394,7 @@ class AutoMapperDataTypeBase:
                         y-M-d
                         yyyyMMdd
                         M/d/y
+        :example: A.column("birth_date").to_date_format("y-M-d")
         """
         from spark_auto_mapper.data_types.date_format import (
             AutoMapperFormatDateTimeDataType,
@@ -394,6 +409,7 @@ class AutoMapperDataTypeBase:
 
 
         :return: an automapper type
+        :example: A.column("my_age").to_null_if_empty()
         """
         from spark_auto_mapper.data_types.null_if_empty import (
             AutoMapperNullIfEmptyDataType,
@@ -411,6 +427,7 @@ class AutoMapperDataTypeBase:
         :param pattern: pattern to search for
         :param replacement: string to replace with
         :return: a regex_replace automapper type
+        :example: A.column("last_name").regex_replace(r"[^\r\n\t _.,!\"'/$-]", ".")
         """
 
         from spark_auto_mapper.data_types.regex_replace import (
@@ -452,6 +469,7 @@ class AutoMapperDataTypeBase:
         :param pattern: regex pattern of characters to replace
         :param replacement: (Optional) string to replace with.  Defaults to space.
         :return: a regex_replace automapper type
+        :example: A.column("last_name").sanitize(replacement=".")
         """
 
         from spark_auto_mapper.data_types.regex_replace import (
@@ -477,7 +495,10 @@ class AutoMapperDataTypeBase:
         returns column if it exists else returns null
 
 
+        :param if_exists: value to return if column exists
+        :param if_not_exists: value to return if column does not exist
         :return: an automapper type
+        :example: A.column("foo").if_exists(A.text("exists"), A.text("not exists"))
         """
         from spark_auto_mapper.data_types.if_column_exists import (
             AutoMapperIfColumnExistsType,
@@ -503,6 +524,7 @@ class AutoMapperDataTypeBase:
 
         :param type_: type to cast to
         :return: an automapper type
+        :example: A.column("my_age").cast(AutoMapperNumberDataType)
         """
 
         # cast it to the inner type so type checking is happy
@@ -511,4 +533,11 @@ class AutoMapperDataTypeBase:
     def __add__(
         self: _TAutoMapperDataType, other: _TAutoMapperDataType
     ) -> _TAutoMapperDataType:
+        """
+        Allows adding items in an array using the + operation
+
+
+        :param other: array to add to the current array
+        :example: A.column("array1") + [ "foo" ]
+        """
         return self.concat(other)
