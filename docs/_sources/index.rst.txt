@@ -17,9 +17,10 @@ Use :class:`~spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase`
 
 NOTE: We recommend using the functions in the AutoMapperDataTypeBase instead of AutoMapperHelpers.  The latter are older and will be removed soon.
 
+Contents:
+==================
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   :maxdepth: 6
 
 
 
