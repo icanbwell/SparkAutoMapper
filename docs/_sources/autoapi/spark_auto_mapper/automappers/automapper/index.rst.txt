@@ -64,18 +64,42 @@ Attributes
 
    .. py:method:: transform_with_data_frame(self, df, source_df, keys)
 
+      Internal function called by base class to transform the data frame
 
-   .. py:method:: get_message_for_exception(column_name, df, e, source_df, column_values)
-      :staticmethod:
+
+      :param df: destination data frame
+      :param source_df: source data frame
+      :param keys: key columns
+      :return data frame after the transform
+
 
 
    .. py:method:: transform(self, df)
 
+      Uses this AutoMapper to transform the specified data frame and return the new data frame
 
-   .. py:method:: register_child(self, dst_column, child)
+
+      :param df: source data frame
+      :returns destination data frame
 
 
    .. py:method:: columns(self, **kwargs)
+
+      Adds mappings for columns
+
+      :example: mapper = AutoMapper(
+              view="members",
+              source_view="patients",
+              keys=["member_id"],
+              drop_key_columns=False,
+          ).columns(
+              dst1="src1",
+              dst2=AutoMapperList(["address1"]),
+              dst3=AutoMapperList(["address1", "address2"]),
+              dst4=AutoMapperList([A.complex(use="usual", family=A.column("last_name"))]),
+          )
+
+      :param kwargs: A dictionary of mappings
 
 
    .. py:method:: complex(self, entity)

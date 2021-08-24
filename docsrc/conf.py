@@ -31,7 +31,7 @@ extensions = [
     "sphinx.ext.autodoc",
     "autoapi.extension",
     "sphinx_rtd_theme",
-    "recommonmark",
+    "myst_parser",
 ]
 autoapi_dirs = ["../spark_auto_mapper"]
 autoapi_type = "python"

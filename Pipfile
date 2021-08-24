@@ -28,7 +28,7 @@ types-Deprecated=">=0.1.2"
 Sphinx="==4.1.2"
 sphinx-autoapi="==1.8.4"
 sphinx-rtd-theme="==0.5.2"
-recommonmark="==0.7.1"
+myst-parser="==0.15.1"
 
 [requires]
 python_version = "3.7"

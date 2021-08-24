@@ -144,7 +144,12 @@ class AutoMapper(AutoMapperContainer):
         self, df: DataFrame, source_df: DataFrame, keys: List[str]
     ) -> DataFrame:
         """
-        This functions transforms the data frame using the mappings in a single select command
+        This internal function transforms the data frame using the mappings in a single select command
+
+
+        :param df: destination data frame
+        :param source_df: source data frame
+        :param keys: key columns
         """
         # get all the column specs
         column_specs: List[Column] = [
@@ -298,7 +303,7 @@ class AutoMapper(AutoMapperContainer):
                     #     print(e3)
                     #     column_values = None
 
-                    msg += self.get_message_for_exception(
+                    msg += self._get_message_for_exception(
                         column_name=column_name + ": " + str(check_schema_result),
                         df=df,
                         e=e2,
@@ -313,7 +318,7 @@ class AutoMapper(AutoMapperContainer):
                     ) from e2
         except Exception as e:
             self.logger.error("====  OOPS ===========")
-            msg = self.get_message_for_exception(
+            msg = self._get_message_for_exception(
                 column_name="", df=df, e=e, source_df=source_df, column_values=None
             )
             raise Exception(msg) from e
@@ -325,6 +330,16 @@ class AutoMapper(AutoMapperContainer):
     def transform_with_data_frame(
         self, df: DataFrame, source_df: Optional[DataFrame], keys: List[str]
     ) -> DataFrame:
+        """
+        Internal function called by base class to transform the data frame
+
+
+        :param df: destination data frame
+        :param source_df: source data frame
+        :param keys: key columns
+        :return data frame after the transform
+
+        """
         current_child_number: int = 0
         # iterate over each child mapper and run it
         for column_name, child_mapper in self.mappers.items():
@@ -366,7 +381,7 @@ class AutoMapper(AutoMapperContainer):
                         "null values for each element in the structure. "
                     )
                 if source_df is not None:
-                    msg += self.get_message_for_exception(
+                    msg += self._get_message_for_exception(
                         column_name=column_name,
                         df=df,
                         e=e,
@@ -376,7 +391,7 @@ class AutoMapper(AutoMapperContainer):
                 raise Exception(msg) from e
             except Exception as e:
                 msg = (
-                    self.get_message_for_exception(
+                    self._get_message_for_exception(
                         column_name=column_name,
                         df=df,
                         e=e,
@@ -399,7 +414,7 @@ class AutoMapper(AutoMapperContainer):
         return df
 
     @staticmethod
-    def get_message_for_exception(
+    def _get_message_for_exception(
         *,
         column_name: str,
         df: DataFrame,
@@ -407,6 +422,16 @@ class AutoMapper(AutoMapperContainer):
         source_df: DataFrame,
         column_values: Optional[List[Any]],
     ) -> str:
+        """
+        This internal function create a message string for the given exception
+
+
+        :param column_name: name of column
+        :param df: destination data frame
+        :param e: exception
+        :param source_df: source data frame
+        :param column_values: (Optional) values of the columns
+        """
         # write out the full list of columns
         columns_in_source: List[str] = list(source_df.columns)
         columns_in_destination: List[str] = list(df.columns)
@@ -418,6 +443,13 @@ class AutoMapper(AutoMapperContainer):
         return msg
 
     def transform(self, df: DataFrame) -> DataFrame:
+        """
+        Uses this AutoMapper to transform the specified data frame and return the new data frame
+
+
+        :param df: source data frame
+        :returns destination data frame
+        """
         # if source_view is specified then load that else assume that df is the source view
         source_df: DataFrame = (
             df.sql_ctx.table(self.source_view) if self.source_view else df
@@ -505,11 +537,36 @@ class AutoMapper(AutoMapperContainer):
             result_df.createOrReplaceTempView(self.view)
         return result_df
 
-    def register_child(self, dst_column: str, child: "AutoMapperBase") -> None:
+    def _register_child(self, dst_column: str, child: "AutoMapperBase") -> None:
+        """
+        Adds a new child mapper to this AutoMapper
+
+
+        :param dst_column: column name
+        :param child: child mapper to register
+        """
         self.mappers[dst_column] = child
 
     # noinspection PyMethodMayBeStatic,PyPep8Naming
     def columns(self, **kwargs: AutoMapperAnyDataType) -> "AutoMapper":
+        """
+        Adds mappings for columns
+
+        :example: mapper = AutoMapper(
+                view="members",
+                source_view="patients",
+                keys=["member_id"],
+                drop_key_columns=False,
+            ).columns(
+                dst1="src1",
+                dst2=AutoMapperList(["address1"]),
+                dst3=AutoMapperList(["address1", "address2"]),
+                dst4=AutoMapperList([A.complex(use="usual", family=A.column("last_name"))]),
+            )
+
+        :param kwargs: A dictionary of mappings
+        """
+
         from spark_auto_mapper.automappers.columns import AutoMapperColumns
 
         # To work around protected keywords as column names, allow a trailing underscore in the definition that gets
@@ -522,7 +579,7 @@ class AutoMapper(AutoMapperContainer):
         }
         columns_mapper: AutoMapperColumns = AutoMapperColumns(**col_spec)
         for column_name, child_mapper in columns_mapper.mappers.items():
-            self.register_child(dst_column=column_name, child=child_mapper)
+            self._register_child(dst_column=column_name, child=child_mapper)
         return self
 
     # noinspection PyPep8Naming,PyMethodMayBeStatic
@@ -538,7 +595,7 @@ class AutoMapper(AutoMapperContainer):
 
         self.entity_name = entity.__class__.__name__
         for column_name, child_mapper in resource_mapper.mappers.items():
-            self.register_child(dst_column=column_name, child=child_mapper)
+            self._register_child(dst_column=column_name, child=child_mapper)
         return self
 
     def __repr__(self) -> str:
