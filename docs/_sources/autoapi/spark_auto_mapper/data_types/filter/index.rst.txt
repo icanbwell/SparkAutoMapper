@@ -21,6 +21,8 @@ Classes
 
    Bases: :py:obj:`spark_auto_mapper.data_types.array_base.AutoMapperArrayLikeBase`
 
+   Base class for all Automapper data types
+
    .. py:method:: include_null_properties(self, include_null_properties)
 
 

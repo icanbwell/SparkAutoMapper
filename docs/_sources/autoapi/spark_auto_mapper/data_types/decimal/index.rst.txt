@@ -21,7 +21,8 @@ Classes
 
    Bases: :py:obj:`spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase`
 
-   
+   Base class for all Automapper data types
+
    Specifies the value should be used as a decimal
    :param value:
    :param precision: the maximum total number of digits (on both sides of dot)

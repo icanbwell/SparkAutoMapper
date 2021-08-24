@@ -342,7 +342,6 @@ class AutoMapper(AutoMapperContainer):
         :param source_df: source data frame
         :param keys: key columns
         :return data frame after the transform
-
         """
         current_child_number: int = 0
         # iterate over each child mapper and run it

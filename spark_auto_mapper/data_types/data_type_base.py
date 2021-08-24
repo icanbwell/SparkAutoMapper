@@ -1,9 +1,11 @@
 from typing import Callable, List, Optional, TypeVar, Union, cast, Type
 
+# noinspection PyPackageRequirements
 from pyspark.sql import Column, DataFrame
 
 from typing import TYPE_CHECKING
 
+# noinspection PyPackageRequirements
 from pyspark.sql.types import StructType, StringType, DataType
 
 if TYPE_CHECKING:
@@ -31,6 +33,10 @@ _TAutoMapperDataType2 = TypeVar(
 
 
 class AutoMapperDataTypeBase:
+    """
+    Base class for all Automapper data types
+    """
+
     # noinspection PyMethodMayBeStatic
     def get_column_spec(
         self, source_df: Optional[DataFrame], current_column: Optional[Column]
@@ -74,8 +80,7 @@ class AutoMapperDataTypeBase:
 
         :param value: Complex or Simple Type to create for each item in the array
         :return: a transform automapper type
-        :Example:
-        This is an example
+        :example: A.column("last_name").transform(A.complex(bar=A.field("value"), bar2=A.field("system")))
         """
         from spark_auto_mapper.data_types.transform import AutoMapperTransformDataType
 
@@ -93,6 +98,7 @@ class AutoMapperDataTypeBase:
 
         :param value: Complex or Simple Type to create for each item in the array
         :return: a transform automapper type
+        :example: A.column("last_name").select(A.complex(bar=A.field("value"), bar2=A.field("system")))
         """
         from spark_auto_mapper.data_types.transform import AutoMapperTransformDataType
 
@@ -112,6 +118,8 @@ class AutoMapperDataTypeBase:
 
         :param func: func to create type or struct
         :return: a filter automapper type
+        :example: A.column("last_name").filter(lambda x: x["use"] == lit("usual")
+        )
         """
         from spark_auto_mapper.data_types.filter import AutoMapperFilterDataType
 
@@ -130,6 +138,7 @@ class AutoMapperDataTypeBase:
 
         :param delimiter: delimiter
         :return: a split_by_delimiter automapper type
+        :example: A.column("last_name").split_by_delimiter("|")
         """
         from spark_auto_mapper.data_types.split_by_delimiter import (
             AutoMapperSplitByDelimiterDataType,
@@ -148,6 +157,7 @@ class AutoMapperDataTypeBase:
 
         :param value: Complex or Simple Type to create for each item in the array
         :return: a transform automapper type
+        :example: A.column("identifier").select_one(A.field("_.value"))
         """
         from spark_auto_mapper.data_types.transform import AutoMapperTransformDataType
         from spark_auto_mapper.data_types.first import AutoMapperFirstDataType
@@ -166,6 +176,7 @@ class AutoMapperDataTypeBase:
         returns the first element in array
 
         :return: a filter automapper type
+        :example: A.column("identifier").select(A.field("_.value")).first()
         """
         from spark_auto_mapper.data_types.first import AutoMapperFirstDataType
 
@@ -179,6 +190,7 @@ class AutoMapperDataTypeBase:
 
         :param value: sql
         :return: an expression automapper type
+        :example: A.column("identifier").select(A.field("_.value")).first()
         """
         from spark_auto_mapper.data_types.expression import AutoMapperDataTypeExpression
 

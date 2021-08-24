@@ -21,4 +21,11 @@ Classes
 
    Bases: :py:obj:`spark_auto_mapper.automappers.container.AutoMapperContainer`
 
+   Abstract Base class for AutoMappers
+
+   Create mappings for columns
+
+
+   :param kwargs: dictionary of column, AutoMapper
+
 

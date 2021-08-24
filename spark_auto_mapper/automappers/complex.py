@@ -19,6 +19,17 @@ class AutoMapperWithComplex(AutoMapperContainer):
         skip_schema_validation: List[str],
         skip_if_columns_null_or_empty: Optional[List[str]],
     ) -> None:
+        """
+        Create mapping for an entity
+
+
+        :param entity: entity mapping definition
+        :param use_schema: whether to use schema
+        :param include_extension: whether to include extension field
+        :param include_null_properties: whether to include null properties
+        :param skip_schema_validation: whether to skip schema validation
+        :param skip_if_columns_null_or_empty:
+        """
         super().__init__()
 
         # ask entity for its schema

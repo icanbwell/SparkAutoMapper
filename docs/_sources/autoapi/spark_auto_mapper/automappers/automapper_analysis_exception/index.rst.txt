@@ -11,13 +11,16 @@ Module Contents
 
    Bases: :py:obj:`Exception`
 
-   Common base class for all non-exit exceptions.
+   Exception thrown if there is an error in the AutoMapper
 
-   Initialize self.  See help(type(self)) for accurate signature.
+   :param msg: message of error
+   :param column_name: column that caused the error
+   :param check_schema_result: result of checking the schemas
+   :param column_values: value of columns
 
    .. py:method:: __str__(self)
 
-      Return str(self).
+      String representation
 
 
 

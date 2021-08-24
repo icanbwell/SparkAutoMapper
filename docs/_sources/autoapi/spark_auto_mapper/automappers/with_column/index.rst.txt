@@ -21,4 +21,6 @@ Classes
 
    Bases: :py:obj:`spark_auto_mapper.automappers.with_column_base.AutoMapperWithColumnBase`
 
+   Abstract Base class for AutoMappers
+
 

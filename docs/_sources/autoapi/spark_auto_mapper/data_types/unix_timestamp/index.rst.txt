@@ -21,7 +21,8 @@ Classes
 
    Bases: :py:obj:`spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase`
 
-   
+   Base class for all Automapper data types
+
    Converts the value to a timestamp type in Spark
 
 

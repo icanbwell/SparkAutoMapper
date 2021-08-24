@@ -21,6 +21,8 @@ Classes
 
    Bases: :py:obj:`spark_auto_mapper.data_types.text_like_base.AutoMapperTextLikeBase`
 
+   Base class for all Automapper data types
+
    .. py:method:: get_column_spec(self, source_df, current_column)
 
       Gets the column spec for this automapper data type

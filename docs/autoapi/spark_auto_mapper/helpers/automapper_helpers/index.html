@@ -248,15 +248,28 @@
 <dt class="sig sig-object py" id="spark_auto_mapper.helpers.automapper_helpers.AutoMapperHelpers.expression">
 <em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">expression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.helpers.automapper_helpers.AutoMapperHelpers.expression" title="Permalink to this definition">¶</a></dt>
 <dd><p>Specifies that the value parameter should be executed as a sql expression in Spark</p>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>value</strong> (<em>str</em>) – sql</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>an expression automapper type</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="../../data_types/array_base/index.html#spark_auto_mapper.data_types.array_base.AutoMapperArrayLikeBase" title="spark_auto_mapper.data_types.array_base.AutoMapperArrayLikeBase">spark_auto_mapper.data_types.array_base.AutoMapperArrayLikeBase</a></p>
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p>A.expression(
+”
+CASE</p>
+<blockquote>
+<div><p>WHEN <cite>Member Sex</cite> = ‘F’ THEN ‘female’
+WHEN <cite>Member Sex</cite> = ‘M’ THEN ‘male’
+ELSE ‘other’</p>
+</div></blockquote>
+<p>END
+”
+)</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="../../data_types/array_base/index.html#spark_auto_mapper.data_types.array_base.AutoMapperArrayLikeBase" title="spark_auto_mapper.data_types.array_base.AutoMapperArrayLikeBase">spark_auto_mapper.data_types.array_base.AutoMapperArrayLikeBase</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1009,11 +1022,7 @@ source: <a class="reference external" href="http://spark.apache.org/docs/latest/
 <dd><p>Joins an array and forms a string using the delimiter</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>column</strong> – column whose contents to use</p></li>
-<li><p><strong>delimiter</strong> – string to use as delimiter</p></li>
-<li><p><strong>value</strong> (<em>spark_auto_mapper.type_definitions.defined_types.AutoMapperNumberInputType</em>) – </p></li>
-</ul>
+<dd class="field-odd"><p><strong>value</strong> (<em>spark_auto_mapper.type_definitions.defined_types.AutoMapperNumberInputType</em>) – value to convert to unix timestamp</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a join automapper type</p>

@@ -21,7 +21,6 @@ Classes
 
    This wrapper provides a nicely formatted string for column spec
 
-
    .. py:method:: __repr__(self)
 
       Display for debugger
@@ -32,8 +31,7 @@ Classes
    .. py:method:: to_debug_string(self)
 
       Formats the column spec so () are on separate lines for easier reading
-      :return:
-      :rtype:
+      :return: string
 
 
 

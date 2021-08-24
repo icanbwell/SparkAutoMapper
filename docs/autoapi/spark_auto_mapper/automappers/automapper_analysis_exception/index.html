@@ -164,22 +164,21 @@
 <dt class="sig sig-object py" id="spark_auto_mapper.automappers.automapper_analysis_exception.AutoMapperAnalysisException">
 <em class="property"><span class="pre">exception</span> </em><span class="sig-prename descclassname"><span class="pre">spark_auto_mapper.automappers.automapper_analysis_exception.</span></span><span class="sig-name descname"><span class="pre">AutoMapperAnalysisException</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_schema_result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.automappers.automapper_analysis_exception.AutoMapperAnalysisException" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">Exception</span></code></p>
-<p>Common base class for all non-exit exceptions.</p>
-<p>Initialize self.  See help(type(self)) for accurate signature.</p>
+<p>Exception thrown if there is an error in the AutoMapper</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>msg</strong> (<em>str</em>) – </p></li>
-<li><p><strong>column_name</strong> (<em>str</em>) – </p></li>
-<li><p><strong>check_schema_result</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="../check_schema_result/index.html#spark_auto_mapper.automappers.check_schema_result.CheckSchemaResult" title="spark_auto_mapper.automappers.check_schema_result.CheckSchemaResult"><em>spark_auto_mapper.automappers.check_schema_result.CheckSchemaResult</em></a><em>]</em>) – </p></li>
-<li><p><strong>column_values</strong> (<em>Optional</em><em>[</em><em>List</em><em>[</em><em>Any</em><em>]</em><em>]</em>) – </p></li>
+<li><p><strong>msg</strong> (<em>str</em>) – message of error</p></li>
+<li><p><strong>column_name</strong> (<em>str</em>) – column that caused the error</p></li>
+<li><p><strong>check_schema_result</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="../check_schema_result/index.html#spark_auto_mapper.automappers.check_schema_result.CheckSchemaResult" title="spark_auto_mapper.automappers.check_schema_result.CheckSchemaResult"><em>spark_auto_mapper.automappers.check_schema_result.CheckSchemaResult</em></a><em>]</em>) – result of checking the schemas</p></li>
+<li><p><strong>column_values</strong> (<em>Optional</em><em>[</em><em>List</em><em>[</em><em>Any</em><em>]</em><em>]</em>) – value of columns</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="spark_auto_mapper.automappers.automapper_analysis_exception.AutoMapperAnalysisException.__str__">
 <span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.automappers.automapper_analysis_exception.AutoMapperAnalysisException.__str__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return str(self).</p>
+<dd><p>String representation</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>str</p>

@@ -19,6 +19,10 @@ Classes
 
 .. py:class:: CheckSchemaResult(result)
 
+   Result of comparing schemas
+
+   :param result: comparison result
+
    .. py:method:: __str__(self)
 
       Return str(self).

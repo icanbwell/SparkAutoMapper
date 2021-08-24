@@ -21,7 +21,8 @@ Classes
 
    Bases: :py:obj:`spark_auto_mapper.data_types.complex.complex_base.AutoMapperDataTypeComplexBase`
 
-   
+   Base class for all Automapper data types
+
    base class for complex types
    :param kwargs:
 

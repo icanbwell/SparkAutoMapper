@@ -61,7 +61,6 @@ Classes
       :return data frame after the transform
 
 
-
    .. py:method:: transform(self, df)
 
       Uses this AutoMapper to transform the specified data frame and return the new data frame
