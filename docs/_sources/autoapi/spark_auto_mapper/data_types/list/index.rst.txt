@@ -50,6 +50,7 @@ Classes
       Allows adding items in an array using the + operation
 
 
+      :param self: Set by Python.  No need to pass.
       :param other: array to add to the current array
       :example: A.column("array1") + [ "foo" ]
 

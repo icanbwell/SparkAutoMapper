@@ -240,7 +240,10 @@ Multiple Inheritance:
 <dd><p>Allows adding items in an array using the + operation</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#spark_auto_mapper.data_types.list.AutoMapperList" title="spark_auto_mapper.data_types.list.AutoMapperList"><em>AutoMapperList</em></a><em>[</em><em>_T</em><em>]</em>) – array to add to the current array</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> – Set by Python.  No need to pass.</p></li>
+<li><p><strong>other</strong> (<a class="reference internal" href="#spark_auto_mapper.data_types.list.AutoMapperList" title="spark_auto_mapper.data_types.list.AutoMapperList"><em>AutoMapperList</em></a><em>[</em><em>_T</em><em>]</em>) – array to add to the current array</p></li>
+</ul>
 </dd>
 <dt class="field-even">Example</dt>
 <dd class="field-even"><p>A.column(“array1”) + [ “foo” ]</p>

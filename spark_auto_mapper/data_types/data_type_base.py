@@ -118,6 +118,7 @@ class AutoMapperDataTypeBase:
         filters an array column
 
 
+        :param self: Set by Python.  No need to pass.
         :param func: func to create type or struct
         :return: a filter automapper type
         :example: A.column("last_name").filter(lambda x: x["use"] == lit("usual")
@@ -138,6 +139,7 @@ class AutoMapperDataTypeBase:
         splits a text column by the delimiter to create an array
 
 
+        :param self: Set by Python.  No need to pass.
         :param delimiter: delimiter
         :return: a split_by_delimiter automapper type
         :example: A.column("last_name").split_by_delimiter("|")
@@ -157,6 +159,7 @@ class AutoMapperDataTypeBase:
         selects first item from array
 
 
+        :param self: Set by Python.  No need to pass.
         :param value: Complex or Simple Type to create for each item in the array
         :return: a transform automapper type
         :example: A.column("identifier").select_one(A.field("_.value"))
@@ -177,6 +180,7 @@ class AutoMapperDataTypeBase:
         """
         returns the first element in array
 
+        :param self: Set by Python.  No need to pass.
         :return: a filter automapper type
         :example: A.column("identifier").select(A.field("_.value")).first()
         """
@@ -190,9 +194,18 @@ class AutoMapperDataTypeBase:
         """
         Specifies that the value parameter should be executed as a sql expression in Spark
 
-        :param value: sql
+        :param self: Set by Python.  No need to pass.
+        :param value: sql to run
         :return: an expression automapper type
-        :example: A.column("identifier").expression("")
+        :example: A.column("identifier").expression(
+                "
+                CASE
+                    WHEN `Member Sex` = 'F' THEN 'female'
+                    WHEN `Member Sex` = 'M' THEN 'male'
+                    ELSE 'other'
+                END
+                "
+                )
         """
         from spark_auto_mapper.data_types.expression import AutoMapperDataTypeExpression
 
@@ -202,6 +215,7 @@ class AutoMapperDataTypeBase:
         """
         Specifies to use the current item
 
+        :param self: Set by Python.  No need to pass.
         :return: A column automapper type
         :example: A.column("last_name").current()
         """
@@ -212,6 +226,7 @@ class AutoMapperDataTypeBase:
         """
         Specifies that the value parameter should be used as a field name
 
+        :param self: Set by Python.  No need to pass.
         :param value: name of field
         :return: A column automapper type
         :example: A.column("identifier").select_one(A.field("type.coding[0].code"))
@@ -227,6 +242,8 @@ class AutoMapperDataTypeBase:
         If a structure of nested arrays is deeper than two levels, only one level of nesting is removed.
         source: http://spark.apache.org/docs/latest/api/python/_modules/pyspark/sql/functions.html#flatten
 
+
+        :param self: Set by Python.  No need to pass.
         :return: a flatten automapper type
         :example: A.flatten(A.column("column"))
         """
@@ -241,6 +258,7 @@ class AutoMapperDataTypeBase:
         converts single element into an array
 
 
+        :param self: Set by Python.  No need to pass.
         :return: an automapper type
         :example: A.column("identifier").to_array()
         """
@@ -260,6 +278,7 @@ class AutoMapperDataTypeBase:
         concatenates two arrays or strings
 
 
+        :param self: Set by Python.  No need to pass.
         :param list2: list to concat into the current column
         :return: a filter automapper type
         :example: A.column("identifier").concat(A.text("foo").to_array()))
@@ -273,6 +292,7 @@ class AutoMapperDataTypeBase:
         """
         Converts column to float
 
+        :param self: Set by Python.  No need to pass.
         :return: a float automapper type
         :example: A.column("identifier").to_float()
         """
@@ -288,6 +308,7 @@ class AutoMapperDataTypeBase:
         For datetime use the datetime mapper type
 
 
+        :param self: Set by Python.  No need to pass.
         :param formats: (Optional) formats to use for trying to parse the value otherwise uses:
                         y-M-d,
                         yyyyMMdd,
@@ -306,6 +327,7 @@ class AutoMapperDataTypeBase:
         Converts the value to a timestamp type in Spark
 
 
+        :param self: Set by Python.  No need to pass.
         :param formats: (Optional) formats to use for trying to parse the value otherwise uses Spark defaults
         :example: A.column("date_of_birth").to_datetime()
         """
@@ -317,6 +339,8 @@ class AutoMapperDataTypeBase:
         """
         Specifies the value should be used as an amount
 
+
+        :param self: Set by Python.  No need to pass.
         :return: an amount automapper type
         :example: A.column("payment").to_amount()
         """
@@ -328,6 +352,8 @@ class AutoMapperDataTypeBase:
         """
         Specifies the value should be used as a boolean
 
+
+        :param self: Set by Python.  No need to pass.
         :return: a boolean automapper type
         :example: A.column("paid").to_boolean()
         """
@@ -339,6 +365,8 @@ class AutoMapperDataTypeBase:
         """
         Specifies value should be used as a number
 
+
+        :param self: Set by Python.  No need to pass.
         :return: a number automapper type
         :example: A.column("paid").to_number()
         """
@@ -350,6 +378,8 @@ class AutoMapperDataTypeBase:
         """
         Specifies that the value parameter should be used as a literal text
 
+
+        :param self: Set by Python.  No need to pass.
         :return: a text automapper type
         :example: A.column("paid").to_text()
         """
@@ -362,6 +392,8 @@ class AutoMapperDataTypeBase:
         """
         Joins an array and forms a string using the delimiter
 
+
+        :param self: Set by Python.  No need to pass.
         :param delimiter: string to use as delimiter
         :return: a join_using_delimiter automapper type
         :example: A.column("suffix").join_using_delimiter(", ")
@@ -390,6 +422,7 @@ class AutoMapperDataTypeBase:
         Converts a date or time into string
 
 
+        :param self: Set by Python.  No need to pass.
         :param format_: format to use for trying to parse the value otherwise uses:
                         y-M-d
                         yyyyMMdd
@@ -408,6 +441,7 @@ class AutoMapperDataTypeBase:
         returns null if the column is an empty string
 
 
+        :param self: Set by Python.  No need to pass.
         :return: an automapper type
         :example: A.column("my_age").to_null_if_empty()
         """
@@ -424,9 +458,12 @@ class AutoMapperDataTypeBase:
         """
         Replace all substrings of the specified string value that match regexp with replacement.
 
+
+        :param self: Set by Python.  No need to pass.
         :param pattern: pattern to search for
         :param replacement: string to replace with
         :return: a regex_replace automapper type
+        :example: A.column("last_name").regex_replace("first", "second")
         :example: A.column("last_name").regex_replace(r"[^\r\n\t _.,!\"'/$-]", ".")
         """
 
@@ -466,6 +503,8 @@ class AutoMapperDataTypeBase:
 
         \t - tab
 
+
+        :param self: Set by Python.  No need to pass.
         :param pattern: regex pattern of characters to replace
         :param replacement: (Optional) string to replace with.  Defaults to space.
         :return: a regex_replace automapper type
@@ -495,6 +534,7 @@ class AutoMapperDataTypeBase:
         returns column if it exists else returns null
 
 
+        :param self: Set by Python.  No need to pass.
         :param if_exists: value to return if column exists
         :param if_not_exists: value to return if column does not exist
         :return: an automapper type
@@ -522,6 +562,8 @@ class AutoMapperDataTypeBase:
         """
         casts columns to type
 
+
+        :param self: Set by Python.  No need to pass.
         :param type_: type to cast to
         :return: an automapper type
         :example: A.column("my_age").cast(AutoMapperNumberDataType)
@@ -537,6 +579,7 @@ class AutoMapperDataTypeBase:
         Allows adding items in an array using the + operation
 
 
+        :param self: Set by Python.  No need to pass.
         :param other: array to add to the current array
         :example: A.column("array1") + [ "foo" ]
         """
