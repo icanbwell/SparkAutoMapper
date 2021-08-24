@@ -169,33 +169,15 @@
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#spark_auto_mapper.automappers.automapper.AutoMapper" title="spark_auto_mapper.automappers.automapper.AutoMapper"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AutoMapper</span></code></a></p></td>
-<td><p>Creates an AutoMapper</p></td>
+<td><p>Main AutoMapper Class</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="attributes">
-<h3>Attributes<a class="headerlink" href="#attributes" title="Permalink to this headline">¶</a></h3>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#spark_auto_mapper.automappers.automapper.TEMPORARY_KEY" title="spark_auto_mapper.automappers.automapper.TEMPORARY_KEY"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TEMPORARY_KEY</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table>
-<dl class="py data">
-<dt class="sig sig-object py" id="spark_auto_mapper.automappers.automapper.TEMPORARY_KEY">
-<span class="sig-prename descclassname"><span class="pre">spark_auto_mapper.automappers.automapper.</span></span><span class="sig-name descname"><span class="pre">TEMPORARY_KEY</span></span><em class="property"> <span class="pre">=</span> <span class="pre">__row_id</span></em><a class="headerlink" href="#spark_auto_mapper.automappers.automapper.TEMPORARY_KEY" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="py class">
 <dt class="sig sig-object py" id="spark_auto_mapper.automappers.automapper.AutoMapper">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spark_auto_mapper.automappers.automapper.</span></span><span class="sig-name descname"><span class="pre">AutoMapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_view</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_duplicates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">drop_key_columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">checkpoint_after_columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">checkpoint_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reuse_existing_view</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_schema</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_extension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_null_properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_single_select</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verify_row_count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_schema_validation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['extension']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_if_columns_null_or_empty</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_null_rows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_by</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_schema_for_all_columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy_all_unmapped_properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy_all_unmapped_properties_exclude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.automappers.automapper.AutoMapper" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../container/index.html#spark_auto_mapper.automappers.container.AutoMapperContainer" title="spark_auto_mapper.automappers.container.AutoMapperContainer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spark_auto_mapper.automappers.container.AutoMapperContainer</span></code></a></p>
+<p>Main AutoMapper Class</p>
 <p>Creates an AutoMapper</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -285,8 +267,11 @@ dst4=AutoMapperList([A.complex(use=”usual”, family=A.column(“last_name”)
 <dt class="field-even">Parameters</dt>
 <dd class="field-even"><p><strong>kwargs</strong> (<em>spark_auto_mapper.type_definitions.defined_types.AutoMapperAnyDataType</em>) – A dictionary of mappings</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#spark_auto_mapper.automappers.automapper.AutoMapper" title="spark_auto_mapper.automappers.automapper.AutoMapper">AutoMapper</a></p>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The same AutoMapper</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#spark_auto_mapper.automappers.automapper.AutoMapper" title="spark_auto_mapper.automappers.automapper.AutoMapper">AutoMapper</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -294,9 +279,30 @@ dst4=AutoMapperList([A.complex(use=”usual”, family=A.column(“last_name”)
 <dl class="py method">
 <dt class="sig sig-object py" id="spark_auto_mapper.automappers.automapper.AutoMapper.complex">
 <span class="sig-name descname"><span class="pre">complex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entity</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.automappers.automapper.AutoMapper.complex" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>entity</strong> (<a class="reference internal" href="../../data_types/complex/complex_base/index.html#spark_auto_mapper.data_types.complex.complex_base.AutoMapperDataTypeComplexBase" title="spark_auto_mapper.data_types.complex.complex_base.AutoMapperDataTypeComplexBase"><em>spark_auto_mapper.data_types.complex.complex_base.AutoMapperDataTypeComplexBase</em></a>) – </p>
+<dd><p>Adds mappings for an entity</p>
+<dl class="field-list">
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><dl>
+<dt>mapper = AutoMapper(</dt><dd><p>view=”members”,
+source_view=”patients”,
+keys=[“member_id”],
+drop_key_columns=False,</p>
+</dd>
+<dt>).complex(</dt><dd><dl class="simple">
+<dt>MyClass(</dt><dd><p>name=A.column(“last_name”),
+age=A.number(A.column(“my_age”))</p>
+</dd>
+</dl>
+<p>)</p>
+</dd>
+</dl>
+<p>)</p>
+</dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><p><strong>entity</strong> (<a class="reference internal" href="../../data_types/complex/complex_base/index.html#spark_auto_mapper.data_types.complex.complex_base.AutoMapperDataTypeComplexBase" title="spark_auto_mapper.data_types.complex.complex_base.AutoMapperDataTypeComplexBase"><em>spark_auto_mapper.data_types.complex.complex_base.AutoMapperDataTypeComplexBase</em></a>) – An AutoMapper type</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The same AutoMapper</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference internal" href="#spark_auto_mapper.automappers.automapper.AutoMapper" title="spark_auto_mapper.automappers.automapper.AutoMapper">AutoMapper</a></p>

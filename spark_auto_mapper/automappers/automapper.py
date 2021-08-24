@@ -34,10 +34,14 @@ from spark_auto_mapper.data_types.complex.complex_base import (
 from spark_auto_mapper.helpers.spark_helpers import SparkHelpers
 from spark_auto_mapper.type_definitions.defined_types import AutoMapperAnyDataType
 
-TEMPORARY_KEY = "__row_id"
+_TEMPORARY_KEY = "__row_id"
 
 
 class AutoMapper(AutoMapperContainer):
+    """
+    Main AutoMapper Class
+    """
+
     # noinspection PyDefaultArgument
     def __init__(
         self,
@@ -463,9 +467,9 @@ class AutoMapper(AutoMapperContainer):
             if self.use_single_select:
                 self.keys = []
             else:
-                self.keys = [TEMPORARY_KEY]
+                self.keys = [_TEMPORARY_KEY]
                 source_df = source_df.withColumn(
-                    TEMPORARY_KEY, monotonically_increasing_id()
+                    _TEMPORARY_KEY, monotonically_increasing_id()
                 )
 
         # if view is specified then check if it exists
@@ -509,7 +513,7 @@ class AutoMapper(AutoMapperContainer):
             )
 
         # now drop the __row_id if we added it
-        result_df = result_df.drop(TEMPORARY_KEY)
+        result_df = result_df.drop(_TEMPORARY_KEY)
 
         # drop the key columns
         if self.drop_key_columns:
@@ -565,6 +569,7 @@ class AutoMapper(AutoMapperContainer):
             )
 
         :param kwargs: A dictionary of mappings
+        :return: The same AutoMapper
         """
 
         from spark_auto_mapper.automappers.columns import AutoMapperColumns
@@ -584,6 +589,25 @@ class AutoMapper(AutoMapperContainer):
 
     # noinspection PyPep8Naming,PyMethodMayBeStatic
     def complex(self, entity: AutoMapperDataTypeComplexBase) -> "AutoMapper":
+        """
+        Adds mappings for an entity
+
+        :example: mapper = AutoMapper(
+                view="members",
+                source_view="patients",
+                keys=["member_id"],
+                drop_key_columns=False,
+            ).complex(
+                MyClass(
+                    name=A.column("last_name"),
+                    age=A.number(A.column("my_age"))
+                )
+            )
+
+        :param entity: An AutoMapper type
+        :return: The same AutoMapper
+        """
+
         resource_mapper: AutoMapperWithComplex = AutoMapperWithComplex(
             entity=entity,
             use_schema=self.use_schema,

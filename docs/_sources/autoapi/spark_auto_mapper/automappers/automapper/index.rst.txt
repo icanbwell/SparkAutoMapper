@@ -17,24 +17,12 @@ Classes
 
 
 
-Attributes
-~~~~~~~~~~
-
-.. autoapisummary::
-
-   spark_auto_mapper.automappers.automapper.TEMPORARY_KEY
-
-
-.. py:data:: TEMPORARY_KEY
-   :annotation: = __row_id
-
-   
-
 .. py:class:: AutoMapper(keys = None, view = None, source_view = None, keep_duplicates = False, drop_key_columns = True, checkpoint_after_columns = None, checkpoint_path = None, reuse_existing_view = False, use_schema = True, include_extension = False, include_null_properties = False, use_single_select = True, verify_row_count = True, skip_schema_validation = ['extension'], skip_if_columns_null_or_empty = None, keep_null_rows = False, filter_by = None, logger = None, check_schema_for_all_columns = False, copy_all_unmapped_properties = False, copy_all_unmapped_properties_exclude = None, log_level = None)
 
    Bases: :py:obj:`spark_auto_mapper.automappers.container.AutoMapperContainer`
 
-   
+   Main AutoMapper Class
+
    Creates an AutoMapper
 
 
@@ -100,9 +88,27 @@ Attributes
           )
 
       :param kwargs: A dictionary of mappings
+      :return: The same AutoMapper
 
 
    .. py:method:: complex(self, entity)
+
+      Adds mappings for an entity
+
+      :example: mapper = AutoMapper(
+              view="members",
+              source_view="patients",
+              keys=["member_id"],
+              drop_key_columns=False,
+          ).complex(
+              MyClass(
+                  name=A.column("last_name"),
+                  age=A.number(A.column("my_age"))
+              )
+          )
+
+      :param entity: An AutoMapper type
+      :return: The same AutoMapper
 
 
    .. py:method:: __repr__(self)
