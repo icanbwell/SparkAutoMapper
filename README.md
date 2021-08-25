@@ -16,6 +16,9 @@ Since this is just Python, you can use any Python editor.  Since everything is t
 pip install sparkautomapper
 ```
 
+## Documentation
+https://icanbwell.github.io/SparkAutoMapper/
+
 ## SparkAutoMapper input and output
 You can pass either a dataframe to SparkAutoMapper or specify the name of a Spark view to read from.
 
