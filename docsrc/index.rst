@@ -4,11 +4,23 @@
    contain the root `toctree` directive.
 
 Welcome to Spark AutoMapper documentation!
-=========================================
+==========================================
 
+Main Classes
+==================
+
+Use :class:`~spark_auto_mapper.automappers.automapper.AutoMapper` to create a new AutoMapper.
+
+Use :class:`~spark_auto_mapper.helpers.automapper_helpers.AutoMapperHelpers` to specify a column vs text.
+
+Use :class:`~spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase` for functions available to use.
+
+NOTE: We recommend using the functions in the AutoMapperDataTypeBase instead of AutoMapperHelpers.  The latter are older and will be removed soon.
+
+Contents:
+==================
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   :maxdepth: 6
 
 
 

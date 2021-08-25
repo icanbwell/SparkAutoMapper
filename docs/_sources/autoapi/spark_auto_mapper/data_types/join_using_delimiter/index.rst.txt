@@ -1,5 +1,5 @@
-:mod:`spark_auto_mapper.data_types.join_using_delimiter`
-========================================================
+:py:mod:`spark_auto_mapper.data_types.join_using_delimiter`
+===========================================================
 
 .. py:module:: spark_auto_mapper.data_types.join_using_delimiter
 
@@ -16,14 +16,14 @@ Classes
 
 
 
-.. class:: AutoMapperJoinUsingDelimiterDataType(column: spark_auto_mapper.type_definitions.wrapper_types.AutoMapperColumnOrColumnLikeType, delimiter: str)
 
+.. py:class:: AutoMapperJoinUsingDelimiterDataType(column, delimiter)
 
-   Bases: :class:`spark_auto_mapper.data_types.text_like_base.AutoMapperTextLikeBase`
+   Bases: :py:obj:`spark_auto_mapper.data_types.text_like_base.AutoMapperTextLikeBase`
 
    Joins array and forms a string using the given delimiter
 
-   .. method:: get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column]) -> pyspark.sql.Column
+   .. py:method:: get_column_spec(self, source_df, current_column)
 
       Gets the column spec for this automapper data type
 

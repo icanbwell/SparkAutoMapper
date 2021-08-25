@@ -1,5 +1,5 @@
-:mod:`spark_auto_mapper.data_types.list`
-========================================
+:py:mod:`spark_auto_mapper.data_types.list`
+===========================================
 
 .. py:module:: spark_auto_mapper.data_types.list
 
@@ -16,25 +16,25 @@ Classes
 
 
 
-.. data:: _T
-   
 
-   
+.. py:class:: AutoMapperList(value, remove_nulls = True, include_null_properties = True)
 
-.. class:: AutoMapperList(value: Optional[Union[List[_T], AutoMapperDataTypeBase, List[AutoMapperDataTypeBase], List[AutoMapperTextLikeBase]]], remove_nulls: bool = True, include_null_properties: bool = True)
-
-
-   Bases: :class:`spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase`, :class:`Generic[_T]`
+   Bases: :py:obj:`spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase`, :py:obj:`Generic`\ [\ :py:obj:`_T`\ ]
 
    Base class for lists
    Generics:  https://mypy.readthedocs.io/en/stable/generics.html
    Multiple Inheritance:
    https://stackoverflow.com/questions/52754339/how-to-express-multiple-inheritance-in-python-type-hint
 
-   .. method:: include_null_properties(self, include_null_properties: bool) -> None
+   Generates a list (array) in Spark
+
+   :param value: items to make into an array
+   :param remove_nulls: whether to remove nulls from the array
+
+   .. py:method:: include_null_properties(self, include_null_properties)
 
 
-   .. method:: get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column]) -> pyspark.sql.Column
+   .. py:method:: get_column_spec(self, source_df, current_column)
 
       Gets the column spec for this automapper data type
 
@@ -42,10 +42,17 @@ Classes
       :param current_column: (Optional) this is set when we are inside an array
 
 
-   .. method:: get_schema(self, include_extension: bool) -> Optional[Union[StructType, DataType]]
+   .. py:method:: get_schema(self, include_extension)
 
 
-   .. method:: __add__(self, other: AutoMapperList[_T]) -> AutoMapperList[_T]
+   .. py:method:: __add__(self, other)
+
+      Allows adding items in an array using the + operation
+
+
+      :param self: Set by Python.  No need to pass.
+      :param other: array to add to the current array
+      :example: A.column("array1") + [ "foo" ]
 
 
 

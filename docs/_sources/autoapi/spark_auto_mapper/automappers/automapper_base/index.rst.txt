@@ -1,5 +1,5 @@
-:mod:`spark_auto_mapper.automappers.automapper_base`
-====================================================
+:py:mod:`spark_auto_mapper.automappers.automapper_base`
+=======================================================
 
 .. py:module:: spark_auto_mapper.automappers.automapper_base
 
@@ -16,18 +16,42 @@ Classes
 
 
 
-.. class:: AutoMapperBase
 
+.. py:class:: AutoMapperBase
 
-   .. method:: transform_with_data_frame(self, df: pyspark.sql.DataFrame, source_df: Optional[DataFrame], keys: List[str]) -> pyspark.sql.DataFrame
+   Abstract Base class for AutoMappers
+
+   .. py:method:: transform_with_data_frame(self, df, source_df, keys)
       :abstractmethod:
 
+      Internal function called by base class to transform the data frame
 
-   .. method:: get_column_specs(self, source_df: Optional[DataFrame]) -> Dict[(str, Column)]
+
+      :param df: destination data frame
+      :param source_df: source data frame
+      :param keys: key columns
+      :return data frame after the transform
+
+
+   .. py:method:: get_column_specs(self, source_df)
       :abstractmethod:
 
+      Gets column specs (Spark expressions)
 
-   .. method:: check_schema(self, parent_column: Optional[str], source_df: Optional[DataFrame]) -> Optional[CheckSchemaResult]
+
+      :param source_df: source data frame
+
+      :return: dictionary of column name, column expression
+
+
+   .. py:method:: check_schema(self, parent_column, source_df)
+
+      Checks the schema
+
+
+      :param parent_column: parent column
+      :param source_df: source data frame
+      :return: result of checking schema
 
 
 

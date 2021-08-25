@@ -1,0 +1,40 @@
+:py:mod:`spark_auto_mapper.data_types.unix_timestamp`
+=====================================================
+
+.. py:module:: spark_auto_mapper.data_types.unix_timestamp
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   spark_auto_mapper.data_types.unix_timestamp.AutoMapperUnixTimestampType
+
+
+
+
+.. py:class:: AutoMapperUnixTimestampType(value)
+
+   Bases: :py:obj:`spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase`
+
+   Base class for all Automapper data types
+
+   Converts the value to a timestamp type in Spark
+
+
+   :param value: value
+   :param formats: (Optional) formats to use for trying to parse the value otherwise uses Spark defaults
+
+   .. py:method:: get_column_spec(self, source_df, current_column)
+
+      Gets the column spec for this automapper data type
+
+      :param source_df: source data frame in case the automapper type needs that data to decide what to do
+      :param current_column: (Optional) this is set when we are inside an array
+
+
+

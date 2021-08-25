@@ -1,5 +1,5 @@
-:mod:`spark_auto_mapper.automappers.complex`
-============================================
+:py:mod:`spark_auto_mapper.automappers.complex`
+===============================================
 
 .. py:module:: spark_auto_mapper.automappers.complex
 
@@ -16,9 +16,21 @@ Classes
 
 
 
-.. class:: AutoMapperWithComplex(entity: spark_auto_mapper.data_types.complex.complex_base.AutoMapperDataTypeComplexBase, use_schema: bool, include_extension: bool, include_null_properties: bool, skip_schema_validation: List[str], skip_if_columns_null_or_empty: Optional[List[str]])
+
+.. py:class:: AutoMapperWithComplex(entity, use_schema, include_extension, include_null_properties, skip_schema_validation, skip_if_columns_null_or_empty)
+
+   Bases: :py:obj:`spark_auto_mapper.automappers.container.AutoMapperContainer`
+
+   Abstract Base class for AutoMappers
+
+   Create mapping for an entity
 
 
-   Bases: :class:`spark_auto_mapper.automappers.container.AutoMapperContainer`
+   :param entity: entity mapping definition
+   :param use_schema: whether to use schema
+   :param include_extension: whether to include extension field
+   :param include_null_properties: whether to include null properties
+   :param skip_schema_validation: whether to skip schema validation
+   :param skip_if_columns_null_or_empty:
 
 

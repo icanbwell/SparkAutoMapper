@@ -1,5 +1,5 @@
-:mod:`spark_auto_mapper.automappers.check_schema_result`
-========================================================
+:py:mod:`spark_auto_mapper.automappers.check_schema_result`
+===========================================================
 
 .. py:module:: spark_auto_mapper.automappers.check_schema_result
 
@@ -16,10 +16,14 @@ Classes
 
 
 
-.. class:: CheckSchemaResult(result: spark_data_frame_comparer.schema_comparer.SchemaComparerResult)
 
+.. py:class:: CheckSchemaResult(result)
 
-   .. method:: __str__(self) -> str
+   Result of comparing schemas
+
+   :param result: comparison result
+
+   .. py:method:: __str__(self)
 
       Return str(self).
 

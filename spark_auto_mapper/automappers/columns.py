@@ -4,6 +4,12 @@ from spark_auto_mapper.type_definitions.defined_types import AutoMapperAnyDataTy
 
 class AutoMapperColumns(AutoMapperContainer):
     def __init__(self, **kwargs: AutoMapperAnyDataType) -> None:
+        """
+        Create mappings for columns
+
+
+        :param kwargs: dictionary of column, AutoMapper
+        """
         super().__init__()
 
         self.generate_mappers(

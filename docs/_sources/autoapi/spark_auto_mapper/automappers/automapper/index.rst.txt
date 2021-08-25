@@ -1,5 +1,5 @@
-:mod:`spark_auto_mapper.automappers.automapper`
-===============================================
+:py:mod:`spark_auto_mapper.automappers.automapper`
+==================================================
 
 .. py:module:: spark_auto_mapper.automappers.automapper
 
@@ -16,46 +16,108 @@ Classes
 
 
 
-.. data:: TEMPORARY_KEY
-   :annotation: = __row_id
 
-   
+.. py:class:: AutoMapper(keys = None, view = None, source_view = None, keep_duplicates = False, drop_key_columns = True, checkpoint_after_columns = None, checkpoint_path = None, reuse_existing_view = False, use_schema = True, include_extension = False, include_null_properties = False, use_single_select = True, verify_row_count = True, skip_schema_validation = ['extension'], skip_if_columns_null_or_empty = None, keep_null_rows = False, filter_by = None, logger = None, check_schema_for_all_columns = False, copy_all_unmapped_properties = False, copy_all_unmapped_properties_exclude = None, log_level = None)
 
-.. class:: AutoMapper(keys: Optional[List[str]] = None, view: Optional[str] = None, source_view: Optional[str] = None, keep_duplicates: bool = False, drop_key_columns: bool = True, checkpoint_after_columns: Optional[int] = None, checkpoint_path: Optional[Union[str, Path]] = None, reuse_existing_view: bool = False, use_schema: bool = True, include_extension: bool = False, include_null_properties: bool = False, use_single_select: bool = True, verify_row_count: bool = True, skip_schema_validation: List[str] = ['extension'], skip_if_columns_null_or_empty: Optional[List[str]] = None, keep_null_rows: bool = False, filter_by: Optional[str] = None, logger: Optional[Logger] = None, check_schema_for_all_columns: bool = False, copy_all_unmapped_properties: bool = False, copy_all_unmapped_properties_exclude: Optional[List[str]] = None, log_level: Optional[Union[int, str]] = None)
+   Bases: :py:obj:`spark_auto_mapper.automappers.container.AutoMapperContainer`
 
+   Main AutoMapper Class
 
-   Bases: :class:`spark_auto_mapper.automappers.container.AutoMapperContainer`
-
-   .. method:: transform_with_data_frame_single_select(self, df: pyspark.sql.DataFrame, source_df: pyspark.sql.DataFrame, keys: List[str]) -> pyspark.sql.DataFrame
+   Creates an AutoMapper
 
 
-   .. method:: transform_with_data_frame(self, df: pyspark.sql.DataFrame, source_df: Optional[DataFrame], keys: List[str]) -> pyspark.sql.DataFrame
+   :param keys: joining keys
+   :param view: view to return
+   :param source_view: where to load the data from
+   :param keep_duplicates: whether to leave duplicates at the end
+   :param drop_key_columns: whether to drop the key columns at the end
+   :param checkpoint_after_columns: checkpoint after how many columns have been processed
+   :param checkpoint_path: Path where to store the checkpoints
+   :param reuse_existing_view: If view already exists, whether to reuse it or create a new one
+   :param use_schema: apply schema to columns
+   :param include_extension: By default we don't include extension elements since they take up a lot of schema.
+           If you're using extensions then set this
+   :param include_null_properties: If you want to include null properties
+   :param use_single_select: This is a faster way to run the AutoMapper since it will select
+           all the columns at once.
+           However this makes it harder to debug since you don't know what column failed
+   :param verify_row_count: verifies that the count of rows remains the same before and after the transformation
+   :param skip_schema_validation: skip schema checks on these columns
+   :param skip_if_columns_null_or_empty: skip creating the record if any of these columns are null or empty
+   :param keep_null_rows: whether to keep the null rows instead of removing them
+   :param filter_by: (Optional) SQL expression that is used to filter
+   :param copy_all_unmapped_properties: copy any property that is not explicitly mapped
+   :param copy_all_unmapped_properties_exclude: exclude these columns when copy_all_unmapped_properties is set
+   :param logger: logger used to log informational messages
+
+   .. py:method:: transform_with_data_frame(self, df, source_df, keys)
+
+      Internal function called by base class to transform the data frame
 
 
-   .. method:: get_message_for_exception(*, column_name: str, df: pyspark.sql.DataFrame, e: Exception, source_df: pyspark.sql.DataFrame, column_values: Optional[List[Any]]) -> str
-      :staticmethod:
+      :param df: destination data frame
+      :param source_df: source data frame
+      :param keys: key columns
+      :return data frame after the transform
 
 
-   .. method:: transform(self, df: pyspark.sql.DataFrame) -> pyspark.sql.DataFrame
+   .. py:method:: transform(self, df)
+
+      Uses this AutoMapper to transform the specified data frame and return the new data frame
 
 
-   .. method:: register_child(self, dst_column: str, child: spark_auto_mapper.automappers.automapper_base.AutoMapperBase) -> None
+      :param df: source data frame
+      :returns destination data frame
 
 
-   .. method:: columns(self, **kwargs: spark_auto_mapper.type_definitions.defined_types.AutoMapperAnyDataType) -> spark_auto_mapper.automappers.automapper.AutoMapper
+   .. py:method:: columns(self, **kwargs)
+
+      Adds mappings for columns
+
+      :example: mapper = AutoMapper(
+              view="members",
+              source_view="patients",
+              keys=["member_id"],
+              drop_key_columns=False,
+          ).columns(
+              dst1="src1",
+              dst2=AutoMapperList(["address1"]),
+              dst3=AutoMapperList(["address1", "address2"]),
+              dst4=AutoMapperList([A.complex(use="usual", family=A.column("last_name"))]),
+          )
+
+      :param kwargs: A dictionary of mappings
+      :return: The same AutoMapper
 
 
-   .. method:: complex(self, entity: spark_auto_mapper.data_types.complex.complex_base.AutoMapperDataTypeComplexBase) -> spark_auto_mapper.automappers.automapper.AutoMapper
+   .. py:method:: complex(self, entity)
+
+      Adds mappings for an entity
+
+      :example: mapper = AutoMapper(
+              view="members",
+              source_view="patients",
+              keys=["member_id"],
+              drop_key_columns=False,
+          ).complex(
+              MyClass(
+                  name=A.column("last_name"),
+                  age=A.number(A.column("my_age"))
+              )
+          )
+
+      :param entity: An AutoMapper type
+      :return: The same AutoMapper
 
 
-   .. method:: __repr__(self) -> str
+   .. py:method:: __repr__(self)
 
       Display for debugger
 
       :return: string representation for debugger
 
 
-   .. method:: to_debug_string(self, source_df: Optional[DataFrame] = None) -> str
+   .. py:method:: to_debug_string(self, source_df = None)
 
       Displays the automapper as a string
 
@@ -63,7 +125,7 @@ Classes
       :return: string representation
 
 
-   .. method:: column_specs(self) -> Dict[(str, Column)]
+   .. py:method:: column_specs(self)
       :property:
 
       Useful to show in debugger
@@ -71,7 +133,7 @@ Classes
       :return dictionary of column specs
 
 
-   .. method:: __str__(self) -> str
+   .. py:method:: __str__(self)
 
       Return str(self).
 

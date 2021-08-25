@@ -1,5 +1,5 @@
-:mod:`spark_auto_mapper.data_types.boolean`
-===========================================
+:py:mod:`spark_auto_mapper.data_types.boolean`
+==============================================
 
 .. py:module:: spark_auto_mapper.data_types.boolean
 
@@ -16,12 +16,14 @@ Classes
 
 
 
-.. class:: AutoMapperBooleanDataType(value: spark_auto_mapper.type_definitions.defined_types.AutoMapperBooleanInputType)
 
+.. py:class:: AutoMapperBooleanDataType(value)
 
-   Bases: :class:`spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase`
+   Bases: :py:obj:`spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase`
 
-   .. method:: get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column]) -> pyspark.sql.Column
+   Base class for all Automapper data types
+
+   .. py:method:: get_column_spec(self, source_df, current_column)
 
       Gets the column spec for this automapper data type
 

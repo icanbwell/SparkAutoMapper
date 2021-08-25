@@ -1,5 +1,5 @@
-:mod:`spark_auto_mapper.data_types.if_column_exists`
-====================================================
+:py:mod:`spark_auto_mapper.data_types.if_column_exists`
+=======================================================
 
 .. py:module:: spark_auto_mapper.data_types.if_column_exists
 
@@ -16,20 +16,15 @@ Classes
 
 
 
-.. data:: _TAutoMapperDataType
-   
 
-   
+.. py:class:: AutoMapperIfColumnExistsType(column, if_exists, if_not_exists)
 
-.. class:: AutoMapperIfColumnExistsType(column: spark_auto_mapper.type_definitions.wrapper_types.AutoMapperColumnOrColumnLikeType, if_exists: Optional[_TAutoMapperDataType], if_not_exists: Optional[_TAutoMapperDataType])
-
-
-   Bases: :class:`spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase`, :class:`Generic[_TAutoMapperDataType]`
+   Bases: :py:obj:`spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase`, :py:obj:`Generic`\ [\ :py:obj:`_TAutoMapperDataType`\ ]
 
    Allows for columns to be defined based in which a source column may not exist. If the optional source column does
    not exist, the "default" column definition is used instead.
 
-   .. method:: get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column]) -> pyspark.sql.Column
+   .. py:method:: get_column_spec(self, source_df, current_column)
 
       Gets the column spec for this automapper data type
 

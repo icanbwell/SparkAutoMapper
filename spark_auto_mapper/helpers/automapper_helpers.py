@@ -1,6 +1,9 @@
 from typing import Any, Dict, Union, TypeVar, cast, Optional, List, Callable
 
+# noinspection PyPackageRequirements
 from pyspark.sql.types import StringType
+
+# noinspection PyPackageRequirements
 from pyspark.sql import Column
 
 from spark_auto_mapper.data_types.array_distinct import AutoMapperArrayDistinctDataType
@@ -122,6 +125,15 @@ class AutoMapperHelpers:
 
         :param value: sql
         :return: an expression automapper type
+        :example: A.expression(
+                "
+                CASE
+                    WHEN `Member Sex` = 'F' THEN 'female'
+                    WHEN `Member Sex` = 'M' THEN 'male'
+                    ELSE 'other'
+                END
+                "
+                )
         """
         return AutoMapperDataTypeExpression(value)
 
@@ -707,8 +719,7 @@ class AutoMapperHelpers:
         """
         Joins an array and forms a string using the delimiter
 
-        :param column: column whose contents to use
-        :param delimiter: string to use as delimiter
+        :param value: value to convert to unix timestamp
         :return: a join automapper type
         """
         return AutoMapperUnixTimestampType(value=value)

@@ -1,5 +1,5 @@
-:mod:`spark_auto_mapper.data_types`
-===================================
+:py:mod:`spark_auto_mapper.data_types`
+======================================
 
 .. py:module:: spark_auto_mapper.data_types
 
@@ -63,5 +63,6 @@ Submodules
    text_like_base/index.rst
    transform/index.rst
    trim/index.rst
+   unix_timestamp/index.rst
 
 

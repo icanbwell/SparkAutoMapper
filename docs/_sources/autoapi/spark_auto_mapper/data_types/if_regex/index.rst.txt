@@ -1,5 +1,5 @@
-:mod:`spark_auto_mapper.data_types.if_regex`
-============================================
+:py:mod:`spark_auto_mapper.data_types.if_regex`
+===============================================
 
 .. py:module:: spark_auto_mapper.data_types.if_regex
 
@@ -16,22 +16,17 @@ Classes
 
 
 
-.. data:: _TAutoMapperDataType
-   
 
-   
+.. py:class:: AutoMapperIfRegExDataType(column, check, value, else_ = None)
 
-.. class:: AutoMapperIfRegExDataType(column: spark_auto_mapper.type_definitions.wrapper_types.AutoMapperColumnOrColumnLikeType, check: Union[(str, List[str])], value: _TAutoMapperDataType, else_: Optional[_TAutoMapperDataType] = None)
-
-
-   Bases: :class:`spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase`, :class:`Generic[_TAutoMapperDataType]`
+   Bases: :py:obj:`spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase`, :py:obj:`Generic`\ [\ :py:obj:`_TAutoMapperDataType`\ ]
 
    If check returns value if the checks passes else when_not
 
-   .. method:: include_null_properties(self, include_null_properties: bool) -> None
+   .. py:method:: include_null_properties(self, include_null_properties)
 
 
-   .. method:: get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column]) -> pyspark.sql.Column
+   .. py:method:: get_column_spec(self, source_df, current_column)
 
       Gets the column spec for this automapper data type
 

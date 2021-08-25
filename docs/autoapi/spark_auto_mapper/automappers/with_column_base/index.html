@@ -4,8 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>spark_auto_mapper.automappers.with_column_base &mdash; SparkAutoMapper  documentation</title>
@@ -14,6 +13,8 @@
   
   <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
 
   
@@ -31,6 +32,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/doctools.js"></script>
@@ -84,8 +86,7 @@
               
             
             
-              <p><span class="caption-text">Contents:</span></p>
-<ul>
+              <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../index.html">API Reference</a></li>
 </ul>
 
@@ -154,11 +155,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="module-spark_auto_mapper.automappers.with_column_base">
+  <div class="section" id="module-spark_auto_mapper.automappers.with_column_base">
 <span id="spark-auto-mapper-automappers-with-column-base"></span><h1><a class="reference internal" href="#module-spark_auto_mapper.automappers.with_column_base" title="spark_auto_mapper.automappers.with_column_base"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.automappers.with_column_base</span></code></a><a class="headerlink" href="#module-spark_auto_mapper.automappers.with_column_base" title="Permalink to this headline">¶</a></h1>
-<section id="module-contents">
+<div class="section" id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
-<section id="classes">
+<div class="section" id="classes">
 <h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h3>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -167,39 +168,100 @@
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#spark_auto_mapper.automappers.with_column_base.AutoMapperWithColumnBase" title="spark_auto_mapper.automappers.with_column_base.AutoMapperWithColumnBase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AutoMapperWithColumnBase</span></code></a></p></td>
-<td><p></p></td>
+<td><p>Abstract Base class for AutoMappers</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py class">
-<dt id="spark_auto_mapper.automappers.with_column_base.AutoMapperWithColumnBase">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">spark_auto_mapper.automappers.with_column_base.</span></code><code class="sig-name descname"><span class="pre">AutoMapperWithColumnBase</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dst_column</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="../../type_definitions/defined_types/index.html#spark_auto_mapper.type_definitions.defined_types.AutoMapperAnyDataType" title="spark_auto_mapper.type_definitions.defined_types.AutoMapperAnyDataType"><span class="pre">spark_auto_mapper.type_definitions.defined_types.AutoMapperAnyDataType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_schema</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">StructField</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_null_properties</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_if_columns_null_or_empty</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.automappers.with_column_base.AutoMapperWithColumnBase" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="../automapper_base/index.html#spark_auto_mapper.automappers.automapper_base.AutoMapperBase" title="spark_auto_mapper.automappers.automapper_base.AutoMapperBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">spark_auto_mapper.automappers.automapper_base.AutoMapperBase</span></code></a></p>
+<dt class="sig sig-object py" id="spark_auto_mapper.automappers.with_column_base.AutoMapperWithColumnBase">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spark_auto_mapper.automappers.with_column_base.</span></span><span class="sig-name descname"><span class="pre">AutoMapperWithColumnBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dst_column</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_schema</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_null_properties</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_if_columns_null_or_empty</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.automappers.with_column_base.AutoMapperWithColumnBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../automapper_base/index.html#spark_auto_mapper.automappers.automapper_base.AutoMapperBase" title="spark_auto_mapper.automappers.automapper_base.AutoMapperBase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spark_auto_mapper.automappers.automapper_base.AutoMapperBase</span></code></a></p>
+<p>Abstract Base class for AutoMappers</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dst_column</strong> (<em>str</em>) – </p></li>
+<li><p><strong>value</strong> (<em>spark_auto_mapper.type_definitions.defined_types.AutoMapperAnyDataType</em>) – </p></li>
+<li><p><strong>column_schema</strong> (<em>Optional</em><em>[</em><em>pyspark.sql.types.StructField</em><em>]</em>) – </p></li>
+<li><p><strong>include_null_properties</strong> (<em>bool</em>) – </p></li>
+<li><p><strong>skip_if_columns_null_or_empty</strong> (<em>Optional</em><em>[</em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
-<dt id="spark_auto_mapper.automappers.with_column_base.AutoMapperWithColumnBase.get_column_spec">
-<code class="sig-name descname"><span class="pre">get_column_spec</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">DataFrame</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pyspark.sql.Column</span><a class="headerlink" href="#spark_auto_mapper.automappers.with_column_base.AutoMapperWithColumnBase.get_column_spec" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="spark_auto_mapper.automappers.with_column_base.AutoMapperWithColumnBase.get_column_spec">
+<span class="sig-name descname"><span class="pre">get_column_spec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.automappers.with_column_base.AutoMapperWithColumnBase.get_column_spec" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>source_df</strong> (<em>Optional</em><em>[</em><em>pyspark.sql.DataFrame</em><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pyspark.sql.Column</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
-<dt id="spark_auto_mapper.automappers.with_column_base.AutoMapperWithColumnBase.get_column_specs">
-<code class="sig-name descname"><span class="pre">get_column_specs</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">DataFrame</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Column</span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#spark_auto_mapper.automappers.with_column_base.AutoMapperWithColumnBase.get_column_specs" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="spark_auto_mapper.automappers.with_column_base.AutoMapperWithColumnBase.get_column_specs">
+<span class="sig-name descname"><span class="pre">get_column_specs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.automappers.with_column_base.AutoMapperWithColumnBase.get_column_specs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets column specs (Spark expressions)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>source_df</strong> (<em>Optional</em><em>[</em><em>pyspark.sql.DataFrame</em><em>]</em>) – source data frame</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>dictionary of column name, column expression</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Dict[str, pyspark.sql.Column]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
-<dt id="spark_auto_mapper.automappers.with_column_base.AutoMapperWithColumnBase.transform_with_data_frame">
-<code class="sig-name descname"><span class="pre">transform_with_data_frame</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pyspark.sql.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">DataFrame</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keys</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pyspark.sql.DataFrame</span><a class="headerlink" href="#spark_auto_mapper.automappers.with_column_base.AutoMapperWithColumnBase.transform_with_data_frame" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="spark_auto_mapper.automappers.with_column_base.AutoMapperWithColumnBase.transform_with_data_frame">
+<span class="sig-name descname"><span class="pre">transform_with_data_frame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keys</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.automappers.with_column_base.AutoMapperWithColumnBase.transform_with_data_frame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Internal function called by base class to transform the data frame</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pyspark.sql.DataFrame</em>) – destination data frame</p></li>
+<li><p><strong>source_df</strong> (<em>Optional</em><em>[</em><em>pyspark.sql.DataFrame</em><em>]</em>) – source data frame</p></li>
+<li><p><strong>keys</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – key columns</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pyspark.sql.DataFrame</p>
+</dd>
+</dl>
+<p>:return data frame after the transform</p>
+</dd></dl>
 
 <dl class="py method">
-<dt id="spark_auto_mapper.automappers.with_column_base.AutoMapperWithColumnBase.check_schema">
-<code class="sig-name descname"><span class="pre">check_schema</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_column</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">DataFrame</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">CheckSchemaResult</span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#spark_auto_mapper.automappers.with_column_base.AutoMapperWithColumnBase.check_schema" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="spark_auto_mapper.automappers.with_column_base.AutoMapperWithColumnBase.check_schema">
+<span class="sig-name descname"><span class="pre">check_schema</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_column</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.automappers.with_column_base.AutoMapperWithColumnBase.check_schema" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks the schema</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>parent_column</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – parent column</p></li>
+<li><p><strong>source_df</strong> (<em>Optional</em><em>[</em><em>pyspark.sql.DataFrame</em><em>]</em>) – source data frame</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>result of checking schema</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Optional[<a class="reference internal" href="../check_schema_result/index.html#spark_auto_mapper.automappers.check_schema_result.CheckSchemaResult" title="spark_auto_mapper.automappers.check_schema_result.CheckSchemaResult">spark_auto_mapper.automappers.check_schema_result.CheckSchemaResult</a>]</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
-</section>
-</section>
-</section>
+</div>
+</div>
+</div>
 
 
            </div>

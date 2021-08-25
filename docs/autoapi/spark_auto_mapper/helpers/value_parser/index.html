@@ -4,8 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>spark_auto_mapper.helpers.value_parser &mdash; SparkAutoMapper  documentation</title>
@@ -14,6 +13,8 @@
   
   <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
 
   
@@ -31,6 +32,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/doctools.js"></script>
@@ -84,8 +86,7 @@
               
             
             
-              <p><span class="caption-text">Contents:</span></p>
-<ul>
+              <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../index.html">API Reference</a></li>
 </ul>
 
@@ -154,11 +155,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="module-spark_auto_mapper.helpers.value_parser">
+  <div class="section" id="module-spark_auto_mapper.helpers.value_parser">
 <span id="spark-auto-mapper-helpers-value-parser"></span><h1><a class="reference internal" href="#module-spark_auto_mapper.helpers.value_parser" title="spark_auto_mapper.helpers.value_parser"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.helpers.value_parser</span></code></a><a class="headerlink" href="#module-spark_auto_mapper.helpers.value_parser" title="Permalink to this headline">¶</a></h1>
-<section id="module-contents">
+<div class="section" id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
-<section id="classes">
+<div class="section" id="classes">
 <h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h3>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -172,18 +173,29 @@
 </tbody>
 </table>
 <dl class="py class">
-<dt id="spark_auto_mapper.helpers.value_parser.AutoMapperValueParser">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">spark_auto_mapper.helpers.value_parser.</span></code><code class="sig-name descname"><span class="pre">AutoMapperValueParser</span></code><a class="headerlink" href="#spark_auto_mapper.helpers.value_parser.AutoMapperValueParser" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="spark_auto_mapper.helpers.value_parser.AutoMapperValueParser">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spark_auto_mapper.helpers.value_parser.</span></span><span class="sig-name descname"><span class="pre">AutoMapperValueParser</span></span><a class="headerlink" href="#spark_auto_mapper.helpers.value_parser.AutoMapperValueParser" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="py method">
-<dt id="spark_auto_mapper.helpers.value_parser.AutoMapperValueParser.parse_value">
-<em class="property"><span class="pre">static</span> </em><code class="sig-name descname"><span class="pre">parse_value</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">AutoMapperAnyDataType</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_nulls</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="../../data_types/data_type_base/index.html#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase" title="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase"><span class="pre">spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase</span></a><a class="headerlink" href="#spark_auto_mapper.helpers.value_parser.AutoMapperValueParser.parse_value" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="spark_auto_mapper.helpers.value_parser.AutoMapperValueParser.parse_value">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">parse_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_nulls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.helpers.value_parser.AutoMapperValueParser.parse_value" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<em>Union</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>, </em><em>List</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>spark_auto_mapper.type_definitions.defined_types.AutoMapperAnyDataType</em><em>]</em>) – </p></li>
+<li><p><strong>include_nulls</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="../../data_types/data_type_base/index.html#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase" title="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase">spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
-</section>
-</section>
-</section>
+</div>
+</div>
+</div>
 
 
            </div>

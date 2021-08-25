@@ -1,5 +1,5 @@
-:mod:`spark_auto_mapper.data_types.decimal`
-===========================================
+:py:mod:`spark_auto_mapper.data_types.decimal`
+==============================================
 
 .. py:module:: spark_auto_mapper.data_types.decimal
 
@@ -16,12 +16,19 @@ Classes
 
 
 
-.. class:: AutoMapperDecimalDataType(value: spark_auto_mapper.type_definitions.defined_types.AutoMapperAmountInputType, precision: int, scale: int)
 
+.. py:class:: AutoMapperDecimalDataType(value, precision, scale)
 
-   Bases: :class:`spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase`
+   Bases: :py:obj:`spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase`
 
-   .. method:: get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column]) -> pyspark.sql.Column
+   Base class for all Automapper data types
+
+   Specifies the value should be used as a decimal
+   :param value:
+   :param precision: the maximum total number of digits (on both sides of dot)
+   :param scale: the number of digits on right side of dot
+
+   .. py:method:: get_column_spec(self, source_df, current_column)
 
       Gets the column spec for this automapper data type
 

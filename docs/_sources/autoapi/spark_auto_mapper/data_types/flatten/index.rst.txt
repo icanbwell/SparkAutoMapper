@@ -1,5 +1,5 @@
-:mod:`spark_auto_mapper.data_types.flatten`
-===========================================
+:py:mod:`spark_auto_mapper.data_types.flatten`
+==============================================
 
 .. py:module:: spark_auto_mapper.data_types.flatten
 
@@ -16,15 +16,17 @@ Classes
 
 
 
-.. class:: AutoMapperFlattenDataType(column: Union[(AutoMapperDataTypeBase, AutoMapperColumnOrColumnLikeType)])
+
+.. py:class:: AutoMapperFlattenDataType(column)
+
+   Bases: :py:obj:`spark_auto_mapper.data_types.array_base.AutoMapperArrayLikeBase`
+
+   Base class for all Automapper data types
+
+   .. py:method:: include_null_properties(self, include_null_properties)
 
 
-   Bases: :class:`spark_auto_mapper.data_types.array_base.AutoMapperArrayLikeBase`
-
-   .. method:: include_null_properties(self, include_null_properties: bool) -> None
-
-
-   .. method:: get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column]) -> pyspark.sql.Column
+   .. py:method:: get_column_spec(self, source_df, current_column)
 
       Gets the column spec for this automapper data type
 

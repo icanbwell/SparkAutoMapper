@@ -3,6 +3,7 @@
 # This file only contains a selection of the most common options. For a full
 # list see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
+# https://sphinx-autoapi.readthedocs.io/en/latest/reference/config.html
 
 # -- Path setup --------------------------------------------------------------
 
@@ -26,9 +27,24 @@ author = "Helix Team"
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ["autoapi.extension", "sphinx_rtd_theme", "recommonmark"]
+extensions = [
+    "sphinx.ext.autodoc",
+    "autoapi.extension",
+    "sphinx_rtd_theme",
+    "myst_parser",
+]
 autoapi_dirs = ["../spark_auto_mapper"]
 autoapi_type = "python"
+autoapi_options = [
+    "members",
+    "undoc-members",
+    "show-inheritance",
+    "show-module-summary",
+    "special-members",
+    "imported-members",
+]
+autodoc_typehints = "description"
+autoapi_python_class_content = "both"
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
 
@@ -43,6 +59,10 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 # a list of builtin themes.
 #
 html_theme = "sphinx_rtd_theme"
+html_theme_options = {
+    "logo_only": True,
+    "navigation_depth": 5,
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

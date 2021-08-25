@@ -1,5 +1,5 @@
-:mod:`spark_auto_mapper.data_types.substring`
-=============================================
+:py:mod:`spark_auto_mapper.data_types.substring`
+================================================
 
 .. py:module:: spark_auto_mapper.data_types.substring
 
@@ -16,14 +16,14 @@ Classes
 
 
 
-.. class:: AutoMapperSubstringDataType(column: spark_auto_mapper.type_definitions.wrapper_types.AutoMapperColumnOrColumnLikeType, start: int, length: int)
 
+.. py:class:: AutoMapperSubstringDataType(column, start, length)
 
-   Bases: :class:`spark_auto_mapper.data_types.text_like_base.AutoMapperTextLikeBase`
+   Bases: :py:obj:`spark_auto_mapper.data_types.text_like_base.AutoMapperTextLikeBase`
 
    Finds a substring in a string
 
-   .. method:: get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column]) -> pyspark.sql.Column
+   .. py:method:: get_column_spec(self, source_df, current_column)
 
       Gets the column spec for this automapper data type
 

@@ -4,8 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Welcome to Spark AutoMapper documentation! &mdash; SparkAutoMapper  documentation</title>
@@ -14,6 +13,8 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
 
   
@@ -31,6 +32,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
@@ -84,8 +86,7 @@
               
             
             
-              <p><span class="caption-text">Contents:</span></p>
-<ul>
+              <ul>
 <li class="toctree-l1"><a class="reference internal" href="autoapi/index.html">API Reference</a></li>
 </ul>
 
@@ -154,26 +155,132 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="welcome-to-spark-automapper-documentation">
+  <div class="section" id="welcome-to-spark-automapper-documentation">
 <h1>Welcome to Spark AutoMapper documentation!<a class="headerlink" href="#welcome-to-spark-automapper-documentation" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="main-classes">
+<h1>Main Classes<a class="headerlink" href="#main-classes" title="Permalink to this headline">¶</a></h1>
+<p>Use <a class="reference internal" href="autoapi/spark_auto_mapper/automappers/automapper/index.html#spark_auto_mapper.automappers.automapper.AutoMapper" title="spark_auto_mapper.automappers.automapper.AutoMapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">AutoMapper</span></code></a> to create a new AutoMapper.</p>
+<p>Use <a class="reference internal" href="autoapi/spark_auto_mapper/helpers/automapper_helpers/index.html#spark_auto_mapper.helpers.automapper_helpers.AutoMapperHelpers" title="spark_auto_mapper.helpers.automapper_helpers.AutoMapperHelpers"><code class="xref py py-class docutils literal notranslate"><span class="pre">AutoMapperHelpers</span></code></a> to specify a column vs text.</p>
+<p>Use <a class="reference internal" href="autoapi/spark_auto_mapper/data_types/data_type_base/index.html#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase" title="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">AutoMapperDataTypeBase</span></code></a> for functions available to use.</p>
+<p>NOTE: We recommend using the functions in the AutoMapperDataTypeBase instead of AutoMapperHelpers.  The latter are older and will be removed soon.</p>
+</div>
+<div class="section" id="contents">
+<h1>Contents:<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
-<p><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="autoapi/index.html">API Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="autoapi/spark_auto_mapper/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="autoapi/spark_auto_mapper/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/spark_auto_mapper/index.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/spark_auto_mapper/automappers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.automappers</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="autoapi/spark_auto_mapper/automappers/index.html#submodules">Submodules</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/automappers/automapper/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.automappers.automapper</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/automappers/automapper_analysis_exception/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.automappers.automapper_analysis_exception</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/automappers/automapper_base/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.automappers.automapper_base</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/automappers/automapper_exception/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.automappers.automapper_exception</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/automappers/check_schema_result/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.automappers.check_schema_result</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/automappers/column_spec_wrapper/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.automappers.column_spec_wrapper</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/automappers/columns/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.automappers.columns</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/automappers/complex/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.automappers.complex</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/automappers/container/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.automappers.container</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/automappers/with_column/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.automappers.with_column</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/automappers/with_column_base/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.automappers.with_column_base</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/index.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/complex/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.complex</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/index.html#submodules">Submodules</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/amount/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.amount</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/array/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.array</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/array_base/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.array_base</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/array_distinct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.array_distinct</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/array_max/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.array_max</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/boolean/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.boolean</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/coalesce/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.coalesce</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/column/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.column</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/column_wrapper/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.column_wrapper</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/concat/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.concat</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/data_type_base/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.data_type_base</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/date/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.date</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/date_format/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.date_format</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/datetime/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.datetime</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/decimal/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.decimal</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/expression/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.expression</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/field/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.field</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/filter/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.filter</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/first/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.first</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/first_valid_column/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.first_valid_column</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/flatten/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.flatten</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/float/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.float</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/hash/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.hash</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/if_/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.if_</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/if_column_exists/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.if_column_exists</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/if_not/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.if_not</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/if_not_null/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.if_not_null</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/if_not_null_or_empty/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.if_not_null_or_empty</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/if_regex/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.if_regex</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/join_using_delimiter/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.join_using_delimiter</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/list/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.list</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/literal/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.literal</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/lpad/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.lpad</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/map/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.map</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/null_if_empty/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.null_if_empty</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/number/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.number</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/regex_extract/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.regex_extract</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/regex_replace/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.regex_replace</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/split_by_delimiter/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.split_by_delimiter</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/substring/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.substring</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/substring_by_delimiter/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.substring_by_delimiter</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/text_like_base/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.text_like_base</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/transform/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.transform</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/trim/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.trim</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/data_types/unix_timestamp/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.data_types.unix_timestamp</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/spark_auto_mapper/helpers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.helpers</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="autoapi/spark_auto_mapper/helpers/index.html#submodules">Submodules</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/helpers/automapper_helpers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.helpers.automapper_helpers</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/helpers/capture_arguments/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.helpers.capture_arguments</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/helpers/spark_helpers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.helpers.spark_helpers</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/helpers/spark_higher_order_functions/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.helpers.spark_higher_order_functions</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/helpers/value_parser/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.helpers.value_parser</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/spark_auto_mapper/type_definitions/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.type_definitions</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="autoapi/spark_auto_mapper/type_definitions/index.html#submodules">Submodules</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/type_definitions/defined_types/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.type_definitions.defined_types</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/type_definitions/native_types/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.type_definitions.native_types</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="autoapi/spark_auto_mapper/type_definitions/wrapper_types/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">spark_auto_mapper.type_definitions.wrapper_types</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </div>
-</section>
-<section id="indices-and-tables">
+</div>
+<div class="section" id="indices-and-tables">
 <h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
 <li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
 <li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
 <li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
 </ul>
-</section>
+</div>
 
 
            </div>

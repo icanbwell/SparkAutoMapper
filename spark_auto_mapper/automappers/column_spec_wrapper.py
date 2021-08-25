@@ -7,7 +7,6 @@ from pyspark.sql import Column
 class ColumnSpecWrapper:
     """
     This wrapper provides a nicely formatted string for column spec
-
     """
 
     def __init__(self, column_spec: Column) -> None:
@@ -25,8 +24,7 @@ class ColumnSpecWrapper:
     def to_debug_string(self) -> str:
         """
         Formats the column spec so () are on separate lines for easier reading
-        :return:
-        :rtype:
+        :return: string
         """
         output: str = ""
         txt: str = str(self.column_spec)

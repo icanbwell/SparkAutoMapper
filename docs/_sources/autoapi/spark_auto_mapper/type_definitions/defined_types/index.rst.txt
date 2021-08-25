@@ -1,5 +1,5 @@
-:mod:`spark_auto_mapper.type_definitions.defined_types`
-=======================================================
+:py:mod:`spark_auto_mapper.type_definitions.defined_types`
+==========================================================
 
 .. py:module:: spark_auto_mapper.type_definitions.defined_types
 
@@ -7,37 +7,37 @@
 Module Contents
 ---------------
 
-.. data:: AutoMapperTextInputType
+.. py:data:: AutoMapperTextInputType
    
 
    
 
-.. data:: AutoMapperNumberInputType
+.. py:data:: AutoMapperNumberInputType
    
 
    
 
-.. data:: AutoMapperBooleanInputType
+.. py:data:: AutoMapperBooleanInputType
    
 
    
 
-.. data:: AutoMapperDateInputType
+.. py:data:: AutoMapperDateInputType
    
 
    
 
-.. data:: AutoMapperAmountInputType
+.. py:data:: AutoMapperAmountInputType
    
 
    
 
-.. data:: AutoMapperAnyDataType
+.. py:data:: AutoMapperAnyDataType
    
 
    
 
-.. data:: AutoMapperString
+.. py:data:: AutoMapperString
    
 
    

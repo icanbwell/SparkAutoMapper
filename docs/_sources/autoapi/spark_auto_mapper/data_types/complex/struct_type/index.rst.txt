@@ -1,5 +1,5 @@
-:mod:`spark_auto_mapper.data_types.complex.struct_type`
-=======================================================
+:py:mod:`spark_auto_mapper.data_types.complex.struct_type`
+==========================================================
 
 .. py:module:: spark_auto_mapper.data_types.complex.struct_type
 
@@ -16,12 +16,17 @@ Classes
 
 
 
-.. class:: AutoMapperDataTypeStruct(value: Dict[(str, Any)])
 
+.. py:class:: AutoMapperDataTypeStruct(value)
 
-   Bases: :class:`spark_auto_mapper.data_types.complex.complex_base.AutoMapperDataTypeComplexBase`
+   Bases: :py:obj:`spark_auto_mapper.data_types.complex.complex_base.AutoMapperDataTypeComplexBase`
 
-   .. method:: get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column]) -> pyspark.sql.Column
+   Base class for all Automapper data types
+
+   base class for complex types
+   :param kwargs:
+
+   .. py:method:: get_column_spec(self, source_df, current_column)
 
       Gets the column spec for this automapper data type
 

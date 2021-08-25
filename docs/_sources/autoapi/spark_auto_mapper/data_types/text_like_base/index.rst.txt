@@ -1,5 +1,5 @@
-:mod:`spark_auto_mapper.data_types.text_like_base`
-==================================================
+:py:mod:`spark_auto_mapper.data_types.text_like_base`
+=====================================================
 
 .. py:module:: spark_auto_mapper.data_types.text_like_base
 
@@ -16,11 +16,14 @@ Classes
 
 
 
-.. class:: AutoMapperTextLikeBase
 
-   Bases: :class:`spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase`
+.. py:class:: AutoMapperTextLikeBase
 
-   .. method:: get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column]) -> pyspark.sql.Column
+   Bases: :py:obj:`spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase`
+
+   Base class for all Automapper data types
+
+   .. py:method:: get_column_spec(self, source_df, current_column)
       :abstractmethod:
 
       Gets the column spec for this automapper data type

@@ -1,5 +1,5 @@
-:mod:`spark_auto_mapper.automappers.columns`
-============================================
+:py:mod:`spark_auto_mapper.automappers.columns`
+===============================================
 
 .. py:module:: spark_auto_mapper.automappers.columns
 
@@ -16,9 +16,16 @@ Classes
 
 
 
-.. class:: AutoMapperColumns(**kwargs: spark_auto_mapper.type_definitions.defined_types.AutoMapperAnyDataType)
+
+.. py:class:: AutoMapperColumns(**kwargs)
+
+   Bases: :py:obj:`spark_auto_mapper.automappers.container.AutoMapperContainer`
+
+   Abstract Base class for AutoMappers
+
+   Create mappings for columns
 
 
-   Bases: :class:`spark_auto_mapper.automappers.container.AutoMapperContainer`
+   :param kwargs: dictionary of column, AutoMapper
 
 

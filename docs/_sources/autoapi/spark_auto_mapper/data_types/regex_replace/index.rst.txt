@@ -1,5 +1,5 @@
-:mod:`spark_auto_mapper.data_types.regex_replace`
-=================================================
+:py:mod:`spark_auto_mapper.data_types.regex_replace`
+====================================================
 
 .. py:module:: spark_auto_mapper.data_types.regex_replace
 
@@ -16,14 +16,14 @@ Classes
 
 
 
-.. class:: AutoMapperRegExReplaceDataType(column: spark_auto_mapper.type_definitions.wrapper_types.AutoMapperColumnOrColumnLikeType, pattern: str, replacement: str)
 
+.. py:class:: AutoMapperRegExReplaceDataType(column, pattern, replacement)
 
-   Bases: :class:`spark_auto_mapper.data_types.text_like_base.AutoMapperTextLikeBase`
+   Bases: :py:obj:`spark_auto_mapper.data_types.text_like_base.AutoMapperTextLikeBase`
 
    Concatenates multiple strings together
 
-   .. method:: get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column]) -> pyspark.sql.Column
+   .. py:method:: get_column_spec(self, source_df, current_column)
 
       Gets the column spec for this automapper data type
 
