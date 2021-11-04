@@ -1,6 +1,7 @@
 from typing import Any, Dict, Union, TypeVar, cast, Optional, List, Callable
 
 # noinspection PyPackageRequirements
+from deprecated import deprecated
 from pyspark.sql.types import StringType
 
 # noinspection PyPackageRequirements
@@ -138,6 +139,7 @@ class AutoMapperHelpers:
         return AutoMapperDataTypeExpression(value)
 
     @staticmethod
+    @deprecated
     def date(
         value: AutoMapperDateInputType, formats: Optional[List[str]] = None
     ) -> AutoMapperDateDataType:
@@ -155,6 +157,7 @@ class AutoMapperHelpers:
         return AutoMapperDateDataType(value, formats)
 
     @staticmethod
+    @deprecated
     def datetime(
         value: AutoMapperDateInputType, formats: Optional[List[str]] = None
     ) -> AutoMapperDateTimeDataType:
@@ -168,6 +171,7 @@ class AutoMapperHelpers:
         return AutoMapperDateTimeDataType(value, formats)
 
     @staticmethod
+    @deprecated
     def decimal(
         value: AutoMapperAmountInputType, precision: int, scale: int
     ) -> AutoMapperDecimalDataType:
@@ -182,6 +186,7 @@ class AutoMapperHelpers:
         return AutoMapperDecimalDataType(value, precision, scale)
 
     @staticmethod
+    @deprecated
     def amount(value: AutoMapperAmountInputType) -> AutoMapperAmountDataType:
         """
         Specifies the value should be used as an amount
@@ -192,6 +197,7 @@ class AutoMapperHelpers:
         return AutoMapperAmountDataType(value)
 
     @staticmethod
+    @deprecated
     def boolean(value: AutoMapperBooleanInputType) -> AutoMapperBooleanDataType:
         """
         Specifies the value should be used as a boolean
@@ -202,6 +208,7 @@ class AutoMapperHelpers:
         return AutoMapperBooleanDataType(value)
 
     @staticmethod
+    @deprecated
     def number(value: AutoMapperNumberInputType) -> AutoMapperNumberDataType:
         """
         Specifies value should be used as a number
@@ -212,6 +219,7 @@ class AutoMapperHelpers:
         return AutoMapperNumberDataType(value)
 
     @staticmethod
+    @deprecated
     def concat(
         *args: Union[
             AutoMapperNativeTextType,
@@ -229,6 +237,7 @@ class AutoMapperHelpers:
         return AutoMapperConcatDataType(*args)
 
     @staticmethod
+    @deprecated
     def if_(
         column: AutoMapperColumnOrColumnLikeType,
         check: Union[AutoMapperAnyDataType, List[AutoMapperAnyDataType]],
@@ -253,6 +262,7 @@ class AutoMapperHelpers:
         )
 
     @staticmethod
+    @deprecated
     def if_not(
         column: AutoMapperColumnOrColumnLikeType,
         check: Union[AutoMapperAnyDataType, List[AutoMapperAnyDataType]],
@@ -275,6 +285,7 @@ class AutoMapperHelpers:
         )
 
     @staticmethod
+    @deprecated
     def if_not_null(
         check: AutoMapperColumnOrColumnLikeType,
         value: _TAutoMapperDataType,
@@ -297,6 +308,7 @@ class AutoMapperHelpers:
         )
 
     @staticmethod
+    @deprecated
     def if_not_null_or_empty(
         check: AutoMapperColumnOrColumnLikeType,
         value: _TAutoMapperDataType,
@@ -321,6 +333,7 @@ class AutoMapperHelpers:
         )
 
     @staticmethod
+    @deprecated
     def map(
         column: AutoMapperColumnOrColumnLikeType,
         mapping: Dict[Optional[AutoMapperTextInputType], AutoMapperAnyDataType],
@@ -338,6 +351,7 @@ class AutoMapperHelpers:
         return AutoMapperMapDataType(column=column, mapping=mapping, default=default)
 
     @staticmethod
+    @deprecated
     def left(
         column: AutoMapperColumnOrColumnLikeType, length: int
     ) -> AutoMapperSubstringDataType:
@@ -351,6 +365,7 @@ class AutoMapperHelpers:
         return AutoMapperSubstringDataType(column=column, start=0, length=length)
 
     @staticmethod
+    @deprecated
     def right(
         column: AutoMapperColumnOrColumnLikeType, length: int
     ) -> AutoMapperSubstringDataType:
@@ -364,6 +379,7 @@ class AutoMapperHelpers:
         return AutoMapperSubstringDataType(column=column, start=-length, length=length)
 
     @staticmethod
+    @deprecated
     def substring(
         column: AutoMapperColumnOrColumnLikeType, start: int, length: int
     ) -> AutoMapperSubstringDataType:
@@ -378,6 +394,7 @@ class AutoMapperHelpers:
         return AutoMapperSubstringDataType(column=column, start=start, length=length)
 
     @staticmethod
+    @deprecated
     def string_before_delimiter(
         column: AutoMapperColumnOrColumnLikeType, delimiter: str
     ) -> AutoMapperSubstringByDelimiterDataType:
@@ -393,6 +410,7 @@ class AutoMapperHelpers:
         )
 
     @staticmethod
+    @deprecated
     def string_after_delimiter(
         column: AutoMapperColumnOrColumnLikeType, delimiter: str
     ) -> AutoMapperSubstringByDelimiterDataType:
@@ -408,6 +426,7 @@ class AutoMapperHelpers:
         )
 
     @staticmethod
+    @deprecated
     def substring_by_delimiter(
         column: AutoMapperColumnOrColumnLikeType, delimiter: str, delimiter_count: int
     ) -> AutoMapperSubstringByDelimiterDataType:
@@ -428,6 +447,7 @@ class AutoMapperHelpers:
         )
 
     @staticmethod
+    @deprecated
     def regex_replace(
         column: AutoMapperColumnOrColumnLikeType, pattern: str, replacement: str
     ) -> AutoMapperRegExReplaceDataType:
@@ -444,6 +464,7 @@ class AutoMapperHelpers:
         )
 
     @staticmethod
+    @deprecated
     def regex_extract(
         column: AutoMapperColumnOrColumnLikeType, pattern: str, index: int
     ) -> AutoMapperRegExExtractDataType:
@@ -461,6 +482,7 @@ class AutoMapperHelpers:
         )
 
     @staticmethod
+    @deprecated
     def trim(column: AutoMapperColumnOrColumnLikeType) -> AutoMapperTrimDataType:
         """
         Trim the spaces from both ends for the specified string column.
@@ -471,6 +493,7 @@ class AutoMapperHelpers:
         return AutoMapperTrimDataType(column=column)
 
     @staticmethod
+    @deprecated
     def lpad(
         column: AutoMapperColumnOrColumnLikeType, length: int, pad: str
     ) -> AutoMapperLPadDataType:
@@ -485,6 +508,7 @@ class AutoMapperHelpers:
         return AutoMapperLPadDataType(column=column, length=length, pad=pad)
 
     @staticmethod
+    @deprecated
     def hash(
         *args: Union[
             AutoMapperNativeTextType, AutoMapperWrapperType, AutoMapperTextLikeBase
@@ -500,6 +524,7 @@ class AutoMapperHelpers:
         return AutoMapperHashDataType(*args)
 
     @staticmethod
+    @deprecated
     def coalesce(*args: _TAutoMapperDataType) -> _TAutoMapperDataType:
         """
         Returns the first value that is not null.
@@ -511,6 +536,7 @@ class AutoMapperHelpers:
         return cast(_TAutoMapperDataType, AutoMapperCoalesceDataType(*args))
 
     @staticmethod
+    @deprecated
     def array_max(*args: _TAutoMapperDataType) -> _TAutoMapperDataType:
         """
         Returns the first value that is not null.
@@ -522,6 +548,7 @@ class AutoMapperHelpers:
         return cast(_TAutoMapperDataType, AutoMapperArrayMaxDataType(*args))
 
     @staticmethod
+    @deprecated
     def array_distinct(*args: _TAutoMapperDataType) -> _TAutoMapperDataType:
         """
         Returns the distinct items in the array.
@@ -533,6 +560,7 @@ class AutoMapperHelpers:
         return cast(_TAutoMapperDataType, AutoMapperArrayDistinctDataType(*args))
 
     @staticmethod
+    @deprecated
     def if_regex(
         column: AutoMapperColumnOrColumnLikeType,
         check: Union[str, List[str]],
@@ -559,6 +587,7 @@ class AutoMapperHelpers:
         )
 
     @staticmethod
+    @deprecated
     def filter(
         column: AutoMapperColumnOrColumnLikeType, func: Callable[[Column], Column]
     ) -> AutoMapperFilterDataType:
@@ -578,6 +607,7 @@ class AutoMapperHelpers:
         return AutoMapperFilterDataType(column=column, func=func)
 
     @staticmethod
+    @deprecated
     def transform(
         column: AutoMapperColumnOrColumnLikeType, value: _TAutoMapperDataType
     ) -> List[_TAutoMapperDataType]:
@@ -615,6 +645,7 @@ class AutoMapperHelpers:
         return AutoMapperDataTypeField("_")
 
     @staticmethod
+    @deprecated
     def split_by_delimiter(
         column: AutoMapperColumnOrColumnLikeType, delimiter: str
     ) -> AutoMapperSplitByDelimiterDataType:
@@ -628,6 +659,7 @@ class AutoMapperHelpers:
         return AutoMapperSplitByDelimiterDataType(column=column, delimiter=delimiter)
 
     @staticmethod
+    @deprecated
     def float(value: AutoMapperDataTypeBase) -> "AutoMapperDataTypeBase":
         """
         Converts column to float
@@ -640,6 +672,7 @@ class AutoMapperHelpers:
         return cast("AutoMapperDataTypeBase", AutoMapperFloatDataType(value=value))
 
     @staticmethod
+    @deprecated
     def flatten(column: AutoMapperColumnOrColumnLikeType) -> "AutoMapperDataTypeBase":
         """
         creates a single array from an array of arrays.
@@ -654,6 +687,7 @@ class AutoMapperHelpers:
         return cast("AutoMapperDataTypeBase", AutoMapperFlattenDataType(column=column))
 
     @staticmethod
+    @deprecated
     def first_valid_column(
         *columns: AutoMapperColumnOrColumnLikeType,
     ) -> "AutoMapperDataTypeBase":
@@ -670,6 +704,7 @@ class AutoMapperHelpers:
         return AutoMapperFirstValidColumnType(*columns)
 
     @staticmethod
+    @deprecated
     def if_column_exists(
         column: AutoMapperColumnOrColumnLikeType,
         if_exists: Optional[_TAutoMapperDataType],
@@ -689,6 +724,7 @@ class AutoMapperHelpers:
         )
 
     @staticmethod
+    @deprecated
     def array(value: AutoMapperDataTypeBase) -> "AutoMapperDataTypeBase":
         """
         creates an array from a single item.
@@ -702,6 +738,7 @@ class AutoMapperHelpers:
         return cast("AutoMapperDataTypeBase", AutoMapperArrayDataType(value=value))
 
     @staticmethod
+    @deprecated
     def join_using_delimiter(
         column: AutoMapperColumnOrColumnLikeType, delimiter: str
     ) -> AutoMapperJoinUsingDelimiterDataType:
@@ -715,6 +752,7 @@ class AutoMapperHelpers:
         return AutoMapperJoinUsingDelimiterDataType(column=column, delimiter=delimiter)
 
     @staticmethod
+    @deprecated
     def unix_timestamp(value: AutoMapperNumberInputType) -> AutoMapperUnixTimestampType:
         """
         Joins an array and forms a string using the delimiter
