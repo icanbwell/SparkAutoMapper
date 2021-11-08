@@ -57,9 +57,9 @@ def test_auto_mapper_cast(spark_session: SparkSession) -> None:
             (2, "Vidal", "Michael", 35),
         ],
         ["member_id", "last_name", "first_name", "my_age"],
-    ).createOrReplaceTempView("patients")
+    ).createOrReplaceTempView("patients1")
 
-    source_df: DataFrame = spark_session.table("patients")
+    source_df: DataFrame = spark_session.table("patients1")
 
     source_df = source_df.withColumn("an_array", array())
     source_df.createOrReplaceTempView("patients")

@@ -88,7 +88,7 @@ def test_automapper_first_valid_column(spark_session: SparkSession) -> None:
     sql_expressions_2: Dict[str, Column] = mapper.get_column_specs(
         source_df=source_df_2
     )
-    assert assert_expressions_are_equal(
+    assert_expressions_are_equal(
         sql_expressions_2["age"],
         col("b.age").cast("long").alias("___age")
     )
