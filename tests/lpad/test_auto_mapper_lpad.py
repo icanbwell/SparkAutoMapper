@@ -2,6 +2,7 @@ from typing import Dict
 
 from pyspark.sql.functions import lpad, col
 
+from spark_auto_mapper.expression_comparer import compare_expressions
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 from pyspark.sql import SparkSession, DataFrame, Column
@@ -34,7 +35,8 @@ def test_auto_mapper_lpad(spark_session: SparkSession) -> None:
     assert isinstance(mapper, AutoMapper)
     sql_expressions: Dict[str, Column] = mapper.get_column_specs(source_df=source_df)
 
-    assert str(sql_expressions["my_column"]) == str(
+    assert compare_expressions(
+        sql_expressions["my_column"],
         lpad(col=col("b.empi"), len=9, pad="0").alias("my_column")
     )
 

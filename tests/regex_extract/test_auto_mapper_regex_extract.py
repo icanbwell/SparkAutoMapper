@@ -7,6 +7,7 @@ from pyspark.sql.functions import regexp_extract
 from pyspark.sql.functions import col
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
+from spark_auto_mapper.expression_comparer import compare_expressions
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 
@@ -34,7 +35,8 @@ def test_auto_mapper_regex_replace(spark_session: SparkSession) -> None:
     assert isinstance(mapper, AutoMapper)
     sql_expressions: Dict[str, Column] = mapper.get_column_specs(source_df=source_df)
 
-    assert str(sql_expressions["my_column"]) == str(
+    assert compare_expressions(
+        sql_expressions["my_column"],
         regexp_extract(col("b.date_of_birth"), r"^(\d{4}).*", 1).alias("my_column")
     )
 
@@ -42,9 +44,9 @@ def test_auto_mapper_regex_replace(spark_session: SparkSession) -> None:
 
     # noinspection SpellCheckingInspection
     assert (
-        result_df.where("member_id == 1").select("my_column").collect()[0][0] == "1970"
+            result_df.where("member_id == 1").select("my_column").collect()[0][0] == "1970"
     )
     # noinspection SpellCheckingInspection
     assert (
-        result_df.where("member_id == 2").select("my_column").collect()[0][0] == "1980"
+            result_df.where("member_id == 2").select("my_column").collect()[0][0] == "1980"
     )

@@ -12,20 +12,21 @@ from spark_auto_mapper.data_types.complex.complex_base import (
 )
 from spark_auto_mapper.data_types.number import AutoMapperNumberDataType
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
+from spark_auto_mapper.expression_comparer import compare_expressions
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 
 class MyClass(AutoMapperDataTypeComplexBase):
     def __init__(
-        self,
-        id_: AutoMapperTextLikeBase,
-        name: AutoMapperTextLikeBase,
-        age: AutoMapperNumberDataType,
+            self,
+            id_: AutoMapperTextLikeBase,
+            name: AutoMapperTextLikeBase,
+            age: AutoMapperNumberDataType,
     ) -> None:
         super().__init__(id_=id_, name=name, age=age)
 
     def get_schema(
-        self, include_extension: bool
+            self, include_extension: bool
     ) -> Optional[Union[StructType, DataType]]:
         schema: StructType = StructType(
             [
@@ -75,21 +76,23 @@ def test_automapper_complex_with_skip_if_null(spark_session: SparkSession) -> No
     result_df: DataFrame = mapper.transform(df=df)
 
     # Assert
-    assert str(sql_expressions["name"]) == str(
+    assert compare_expressions(
+        sql_expressions["name"],
         when(
             col("b.first_name").isNull() | col("b.first_name").eqNullSafe(""), lit(None)
         )
-        .otherwise(col("b.last_name"))
-        .cast(StringType())
-        .alias("name")
+            .otherwise(col("b.last_name"))
+            .cast(StringType())
+            .alias("name")
     )
-    assert str(sql_expressions["age"]) == str(
+    assert compare_expressions(
+        sql_expressions["age"],
         when(
             col("b.first_name").isNull() | col("b.first_name").eqNullSafe(""), lit(None)
         )
-        .otherwise(col("b.my_age"))
-        .cast(LongType())
-        .alias("age")
+            .otherwise(col("b.my_age"))
+            .cast(LongType())
+            .alias("age")
     )
 
     result_df.printSchema()

@@ -7,6 +7,7 @@ from pyspark.sql.functions import regexp_replace
 from pyspark.sql.functions import col
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
+from spark_auto_mapper.expression_comparer import compare_expressions
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 
@@ -42,7 +43,8 @@ def test_auto_mapper_sanitize(spark_session: SparkSession) -> None:
 
     not_normal_characters: str = r"[^\w\r\n\t _.,!\"'/$-]"
 
-    assert str(sql_expressions["my_column"]) == str(
+    assert compare_expressions(
+        sql_expressions["my_column"],
         regexp_replace(col("b.last_name"), not_normal_characters, ".").alias(
             "my_column"
         )

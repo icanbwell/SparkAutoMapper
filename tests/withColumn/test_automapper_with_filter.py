@@ -6,6 +6,7 @@ from pyspark.sql import SparkSession, Column, DataFrame
 from pyspark.sql.functions import col
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
+from spark_auto_mapper.expression_comparer import compare_expressions
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 
@@ -37,7 +38,7 @@ def test_auto_mapper_with_filter(spark_session: SparkSession) -> None:
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
-    assert str(sql_expressions["lname"]) == str(col("b.last_name").alias("lname"))
+    assert compare_expressions(sql_expressions["lname"], col("b.last_name").alias("lname"))
 
     result_df: DataFrame = mapper.transform(df=df)
 

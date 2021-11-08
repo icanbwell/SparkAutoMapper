@@ -22,6 +22,7 @@ from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 from spark_auto_mapper.data_types.list import AutoMapperList
 from spark_auto_mapper.data_types.number import AutoMapperNumberDataType
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
+from spark_auto_mapper.expression_comparer import compare_expressions
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 from spark_auto_mapper.type_definitions.defined_types import AutoMapperDateInputType
 
@@ -29,10 +30,10 @@ from spark_auto_mapper.type_definitions.defined_types import AutoMapperDateInput
 class MyProcessingStatusExtensionItem(AutoMapperDataTypeComplexBase):
     # noinspection PyPep8Naming
     def __init__(
-        self,
-        url: str,
-        valueString: Optional[AutoMapperTextLikeBase] = None,
-        valueDateTime: Optional[AutoMapperDateInputType] = None,
+            self,
+            url: str,
+            valueString: Optional[AutoMapperTextLikeBase] = None,
+            valueDateTime: Optional[AutoMapperDateInputType] = None,
     ) -> None:
         super().__init__(url=url, valueString=valueString, valueDateTime=valueDateTime)
 
@@ -40,10 +41,10 @@ class MyProcessingStatusExtensionItem(AutoMapperDataTypeComplexBase):
 class MyProcessingStatusExtension(AutoMapperDataTypeComplexBase):
     # noinspection PyPep8Naming
     def __init__(
-        self,
-        processing_status: AutoMapperTextLikeBase,
-        request_id: AutoMapperTextLikeBase,
-        date_processed: Optional[AutoMapperDateInputType] = None,
+            self,
+            processing_status: AutoMapperTextLikeBase,
+            request_id: AutoMapperTextLikeBase,
+            date_processed: Optional[AutoMapperDateInputType] = None,
     ) -> None:
         definition_base_url = "https://raw.githubusercontent.com/imranq2/SparkAutoMapper.FHIR/main/StructureDefinition/"
         processing_status_extensions = [
@@ -76,7 +77,7 @@ class MyProcessingStatusExtension(AutoMapperDataTypeComplexBase):
             )
 
     def get_schema(
-        self, include_extension: bool
+            self, include_extension: bool
     ) -> Optional[Union[StructType, DataType]]:
         return StructType(
             [
@@ -97,25 +98,25 @@ class MyProcessingStatusExtension(AutoMapperDataTypeComplexBase):
         )
 
     def get_value(
-        self,
-        value: AutoMapperDataTypeBase,
-        source_df: Optional[DataFrame],
-        current_column: Optional[Column],
+            self,
+            value: AutoMapperDataTypeBase,
+            source_df: Optional[DataFrame],
+            current_column: Optional[Column],
     ) -> Column:
         return super().get_value(value, source_df, current_column)
 
 
 class MyClass(AutoMapperDataTypeComplexBase):
     def __init__(
-        self,
-        name: AutoMapperTextLikeBase,
-        age: AutoMapperNumberDataType,
-        extension: AutoMapperList[MyProcessingStatusExtension],
+            self,
+            name: AutoMapperTextLikeBase,
+            age: AutoMapperNumberDataType,
+            extension: AutoMapperList[MyProcessingStatusExtension],
     ) -> None:
         super().__init__(name=name, age=age, extension=extension)
 
     def get_schema(
-        self, include_extension: bool
+            self, include_extension: bool
     ) -> Optional[Union[StructType, DataType]]:
         schema: StructType = StructType(
             [
@@ -171,10 +172,10 @@ def test_auto_mapper_complex_with_extension(spark_session: SparkSession) -> None
     result_df: DataFrame = mapper.transform(df=df)
 
     # Assert
-    assert str(sql_expressions["name"]) == str(
-        col("b.last_name").cast("string").alias("name")
-    )
-    assert str(sql_expressions["age"]) == str(col("b.my_age").cast("long").alias("age"))
+    assert compare_expressions(sql_expressions["name"],
+                               col("b.last_name").cast("string").alias("name")
+                               )
+    assert compare_expressions(sql_expressions["age"], col("b.my_age").cast("long").alias("age"))
 
     result_df.printSchema()
     result_df.show(truncate=False)

@@ -6,6 +6,7 @@ from pyspark.sql.functions import col, filter
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.data_types.list import AutoMapperList
+from spark_auto_mapper.expression_comparer import compare_expressions
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 
@@ -44,16 +45,19 @@ def test_auto_mapper_columns(spark_session: SparkSession) -> None:
 
     # Assert
     assert len(sql_expressions) == 4
-    assert str(sql_expressions["dst1"]) == str(lit("src1").alias("dst1"))
-    assert str(sql_expressions["dst2"]) == str(
+    assert compare_expressions(sql_expressions["dst1"], lit("src1").alias("dst1"))
+    assert compare_expressions(
+        sql_expressions["dst2"],
         filter(array(lit("address1")), lambda x: x.isNotNull()).alias("dst2")
     )
-    assert str(sql_expressions["dst3"]) == str(
+    assert compare_expressions(
+        sql_expressions["dst3"],
         filter(array(lit("address1"), lit("address2")), lambda x: x.isNotNull()).alias(
             "dst3"
         )
     )
-    assert str(sql_expressions["dst4"]) == str(
+    assert compare_expressions(
+        sql_expressions["dst4"],
         filter(
             array(
                 struct(lit("usual").alias("use"), col("b.last_name").alias("family"))
@@ -71,24 +75,24 @@ def test_auto_mapper_columns(spark_session: SparkSession) -> None:
     assert len(result_df.columns) == 5
     assert result_df.where("member_id == 1").select("dst1").collect()[0][0] == "src1"
     assert (
-        result_df.where("member_id == 1").select("dst2").collect()[0][0][0]
-        == "address1"
+            result_df.where("member_id == 1").select("dst2").collect()[0][0][0]
+            == "address1"
     )
 
     assert (
-        result_df.where("member_id == 1").select("dst3").collect()[0][0][0]
-        == "address1"
+            result_df.where("member_id == 1").select("dst3").collect()[0][0][0]
+            == "address1"
     )
     assert (
-        result_df.where("member_id == 1").select("dst3").collect()[0][0][1]
-        == "address2"
+            result_df.where("member_id == 1").select("dst3").collect()[0][0][1]
+            == "address2"
     )
 
     assert (
-        result_df.where("member_id == 1").select("dst4").collect()[0][0][0][0]
-        == "usual"
+            result_df.where("member_id == 1").select("dst4").collect()[0][0][0][0]
+            == "usual"
     )
     assert (
-        result_df.where("member_id == 1").select("dst4").collect()[0][0][0][1]
-        == "Qureshi"
+            result_df.where("member_id == 1").select("dst4").collect()[0][0][0][1]
+            == "Qureshi"
     )

@@ -7,6 +7,7 @@ from pyspark.sql.functions import split
 from pyspark.sql.functions import col
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
+from spark_auto_mapper.expression_comparer import compare_expressions
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 
@@ -35,7 +36,8 @@ def test_auto_mapper_split_by_delimiter(spark_session: SparkSession) -> None:
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
-    assert str(sql_expressions["my_column"]) == str(
+    assert compare_expressions(
+        sql_expressions["my_column"],
         split(col("b.last_name"), "[|]", -1).alias("my_column")
     )
 

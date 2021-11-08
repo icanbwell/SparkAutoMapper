@@ -23,6 +23,7 @@ from spark_auto_mapper.data_types.complex.complex_base import (
 from spark_auto_mapper.data_types.list import AutoMapperList
 from spark_auto_mapper.data_types.number import AutoMapperNumberDataType
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
+from spark_auto_mapper.expression_comparer import compare_expressions
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 
@@ -90,10 +91,14 @@ def test_auto_mapper_cast(spark_session: SparkSession) -> None:
     result_df: DataFrame = mapper.transform(df=df)
 
     # Assert
-    assert str(sql_expressions["name"]) == str(
+    assert compare_expressions(
+        sql_expressions["name"],
         col("b.last_name").cast("string").alias("name")
     )
-    assert str(sql_expressions["age"]) == str(col("b.my_age").cast("long").alias("age"))
+    assert compare_expressions(
+        sql_expressions["age"],
+        col("b.my_age").cast("long").alias("age")
+    )
 
     result_df.printSchema()
     result_df.show()

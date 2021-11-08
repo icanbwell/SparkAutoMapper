@@ -4,6 +4,7 @@ from typing import Dict
 from pyspark.sql import SparkSession, DataFrame, Column
 from pyspark.sql.functions import transform, filter
 
+from spark_auto_mapper.expression_comparer import compare_expressions
 from tests.conftest import clean_spark_session
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
@@ -37,7 +38,8 @@ def test_automapper_select_one(spark_session: SparkSession) -> None:
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
-    assert str(sql_expressions["age"]) == str(
+    assert compare_expressions(
+        sql_expressions["age"],
         transform(
             filter(
                 "b.identifier",

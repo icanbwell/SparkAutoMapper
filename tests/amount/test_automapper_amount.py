@@ -8,6 +8,7 @@ from pytest import approx
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
+from spark_auto_mapper.expression_comparer import compare_expressions
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 
@@ -43,10 +44,12 @@ def test_auto_mapper_amount(spark_session: SparkSession) -> None:
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
-    assert str(sql_expressions["age"]) == str(
+    assert compare_expressions(
+        sql_expressions["age"],
         col("b.my_age").cast("double").alias("age")
     )
-    assert str(sql_expressions["null_col"]) == str(
+    assert compare_expressions(
+        sql_expressions["null_col"],
         lit(None).cast("double").alias("null_col")
     )
 
@@ -64,8 +67,8 @@ def test_auto_mapper_amount(spark_session: SparkSession) -> None:
     ) == (approx(67.67), None)
     # Ensuring exact match in situations in which float arithmetic errors might occur
     assert (
-        str(result_df.where("member_id == 3").select("age").collect()[0][0])
-        == "1286782.17"
+            str(result_df.where("member_id == 3").select("age").collect()[0][0])
+            == "1286782.17"
     )
 
     assert dict(result_df.dtypes)["age"] == "double"

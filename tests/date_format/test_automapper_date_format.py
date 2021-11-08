@@ -6,6 +6,7 @@ from pyspark.sql import SparkSession, Column, DataFrame
 from pyspark.sql.functions import col, date_format, to_timestamp
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
+from spark_auto_mapper.expression_comparer import compare_expressions
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 
@@ -42,7 +43,8 @@ def test_auto_mapper_date_format(spark_session: SparkSession) -> None:
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
-    assert str(sql_expressions["openingTime"]) == str(
+    assert compare_expressions(
+        sql_expressions["openingTime"],
         date_format(col("b.opening_time"), "hh:mm:ss").alias("openingTime")
     )
 
