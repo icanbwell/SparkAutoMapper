@@ -55,7 +55,7 @@ def test_automapper_if_not_null_or_empty(spark_session: SparkSession) -> None:
             lit("100").cast(StringType()),
         )
         .otherwise(col("b.my_age"))
-        .alias("age")
+        .alias("age"),
     )
 
     result_df: DataFrame = mapper.transform(df=df)

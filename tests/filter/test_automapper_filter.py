@@ -38,7 +38,7 @@ def test_automapper_filter(spark_session: SparkSession) -> None:
 
     assert_expressions_are_equal(
         sql_expressions["age"],
-        filter("b.identifier", lambda x: x["use"] == lit("usual")).alias("age")
+        filter("b.identifier", lambda x: x["use"] == lit("usual")).alias("age"),
     )
     result_df: DataFrame = mapper.transform(df=source_df)
 

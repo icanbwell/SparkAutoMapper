@@ -45,7 +45,7 @@ def test_auto_mapper_array_multiple_items_with_null(
         sql_expressions["dst2"],
         filter(
             array(lit("address1"), lit("address2"), lit(None)), lambda x: x.isNotNull()
-        ).alias("dst2")
+        ).alias("dst2"),
     )
 
     result_df: DataFrame = mapper.transform(df=df)

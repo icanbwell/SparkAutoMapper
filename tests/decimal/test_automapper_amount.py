@@ -44,8 +44,7 @@ def test_auto_mapper_amount(spark_session: SparkSession) -> None:
         print(f"{column_name}: {sql_expression}")
 
     assert_expressions_are_equal(
-        sql_expressions["age"],
-        col("b.my_age").cast("decimal(10,2)").alias("age")
+        sql_expressions["age"], col("b.my_age").cast("decimal(10,2)").alias("age")
     )
 
     result_df: DataFrame = mapper.transform(df=df)

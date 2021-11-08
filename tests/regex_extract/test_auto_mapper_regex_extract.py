@@ -37,16 +37,16 @@ def test_auto_mapper_regex_replace(spark_session: SparkSession) -> None:
 
     assert_expressions_are_equal(
         sql_expressions["my_column"],
-        regexp_extract(col("b.date_of_birth"), r"^(\d{4}).*", 1).alias("my_column")
+        regexp_extract(col("b.date_of_birth"), r"^(\d{4}).*", 1).alias("my_column"),
     )
 
     result_df: DataFrame = mapper.transform(df=df)
 
     # noinspection SpellCheckingInspection
     assert (
-            result_df.where("member_id == 1").select("my_column").collect()[0][0] == "1970"
+        result_df.where("member_id == 1").select("my_column").collect()[0][0] == "1970"
     )
     # noinspection SpellCheckingInspection
     assert (
-            result_df.where("member_id == 2").select("my_column").collect()[0][0] == "1980"
+        result_df.where("member_id == 2").select("my_column").collect()[0][0] == "1980"
     )

@@ -46,7 +46,7 @@ def test_auto_mapper_date_literal(spark_session: SparkSession) -> None:
             to_date(lit("1970-01-01"), format="y-M-d"),
             to_date(lit("1970-01-01"), format="yyyyMMdd"),
             to_date(lit("1970-01-01"), format="M/d/y"),
-        ).alias("birthDate")
+        ).alias("birthDate"),
     )
 
     result_df: DataFrame = mapper.transform(df=df)

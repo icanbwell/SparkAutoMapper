@@ -48,7 +48,7 @@ def test_auto_mapper_coalesce(spark_session: SparkSession) -> None:
             col("b.last_name"),
             col("b.date_of_birth"),
             lit("last_resort").cast(StringType()),
-        ).alias("my_column")
+        ).alias("my_column"),
     )
 
     result_df: DataFrame = mapper.transform(df=df)

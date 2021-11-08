@@ -46,7 +46,7 @@ def test_automapper_select_one(spark_session: SparkSession) -> None:
                 lambda x: x["system"] == lit("http://hl7.org/fhir/sid/us-npi"),
             ),
             lambda x: x["value"],
-        )[0].alias("age")
+        )[0].alias("age"),
     )
     result_df: DataFrame = mapper.transform(df=source_df)
 

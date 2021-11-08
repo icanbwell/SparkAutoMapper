@@ -38,7 +38,7 @@ def test_auto_mapper_regex_replace(spark_session: SparkSession) -> None:
 
     assert_expressions_are_equal(
         sql_expressions["my_column"],
-        regexp_replace(col("b.last_name"), "i", "f").alias("my_column")
+        regexp_replace(col("b.last_name"), "i", "f").alias("my_column"),
     )
 
     result_df: DataFrame = mapper.transform(df=df)

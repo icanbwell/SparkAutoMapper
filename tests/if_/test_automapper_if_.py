@@ -51,7 +51,7 @@ def test_automapper_if_(spark_session: SparkSession) -> None:
             col("b.my_age").cast(LongType()),
         )
         .otherwise(lit("100").cast(StringType()).cast(LongType()))
-        .alias("age")
+        .alias("age"),
     )
 
     result_df: DataFrame = mapper.transform(df=df)

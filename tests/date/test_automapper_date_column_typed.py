@@ -44,8 +44,7 @@ def test_auto_mapper_date_column_typed(spark_session: SparkSession) -> None:
         print(f"{column_name}: {sql_expression}")
 
     assert_expressions_are_equal(
-        sql_expressions["birthDate"],
-        col("b.date_of_birth").alias("birthDate")
+        sql_expressions["birthDate"], col("b.date_of_birth").alias("birthDate")
     )
 
     result_df: DataFrame = mapper.transform(df=df)

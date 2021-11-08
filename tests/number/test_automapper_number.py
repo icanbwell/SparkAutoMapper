@@ -44,13 +44,11 @@ def test_auto_mapper_number(spark_session: SparkSession) -> None:
         print(f"{column_name}: {sql_expression}")
 
     assert_expressions_are_equal(
-        sql_expressions["age"],
-        col("b.my_age").cast("long").alias("age")
+        sql_expressions["age"], col("b.my_age").cast("long").alias("age")
     )
 
     assert_expressions_are_equal(
-        sql_expressions["null_field"],
-        lit(None).cast("long").alias("null_field")
+        sql_expressions["null_field"], lit(None).cast("long").alias("null_field")
     )
 
     result_df: DataFrame = mapper.transform(df=df)

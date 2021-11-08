@@ -41,7 +41,7 @@ def test_auto_mapper_struct(spark_session: SparkSession) -> None:
     # Assert
     assert_expressions_are_equal(
         sql_expressions["dst2"],
-        struct(lit("usual").alias("use"), lit("imran").alias("family")).alias("dst2")
+        struct(lit("usual").alias("use"), lit("imran").alias("family")).alias("dst2"),
     )
 
     result_df.printSchema()

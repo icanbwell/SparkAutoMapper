@@ -45,12 +45,10 @@ def test_auto_mapper_amount(spark_session: SparkSession) -> None:
         print(f"{column_name}: {sql_expression}")
 
     assert_expressions_are_equal(
-        sql_expressions["age"],
-        col("b.my_age").cast("double").alias("age")
+        sql_expressions["age"], col("b.my_age").cast("double").alias("age")
     )
     assert_expressions_are_equal(
-        sql_expressions["null_col"],
-        lit(None).cast("double").alias("null_col")
+        sql_expressions["null_col"], lit(None).cast("double").alias("null_col")
     )
 
     result_df: DataFrame = mapper.transform(df=df)
@@ -67,8 +65,8 @@ def test_auto_mapper_amount(spark_session: SparkSession) -> None:
     ) == (approx(67.67), None)
     # Ensuring exact match in situations in which float arithmetic errors might occur
     assert (
-            str(result_df.where("member_id == 3").select("age").collect()[0][0])
-            == "1286782.17"
+        str(result_df.where("member_id == 3").select("age").collect()[0][0])
+        == "1286782.17"
     )
 
     assert dict(result_df.dtypes)["age"] == "double"

@@ -18,12 +18,12 @@ from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 class MyClass(AutoMapperDataTypeComplexBase):
     def __init__(
-            self, name: AutoMapperTextLikeBase, age: AutoMapperNumberDataType
+        self, name: AutoMapperTextLikeBase, age: AutoMapperNumberDataType
     ) -> None:
         super().__init__(name=name, age=age)
 
     def get_schema(
-            self, include_extension: bool
+        self, include_extension: bool
     ) -> Optional[Union[StructType, DataType]]:
         schema: StructType = StructType(
             [
@@ -66,11 +66,11 @@ def test_auto_mapper_complex_with_defined_class(spark_session: SparkSession) -> 
 
     # Assert
     assert_expressions_are_equal(
-        sql_expressions["name"],
-        col("b.last_name").cast("string").alias("name")
+        sql_expressions["name"], col("b.last_name").cast("string").alias("name")
     )
     assert_expressions_are_equal(
-        sql_expressions["age"], col("b.my_age").cast("long").alias("age"))
+        sql_expressions["age"], col("b.my_age").cast("long").alias("age")
+    )
 
     result_df.printSchema()
     result_df.show()

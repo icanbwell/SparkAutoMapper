@@ -37,7 +37,7 @@ def test_auto_mapper_join_using_delimiter(spark_session: SparkSession) -> None:
 
     assert_expressions_are_equal(
         sql_expressions["my_column"],
-        array_join(col("b.suffix"), ", ").alias("my_column")
+        array_join(col("b.suffix"), ", ").alias("my_column"),
     )
 
     result_df: DataFrame = mapper.transform(df=df)

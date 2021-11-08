@@ -41,7 +41,7 @@ def test_auto_mapper_hash(spark_session: SparkSession) -> None:
 
     assert_expressions_are_equal(
         sql_expressions["age"],
-        hash(col("b.my_age"), col("b.last_name")).cast("string").alias("age")
+        hash(col("b.my_age"), col("b.last_name")).cast("string").alias("age"),
     )
 
     result_df: DataFrame = mapper.transform(df=df)

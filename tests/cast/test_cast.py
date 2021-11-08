@@ -92,12 +92,10 @@ def test_auto_mapper_cast(spark_session: SparkSession) -> None:
 
     # Assert
     assert_expressions_are_equal(
-        sql_expressions["name"],
-        col("b.last_name").cast("string").alias("name")
+        sql_expressions["name"], col("b.last_name").cast("string").alias("name")
     )
     assert_expressions_are_equal(
-        sql_expressions["age"],
-        col("b.my_age").cast("long").alias("age")
+        sql_expressions["age"], col("b.my_age").cast("long").alias("age")
     )
 
     result_df.printSchema()

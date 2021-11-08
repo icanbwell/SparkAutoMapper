@@ -37,7 +37,9 @@ def test_auto_mapper_with_column_literal(spark_session: SparkSession) -> None:
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
-    assert_expressions_are_equal(sql_expressions["lname"], lit("last_name").alias("lname"))
+    assert_expressions_are_equal(
+        sql_expressions["lname"], lit("last_name").alias("lname")
+    )
 
     result_df: DataFrame = mapper.transform(df=df)
 

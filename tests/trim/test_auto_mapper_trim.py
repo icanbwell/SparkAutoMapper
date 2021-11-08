@@ -39,8 +39,7 @@ def test_auto_mapper_trim(spark_session: SparkSession) -> None:
         print(f"{column_name}: {sql_expression}")
 
     assert_expressions_are_equal(
-        sql_expressions["my_column"],
-        trim(col("b.last_name")).alias("my_column")
+        sql_expressions["my_column"], trim(col("b.last_name")).alias("my_column")
     )
 
     result_df: DataFrame = mapper.transform(df=df)

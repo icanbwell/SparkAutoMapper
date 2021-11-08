@@ -38,7 +38,7 @@ def test_auto_mapper_concat_column(spark_session: SparkSession) -> None:
 
     assert_expressions_are_equal(
         sql_expressions["my_column"],
-        concat(lit("pre-"), col("b.last_name"), lit("-post")).alias("my_column")
+        concat(lit("pre-"), col("b.last_name"), lit("-post")).alias("my_column"),
     )
 
     result_df: DataFrame = mapper.transform(df=df)

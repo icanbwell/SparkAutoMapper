@@ -38,7 +38,7 @@ def test_auto_mapper_left(spark_session: SparkSession) -> None:
 
     assert_expressions_are_equal(
         sql_expressions["my_column"],
-        substring(col("b.last_name"), 0, 3).alias("my_column")
+        substring(col("b.last_name"), 0, 3).alias("my_column"),
     )
 
     result_df: DataFrame = mapper.transform(df=df)

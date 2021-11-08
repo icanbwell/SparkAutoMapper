@@ -42,7 +42,7 @@ def test_auto_mapper_array_single_item_with_mapper(spark_session: SparkSession) 
         sql_expressions["dst2"],
         filter(
             array(struct(lit("address1").alias("addr"))), lambda x: x.isNotNull()
-        ).alias("dst2")
+        ).alias("dst2"),
     )
 
     result_df: DataFrame = mapper.transform(df=df)

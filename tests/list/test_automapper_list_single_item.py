@@ -38,7 +38,7 @@ def test_auto_mapper_array_single_item(spark_session: SparkSession) -> None:
 
     assert_expressions_are_equal(
         sql_expressions["dst2"],
-        filter(array(expr("address1")), lambda x: x.isNotNull()).alias("dst2")
+        filter(array(expr("address1")), lambda x: x.isNotNull()).alias("dst2"),
     )
 
     result_df: DataFrame = mapper.transform(df=df)

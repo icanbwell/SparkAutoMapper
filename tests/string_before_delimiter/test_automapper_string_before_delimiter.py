@@ -38,7 +38,7 @@ def test_auto_mapper_string_before_delimiter(spark_session: SparkSession) -> Non
 
     assert_expressions_are_equal(
         sql_expressions["my_column"],
-        substring_index(col("b.last_name"), "/", 1).alias("my_column")
+        substring_index(col("b.last_name"), "/", 1).alias("my_column"),
     )
 
     result_df: DataFrame = mapper.transform(df=df)

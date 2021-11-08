@@ -43,7 +43,7 @@ def test_auto_mapper_date_column(spark_session: SparkSession) -> None:
             to_date(col("b.date_of_birth"), format="y-M-d"),
             to_date(col("b.date_of_birth"), format="yyyyMMdd"),
             to_date(col("b.date_of_birth"), format="M/d/y"),
-        ).alias("birthDate")
+        ).alias("birthDate"),
     )
 
     result_df: DataFrame = mapper.transform(df=df)

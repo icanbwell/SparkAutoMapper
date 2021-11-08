@@ -1,4 +1,3 @@
-import re
 from pathlib import Path
 from typing import Dict, List
 
@@ -53,7 +52,7 @@ def test_automapper_filter_and_transform_fluent(spark_session: SparkSession) -> 
         transform(
             filter("b.identifier", lambda x: x["use"] == lit("usual")),
             lambda x: struct(x["value"].alias("bar"), x["system"].alias("bar2")),
-        ).alias("age")
+        ).alias("age"),
     )
     result_df: DataFrame = mapper.transform(df=source_df)
 

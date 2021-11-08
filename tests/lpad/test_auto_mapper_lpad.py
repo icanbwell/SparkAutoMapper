@@ -37,7 +37,7 @@ def test_auto_mapper_lpad(spark_session: SparkSession) -> None:
 
     assert_expressions_are_equal(
         sql_expressions["my_column"],
-        lpad(col=col("b.empi"), len=9, pad="0").alias("my_column")
+        lpad(col=col("b.empi"), len=9, pad="0").alias("my_column"),
     )
 
     result_df: DataFrame = mapper.transform(df=df)

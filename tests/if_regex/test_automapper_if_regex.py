@@ -48,7 +48,7 @@ def test_automapper_if_regex(spark_session: SparkSession) -> None:
         sql_expressions["age"],
         when(col("b.my_age").rlike("5*"), col("b.my_age").cast(LongType()))
         .otherwise(lit("100").cast(StringType()).cast(LongType()))
-        .alias("age")
+        .alias("age"),
     )
 
     result_df: DataFrame = mapper.transform(df=df)

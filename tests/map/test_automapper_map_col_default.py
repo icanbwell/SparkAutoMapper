@@ -48,23 +48,23 @@ def test_automapper_map(spark_session: SparkSession) -> None:
     assert_expressions_are_equal(
         sql_expressions["has_kids"],
         when(col("b.has_kids").eqNullSafe(lit("Y")), lit("Yes"))
-            .when(col("b.has_kids").eqNullSafe(lit("N")), lit("No"))
-            .otherwise(col("b.has_kids"))
-            .alias("___has_kids")
+        .when(col("b.has_kids").eqNullSafe(lit("N")), lit("No"))
+        .otherwise(col("b.has_kids"))
+        .alias("___has_kids"),
     )
     assert_expressions_are_equal(
         sql_expressions["short_col_name"],
         when(col("b.has_kids").eqNullSafe(lit("Y")), lit("Yes"))
-            .when(col("b.has_kids").eqNullSafe(lit("N")), lit("No"))
-            .otherwise(col("b.has_kids"))
-            .alias("short_col_name")
+        .when(col("b.has_kids").eqNullSafe(lit("N")), lit("No"))
+        .otherwise(col("b.has_kids"))
+        .alias("short_col_name"),
     )
     assert_expressions_are_equal(
         sql_expressions["lit_col"],
         when(col("b.has_kids").eqNullSafe(lit("Y")), lit("Yes"))
-            .when(col("b.has_kids").eqNullSafe(lit("N")), lit("No"))
-            .otherwise(lit("TRUE"))
-            .alias("lit_col")
+        .when(col("b.has_kids").eqNullSafe(lit("N")), lit("No"))
+        .otherwise(lit("TRUE"))
+        .alias("lit_col"),
     )
 
     result_df: DataFrame = mapper.transform(df=df)
@@ -77,8 +77,8 @@ def test_automapper_map(spark_session: SparkSession) -> None:
     assert result_df.where("member_id == 2").select("has_kids").collect()[0][0] == "No"
     assert result_df.where("member_id == 3").select("has_kids").collect()[0][0] == "f"
     assert (
-            result_df.where("member_id == 3").select("short_col_name").collect()[0][0]
-            == "f"
+        result_df.where("member_id == 3").select("short_col_name").collect()[0][0]
+        == "f"
     )
     assert result_df.where("member_id == 3").select("lit_col").collect()[0][0] == "TRUE"
     assert result_df.where("member_id == 3").select("blank_col").collect()[0][0] == ""

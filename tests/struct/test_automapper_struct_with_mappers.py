@@ -44,7 +44,7 @@ def test_auto_mapper_struct_with_mappers(spark_session: SparkSession) -> None:
         struct(
             expr("usual").alias("use"),
             struct(expr("foo").alias("given")).alias("family"),
-        ).alias("dst2")
+        ).alias("dst2"),
     )
 
     result_df.printSchema()

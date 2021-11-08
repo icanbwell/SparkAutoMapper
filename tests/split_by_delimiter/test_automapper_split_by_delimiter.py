@@ -38,7 +38,7 @@ def test_auto_mapper_split_by_delimiter(spark_session: SparkSession) -> None:
 
     assert_expressions_are_equal(
         sql_expressions["my_column"],
-        split(col("b.last_name"), "[|]", -1).alias("my_column")
+        split(col("b.last_name"), "[|]", -1).alias("my_column"),
     )
 
     result_df: DataFrame = mapper.transform(df=df)

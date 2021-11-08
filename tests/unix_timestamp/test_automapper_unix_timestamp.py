@@ -41,7 +41,7 @@ def test_auto_mapper_datetime_column_default(spark_session: SparkSession) -> Non
         sql_expressions["timestamp"],
         to_timestamp(
             from_unixtime(col("b.ts"), "yyyy-MM-dd HH:mm:ss"), "yyyy-MM-dd HH:mm:ss"
-        ).alias("timestamp")
+        ).alias("timestamp"),
     )
 
     result_df: DataFrame = mapper.transform(df=df)

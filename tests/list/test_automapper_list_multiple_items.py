@@ -41,7 +41,7 @@ def test_auto_mapper_array_multiple_items(spark_session: SparkSession) -> None:
         sql_expressions["dst2"],
         filter(array(lit("address1"), lit("address2")), lambda x: x.isNotNull()).alias(
             "dst2"
-        )
+        ),
     )
 
     result_df: DataFrame = mapper.transform(df=df)

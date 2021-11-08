@@ -49,7 +49,7 @@ def test_auto_mapper_regex_replace_unicode(spark_session: SparkSession) -> None:
         sql_expressions["my_column"],
         regexp_replace(col("b.last_name"), not_normal_characters, ".").alias(
             "my_column"
-        )
+        ),
     )
 
     result_df: DataFrame = mapper.transform(df=df)

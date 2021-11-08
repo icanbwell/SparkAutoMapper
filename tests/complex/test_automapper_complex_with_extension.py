@@ -30,10 +30,10 @@ from spark_auto_mapper.type_definitions.defined_types import AutoMapperDateInput
 class MyProcessingStatusExtensionItem(AutoMapperDataTypeComplexBase):
     # noinspection PyPep8Naming
     def __init__(
-            self,
-            url: str,
-            valueString: Optional[AutoMapperTextLikeBase] = None,
-            valueDateTime: Optional[AutoMapperDateInputType] = None,
+        self,
+        url: str,
+        valueString: Optional[AutoMapperTextLikeBase] = None,
+        valueDateTime: Optional[AutoMapperDateInputType] = None,
     ) -> None:
         super().__init__(url=url, valueString=valueString, valueDateTime=valueDateTime)
 
@@ -41,10 +41,10 @@ class MyProcessingStatusExtensionItem(AutoMapperDataTypeComplexBase):
 class MyProcessingStatusExtension(AutoMapperDataTypeComplexBase):
     # noinspection PyPep8Naming
     def __init__(
-            self,
-            processing_status: AutoMapperTextLikeBase,
-            request_id: AutoMapperTextLikeBase,
-            date_processed: Optional[AutoMapperDateInputType] = None,
+        self,
+        processing_status: AutoMapperTextLikeBase,
+        request_id: AutoMapperTextLikeBase,
+        date_processed: Optional[AutoMapperDateInputType] = None,
     ) -> None:
         definition_base_url = "https://raw.githubusercontent.com/imranq2/SparkAutoMapper.FHIR/main/StructureDefinition/"
         processing_status_extensions = [
@@ -77,7 +77,7 @@ class MyProcessingStatusExtension(AutoMapperDataTypeComplexBase):
             )
 
     def get_schema(
-            self, include_extension: bool
+        self, include_extension: bool
     ) -> Optional[Union[StructType, DataType]]:
         return StructType(
             [
@@ -98,25 +98,25 @@ class MyProcessingStatusExtension(AutoMapperDataTypeComplexBase):
         )
 
     def get_value(
-            self,
-            value: AutoMapperDataTypeBase,
-            source_df: Optional[DataFrame],
-            current_column: Optional[Column],
+        self,
+        value: AutoMapperDataTypeBase,
+        source_df: Optional[DataFrame],
+        current_column: Optional[Column],
     ) -> Column:
         return super().get_value(value, source_df, current_column)
 
 
 class MyClass(AutoMapperDataTypeComplexBase):
     def __init__(
-            self,
-            name: AutoMapperTextLikeBase,
-            age: AutoMapperNumberDataType,
-            extension: AutoMapperList[MyProcessingStatusExtension],
+        self,
+        name: AutoMapperTextLikeBase,
+        age: AutoMapperNumberDataType,
+        extension: AutoMapperList[MyProcessingStatusExtension],
     ) -> None:
         super().__init__(name=name, age=age, extension=extension)
 
     def get_schema(
-            self, include_extension: bool
+        self, include_extension: bool
     ) -> Optional[Union[StructType, DataType]]:
         schema: StructType = StructType(
             [
@@ -172,10 +172,12 @@ def test_auto_mapper_complex_with_extension(spark_session: SparkSession) -> None
     result_df: DataFrame = mapper.transform(df=df)
 
     # Assert
-    assert_expressions_are_equal(sql_expressions["name"],
-                                        col("b.last_name").cast("string").alias("name")
-                                        )
-    assert_expressions_are_equal(sql_expressions["age"], col("b.my_age").cast("long").alias("age"))
+    assert_expressions_are_equal(
+        sql_expressions["name"], col("b.last_name").cast("string").alias("name")
+    )
+    assert_expressions_are_equal(
+        sql_expressions["age"], col("b.my_age").cast("long").alias("age")
+    )
 
     result_df.printSchema()
     result_df.show(truncate=False)

@@ -56,7 +56,7 @@ def test_automapper_transform(spark_session: SparkSession) -> None:
             lambda x: struct(
                 col("x[value]").alias("bar"), col("x[system]").alias("bar2")
             ),
-        ).alias("age")
+        ).alias("age"),
     )
     result_df: DataFrame = mapper.transform(df=source_df)
 

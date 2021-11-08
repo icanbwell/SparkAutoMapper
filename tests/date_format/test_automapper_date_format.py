@@ -45,7 +45,7 @@ def test_auto_mapper_date_format(spark_session: SparkSession) -> None:
 
     assert_expressions_are_equal(
         sql_expressions["openingTime"],
-        date_format(col("b.opening_time"), "hh:mm:ss").alias("openingTime")
+        date_format(col("b.opening_time"), "hh:mm:ss").alias("openingTime"),
     )
 
     result_df: DataFrame = mapper.transform(df=df)
