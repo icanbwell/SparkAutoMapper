@@ -7,7 +7,7 @@ from pyspark.sql.functions import col, when
 from pyspark.sql.functions import lit
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
-from spark_auto_mapper.expression_comparer import compare_expressions
+from spark_auto_mapper.expression_comparer import assert_expressions_are_equal
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 from tests.conftest import clean_spark_session
 
@@ -43,7 +43,7 @@ def test_automapper_null_if_empty(spark_session: SparkSession) -> None:
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
-    assert compare_expressions(
+    assert_expressions_are_equal(
         sql_expressions["age"],
         when(col("b.my_age").eqNullSafe(""), lit(None))
         .otherwise(col("b.my_age"))

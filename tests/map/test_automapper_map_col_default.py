@@ -6,7 +6,7 @@ from pyspark.sql import SparkSession, Column, DataFrame
 from pyspark.sql.functions import col, when, lit
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
-from spark_auto_mapper.expression_comparer import compare_expressions
+from spark_auto_mapper.expression_comparer import assert_expressions_are_equal
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 
@@ -45,25 +45,26 @@ def test_automapper_map(spark_session: SparkSession) -> None:
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
-    assert compare_expressions(
+    assert_expressions_are_equal(
         sql_expressions["has_kids"],
         when(col("b.has_kids").eqNullSafe(lit("Y")), lit("Yes"))
-        .when(col("b.has_kids").eqNullSafe(lit("N")), lit("No"))
-        .otherwise(col("b.has_kids"))
-        .alias("___has_kids")
+            .when(col("b.has_kids").eqNullSafe(lit("N")), lit("No"))
+            .otherwise(col("b.has_kids"))
+            .alias("___has_kids")
     )
-    assert compare_expressions(
+    assert_expressions_are_equal(
         sql_expressions["short_col_name"],
         when(col("b.has_kids").eqNullSafe(lit("Y")), lit("Yes"))
-        .when(col("b.has_kids").eqNullSafe(lit("N")), lit("No"))
-        .otherwise(col("b.has_kids"))
-        .alias("short_col_name")
+            .when(col("b.has_kids").eqNullSafe(lit("N")), lit("No"))
+            .otherwise(col("b.has_kids"))
+            .alias("short_col_name")
     )
-    assert compare_expressions(sql_expressions["lit_col"],
+    assert_expressions_are_equal(
+        sql_expressions["lit_col"],
         when(col("b.has_kids").eqNullSafe(lit("Y")), lit("Yes"))
-        .when(col("b.has_kids").eqNullSafe(lit("N")), lit("No"))
-        .otherwise(lit("TRUE"))
-        .alias("lit_col")
+            .when(col("b.has_kids").eqNullSafe(lit("N")), lit("No"))
+            .otherwise(lit("TRUE"))
+            .alias("lit_col")
     )
 
     result_df: DataFrame = mapper.transform(df=df)
@@ -76,8 +77,8 @@ def test_automapper_map(spark_session: SparkSession) -> None:
     assert result_df.where("member_id == 2").select("has_kids").collect()[0][0] == "No"
     assert result_df.where("member_id == 3").select("has_kids").collect()[0][0] == "f"
     assert (
-        result_df.where("member_id == 3").select("short_col_name").collect()[0][0]
-        == "f"
+            result_df.where("member_id == 3").select("short_col_name").collect()[0][0]
+            == "f"
     )
     assert result_df.where("member_id == 3").select("lit_col").collect()[0][0] == "TRUE"
     assert result_df.where("member_id == 3").select("blank_col").collect()[0][0] == ""

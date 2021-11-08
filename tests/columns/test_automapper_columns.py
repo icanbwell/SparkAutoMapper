@@ -6,7 +6,7 @@ from pyspark.sql.functions import col, filter
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.data_types.list import AutoMapperList
-from spark_auto_mapper.expression_comparer import compare_expressions
+from spark_auto_mapper.expression_comparer import assert_expressions_are_equal
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 
@@ -45,18 +45,18 @@ def test_auto_mapper_columns(spark_session: SparkSession) -> None:
 
     # Assert
     assert len(sql_expressions) == 4
-    assert compare_expressions(sql_expressions["dst1"], lit("src1").alias("dst1"))
-    assert compare_expressions(
+    assert_expressions_are_equal(sql_expressions["dst1"], lit("src1").alias("dst1"))
+    assert_expressions_are_equal(
         sql_expressions["dst2"],
         filter(array(lit("address1")), lambda x: x.isNotNull()).alias("dst2")
     )
-    assert compare_expressions(
+    assert_expressions_are_equal(
         sql_expressions["dst3"],
         filter(array(lit("address1"), lit("address2")), lambda x: x.isNotNull()).alias(
             "dst3"
         )
     )
-    assert compare_expressions(
+    assert_expressions_are_equal(
         sql_expressions["dst4"],
         filter(
             array(

@@ -7,7 +7,7 @@ from pyspark.sql.functions import transform
 from spark_auto_mapper.data_types.complex.complex_base import (
     AutoMapperDataTypeComplexBase,
 )
-from spark_auto_mapper.expression_comparer import compare_expressions
+from spark_auto_mapper.expression_comparer import assert_expressions_are_equal
 
 from tests.conftest import clean_spark_session
 
@@ -49,7 +49,7 @@ def test_automapper_transform(spark_session: SparkSession) -> None:
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
-    assert compare_expressions(
+    assert_expressions_are_equal(
         sql_expressions["age"],
         transform(
             "b.identifier",

@@ -5,7 +5,7 @@ from pyspark.sql.functions import array, expr, filter
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.data_types.list import AutoMapperList
-from spark_auto_mapper.expression_comparer import compare_expressions
+from spark_auto_mapper.expression_comparer import assert_expressions_are_equal
 
 
 def test_auto_mapper_array_single_item(spark_session: SparkSession) -> None:
@@ -36,7 +36,7 @@ def test_auto_mapper_array_single_item(spark_session: SparkSession) -> None:
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
-    assert compare_expressions(
+    assert_expressions_are_equal(
         sql_expressions["dst2"],
         filter(array(expr("address1")), lambda x: x.isNotNull()).alias("dst2")
     )

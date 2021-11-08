@@ -6,7 +6,7 @@ from pyspark.sql import SparkSession, Column, DataFrame
 from pyspark.sql.functions import lit
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
-from spark_auto_mapper.expression_comparer import compare_expressions
+from spark_auto_mapper.expression_comparer import assert_expressions_are_equal
 
 
 def test_auto_mapper_with_column_literal(spark_session: SparkSession) -> None:
@@ -37,7 +37,7 @@ def test_auto_mapper_with_column_literal(spark_session: SparkSession) -> None:
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
-    assert compare_expressions(sql_expressions["lname"], lit("last_name").alias("lname"))
+    assert_expressions_are_equal(sql_expressions["lname"], lit("last_name").alias("lname"))
 
     result_df: DataFrame = mapper.transform(df=df)
 

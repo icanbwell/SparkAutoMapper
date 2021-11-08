@@ -3,7 +3,7 @@ from typing import Dict
 
 from pyspark.sql import SparkSession, DataFrame, Column
 
-from spark_auto_mapper.expression_comparer import compare_expressions
+from spark_auto_mapper.expression_comparer import assert_expressions_are_equal
 from tests.conftest import clean_spark_session
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
@@ -35,7 +35,7 @@ def test_automapper_first(spark_session: SparkSession) -> None:
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
-    assert compare_expressions(
+    assert_expressions_are_equal(
         sql_expressions["age"], col("b.identifier[0]").alias("age"))
     result_df: DataFrame = mapper.transform(df=source_df)
 

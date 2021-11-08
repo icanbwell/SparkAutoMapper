@@ -7,7 +7,7 @@ from pyspark.sql.functions import lit
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
-from spark_auto_mapper.expression_comparer import compare_expressions
+from spark_auto_mapper.expression_comparer import assert_expressions_are_equal
 
 
 def test_auto_mapper_datatype_literal(spark_session: SparkSession) -> None:
@@ -44,12 +44,12 @@ def test_auto_mapper_datatype_literal(spark_session: SparkSession) -> None:
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
-    assert compare_expressions(sql_expressions["dst1"], lit("src1").alias("dst1"))
-    assert compare_expressions(sql_expressions["dst2"], lit(None).alias("dst2"))
-    assert compare_expressions(sql_expressions["dst3"], lit("").alias("dst3"))
-    assert compare_expressions(sql_expressions["dst4"], lit("literal").alias("dst4"))
-    assert compare_expressions(sql_expressions["dst5"], lit(1234).alias("dst5"))
-    assert compare_expressions(sql_expressions["dst6"], lit(0).alias("dst6"))
+    assert_expressions_are_equal(sql_expressions["dst1"], lit("src1").alias("dst1"))
+    assert_expressions_are_equal(sql_expressions["dst2"], lit(None).alias("dst2"))
+    assert_expressions_are_equal(sql_expressions["dst3"], lit("").alias("dst3"))
+    assert_expressions_are_equal(sql_expressions["dst4"], lit("literal").alias("dst4"))
+    assert_expressions_are_equal(sql_expressions["dst5"], lit(1234).alias("dst5"))
+    assert_expressions_are_equal(sql_expressions["dst6"], lit(0).alias("dst6"))
 
     result_df: DataFrame = mapper.transform(df=source_df)
 

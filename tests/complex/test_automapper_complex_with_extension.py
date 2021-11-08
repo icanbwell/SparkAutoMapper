@@ -22,7 +22,7 @@ from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 from spark_auto_mapper.data_types.list import AutoMapperList
 from spark_auto_mapper.data_types.number import AutoMapperNumberDataType
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
-from spark_auto_mapper.expression_comparer import compare_expressions
+from spark_auto_mapper.expression_comparer import assert_expressions_are_equal
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 from spark_auto_mapper.type_definitions.defined_types import AutoMapperDateInputType
 
@@ -172,10 +172,10 @@ def test_auto_mapper_complex_with_extension(spark_session: SparkSession) -> None
     result_df: DataFrame = mapper.transform(df=df)
 
     # Assert
-    assert compare_expressions(sql_expressions["name"],
-                               col("b.last_name").cast("string").alias("name")
-                               )
-    assert compare_expressions(sql_expressions["age"], col("b.my_age").cast("long").alias("age"))
+    assert_expressions_are_equal(sql_expressions["name"],
+                                        col("b.last_name").cast("string").alias("name")
+                                        )
+    assert_expressions_are_equal(sql_expressions["age"], col("b.my_age").cast("long").alias("age"))
 
     result_df.printSchema()
     result_df.show(truncate=False)
