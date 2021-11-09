@@ -1,4 +1,4 @@
-exclude: (^.idea/, /usr/local/lib/python3.7/site-packages/pyspark/)
+exclude: (^.idea/)
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v3.2.0
