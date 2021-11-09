@@ -32,4 +32,4 @@ repos:
         types: [ python ]
         entry: mypy
         require_serial: true
-        args: [ --strict, --python-version=3.7, --show-error-codes, --allow-untyped-decorators, --verbose ]
+        args: [ --strict, --python-version=3.7, --show-error-codes, --allow-untyped-decorators ]

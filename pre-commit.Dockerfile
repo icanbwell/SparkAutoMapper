@@ -5,7 +5,7 @@ RUN apt-get update && \
     pip install pipenv
 
 COPY ${project_root}/Pipfile* ./
-RUN pipenv sync --dev --system --verbose
+RUN pipenv sync --dev --system
 
 WORKDIR /sourcecode
-CMD pre-commit run --all-files --verbose
+CMD pre-commit run --all-files
