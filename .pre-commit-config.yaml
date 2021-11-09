@@ -1,4 +1,4 @@
-exclude: (^.idea/)
+exclude: (^.idea/, /usr/local/lib/python3.7/site-packages/pyspark/)
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v3.2.0
@@ -32,4 +32,4 @@ repos:
         types: [ python ]
         entry: mypy
         require_serial: true
-        args: [ --strict, --python-version=3.7, --show-error-codes, --allow-untyped-decorators ]
+        args: [ --strict, --python-version=3.7, --show-error-codes, --allow-untyped-decorators, --verbose ]
