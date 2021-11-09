@@ -23,6 +23,7 @@ from spark_auto_mapper.data_types.complex.complex_base import (
 from spark_auto_mapper.data_types.list import AutoMapperList
 from spark_auto_mapper.data_types.number import AutoMapperNumberDataType
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
+from spark_auto_mapper.expression_comparer import assert_expressions_are_equal
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 
@@ -56,9 +57,9 @@ def test_auto_mapper_cast(spark_session: SparkSession) -> None:
             (2, "Vidal", "Michael", 35),
         ],
         ["member_id", "last_name", "first_name", "my_age"],
-    ).createOrReplaceTempView("patients")
+    ).createOrReplaceTempView("patients1")
 
-    source_df: DataFrame = spark_session.table("patients")
+    source_df: DataFrame = spark_session.table("patients1")
 
     source_df = source_df.withColumn("an_array", array())
     source_df.createOrReplaceTempView("patients")
@@ -90,10 +91,12 @@ def test_auto_mapper_cast(spark_session: SparkSession) -> None:
     result_df: DataFrame = mapper.transform(df=df)
 
     # Assert
-    assert str(sql_expressions["name"]) == str(
-        col("b.last_name").cast("string").alias("name")
+    assert_expressions_are_equal(
+        sql_expressions["name"], col("b.last_name").cast("string").alias("name")
     )
-    assert str(sql_expressions["age"]) == str(col("b.my_age").cast("long").alias("age"))
+    assert_expressions_are_equal(
+        sql_expressions["age"], col("b.my_age").cast("long").alias("age")
+    )
 
     result_df.printSchema()
     result_df.show()

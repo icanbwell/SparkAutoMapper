@@ -4,6 +4,7 @@ from pyspark.sql import SparkSession, Column, DataFrame
 from pyspark.sql.functions import col
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
+from spark_auto_mapper.expression_comparer import assert_expressions_are_equal
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 
@@ -65,8 +66,8 @@ def test_automapper_first_valid_column(spark_session: SparkSession) -> None:
     for column_name, sql_expression in sql_expressions_1.items():
         print(f"{column_name}: {sql_expression}")
 
-    assert str(sql_expressions_1["age"]) == str(
-        col("b.my_age").cast("long").alias("age")
+    assert_expressions_are_equal(
+        sql_expressions_1["age"], col("b.my_age").cast("long").alias("age")
     )
     result_df_1: DataFrame = mapper.transform(df=df)
 
@@ -86,8 +87,8 @@ def test_automapper_first_valid_column(spark_session: SparkSession) -> None:
     sql_expressions_2: Dict[str, Column] = mapper.get_column_specs(
         source_df=source_df_2
     )
-    assert str(sql_expressions_2["age"]) == str(
-        col("b.age").cast("long").alias("___age")
+    assert_expressions_are_equal(
+        sql_expressions_2["age"], col("b.age").cast("long").alias("___age")
     )
 
     result_df_2 = mapper.transform(df=df)
