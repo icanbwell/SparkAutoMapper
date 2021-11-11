@@ -94,10 +94,10 @@ def test_auto_mapper_date_format_multiple_formats(spark_session: SparkSession) -
             formats=["M/dd/yyyy"],
         ),
         formatted_date_time=A.datetime(
-            value=A.column("opening_time")
-            .regex_replace(pattern="/", replacement="-")
-            .regex_replace(pattern=r"\b(\d)(?=-)", replacement="0$1"),
-            formats=["M-dd-yyyy"],
+            value=A.column("opening_time").regex_replace(
+                pattern=r"\b(\d)(?=-)", replacement="0$1"
+            ),
+            formats=["M/dd/yyyy"],
         ).to_date_format("yyyy-M-dd"),
     )
     assert isinstance(mapper, AutoMapper)
