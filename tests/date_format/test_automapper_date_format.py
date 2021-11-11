@@ -63,3 +63,46 @@ def test_auto_mapper_date_format(spark_session: SparkSession) -> None:
 
     # check type
     assert dict(result_df.dtypes)["openingTime"] == "string"
+
+
+def test_auto_mapper_date_format_multiple_formats(spark_session: SparkSession) -> None:
+    # Arrange
+    spark_session.createDataFrame(
+        [
+            (1, "Qureshi", "Imran", "1/13/1995"),
+            (2, "Vidal", "Michael", "1/03/1995"),
+        ],
+        ["member_id", "last_name", "first_name", "opening_time"],
+    ).createOrReplaceTempView("patients")
+
+    source_df: DataFrame = spark_session.table("patients")
+    # Act
+    mapper = AutoMapper(
+        view="members", source_view="patients", keys=["member_id"]
+    ).columns(
+        timestamped_date=A.datetime(
+            A.column("opening_time"), formats=["M/dd/yyyy"]
+        ).to_date_format("yyyy-M-dd"),
+        timestamped_replaced_date=A.datetime(
+            A.regex_replace(
+                A.column("opening_time"), pattern=r"\b(\d)(?=-)", replacement="0$1"
+            ),
+            formats=["M/dd/yyyy"],
+        ),
+        regex_replace_date=A.regex_replace(
+            A.column("opening_time"), pattern=r"\b(\d)(?=-)", replacement="0$1"
+        ),
+        formatted_date_time=A.datetime(
+            value=A.column("opening_time")
+            .regex_replace(pattern="/", replacement="-")
+            .regex_replace(pattern=r"\b(\d)(?=-)", replacement="0$1"),
+            formats=["M-dd-yyyy"],
+        ).to_date_format("yyyy-M-dd"),
+    )
+    assert isinstance(mapper, AutoMapper)
+    sql_expressions: Dict[str, Column] = mapper.get_column_specs(source_df=source_df)
+    for column_name, sql_expression in sql_expressions.items():
+        print(f"{column_name}: {sql_expression}")
+    result_df: DataFrame = mapper.transform(df=source_df)
+    # result_df: DataFrame = spark_session.table("members")
+    result_df.show()
