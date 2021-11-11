@@ -80,17 +80,18 @@ def test_auto_mapper_date_format_multiple_formats(spark_session: SparkSession) -
     mapper = AutoMapper(
         view="members", source_view="patients", keys=["member_id"]
     ).columns(
-        timestamped_date=A.datetime(
+        timestamped_date=A.datetime(A.column("opening_time"), formats=["M/dd/yyyy"]),
+        timestamped_formatted_date=A.datetime(
             A.column("opening_time"), formats=["M/dd/yyyy"]
         ).to_date_format("yyyy-M-dd"),
+        regex_replace_date=A.regex_replace(
+            A.column("opening_time"), pattern=r"\b(\d)(?=-)", replacement="0$1"
+        ),
         timestamped_replaced_date=A.datetime(
             A.regex_replace(
                 A.column("opening_time"), pattern=r"\b(\d)(?=-)", replacement="0$1"
             ),
             formats=["M/dd/yyyy"],
-        ),
-        regex_replace_date=A.regex_replace(
-            A.column("opening_time"), pattern=r"\b(\d)(?=-)", replacement="0$1"
         ),
         formatted_date_time=A.datetime(
             value=A.column("opening_time")
