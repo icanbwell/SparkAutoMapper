@@ -65,14 +65,15 @@ def test_auto_mapper_date_format(spark_session: SparkSession) -> None:
     assert dict(result_df.dtypes)["openingTime"] == "string"
 
 
-def test_auto_mapper_date_format_multiple_formats(spark_session: SparkSession) -> None:
+def test_auto_mapper_datetime_regex_replace_format(spark_session: SparkSession) -> None:
     # Arrange
     spark_session.createDataFrame(
         [
-            (1, "Qureshi", "Imran", "1/13/1995"),
-            (2, "Vidal", "Michael", "1/03/1995"),
+            (1, "1/13/1995"),
+            (2, "1/3/1995"),
+            (3, "11/3/1995"),
         ],
-        ["member_id", "last_name", "first_name", "opening_time"],
+        ["member_id", "opening_date"],
     ).createOrReplaceTempView("patients")
 
     source_df: DataFrame = spark_session.table("patients")
@@ -80,30 +81,28 @@ def test_auto_mapper_date_format_multiple_formats(spark_session: SparkSession) -
     mapper = AutoMapper(
         view="members", source_view="patients", keys=["member_id"]
     ).columns(
-        timestamped_date=A.datetime(A.column("opening_time"), formats=["M/dd/yyyy"]),
-        timestamped_formatted_date=A.datetime(
-            A.column("opening_time"), formats=["M/dd/yyyy"]
-        ).to_date_format("yyyy-M-dd"),
-        regex_replace_date=A.regex_replace(
-            A.column("opening_time"), pattern=r"\b(\d)(?=-)", replacement="0$1"
-        ),
-        timestamped_replaced_date=A.datetime(
-            A.regex_replace(
-                A.column("opening_time"), pattern=r"\b(\d)(?=-)", replacement="0$1"
+        formatted_date=A.datetime(
+            value=A.regex_replace(
+                A.column("opening_date"), pattern=r"\b(\d)(?=/)", replacement="0$1"
             ),
             formats=["M/dd/yyyy"],
-        ),
-        formatted_date_time=A.datetime(
-            value=A.column("opening_time").regex_replace(
-                pattern=r"\b(\d)(?=-)", replacement="0$1"
-            ),
-            formats=["M/dd/yyyy"],
-        ).to_date_format("yyyy-M-dd"),
+        ).to_date_format("yyyy-M-dd")
     )
     assert isinstance(mapper, AutoMapper)
     sql_expressions: Dict[str, Column] = mapper.get_column_specs(source_df=source_df)
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
     result_df: DataFrame = mapper.transform(df=source_df)
-    # result_df: DataFrame = spark_session.table("members")
-    result_df.show()
+
+    assert (
+        result_df.where("member_id == 1").select("formatted_date").collect()[0][0]
+        == "1995-1-13"
+    )
+    assert (
+        result_df.where("member_id == 2").select("formatted_date").collect()[0][0]
+        == "1995-1-03"
+    )
+    assert (
+        result_df.where("member_id == 3").select("formatted_date").collect()[0][0]
+        == "1995-11-03"
+    )
