@@ -6,7 +6,6 @@ from pyspark.sql import SparkSession, Column, DataFrame
 from pyspark.sql.functions import col
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
-from spark_auto_mapper.expression_comparer import assert_expressions_are_equal
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 
@@ -36,8 +35,8 @@ def test_auto_mapper_boolean_typed(spark_session: SparkSession) -> None:
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
-    assert_expressions_are_equal(
-        sql_expressions["age"], col("b.my_age").cast("boolean").alias("age")
+    assert str(sql_expressions["age"]) == str(
+        col("b.my_age").cast("boolean").alias("age")
     )
 
     result_df: DataFrame = mapper.transform(df=df)

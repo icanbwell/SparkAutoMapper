@@ -7,7 +7,6 @@ from pyspark.sql.functions import regexp_replace
 from pyspark.sql.functions import col
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
-from spark_auto_mapper.expression_comparer import assert_expressions_are_equal
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 
@@ -36,9 +35,8 @@ def test_auto_mapper_regex_replace(spark_session: SparkSession) -> None:
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
-    assert_expressions_are_equal(
-        sql_expressions["my_column"],
-        regexp_replace(col("b.last_name"), "i", "f").alias("my_column"),
+    assert str(sql_expressions["my_column"]) == str(
+        regexp_replace(col("b.last_name"), "i", "f").alias("my_column")
     )
 
     result_df: DataFrame = mapper.transform(df=df)

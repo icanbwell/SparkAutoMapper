@@ -12,7 +12,6 @@ from spark_auto_mapper.data_types.complex.complex_base import (
 )
 from spark_auto_mapper.data_types.number import AutoMapperNumberDataType
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
-from spark_auto_mapper.expression_comparer import assert_expressions_are_equal
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 
@@ -76,23 +75,21 @@ def test_automapper_complex_with_skip_if_null(spark_session: SparkSession) -> No
     result_df: DataFrame = mapper.transform(df=df)
 
     # Assert
-    assert_expressions_are_equal(
-        sql_expressions["name"],
+    assert str(sql_expressions["name"]) == str(
         when(
             col("b.first_name").isNull() | col("b.first_name").eqNullSafe(""), lit(None)
         )
         .otherwise(col("b.last_name"))
         .cast(StringType())
-        .alias("name"),
+        .alias("name")
     )
-    assert_expressions_are_equal(
-        sql_expressions["age"],
+    assert str(sql_expressions["age"]) == str(
         when(
             col("b.first_name").isNull() | col("b.first_name").eqNullSafe(""), lit(None)
         )
         .otherwise(col("b.my_age"))
         .cast(LongType())
-        .alias("age"),
+        .alias("age")
     )
 
     result_df.printSchema()
