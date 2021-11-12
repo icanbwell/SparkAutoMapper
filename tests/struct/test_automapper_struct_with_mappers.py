@@ -4,7 +4,6 @@ from pyspark.sql import SparkSession, Column, DataFrame
 from pyspark.sql.functions import expr, struct
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
-from spark_auto_mapper.expression_comparer import assert_expressions_are_equal
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 
@@ -39,12 +38,11 @@ def test_auto_mapper_struct_with_mappers(spark_session: SparkSession) -> None:
     result_df: DataFrame = mapper.transform(df=df)
 
     # Assert
-    assert_expressions_are_equal(
-        sql_expressions["dst2"],
+    assert str(sql_expressions["dst2"]) == str(
         struct(
             expr("usual").alias("use"),
             struct(expr("foo").alias("given")).alias("family"),
-        ).alias("dst2"),
+        ).alias("dst2")
     )
 
     result_df.printSchema()

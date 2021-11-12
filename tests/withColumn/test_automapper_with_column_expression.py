@@ -6,7 +6,6 @@ from pyspark.sql import SparkSession, Column, DataFrame
 from pyspark.sql.functions import expr
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
-from spark_auto_mapper.expression_comparer import assert_expressions_are_equal
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 
@@ -35,8 +34,8 @@ def test_auto_mapper_with_column_expression(spark_session: SparkSession) -> None
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
-    assert_expressions_are_equal(
-        sql_expressions["lname"], expr("SUBSTRING(last_name,1,3)").alias("lname")
+    assert str(sql_expressions["lname"]) == str(
+        expr("SUBSTRING(last_name,1,3)").alias("lname")
     )
 
     result_df: DataFrame = mapper.transform(df=df)

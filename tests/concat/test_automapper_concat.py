@@ -7,7 +7,6 @@ from pyspark.sql.functions import concat
 from pyspark.sql.functions import lit, col
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
-from spark_auto_mapper.expression_comparer import assert_expressions_are_equal
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 
@@ -36,9 +35,8 @@ def test_auto_mapper_concat_column(spark_session: SparkSession) -> None:
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
-    assert_expressions_are_equal(
-        sql_expressions["my_column"],
-        concat(lit("pre-"), col("b.last_name"), lit("-post")).alias("my_column"),
+    assert str(sql_expressions["my_column"]) == str(
+        concat(lit("pre-"), col("b.last_name"), lit("-post")).alias("my_column")
     )
 
     result_df: DataFrame = mapper.transform(df=df)

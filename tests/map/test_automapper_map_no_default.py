@@ -6,7 +6,6 @@ from pyspark.sql import SparkSession, Column, DataFrame
 from pyspark.sql.functions import col, when, lit
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
-from spark_auto_mapper.expression_comparer import assert_expressions_are_equal
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 
@@ -36,12 +35,11 @@ def test_automapper_map_no_default(spark_session: SparkSession) -> None:
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
-    assert_expressions_are_equal(
-        sql_expressions["has_kids"],
+    assert str(sql_expressions["has_kids"]) == str(
         when(col("b.has_kids").eqNullSafe(lit("Y")), lit("Yes"))
         .when(col("b.has_kids").eqNullSafe(lit("N")), lit("No"))
         .otherwise(lit(None))
-        .alias("___has_kids"),
+        .alias("___has_kids")
     )
 
     result_df: DataFrame = mapper.transform(df=df)

@@ -7,7 +7,6 @@ from pyspark.sql.functions import transform
 from spark_auto_mapper.data_types.complex.complex_base import (
     AutoMapperDataTypeComplexBase,
 )
-from spark_auto_mapper.expression_comparer import assert_expressions_are_equal
 
 from tests.conftest import clean_spark_session
 
@@ -49,14 +48,13 @@ def test_automapper_transform(spark_session: SparkSession) -> None:
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
-    assert_expressions_are_equal(
-        sql_expressions["age"],
+    assert str(sql_expressions["age"]) == str(
         transform(
             "b.identifier",
             lambda x: struct(
                 col("x[value]").alias("bar"), col("x[system]").alias("bar2")
             ),
-        ).alias("age"),
+        ).alias("age")
     )
     result_df: DataFrame = mapper.transform(df=source_df)
 
