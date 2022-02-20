@@ -236,7 +236,7 @@ class AutoMapper(AutoMapperContainer):
                 )
                 df.write.parquet(str(checkpoint_path))
                 df = df.sql_ctx.read.parquet(str(checkpoint_path))
-        except AnalysisException:
+        except (AnalysisException, ValueError):
             self.logger.warning(
                 f"-------- automapper ({self.view}) column specs ------"
             )
@@ -265,7 +265,7 @@ class AutoMapper(AutoMapperContainer):
                     self.logger.debug(
                         f"========= Done Processing {column_name} =========== "
                     )
-                except AnalysisException as e2:
+                except (AnalysisException, ValueError) as e2:
                     self.logger.error(
                         f"=========  Processing {column_name} FAILED =========== "
                     )
@@ -282,7 +282,9 @@ class AutoMapper(AutoMapperContainer):
                         parent_column=None, source_df=source_df
                     )
                     msg: str = ""
-                    if e2.desc.startswith("cannot resolve 'array"):
+                    if isinstance(e2, AnalysisException) and e2.desc.startswith(
+                        "cannot resolve 'array"
+                    ):
                         msg = (
                             "Looks like the elements of the array have different structures.  "
                             "All items in an array should have the exact same structure.  "
@@ -462,7 +464,7 @@ class AutoMapper(AutoMapperContainer):
         if not self.keys or len(self.keys) == 0:
             assert not self.view or not SparkHelpers.spark_table_exists(
                 sql_ctx=df.sql_ctx, view=self.view
-            )
+            ), f"View {self.view} already exists"
             if self.use_single_select:
                 self.keys = []
             else:
