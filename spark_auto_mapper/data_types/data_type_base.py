@@ -584,3 +584,21 @@ class AutoMapperDataTypeBase:
         :example: A.column("array1") + [ "foo" ]
         """
         return self.concat(other)
+
+    # noinspection PyMethodMayBeStatic
+    def remove_null_or_empty(self) -> "AutoMapperArrayLikeBase":
+        """
+        converts single element into an array
+
+
+        :param self: Set by Python.  No need to pass.
+        :return: an automapper type
+        :example: A.column("identifier").to_array()
+        """
+        from spark_auto_mapper.data_types.null_remover import AutoMapperNullRemover
+
+        # cast it to the inner type so type checking is happy
+        return cast(
+            "AutoMapperArrayLikeBase",
+            AutoMapperNullRemover(value=self),
+        )
