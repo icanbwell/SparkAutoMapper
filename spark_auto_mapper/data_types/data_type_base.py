@@ -602,3 +602,57 @@ class AutoMapperDataTypeBase:
             "AutoMapperArrayLikeBase",
             AutoMapperNullRemover(value=self),
         )
+
+    # noinspection PyMethodMayBeStatic
+    def if_not_null(
+        self: _TAutoMapperDataType,
+        value: _TAutoMapperDataType,
+        when_null: Optional[_TAutoMapperDataType] = None,
+    ) -> _TAutoMapperDataType:
+        """
+        returns value if the current column is not null else when_null (defaults to null)
+
+
+        :param self: Set by Python.  No need to pass.
+        :param value: value to return if column is not null
+        :param when_null: value to return if column is null
+        :return: an automapper type
+        :example: A.column("foo").if_exists(A.text("exists"), A.text("not exists"))
+        """
+        from spark_auto_mapper.data_types.if_not_null import (
+            AutoMapperIfNotNullDataType,
+        )
+
+        # cast it to the inner type so type checking is happy
+        return cast(
+            _TAutoMapperDataType,
+            AutoMapperIfNotNullDataType(check=self, value=value, when_null=when_null),
+        )
+
+    # noinspection PyMethodMayBeStatic
+    def if_not_null_or_empty(
+        self: _TAutoMapperDataType,
+        value: _TAutoMapperDataType,
+        when_null_or_empty: Optional[_TAutoMapperDataType] = None,
+    ) -> _TAutoMapperDataType:
+        """
+        returns value if the current column is not null or empty else when_null (defaults to null)
+
+
+        :param self: Set by Python.  No need to pass.
+        :param value: value to return if column is not null
+        :param when_null_or_empty: value to return if column is null
+        :return: an automapper type
+        :example: A.column("foo").if_exists(A.text("exists"), A.text("not exists"))
+        """
+        from spark_auto_mapper.data_types.if_not_null_or_empty import (
+            AutoMapperIfNotNullOrEmptyDataType,
+        )
+
+        # cast it to the inner type so type checking is happy
+        return cast(
+            _TAutoMapperDataType,
+            AutoMapperIfNotNullOrEmptyDataType(
+                check=self, value=value, when_null_or_empty=when_null_or_empty
+            ),
+        )

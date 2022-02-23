@@ -1,7 +1,7 @@
 from typing import Dict
 
 from pyspark.sql import SparkSession, Column, DataFrame
-from pyspark.sql.functions import array, lit, struct
+from pyspark.sql.functions import array, lit, struct, when
 from pyspark.sql.functions import col, filter
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
@@ -46,7 +46,10 @@ def test_auto_mapper_columns(spark_session: SparkSession) -> None:
     assert len(sql_expressions) == 4
     assert str(sql_expressions["dst1"]) == str(lit("src1").alias("dst1"))
     assert str(sql_expressions["dst2"]) == str(
-        filter(array(lit("address1")), lambda x: x.isNotNull()).alias("dst2")
+        when(
+            array(lit("address1").isNotNull()),
+            filter(array(lit("address1")), lambda x: x.isNotNull()).alias("dst2"),
+        )
     )
     assert str(sql_expressions["dst3"]) == str(
         filter(array(lit("address1"), lit("address2")), lambda x: x.isNotNull()).alias(
