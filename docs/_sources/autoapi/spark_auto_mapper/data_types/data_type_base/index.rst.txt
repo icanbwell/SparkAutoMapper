@@ -366,4 +366,38 @@ Classes
       :example: A.column("array1") + [ "foo" ]
 
 
+   .. py:method:: remove_null_or_empty(self)
+
+      converts single element into an array
+
+
+      :param self: Set by Python.  No need to pass.
+      :return: an automapper type
+      :example: A.column("identifier").to_array()
+
+
+   .. py:method:: if_not_null(self, value, when_null = None)
+
+      returns value if the current column is not null else when_null (defaults to null)
+
+
+      :param self: Set by Python.  No need to pass.
+      :param value: value to return if column is not null
+      :param when_null: value to return if column is null
+      :return: an automapper type
+      :example: A.column("foo").if_exists(A.text("exists"), A.text("not exists"))
+
+
+   .. py:method:: if_not_null_or_empty(self, value, when_null_or_empty = None)
+
+      returns value if the current column is not null or empty else when_null (defaults to null)
+
+
+      :param self: Set by Python.  No need to pass.
+      :param value: value to return if column is not null
+      :param when_null_or_empty: value to return if column is null
+      :return: an automapper type
+      :example: A.column("foo").if_exists(A.text("exists"), A.text("not exists"))
+
+
 

@@ -1,0 +1,47 @@
+:py:mod:`spark_auto_mapper.data_types.null_remover`
+===================================================
+
+.. py:module:: spark_auto_mapper.data_types.null_remover
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   spark_auto_mapper.data_types.null_remover.AutoMapperNullRemover
+
+
+
+
+.. py:class:: AutoMapperNullRemover(value, include_null_properties = True)
+
+   Bases: :py:obj:`spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase`, :py:obj:`Generic`\ [\ :py:obj:`_T`\ ]
+
+   Base class for lists
+   Generics:  https://mypy.readthedocs.io/en/stable/generics.html
+   Multiple Inheritance:
+   https://stackoverflow.com/questions/52754339/how-to-express-multiple-inheritance-in-python-type-hint
+
+   Generates a list (array) in Spark
+
+   :param value: items to make into an array
+
+   .. py:method:: include_null_properties(self, include_null_properties)
+
+
+   .. py:method:: get_column_spec(self, source_df, current_column)
+
+      Gets the column spec for this automapper data type
+
+      :param source_df: source data frame in case the automapper type needs that data to decide what to do
+      :param current_column: (Optional) this is set when we are inside an array
+
+
+   .. py:method:: get_schema(self, include_extension)
+
+
+

@@ -884,6 +884,74 @@ S]’):</p>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.remove_null_or_empty">
+<span class="sig-name descname"><span class="pre">remove_null_or_empty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.remove_null_or_empty" title="Permalink to this definition">¶</a></dt>
+<dd><p>converts single element into an array</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>self</strong> – Set by Python.  No need to pass.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>an automapper type</p>
+</dd>
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p>A.column(“identifier”).to_array()</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="../array_base/index.html#spark_auto_mapper.data_types.array_base.AutoMapperArrayLikeBase" title="spark_auto_mapper.data_types.array_base.AutoMapperArrayLikeBase">spark_auto_mapper.data_types.array_base.AutoMapperArrayLikeBase</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.if_not_null">
+<span class="sig-name descname"><span class="pre">if_not_null</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">when_null</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.if_not_null" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns value if the current column is not null else when_null (defaults to null)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<em>_TAutoMapperDataType</em>) – Set by Python.  No need to pass.</p></li>
+<li><p><strong>value</strong> (<em>_TAutoMapperDataType</em>) – value to return if column is not null</p></li>
+<li><p><strong>when_null</strong> (<em>Optional</em><em>[</em><em>_TAutoMapperDataType</em><em>]</em>) – value to return if column is null</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>an automapper type</p>
+</dd>
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p>A.column(“foo”).if_exists(A.text(“exists”), A.text(“not exists”))</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>_TAutoMapperDataType</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.if_not_null_or_empty">
+<span class="sig-name descname"><span class="pre">if_not_null_or_empty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">when_null_or_empty</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spark_auto_mapper.data_types.data_type_base.AutoMapperDataTypeBase.if_not_null_or_empty" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns value if the current column is not null or empty else when_null (defaults to null)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<em>_TAutoMapperDataType</em>) – Set by Python.  No need to pass.</p></li>
+<li><p><strong>value</strong> (<em>_TAutoMapperDataType</em>) – value to return if column is not null</p></li>
+<li><p><strong>when_null_or_empty</strong> (<em>Optional</em><em>[</em><em>_TAutoMapperDataType</em><em>]</em>) – value to return if column is null</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>an automapper type</p>
+</dd>
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p>A.column(“foo”).if_exists(A.text(“exists”), A.text(“not exists”))</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>_TAutoMapperDataType</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </div>

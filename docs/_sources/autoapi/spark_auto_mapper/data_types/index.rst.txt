@@ -54,6 +54,7 @@ Submodules
    lpad/index.rst
    map/index.rst
    null_if_empty/index.rst
+   null_remover/index.rst
    number/index.rst
    regex_extract/index.rst
    regex_replace/index.rst
