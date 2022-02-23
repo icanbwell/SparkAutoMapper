@@ -2,7 +2,7 @@ from typing import Union, List, Optional, Generic, TypeVar
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import array
-from pyspark.sql.functions import lit, filter
+from pyspark.sql.functions import filter
 from pyspark.sql.types import StructType, ArrayType, StructField, DataType
 
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
@@ -13,7 +13,7 @@ from spark_auto_mapper.type_definitions.native_types import AutoMapperNativeSimp
 _T = TypeVar("_T", bound=Union[AutoMapperNativeSimpleType, AutoMapperDataTypeBase])
 
 
-class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
+class AutoMapperNullRemover(AutoMapperDataTypeBase, Generic[_T]):
     """
     Base class for lists
     Generics:  https://mypy.readthedocs.io/en/stable/generics.html
@@ -31,24 +31,19 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
                 List[AutoMapperTextLikeBase],
             ]
         ],
-        remove_nulls: bool = True,
         include_null_properties: bool = True,
     ) -> None:
         """
         Generates a list (array) in Spark
 
         :param value: items to make into an array
-        :param remove_nulls: whether to remove nulls from the array
         """
         super().__init__()
         # can a single mapper or a list of mappers
-        self.remove_nulls: bool = remove_nulls
         self.value: Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]
         if not value:
             self.value = []
-        if isinstance(value, str):
-            self.value = AutoMapperValueParser.parse_value(value=value)
-        elif isinstance(value, AutoMapperDataTypeBase):
+        if isinstance(value, AutoMapperDataTypeBase):
             self.value = value
         elif isinstance(value, List):
             self.value = [AutoMapperValueParser.parse_value(v) for v in value]
@@ -74,11 +69,6 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
     def get_column_spec(
         self, source_df: Optional[DataFrame], current_column: Optional[Column]
     ) -> Column:
-        if isinstance(
-            self.value, str
-        ):  # if the src column is just string then consider it a sql expression
-            return array(lit(self.value))
-
         if isinstance(self.value, list):  # if the src column is a list then iterate
             inner_array = array(
                 *[
@@ -88,11 +78,7 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
                     for item in self.value
                 ]
             )
-            return (
-                filter(inner_array, lambda x: x.isNotNull())
-                if self.remove_nulls
-                else inner_array
-            )
+            return filter(inner_array, lambda x: x.isNotNull())
 
         # if value is an AutoMapper then ask it for its column spec
         if isinstance(self.value, AutoMapperDataTypeBase):
@@ -100,13 +86,9 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
             inner_child_spec = child.get_column_spec(
                 source_df=source_df, current_column=current_column
             )
-            return (
-                filter(inner_child_spec, lambda x: x.isNotNull())
-                if self.remove_nulls
-                else inner_child_spec
-            )
+            return filter(inner_child_spec, lambda x: x.isNotNull())
 
-        raise ValueError(f"value: {self.value} is neither str nor AutoMapper")
+        raise ValueError(f"value: {self.value} is neither list nor AutoMapper")
 
     # noinspection PyMethodMayBeStatic
     def get_schema(
@@ -121,12 +103,3 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
                     return None
                 return StructType([StructField("extension", ArrayType(schema))])
         return None
-
-    def __add__(self, other: "AutoMapperList[_T]") -> "AutoMapperList[_T]":
-        # iterate through both lists and return a new one
-        result: AutoMapperList[_T] = AutoMapperList(
-            value=(self.value if isinstance(self.value, list) else [self.value])
-            + (other.value if isinstance(other.value, list) else [other.value]),
-            remove_nulls=self.remove_nulls,
-        )
-        return result

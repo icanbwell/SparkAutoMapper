@@ -1,0 +1,376 @@
+{
+  "resourceType": "Patient",
+  "id": "er1zEv9fjIwf3RFm-c0Jz5g3",
+  "meta": {
+    "source": "https://thedacare.org",
+    "security": [
+      {
+        "system": "https://www.icanbwell.com/access",
+        "code": "Thedacare"
+      },
+      {
+        "system": "https://www.icanbwell.com/owner",
+        "code": "Thedacare"
+      }
+    ]
+  },
+  "identifier": [
+    {
+      "use": "usual",
+      "type": {
+        "coding": [
+          {
+            "code": "CEID"
+          }
+        ]
+      },
+      "value": "TCE-111-1111"
+    },
+    {
+      "use": "usual",
+      "type": {
+        "coding": [
+          {
+            "code": "CEID"
+          }
+        ]
+      },
+      "value": "NHG-111-1111"
+    },
+    {
+      "use": "usual",
+      "type": {
+        "coding": [
+          {
+            "code": "EMPI"
+          }
+        ]
+      },
+      "system": "urn:oid:1.2.840.114350.1.13.79.2.7.5.737384.0",
+      "value": "E11111111"
+    },
+    {
+      "use": "usual",
+      "type": {
+        "coding": [
+          {
+            "code": "EXTERNAL"
+          }
+        ]
+      },
+      "system": "urn:oid:1.2.840.114350.1.13.79.2.7.2.698084",
+      "value": "Z1111111"
+    },
+    {
+      "use": "usual",
+      "type": {
+        "coding": [
+          {
+            "code": "FHIR"
+          }
+        ]
+      },
+      "system": "http://open.epic.com/FHIR/StructureDefinition/patient-dstu2-fhir-id",
+      "value": "T9111111"
+    },
+    {
+      "use": "usual",
+      "type": {
+        "coding": [
+          {
+            "code": "FHIR STU3"
+          }
+        ]
+      },
+      "system": "http://open.epic.com/FHIR/StructureDefinition/patient-fhir-id",
+      "value": "er1111111"
+    },
+    {
+      "use": "usual",
+      "type": {
+        "coding": [
+          {
+            "code": "FLU"
+          }
+        ]
+      },
+      "system": "urn:oid:1.2.840.114350.1.13.79.2.7.5.737384.977",
+      "value": "111111"
+    },
+    {
+      "use": "usual",
+      "type": {
+        "coding": [
+          {
+            "code": "HealthPartners"
+          }
+        ]
+      },
+      "system": "urn:oid:1.2.840.114350.1.13.79.2.7.5.737384.1208",
+      "value": "1111111"
+    },
+    {
+      "use": "usual",
+      "type": {
+        "coding": [
+          {
+            "code": "INTERNAL"
+          }
+        ]
+      },
+      "system": "urn:oid:1.2.840.114350.1.13.79.2.7.2.698084",
+      "value": "   Z11111111"
+    },
+    {
+      "use": "usual",
+      "type": {
+        "coding": [
+          {
+            "code": "MYCHARTLOGIN"
+          }
+        ]
+      },
+      "system": "urn:oid:1.2.840.114350.1.13.79.2.7.3.878082.110",
+      "value": "FLASTNAME"
+    },
+    {
+      "use": "usual",
+      "type": {
+        "coding": [
+          {
+            "code": "UHC Commercial"
+          }
+        ]
+      },
+      "system": "urn:oid:1.2.840.114350.1.13.79.2.7.5.737384.1206",
+      "value": "111111111"
+    },
+    {
+      "use": "usual",
+      "type": {
+        "coding": [
+          {
+            "code": "VERGE PROVIDERS"
+          }
+        ]
+      },
+      "system": "urn:oid:1.2.840.114350.1.13.79.2.7.5.737384.1003",
+      "value": "11111111"
+    },
+    {
+      "use": "usual",
+      "type": {
+        "coding": [
+          {
+            "code": "WPRINTERNAL"
+          }
+        ]
+      },
+      "system": "urn:oid:1.2.840.114350.1.13.79.2.7.2.878082",
+      "value": "1111"
+    }
+  ],
+  "extension": [
+    {
+      "extension": [
+        {
+          "url": "ombCategory",
+          "valueCoding": {
+            "system": "http://hl7.org/fhir/us/core/ValueSet/omb-race-category",
+            "code": "2106-3",
+            "display": "White"
+          }
+        },
+        {
+          "url": "text",
+          "valueString": "White"
+        }
+      ],
+      "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-race"
+    },
+    {
+      "extension": [
+        {
+          "url": "ombCategory",
+          "valueCoding": {
+            "system": "http://hl7.org/fhir/us/core/ValueSet/omb-ethnicity-category",
+            "code": "2186-5",
+            "display": "Not Hispanic or Latino"
+          }
+        },
+        {
+          "url": "text",
+          "valueString": "Not Hispanic or Latino"
+        }
+      ],
+      "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity"
+    },
+    {
+      "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-birthsex",
+      "valueCode": "F"
+    }
+  ],
+  "active": true,
+  "name": [
+    {
+      "use": "official",
+      "text": "First Middle Last",
+      "family": "Last",
+      "given": [
+        "First",
+        "Middle"
+      ]
+    },
+    {
+      "use": "usual",
+      "text": "First Middle Last",
+      "family": "Last",
+      "given": [
+        "First",
+        "Middle"
+      ]
+    }
+  ],
+  "telecom": [
+    {
+      "system": "phone",
+      "value": "999-999-9999",
+      "use": "home"
+    },
+    {
+      "system": "phone",
+      "value": "999-999-9999",
+      "use": "mobile"
+    },
+    {
+      "system": "email",
+      "value": "last@new.rr.com"
+    }
+  ],
+  "gender": "female",
+  "birthDate": "1970-01-01",
+  "deceasedBoolean": false,
+  "address": [
+    {
+      "use": "home",
+      "line": [
+        "1111 STREET LN",
+        null,
+        "",
+        "SUITE 256"
+      ],
+      "city": "APPLETON",
+      "district": "OUTAGAMIE",
+      "state": "WI",
+      "postalCode": "54913",
+      "country": "USA"
+    }
+  ],
+  "maritalStatus": {
+    "text": "Married"
+  },
+  "contact": [
+    {
+      "relationship": [
+        {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v2-0131",
+              "code": "C",
+              "display": "Emergency Contact"
+            }
+          ]
+        }
+      ],
+      "name": {
+        "use": "usual",
+        "text": "First P Last"
+      },
+      "telecom": [
+        {
+          "system": "phone",
+          "value": "999-999-9999",
+          "use": "temp"
+        }
+      ],
+      "address": {
+        "use": "home",
+        "line": [
+          "1 STREET CT",
+          ""
+        ],
+        "city": "APPLETON",
+        "state": "WI",
+        "postalCode": "54914",
+        "country": "USA"
+      }
+    }
+  ],
+  "generalPractitioner": [
+    {
+      "reference": "https://arr.thedacare.org/FHIR/api/FHIR/STU3/Practitioner/eBV-IbsmfouYkaxp0GDVdBQ3",
+      "display": "xxx A Berg, MD"
+    },
+    {
+      "reference": "https://arr.thedacare.org/FHIR/api/FHIR/STU3/Practitioner/e3CAjh4zc48kgHgnk57.xJQ3",
+      "display": "xxx L Kercher, MD"
+    },
+    {
+      "reference": "https://arr.thedacare.org/FHIR/api/FHIR/STU3/Practitioner/eNbz6Bpq53ADx-XTWOjJm-Q3",
+      "display": "xxx A Derksen, DPM"
+    },
+    {
+      "reference": "https://arr.thedacare.org/FHIR/api/FHIR/STU3/Practitioner/ev2Z1cK4HUpSEQQ46L5TbDQ3"
+    }
+  ],
+  "managingOrganization": {
+    "reference": "https://arr.thedacare.org/FHIR/api/FHIR/STU3/Organization/e5zBsFV.o1p7LMbQylJy09A3",
+    "display": "THEDACARE HOSPITALS AND CLINICS"
+  },
+  "link": [
+    {
+      "extension": [
+        {
+          "url": "https://open.epic.com/FHIR/StructureDefinition/patient-merge-unmerge-instant"
+        }
+      ],
+      "other": {
+        "reference": "https://arr.thedacare.org/FHIR/api/FHIR/STU3/Patient/e1111111111"
+      },
+      "type": "replaces"
+    },
+    {
+      "extension": [
+        {
+          "url": "https://open.epic.com/FHIR/StructureDefinition/patient-merge-unmerge-instant"
+        }
+      ],
+      "other": {
+        "reference": "https://arr.thedacare.org/FHIR/api/FHIR/STU3/Patient/e7111111111111"
+      },
+      "type": "replaces"
+    },
+    {
+      "extension": [
+        {
+          "url": "https://open.epic.com/FHIR/StructureDefinition/patient-merge-unmerge-instant"
+        }
+      ],
+      "other": {
+        "reference": "https://arr.thedacare.org/FHIR/api/FHIR/STU3/Patient/e111111111111"
+      },
+      "type": "replaces"
+    },
+    {
+      "extension": [
+        {
+          "url": "https://open.epic.com/FHIR/StructureDefinition/patient-merge-unmerge-instant"
+        }
+      ],
+      "other": {
+        "reference": "https://arr.thedacare.org/FHIR/api/FHIR/STU3/Patient/e111111111111"
+      },
+      "type": "replaces"
+    }
+  ]
+}
