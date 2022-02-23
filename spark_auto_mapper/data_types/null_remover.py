@@ -3,6 +3,7 @@ from typing import Union, List, Optional, Generic, TypeVar
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import array
 from pyspark.sql.functions import filter
+from pyspark.sql.functions import when
 from pyspark.sql.types import StructType, ArrayType, StructField, DataType
 
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
@@ -78,15 +79,21 @@ class AutoMapperNullRemover(AutoMapperDataTypeBase, Generic[_T]):
                     for item in self.value
                 ]
             )
-            return filter(inner_array, lambda x: x.isNotNull() & ~x.eqNullSafe(""))
+            return when(
+                inner_array.isNotNull(),
+                filter(inner_array, lambda x: x.isNotNull() & ~x.eqNullSafe("")),
+            )
 
-        # if value is an AutoMapper then ask it for its column spec
+            # if value is an AutoMapper then ask it for its column spec
         if isinstance(self.value, AutoMapperDataTypeBase):
             child: AutoMapperDataTypeBase = self.value
             inner_child_spec = child.get_column_spec(
                 source_df=source_df, current_column=current_column
             )
-            return filter(inner_child_spec, lambda x: x.isNotNull() & ~x.eqNullSafe(""))
+            return when(
+                inner_child_spec.isNotNull(),
+                filter(inner_child_spec, lambda x: x.isNotNull() & ~x.eqNullSafe("")),
+            )
 
         raise ValueError(f"value: {self.value} is neither list nor AutoMapper")
 

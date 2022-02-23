@@ -1,7 +1,8 @@
 from typing import Union, List, Optional, Generic, TypeVar
 
 from pyspark.sql import Column, DataFrame
-from pyspark.sql.functions import array
+from pyspark.sql.functions import array, coalesce
+from pyspark.sql.functions import when
 from pyspark.sql.functions import lit, filter
 from pyspark.sql.types import StructType, ArrayType, StructField, DataType
 
@@ -89,7 +90,14 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
                 ]
             )
             return (
-                filter(inner_array, lambda x: x.isNotNull())
+                when(
+                    inner_array.isNotNull(),
+                    # coalesce is needed otherwise Spark complains:
+                    # pyspark.sql.utils.AnalysisException: cannot resolve
+                    # 'filter(NULL, lambdafunction((x IS NOT NULL), x))' due to argument data type mismatch:
+                    # argument 1 requires array type, however, 'NULL' is of null type.;
+                    filter(coalesce(inner_array, array()), lambda x: x.isNotNull()),
+                )
                 if self.remove_nulls
                 else inner_array
             )
@@ -101,7 +109,17 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
                 source_df=source_df, current_column=current_column
             )
             return (
-                filter(inner_child_spec, lambda x: x.isNotNull())
+                when(
+                    inner_child_spec.isNotNull(),
+                    filter(
+                        # coalesce is needed otherwise Spark complains:
+                        # pyspark.sql.utils.AnalysisException: cannot resolve
+                        # 'filter(NULL, lambdafunction((x IS NOT NULL), x))' due to argument data type mismatch:
+                        # argument 1 requires array type, however, 'NULL' is of null type.;
+                        coalesce(inner_child_spec, array()),
+                        lambda x: x.isNotNull(),
+                    ),
+                )
                 if self.remove_nulls
                 else inner_child_spec
             )

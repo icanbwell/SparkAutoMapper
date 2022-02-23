@@ -244,12 +244,12 @@ class AutoMapper(AutoMapperContainer):
             self.logger.warning(
                 f"-------- end automapper ({self.view}) column specs ------"
             )
-            self.logger.warning(
+            self.logger.debug(
                 f"-------- automapper ({self.source_view}) source_df schema ------"
             )
             # noinspection PyProtectedMember
-            self.logger.warning(source_df._jdf.schema().treeString())  # type: ignore
-            self.logger.warning(
+            self.logger.debug(source_df._jdf.schema().treeString())  # type: ignore
+            self.logger.debug(
                 f"-------- end automapper ({self.source_view}) source_df schema ------"
             )
             # iterate through each column to find the problem child

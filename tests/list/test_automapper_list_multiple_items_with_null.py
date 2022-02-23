@@ -1,7 +1,7 @@
 from typing import Dict
 
 from pyspark.sql import SparkSession, Column, DataFrame
-from pyspark.sql.functions import array
+from pyspark.sql.functions import array, when, coalesce
 
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import lit, filter
@@ -41,8 +41,12 @@ def test_auto_mapper_array_multiple_items_with_null(
         print(f"{column_name}: {sql_expression}")
 
     assert str(sql_expressions["dst2"]) == str(
-        filter(
-            array(lit("address1"), lit("address2"), lit(None)), lambda x: x.isNotNull()
+        when(
+            array(lit("address1"), lit("address2"), lit(None)).isNotNull(),
+            filter(
+                coalesce(array(lit("address1"), lit("address2"), lit(None)), array()),
+                lambda x: x.isNotNull(),
+            ),
         ).alias("dst2")
     )
 
