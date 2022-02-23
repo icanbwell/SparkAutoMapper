@@ -78,7 +78,7 @@ class AutoMapperNullRemover(AutoMapperDataTypeBase, Generic[_T]):
                     for item in self.value
                 ]
             )
-            return filter(inner_array, lambda x: x.isNotNull())
+            return filter(inner_array, lambda x: x.isNotNull() & ~x.eqNullSafe(""))
 
         # if value is an AutoMapper then ask it for its column spec
         if isinstance(self.value, AutoMapperDataTypeBase):
@@ -86,7 +86,7 @@ class AutoMapperNullRemover(AutoMapperDataTypeBase, Generic[_T]):
             inner_child_spec = child.get_column_spec(
                 source_df=source_df, current_column=current_column
             )
-            return filter(inner_child_spec, lambda x: x.isNotNull())
+            return filter(inner_child_spec, lambda x: x.isNotNull() & ~x.eqNullSafe(""))
 
         raise ValueError(f"value: {self.value} is neither list nor AutoMapper")
 

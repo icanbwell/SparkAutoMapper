@@ -28,7 +28,7 @@ def test_automapper_null_remover(spark_session: SparkSession) -> None:
                 A.if_not_null(
                     A.field("line"),
                     A.field("line")
-                    .select(A.current().sanitize().to_null_if_empty())
+                    .select(A.current().sanitize())
                     .remove_null_or_empty(),
                 )
             ),
