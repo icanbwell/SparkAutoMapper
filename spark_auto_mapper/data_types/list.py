@@ -92,6 +92,10 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
             return (
                 when(
                     inner_array.isNotNull(),
+                    # coalesce is needed otherwise Spark complains:
+                    # pyspark.sql.utils.AnalysisException: cannot resolve
+                    # 'filter(NULL, lambdafunction((x IS NOT NULL), x))' due to argument data type mismatch:
+                    # argument 1 requires array type, however, 'NULL' is of null type.;
                     filter(coalesce(inner_array, array()), lambda x: x.isNotNull()),
                 )
                 if self.remove_nulls
@@ -108,7 +112,12 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
                 when(
                     inner_child_spec.isNotNull(),
                     filter(
-                        coalesce(inner_child_spec, array()), lambda x: x.isNotNull()
+                        # coalesce is needed otherwise Spark complains:
+                        # pyspark.sql.utils.AnalysisException: cannot resolve
+                        # 'filter(NULL, lambdafunction((x IS NOT NULL), x))' due to argument data type mismatch:
+                        # argument 1 requires array type, however, 'NULL' is of null type.;
+                        coalesce(inner_child_spec, array()),
+                        lambda x: x.isNotNull(),
                     ),
                 )
                 if self.remove_nulls
