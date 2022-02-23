@@ -1,7 +1,7 @@
 from typing import Dict
 
 from pyspark.sql import SparkSession, Column, DataFrame
-from pyspark.sql.functions import array, expr, filter
+from pyspark.sql.functions import array, expr, filter, when, coalesce
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.data_types.list import AutoMapperList
@@ -36,7 +36,10 @@ def test_auto_mapper_array_single_item(spark_session: SparkSession) -> None:
         print(f"{column_name}: {sql_expression}")
 
     assert str(sql_expressions["dst2"]) == str(
-        filter(array(expr("address1")), lambda x: x.isNotNull()).alias("dst2")
+        when(
+            array(expr("address1")).isNotNull(),
+            filter(coalesce(array(expr("address1")), array()), lambda x: x.isNotNull()),
+        ).alias("dst2")
     )
 
     result_df: DataFrame = mapper.transform(df=df)
