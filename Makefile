@@ -53,3 +53,7 @@ sphinx-html:
 .PHONY:pipenv-setup
 pipenv-setup:devdocker ## Brings up the bash shell in dev docker
 	docker-compose run --rm --name sam_tests dev pipenv-setup sync --pipfile
+
+.PHONY:shell
+shell:devdocker ## Brings up the bash shell in dev docker
+	docker-compose run --rm --name sam_shell dev /bin/bash
