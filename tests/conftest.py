@@ -1,11 +1,9 @@
 import logging
 import os
 import shutil
-import random
-import string
+from typing import Any
 
 import pytest
-from _pytest.fixtures import FixtureRequest
 from pyspark.sql import SparkSession
 
 # make sure env variables are set correctly
@@ -63,42 +61,8 @@ def clean_close(session: SparkSession) -> None:
     session.stop()
 
 
-def get_random_string(length: int) -> str:
-    letters = string.ascii_lowercase
-    result_str = "".join(random.choice(letters) for _ in range(length))
-    return result_str
-
-
 @pytest.fixture(scope="session")
-def spark_session(request: FixtureRequest) -> SparkSession:
-    # make sure env variables are set correctly
-    if "SPARK_HOME" not in os.environ:
-        os.environ["SPARK_HOME"] = "/usr/local/opt/spark"
-
-    clean_spark_dir()
-    master = "local[2]"
-
-    session = (
-        SparkSession.builder.appName(
-            f"pytest-pyspark-local-testing-{get_random_string(4)}"
-        )
-        .master(master)
-        .config("spark.ui.showConsoleProgress", "false")
-        .config("spark.sql.shuffle.partitions", "2")
-        .config("spark.default.parallelism", "4")
-        .config("spark.driver.bindAddress", "127.0.0.1")
-        .config("spark.sql.broadcastTimeout", "2400")
-        .enableHiveSupport()
-        .getOrCreate()
-    )
-
-    request.addfinalizer(lambda: clean_close(session))
-    quiet_py4j()
-    return session
-
-
-@pytest.fixture(scope="function")
-def spark_session_per_function(request: FixtureRequest) -> SparkSession:
+def spark_session(request: Any) -> SparkSession:
     # make sure env variables are set correctly
     if "SPARK_HOME" not in os.environ:
         os.environ["SPARK_HOME"] = "/usr/local/opt/spark"
@@ -113,7 +77,32 @@ def spark_session_per_function(request: FixtureRequest) -> SparkSession:
         .config("spark.ui.showConsoleProgress", "false")
         .config("spark.sql.shuffle.partitions", "2")
         .config("spark.default.parallelism", "4")
-        .config("spark.driver.bindAddress", "127.0.0.1")
+        .config("spark.sql.broadcastTimeout", "2400")
+        .enableHiveSupport()
+        .getOrCreate()
+    )
+
+    request.addfinalizer(lambda: clean_close(session))
+    quiet_py4j()
+    return session
+
+
+@pytest.fixture(scope="function")
+def spark_session_per_function(request: Any) -> SparkSession:
+    # make sure env variables are set correctly
+    if "SPARK_HOME" not in os.environ:
+        os.environ["SPARK_HOME"] = "/usr/local/opt/spark"
+
+    clean_spark_dir()
+
+    master = "local[2]"
+
+    session = (
+        SparkSession.builder.appName("pytest-pyspark-local-testing")
+        .master(master)
+        .config("spark.ui.showConsoleProgress", "false")
+        .config("spark.sql.shuffle.partitions", "2")
+        .config("spark.default.parallelism", "4")
         .config("spark.sql.broadcastTimeout", "2400")
         .enableHiveSupport()
         .getOrCreate()
