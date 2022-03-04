@@ -37,16 +37,19 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
         ],
         remove_nulls: bool = True,
         include_null_properties: bool = True,
+        children_schema: Optional[Union[StructType, DataType]] = None,
     ) -> None:
         """
         Generates a list (array) in Spark
 
         :param value: items to make into an array
         :param remove_nulls: whether to remove nulls from the array
+        :param children_schema: schema to use for children
         """
         super().__init__()
         # can a single mapper or a list of mappers
         self.remove_nulls: bool = remove_nulls
+        self.children_schema: Optional[Union[StructType, DataType]] = children_schema
         self.value: Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]
         if not value:
             self.value = []
@@ -65,6 +68,11 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
             raise ValueError(f"{type(value)} is not supported")
 
     def include_null_properties(self, include_null_properties: bool) -> None:
+        """
+        Whether to include or exclude null properties from the output
+
+        :param include_null_properties: include if true
+        """
         if isinstance(self.value, list):
             for item in self.value:
                 item.include_null_properties(
@@ -78,6 +86,11 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
     def get_column_spec(
         self, source_df: Optional[DataFrame], current_column: Optional[Column]
     ) -> Column:
+        """
+        returns a Spark Column definition
+
+
+        """
         self.ensure_children_have_same_properties()
         if isinstance(
             self.value, str
@@ -134,17 +147,27 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
     def get_schema(
         self, include_extension: bool
     ) -> Optional[Union[StructType, DataType]]:
+        if self.children_schema:
+            return self.children_schema
         if isinstance(self.value, list):
             # get schema for first element
             if len(self.value) > 0:
                 first_element = self.value[0]
-                schema = first_element.get_schema(include_extension=include_extension)
+                schema: Optional[
+                    Union[StructType, DataType]
+                ] = first_element.get_schema(include_extension=include_extension)
                 if schema is None:
                     return None
                 return StructType([StructField("extension", ArrayType(schema))])
         return None
 
     def __add__(self, other: "AutoMapperList[_T]") -> "AutoMapperList[_T]":
+        """
+        This is here to allow using + when adding items of two lists to get a new list
+
+
+        :param other: other list to append to this one
+        """
         # iterate through both lists and return a new one
         result: AutoMapperList[_T] = AutoMapperList(
             value=(self.value if isinstance(self.value, list) else [self.value])
@@ -157,7 +180,8 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
         """
         Spark cannot handle children of a list having different properties.
         So we find the superset of properties and add them as null.
-        Also Spark expects the children of a list to have properties in the same order
+
+        Spark expects the children of a list to have properties in the same order
         So if we have a schema we need to order in that order otherwise just make sure all children have the same order
         """
         if not isinstance(self.value, list):
@@ -175,7 +199,26 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
                 if child_property not in superset_of_all_properties:
                     superset_of_all_properties.append(child_property)
 
+        ordered_superset_of_all_properties: List[str] = []
+        if self.children_schema and isinstance(self.children_schema, StructType):
+            field: StructField
+            for field in self.children_schema.fields:
+                if field.name in superset_of_all_properties:
+                    ordered_superset_of_all_properties.append(field.name)
+        else:
+            ordered_superset_of_all_properties = superset_of_all_properties
+
         for child in [
             v for v in self.value if isinstance(v, AutoMapperDataTypeComplexBase)
         ]:
-            child.add_missing_values_and_order(superset_of_all_properties)
+            child.add_missing_values_and_order(ordered_superset_of_all_properties)
+
+    def set_children_schema(
+        self, schema: Optional[Union[StructType, DataType]]
+    ) -> None:
+        """
+        Used by the parent to set the schema for the children of this list
+
+        :param schema: children schema
+        """
+        self.children_schema = schema
