@@ -1,10 +1,13 @@
-from typing import Union, List, Optional, Generic, TypeVar
+from typing import Union, List, Optional, Generic, TypeVar, Dict
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import array, coalesce
 from pyspark.sql.functions import when
 from pyspark.sql.functions import lit, filter
 from pyspark.sql.types import StructType, ArrayType, StructField, DataType
+from spark_auto_mapper.data_types.complex.complex_base import (
+    AutoMapperDataTypeComplexBase,
+)
 
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
@@ -75,6 +78,7 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
     def get_column_spec(
         self, source_df: Optional[DataFrame], current_column: Optional[Column]
     ) -> Column:
+        self.ensure_children_have_same_properties()
         if isinstance(
             self.value, str
         ):  # if the src column is just string then consider it a sql expression
@@ -148,3 +152,30 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
             remove_nulls=self.remove_nulls,
         )
         return result
+
+    def ensure_children_have_same_properties(self) -> None:
+        """
+        Spark cannot handle children of a list having different properties.
+        So we find the superset of properties and add them as null.
+        Also Spark expects the children of a list to have properties in the same order
+        So if we have a schema we need to order in that order otherwise just make sure all children have the same order
+        """
+        if not isinstance(self.value, list):
+            return
+
+        children_properties: Dict[AutoMapperDataTypeComplexBase, List[str]] = {
+            v: list(v.value.keys())
+            for v in self.value
+            if isinstance(v, AutoMapperDataTypeComplexBase)
+        }
+        # find superset of properties and get them in the right order
+        superset_of_all_properties: List[str] = []
+        for child, child_properties in children_properties.items():
+            for child_property in child_properties:
+                if child_property not in superset_of_all_properties:
+                    superset_of_all_properties.append(child_property)
+
+        for child in [
+            v for v in self.value if isinstance(v, AutoMapperDataTypeComplexBase)
+        ]:
+            child.add_missing_values_and_order(superset_of_all_properties)

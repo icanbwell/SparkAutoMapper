@@ -1,4 +1,4 @@
-from typing import Dict, Any, Optional, Union
+from typing import Dict, Any, Optional, Union, List, OrderedDict
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import struct
@@ -21,14 +21,29 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
         # this flag specifies that we should include all values in the column_spec event NULLs
         self.include_nulls: bool = "include_nulls" in kwargs
 
-        self.value: Dict[str, AutoMapperDataTypeBase] = {
+        self.value: Dict[str, AutoMapperDataTypeBase] = {}
+        self.set_value_from_kwargs(kwargs)
+
+        self.kwargs: Dict[str, Any] = kwargs
+
+    def set_value_from_kwargs(self, kwargs: Dict[str, Any]) -> None:
+        self.value = {
             parameter_name
             if not parameter_name.endswith(
                 "_"
-            )  # some property names are python keywords so we have to append with _
+            )  # some property names are python keywords, so we have to append with _
             else parameter_name[:-1]: AutoMapperValueParser.parse_value(parameter_value)
             for parameter_name, parameter_value in kwargs.items()
         }
+
+    def add_missing_values_and_order(self, expected_keys: List[str]) -> None:
+        new_dict: OrderedDict[str, Any] = OrderedDict[str, Any]()
+        for expected_key in expected_keys:
+            if expected_key in self.kwargs.keys():
+                new_dict[expected_key] = self.kwargs[expected_key]
+            else:
+                new_dict[expected_key] = None
+        self.set_value_from_kwargs(new_dict)
 
     def include_null_properties(self, include_null_properties: bool) -> None:
         self.include_nulls = include_null_properties
