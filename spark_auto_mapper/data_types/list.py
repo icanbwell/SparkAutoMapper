@@ -205,6 +205,15 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
             for field in self.children_schema.fields:
                 if field.name in superset_of_all_properties:
                     ordered_superset_of_all_properties.append(field.name)
+            # confirm that there wasn't any field missing from schema
+            missing_properties: List[str] = []
+            for child_property in superset_of_all_properties:
+                if child_property not in ordered_superset_of_all_properties:
+                    missing_properties.append(child_property)
+            assert len(missing_properties) == 0, (
+                f"List had items with properties not present in schema:"
+                f" {','.join(missing_properties)}"
+            )
         else:
             ordered_superset_of_all_properties = superset_of_all_properties
 
