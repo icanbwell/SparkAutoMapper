@@ -28,22 +28,24 @@ class AutoMapperNullIfEmptyDataType(
         self.value: _TAutoMapperDataType = value
 
     def include_null_properties(self, include_null_properties: bool) -> None:
-        self.value.include_null_properties(
-            include_null_properties=include_null_properties
-        )
+        if isinstance(self.value, AutoMapperDataTypeBase):
+            self.value.include_null_properties(
+                include_null_properties=include_null_properties
+            )
 
     def get_column_spec(
         self, source_df: Optional[DataFrame], current_column: Optional[Column]
     ) -> Column:
-        column_spec = when(
-            self.value.get_column_spec(
-                source_df=source_df, current_column=current_column
-            ).eqNullSafe(""),
-            lit(None),
-        ).otherwise(
+        value_spec = (
             self.value.get_column_spec(
                 source_df=source_df, current_column=current_column
             )
+            if isinstance(self.value, AutoMapperDataTypeBase)
+            else lit(self.value)
         )
+        column_spec = when(
+            value_spec.eqNullSafe(""),
+            lit(None),
+        ).otherwise(value_spec)
 
         return column_spec

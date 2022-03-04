@@ -50,24 +50,12 @@ def test_auto_mapper_boolean(spark_session: SparkSession) -> None:
     result_df.printSchema()
     result_df.show()
 
-    assert (
-        result_df.where("member_id == 1")
-        .select(
-            "age",
-            "is_active",
-        )
-        .collect()[0][:]
-        == (False, False)
-    )
-    assert (
-        result_df.where("member_id == 2")
-        .select(
-            "age",
-            "is_active",
-        )
-        .collect()[0][:]
-        == (True, False)
-    )
+    assert result_df.where("member_id == 1").select("age", "is_active",).collect()[0][
+        :
+    ] == (False, False)
+    assert result_df.where("member_id == 2").select("age", "is_active",).collect()[0][
+        :
+    ] == (True, False)
 
     assert dict(result_df.dtypes)["age"] == "boolean"
     assert dict(result_df.dtypes)["is_active"] == "boolean"

@@ -125,7 +125,7 @@ class AutoMapper(AutoMapperContainer):
             if self.logger.handlers:
                 pass
             else:
-                stream_handler: StreamHandler = StreamHandler(stderr)
+                stream_handler: StreamHandler = StreamHandler(stderr)  # type: ignore
                 if log_level:
                     stream_handler.setLevel(level=log_level)
                 # noinspection SpellCheckingInspection
