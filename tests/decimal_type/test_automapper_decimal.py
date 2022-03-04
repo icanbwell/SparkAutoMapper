@@ -10,19 +10,18 @@ from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 
-def test_auto_mapper_amount_typed(spark_session: SparkSession) -> None:
+def test_auto_mapper_decimal(spark_session: SparkSession) -> None:
     # Arrange
     spark_session.createDataFrame(
         [
-            (1, "Qureshi", "Imran", 54.45),
-            (2, "Vidal", "Michael", 123467.678),
-            (3, "Paul", "Kyle", 13.0),
+            (1, "Qureshi", "Imran", "54.45"),
+            (2, "Vidal", "Michael", "123467.678"),
+            (3, "Paul", "Kyle", "13"),
         ],
         ["member_id", "last_name", "first_name", "my_age"],
     ).createOrReplaceTempView("patients")
 
     source_df: DataFrame = spark_session.table("patients")
-    # source_df = source_df.withColumn("my_age", col("my_age").cast("float"))
 
     df = source_df.select("member_id")
     df.createOrReplaceTempView("members")
@@ -34,6 +33,9 @@ def test_auto_mapper_amount_typed(spark_session: SparkSession) -> None:
         keys=["member_id"],
         drop_key_columns=False,
     ).columns(age=A.decimal(A.column("my_age"), 10, 2))
+
+    debug_text: str = mapper.to_debug_string()
+    print(debug_text)
 
     assert isinstance(mapper, AutoMapper)
     sql_expressions: Dict[str, Column] = mapper.get_column_specs(source_df=source_df)

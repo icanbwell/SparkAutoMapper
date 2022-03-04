@@ -31,9 +31,10 @@ class AutoMapperTransformDataType(
         self.include_null_properties(include_null_properties=True)
 
     def include_null_properties(self, include_null_properties: bool) -> None:
-        self.value.include_null_properties(
-            include_null_properties=include_null_properties
-        )
+        if isinstance(self.value, AutoMapperDataTypeBase):
+            self.value.include_null_properties(
+                include_null_properties=include_null_properties
+            )
 
     def get_column_spec(
         self, source_df: Optional[DataFrame], current_column: Optional[Column]
@@ -42,7 +43,12 @@ class AutoMapperTransformDataType(
             source_df=source_df, current_column=current_column
         )
 
+        if not isinstance(self.value, AutoMapperDataTypeBase):
+            return column_spec
+
         def get_column_spec_for_column(x: Column) -> Column:
+            if not isinstance(self.value, AutoMapperDataTypeBase):
+                return x
             value_get_column_spec: Column = self.value.get_column_spec(
                 source_df=source_df, current_column=x
             )

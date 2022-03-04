@@ -1,5 +1,5 @@
-FROM imranq2/spark_python:0.1.27
-# https://github.com/imranq2/docker.spark_python
+FROM imranq2/spark-py:3.0.50
+# https://github.com/imranq2/kubernetes.spark_python
 USER root
 
 ENV PYTHONPATH=/sam
@@ -13,6 +13,9 @@ RUN pipenv sync --dev --system
 
 # COPY ./jars/* /opt/bitnami/spark/jars/
 # COPY ./conf/* /opt/bitnami/spark/conf/
+
+# override entrypoint to remove extra logging
+RUN mv /opt/minimal_entrypoint.sh /opt/entrypoint.sh
 
 COPY . /sam
 

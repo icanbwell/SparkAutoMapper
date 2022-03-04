@@ -3,8 +3,6 @@ from typing import Dict, Any, Optional
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import struct
 
-from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
-from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 from spark_auto_mapper.data_types.complex.complex_base import (
     AutoMapperDataTypeComplexBase,
 )
@@ -12,12 +10,8 @@ from spark_auto_mapper.data_types.complex.complex_base import (
 
 class AutoMapperDataTypeStruct(AutoMapperDataTypeComplexBase):
     def __init__(self, value: Dict[str, Any]) -> None:
-        super().__init__()
         assert isinstance(value, dict)
-        self.value: Dict[str, AutoMapperDataTypeBase] = {
-            key: AutoMapperValueParser.parse_value(value)
-            for key, value in value.items()
-        }
+        super().__init__(**value)
 
     def get_column_spec(
         self, source_df: Optional[DataFrame], current_column: Optional[Column]
