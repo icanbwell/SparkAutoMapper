@@ -37,7 +37,7 @@ from spark_auto_mapper.data_types.complex.complex import AutoMapperDataTypeCompl
 from spark_auto_mapper.data_types.concat import AutoMapperConcatDataType
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 from spark_auto_mapper.data_types.date import AutoMapperDateDataType
-from spark_auto_mapper.data_types.decimal_type import AutoMapperDecimalDataType
+from spark_auto_mapper.data_types.decimal import AutoMapperDecimalDataType
 from spark_auto_mapper.data_types.expression import AutoMapperDataTypeExpression
 from spark_auto_mapper.data_types.if_not_null import AutoMapperIfNotNullDataType
 from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral

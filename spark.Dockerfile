@@ -14,6 +14,9 @@ RUN pipenv sync --dev --system
 # COPY ./jars/* /opt/bitnami/spark/jars/
 # COPY ./conf/* /opt/bitnami/spark/conf/
 
+# override entrypoint to remove extra logging
+RUN mv /opt/minimal_entrypoint.sh /opt/entrypoint.sh
+
 COPY . /sam
 
 # run pre-commit once so it installs all the hooks and subsequent runs are fast
