@@ -5,6 +5,7 @@ from pyspark.sql.functions import struct
 from pyspark.sql.types import StructType, DataType
 
 from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
+from spark_auto_mapper.helpers.python_keyword_cleaner import PythonKeywordCleaner
 from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
 
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
@@ -28,21 +29,20 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
 
     def set_value_from_kwargs(self, kwargs: Dict[str, Any]) -> None:
         self.value = {
-            parameter_name
-            if not parameter_name.endswith(
-                "_"
-            )  # some property names are python keywords, so we have to append with _
-            else parameter_name[:-1]: AutoMapperValueParser.parse_value(parameter_value)
+            PythonKeywordCleaner.from_python_safe(
+                name=parameter_name
+            ): AutoMapperValueParser.parse_value(parameter_value)
             for parameter_name, parameter_value in kwargs.items()
         }
 
     def add_missing_values_and_order(self, expected_keys: List[str]) -> None:
         new_dict: OrderedDict[str, Any] = OrderedDict[str, Any]()
         for expected_key in expected_keys:
-            if expected_key in self.kwargs.keys():
-                new_dict[expected_key] = self.kwargs[expected_key]
+            expected_key_safe: str = PythonKeywordCleaner.to_python_safe(expected_key)
+            if expected_key_safe in self.kwargs.keys():
+                new_dict[expected_key_safe] = self.kwargs[expected_key_safe]
             else:
-                new_dict[expected_key] = None
+                new_dict[expected_key_safe] = None
         self.set_value_from_kwargs(new_dict)
 
     def include_null_properties(self, include_null_properties: bool) -> None:

@@ -203,8 +203,9 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
         if self.children_schema and isinstance(self.children_schema, StructType):
             field: StructField
             for field in self.children_schema.fields:
-                if field.name in superset_of_all_properties:
-                    ordered_superset_of_all_properties.append(field.name)
+                field_name_safe: str = field.name
+                if field_name_safe in superset_of_all_properties:
+                    ordered_superset_of_all_properties.append(field_name_safe)
             # confirm that there wasn't any field missing from schema
             missing_properties: List[str] = []
             for child_property in superset_of_all_properties:
@@ -212,7 +213,9 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
                     missing_properties.append(child_property)
             assert len(missing_properties) == 0, (
                 f"List had items with properties not present in schema:"
-                f" {','.join(missing_properties)}"
+                f" {','.join(missing_properties)}."
+                f" list from mappers:{','.join(superset_of_all_properties)}."
+                f" list from schema:{','.join(ordered_superset_of_all_properties)}."
             )
         else:
             ordered_superset_of_all_properties = superset_of_all_properties

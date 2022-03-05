@@ -37,7 +37,7 @@ def test_auto_mapper_array_multiple_items_structs_different_elements_with_schema
 
     schema: StructType = StructType(
         [
-            StructField("a", StringType(), True),
+            StructField("id", StringType(), True),
             StructField("c", StringType(), True),
             StructField("b", StringType(), True),
         ]
@@ -53,10 +53,10 @@ def test_auto_mapper_array_multiple_items_structs_different_elements_with_schema
         dst2=AutoMapperList(
             [
                 AutoMapperDataTypeComplexBase(
-                    a=A.column("first_name"), b=A.column("last_name")
+                    id_=A.column("first_name"), b=A.column("last_name")
                 ),
                 AutoMapperDataTypeComplexBase(
-                    a=A.column("first_name"), c=A.column("last_name")
+                    id_=A.column("first_name"), c=A.column("last_name")
                 ),
             ],
             include_null_properties=True,
@@ -70,12 +70,12 @@ def test_auto_mapper_array_multiple_items_structs_different_elements_with_schema
         print(f"{column_name}: {sql_expression}")
 
     struct1 = struct(
-        col("b.first_name").alias("a"),
+        col("b.first_name").alias("id"),
         lit(None).alias("c"),
         col("b.last_name").alias("b"),
     )
     struct2 = struct(
-        col("b.first_name").alias("a"),
+        col("b.first_name").alias("id"),
         col("b.last_name").alias("c"),
         lit(None).alias("b"),
     )
