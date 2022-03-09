@@ -15,7 +15,7 @@ from spark_auto_mapper.data_types.list import AutoMapperList
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 
 
-def test_auto_mapper_array_multiple_items_structs_different_elements(
+def test_auto_mapper_list_addition_multiple_items_structs_different_elements(
     spark_session: SparkSession,
 ) -> None:
     # Arrange
@@ -43,12 +43,15 @@ def test_auto_mapper_array_multiple_items_structs_different_elements(
             [
                 AutoMapperDataTypeComplexBase(
                     a=A.column("first_name"), b=A.column("last_name")
-                ),
+                )
+            ],
+        )
+        + AutoMapperList(
+            [
                 AutoMapperDataTypeComplexBase(
                     a=A.column("first_name"), c=A.column("last_name")
                 ),
             ],
-            include_null_properties=True,
         )
     )
 

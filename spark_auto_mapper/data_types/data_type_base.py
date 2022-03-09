@@ -656,3 +656,9 @@ class AutoMapperDataTypeBase:
                 check=self, value=value, when_null_or_empty=when_null_or_empty
             ),
         )
+
+    def get_fields(self) -> List[str]:
+        return []
+
+    def add_missing_values_and_order(self, expected_keys: List[str]) -> None:
+        return
