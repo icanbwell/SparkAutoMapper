@@ -5,13 +5,14 @@ from pyspark.sql.functions import concat
 from spark_auto_mapper.data_types.array_base import AutoMapperArrayLikeBase
 
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
+from spark_auto_mapper.data_types.mixins.has_children_mixin import HasChildrenMixin
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
 from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
 from spark_auto_mapper.type_definitions.native_types import AutoMapperNativeTextType
 from spark_auto_mapper.type_definitions.wrapper_types import AutoMapperWrapperType
 
 
-class AutoMapperConcatDataType(AutoMapperArrayLikeBase):
+class AutoMapperConcatDataType(AutoMapperArrayLikeBase, HasChildrenMixin):
     """
     Concatenates multiple strings or arrays together
     """
@@ -54,3 +55,7 @@ class AutoMapperConcatDataType(AutoMapperArrayLikeBase):
             ]
         )
         return column_spec
+
+    @property
+    def children(self) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
+        return self.value

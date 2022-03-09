@@ -87,3 +87,6 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
         self, include_extension: bool
     ) -> Optional[Union[StructType, DataType]]:
         return None
+
+    def get_fields(self) -> List[str]:
+        return list(self.value.keys())

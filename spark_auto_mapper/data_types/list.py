@@ -8,6 +8,7 @@ from pyspark.sql.types import StructType, ArrayType, StructField, DataType
 
 from spark_auto_mapper.data_types.array_base import AutoMapperArrayLikeBase
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
+from spark_auto_mapper.data_types.mixins.has_children_mixin import HasChildrenMixin
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
 from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
 from spark_auto_mapper.type_definitions.native_types import AutoMapperNativeSimpleType
@@ -15,7 +16,7 @@ from spark_auto_mapper.type_definitions.native_types import AutoMapperNativeSimp
 _T = TypeVar("_T", bound=Union[AutoMapperNativeSimpleType, AutoMapperDataTypeBase])
 
 
-class AutoMapperList(AutoMapperArrayLikeBase, Generic[_T]):
+class AutoMapperList(AutoMapperArrayLikeBase, HasChildrenMixin, Generic[_T]):
     """
     Base class for lists
     Generics:  https://mypy.readthedocs.io/en/stable/generics.html
@@ -24,18 +25,18 @@ class AutoMapperList(AutoMapperArrayLikeBase, Generic[_T]):
     """
 
     def __init__(
-            self,
-            value: Optional[
-                Union[
-                    List[_T],
-                    AutoMapperDataTypeBase,
-                    List[AutoMapperDataTypeBase],
-                    List[AutoMapperTextLikeBase],
-                ]
-            ],
-            remove_nulls: bool = True,
-            include_null_properties: bool = True,
-            children_schema: Optional[Union[StructType, DataType]] = None,
+        self,
+        value: Optional[
+            Union[
+                List[_T],
+                AutoMapperDataTypeBase,
+                List[AutoMapperDataTypeBase],
+                List[AutoMapperTextLikeBase],
+            ]
+        ],
+        remove_nulls: bool = True,
+        include_null_properties: bool = True,
+        children_schema: Optional[Union[StructType, DataType]] = None,
     ) -> None:
         """
         Generates a list (array) in Spark
@@ -44,9 +45,12 @@ class AutoMapperList(AutoMapperArrayLikeBase, Generic[_T]):
         :param remove_nulls: whether to remove nulls from the array
         :param children_schema: schema to use for children
         """
-        super().__init__(children_schema=children_schema)
+        super().__init__()
+        if children_schema:
+            self.set_children_schema(schema=children_schema)
         # can a single mapper or a list of mappers
         self.remove_nulls: bool = remove_nulls
+        self.value: Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]
         if not value:
             self.value = []
         if isinstance(value, str):
@@ -80,7 +84,7 @@ class AutoMapperList(AutoMapperArrayLikeBase, Generic[_T]):
             )
 
     def get_column_spec(
-            self, source_df: Optional[DataFrame], current_column: Optional[Column]
+        self, source_df: Optional[DataFrame], current_column: Optional[Column]
     ) -> Column:
         """
         returns a Spark Column definition
@@ -89,7 +93,7 @@ class AutoMapperList(AutoMapperArrayLikeBase, Generic[_T]):
         """
         self.ensure_children_have_same_properties()
         if isinstance(
-                self.value, str
+            self.value, str
         ):  # if the src column is just string then consider it a sql expression
             return array(lit(self.value))
 
@@ -141,7 +145,7 @@ class AutoMapperList(AutoMapperArrayLikeBase, Generic[_T]):
 
     # noinspection PyMethodMayBeStatic
     def get_schema(
-            self, include_extension: bool
+        self, include_extension: bool
     ) -> Optional[Union[StructType, DataType]]:
         if self.children_schema:
             return self.children_schema
@@ -164,14 +168,16 @@ class AutoMapperList(AutoMapperArrayLikeBase, Generic[_T]):
 
         :param other: other list to append to this one
         """
-        new_value: List[_T] = []
+        new_value: List[AutoMapperDataTypeBase] = []
         if isinstance(self.value, list):
             new_value = new_value + self.value
         else:
+            # noinspection PyTypeChecker
             new_value.append(self.value)
         if isinstance(other.value, list):
             new_value = new_value + other.value
         else:
+            # noinspection PyTypeChecker
             new_value.append(other.value)
 
         # iterate through both lists and return a new one
@@ -181,3 +187,6 @@ class AutoMapperList(AutoMapperArrayLikeBase, Generic[_T]):
         )
         return result
 
+    @property
+    def children(self) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
+        return self.value
