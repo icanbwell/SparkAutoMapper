@@ -1,14 +1,12 @@
-from typing import Union, List, Optional, Generic, TypeVar, Dict
+from typing import Union, List, Optional, Generic, TypeVar
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import array, coalesce
-from pyspark.sql.functions import when
 from pyspark.sql.functions import lit, filter
+from pyspark.sql.functions import when
 from pyspark.sql.types import StructType, ArrayType, StructField, DataType
-from spark_auto_mapper.data_types.complex.complex_base import (
-    AutoMapperDataTypeComplexBase,
-)
 
+from spark_auto_mapper.data_types.array_base import AutoMapperArrayLikeBase
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
 from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
@@ -17,7 +15,7 @@ from spark_auto_mapper.type_definitions.native_types import AutoMapperNativeSimp
 _T = TypeVar("_T", bound=Union[AutoMapperNativeSimpleType, AutoMapperDataTypeBase])
 
 
-class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
+class AutoMapperList(AutoMapperArrayLikeBase, Generic[_T]):
     """
     Base class for lists
     Generics:  https://mypy.readthedocs.io/en/stable/generics.html
@@ -26,18 +24,18 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
     """
 
     def __init__(
-        self,
-        value: Optional[
-            Union[
-                List[_T],
-                AutoMapperDataTypeBase,
-                List[AutoMapperDataTypeBase],
-                List[AutoMapperTextLikeBase],
-            ]
-        ],
-        remove_nulls: bool = True,
-        include_null_properties: bool = True,
-        children_schema: Optional[Union[StructType, DataType]] = None,
+            self,
+            value: Optional[
+                Union[
+                    List[_T],
+                    AutoMapperDataTypeBase,
+                    List[AutoMapperDataTypeBase],
+                    List[AutoMapperTextLikeBase],
+                ]
+            ],
+            remove_nulls: bool = True,
+            include_null_properties: bool = True,
+            children_schema: Optional[Union[StructType, DataType]] = None,
     ) -> None:
         """
         Generates a list (array) in Spark
@@ -46,11 +44,9 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
         :param remove_nulls: whether to remove nulls from the array
         :param children_schema: schema to use for children
         """
-        super().__init__()
+        super().__init__(children_schema=children_schema)
         # can a single mapper or a list of mappers
         self.remove_nulls: bool = remove_nulls
-        self.children_schema: Optional[Union[StructType, DataType]] = children_schema
-        self.value: Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]
         if not value:
             self.value = []
         if isinstance(value, str):
@@ -84,7 +80,7 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
             )
 
     def get_column_spec(
-        self, source_df: Optional[DataFrame], current_column: Optional[Column]
+            self, source_df: Optional[DataFrame], current_column: Optional[Column]
     ) -> Column:
         """
         returns a Spark Column definition
@@ -93,7 +89,7 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
         """
         self.ensure_children_have_same_properties()
         if isinstance(
-            self.value, str
+                self.value, str
         ):  # if the src column is just string then consider it a sql expression
             return array(lit(self.value))
 
@@ -145,7 +141,7 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
 
     # noinspection PyMethodMayBeStatic
     def get_schema(
-        self, include_extension: bool
+            self, include_extension: bool
     ) -> Optional[Union[StructType, DataType]]:
         if self.children_schema:
             return self.children_schema
@@ -168,69 +164,20 @@ class AutoMapperList(AutoMapperDataTypeBase, Generic[_T]):
 
         :param other: other list to append to this one
         """
+        new_value: List[_T] = []
+        if isinstance(self.value, list):
+            new_value = new_value + self.value
+        else:
+            new_value.append(self.value)
+        if isinstance(other.value, list):
+            new_value = new_value + other.value
+        else:
+            new_value.append(other.value)
+
         # iterate through both lists and return a new one
         result: AutoMapperList[_T] = AutoMapperList(
-            value=(self.value if isinstance(self.value, list) else [self.value])
-            + (other.value if isinstance(other.value, list) else [other.value]),
+            value=new_value,
             remove_nulls=self.remove_nulls,
         )
         return result
 
-    def ensure_children_have_same_properties(self) -> None:
-        """
-        Spark cannot handle children of a list having different properties.
-        So we find the superset of properties and add them as null.
-
-        Spark expects the children of a list to have properties in the same order
-        So if we have a schema we need to order in that order otherwise just make sure all children have the same order
-        """
-        if not isinstance(self.value, list):
-            return
-
-        children_properties: Dict[AutoMapperDataTypeComplexBase, List[str]] = {
-            v: list(v.value.keys())
-            for v in self.value
-            if isinstance(v, AutoMapperDataTypeComplexBase)
-        }
-        # find superset of properties and get them in the right order
-        superset_of_all_properties: List[str] = []
-        for child, child_properties in children_properties.items():
-            for child_property in child_properties:
-                if child_property not in superset_of_all_properties:
-                    superset_of_all_properties.append(child_property)
-
-        ordered_superset_of_all_properties: List[str] = []
-        if self.children_schema and isinstance(self.children_schema, StructType):
-            field: StructField
-            for field in self.children_schema.fields:
-                field_name_safe: str = field.name
-                if field_name_safe in superset_of_all_properties:
-                    ordered_superset_of_all_properties.append(field_name_safe)
-            # confirm that there wasn't any field missing from schema
-            missing_properties: List[str] = []
-            for child_property in superset_of_all_properties:
-                if child_property not in ordered_superset_of_all_properties:
-                    missing_properties.append(child_property)
-            assert len(missing_properties) == 0, (
-                f"List had items with properties not present in schema:"
-                f" {','.join(missing_properties)}."
-                f" list from mappers:{','.join(superset_of_all_properties)}."
-                f" list from schema:{','.join(ordered_superset_of_all_properties)}."
-            )
-        else:
-            ordered_superset_of_all_properties = superset_of_all_properties
-
-        for child in [
-            v for v in self.value if isinstance(v, AutoMapperDataTypeComplexBase)
-        ]:
-            child.add_missing_values_and_order(ordered_superset_of_all_properties)
-
-    def set_children_schema(
-        self, schema: Optional[Union[StructType, DataType]]
-    ) -> None:
-        """
-        Used by the parent to set the schema for the children of this list
-
-        :param schema: children schema
-        """
-        self.children_schema = schema
