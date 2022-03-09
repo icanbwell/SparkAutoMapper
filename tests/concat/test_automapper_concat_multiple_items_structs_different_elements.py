@@ -1,10 +1,16 @@
 from typing import Dict
 
 from pyspark.sql import SparkSession, Column, DataFrame
-from pyspark.sql.functions import array, when, coalesce, col, struct
-
-# noinspection PyUnresolvedReferences
-from pyspark.sql.functions import lit, filter
+from pyspark.sql.functions import (
+    lit,
+    concat,
+    array,
+    col,
+    struct,
+    when,
+    filter,
+    coalesce,
+)
 
 from spark_auto_mapper.data_types.complex.complex_base import (
     AutoMapperDataTypeComplexBase,
@@ -45,13 +51,14 @@ def test_auto_mapper_concat_multiple_items_structs_different_elements(
                     a=A.column("first_name"), b=A.column("last_name")
                 )
             ],
-        )
-        + AutoMapperList(
-            [
-                AutoMapperDataTypeComplexBase(
-                    a=A.column("first_name"), c=A.column("last_name")
-                ),
-            ],
+        ).concat(
+            AutoMapperList(
+                [
+                    AutoMapperDataTypeComplexBase(
+                        a=A.column("first_name"), c=A.column("last_name")
+                    ),
+                ],
+            )
         )
     )
 
@@ -60,40 +67,51 @@ def test_auto_mapper_concat_multiple_items_structs_different_elements(
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
-    assert str(sql_expressions["dst2"]) == str(
-        when(
-            array(
-                struct(
-                    col("b.first_name").alias("a"),
-                    col("b.last_name").alias("b"),
-                    lit(None).alias("c"),
-                ),
-                struct(
-                    col("b.first_name").alias("a"),
-                    lit(None).alias("b"),
-                    col("b.last_name").alias("c"),
-                ),
-            ).isNotNull(),
-            filter(
-                coalesce(
-                    array(
-                        struct(
-                            col("b.first_name").alias("a"),
-                            col("b.last_name").alias("b"),
-                            lit(None).alias("c"),
-                        ),
-                        struct(
-                            col("b.first_name").alias("a"),
-                            lit(None).alias("b"),
-                            col("b.last_name").alias("c"),
-                        ),
-                    ),
-                    array(),
-                ),
-                lambda x: x.isNotNull(),
+    array1 = when(
+        array(
+            struct(
+                col("b.first_name").alias("a"),
+                col("b.last_name").alias("b"),
+                lit(None).alias("c"),
             ),
-        ).alias("dst2")
+        ).isNotNull(),
+        filter(
+            coalesce(
+                array(
+                    struct(
+                        col("b.first_name").alias("a"),
+                        col("b.last_name").alias("b"),
+                        lit(None).alias("c"),
+                    ),
+                ),
+                array(),
+            ),
+            lambda x: x.isNotNull(),
+        ),
     )
+    array2 = when(
+        array(
+            struct(
+                col("b.first_name").alias("a"),
+                lit(None).alias("b"),
+                col("b.last_name").alias("c"),
+            ),
+        ).isNotNull(),
+        filter(
+            coalesce(
+                array(
+                    struct(
+                        col("b.first_name").alias("a"),
+                        lit(None).alias("b"),
+                        col("b.last_name").alias("c"),
+                    ),
+                ),
+                array(),
+            ),
+            lambda x: x.isNotNull(),
+        ),
+    )
+    assert str(sql_expressions["dst2"]) == str(concat(array1, array2).alias("dst2"))
 
     result_df: DataFrame = mapper.transform(df=df)
 
