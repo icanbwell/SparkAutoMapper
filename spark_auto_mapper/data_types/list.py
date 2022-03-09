@@ -184,6 +184,7 @@ class AutoMapperList(AutoMapperArrayLikeBase, HasChildrenMixin, Generic[_T]):
         result: AutoMapperList[_T] = AutoMapperList(
             value=new_value,
             remove_nulls=self.remove_nulls,
+            children_schema=self.children_schema,
         )
         return result
 
