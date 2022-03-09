@@ -190,3 +190,9 @@ class AutoMapperList(AutoMapperArrayLikeBase, HasChildrenMixin, Generic[_T]):
     @property
     def children(self) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
         return self.value
+
+    def get_fields(self) -> List[str]:
+        return HasChildrenMixin.get_fields(self)
+
+    def add_missing_values_and_order(self, expected_keys: List[str]) -> None:
+        HasChildrenMixin.add_missing_values_and_order(self, expected_keys=expected_keys)
