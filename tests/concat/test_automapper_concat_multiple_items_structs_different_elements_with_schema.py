@@ -60,7 +60,6 @@ def test_auto_mapper_concat_multiple_items_structs_different_elements_with_schem
                     id_=A.column("first_name"), b=A.column("last_name")
                 ),
             ],
-            include_null_properties=True,
             children_schema=schema,
         ).concat(
             AutoMapperList(
@@ -69,7 +68,6 @@ def test_auto_mapper_concat_multiple_items_structs_different_elements_with_schem
                         id_=A.column("first_name"), c=A.column("last_name")
                     ),
                 ],
-                include_null_properties=True,
                 children_schema=schema,
             )
         )

@@ -1,10 +1,11 @@
-from typing import Generic, Optional, TypeVar, Union
+from typing import Generic, Optional, TypeVar, Union, List
 
 from pyspark.sql import DataFrame, Column
 from pyspark.sql.functions import transform
 
 from spark_auto_mapper.data_types.array_base import AutoMapperArrayLikeBase
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
+from spark_auto_mapper.data_types.mixins.has_children_mixin import HasChildrenMixin
 from spark_auto_mapper.type_definitions.wrapper_types import (
     AutoMapperAnyDataType,
     AutoMapperColumnOrColumnLikeType,
@@ -14,7 +15,7 @@ _TAutoMapperDataType = TypeVar("_TAutoMapperDataType", bound=AutoMapperAnyDataTy
 
 
 class AutoMapperTransformDataType(
-    AutoMapperArrayLikeBase, Generic[_TAutoMapperDataType]
+    AutoMapperArrayLikeBase, HasChildrenMixin, Generic[_TAutoMapperDataType]
 ):
     def __init__(
         self,
@@ -55,3 +56,13 @@ class AutoMapperTransformDataType(
             return value_get_column_spec
 
         return transform(column_spec, get_column_spec_for_column)
+
+    @property
+    def children(self) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
+        return self.value  # type: ignore
+
+    def get_fields(self) -> List[str]:
+        return HasChildrenMixin.get_fields(self)
+
+    def add_missing_values_and_order(self, expected_keys: List[str]) -> None:
+        HasChildrenMixin.add_missing_values_and_order(self, expected_keys=expected_keys)
