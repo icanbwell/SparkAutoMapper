@@ -1,13 +1,11 @@
 from typing import Optional, TypeVar, Union, List, Dict
 
 from pyspark.sql import DataFrame, Column
-from pyspark.sql.types import StructType, DataTypeSingleton, DataType, StructField
-from spark_auto_mapper.data_types.complex.complex_base import AutoMapperDataTypeComplexBase
-
-from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
+from pyspark.sql.types import StructType, DataType, StructField
 
 # noinspection PyUnresolvedReferences
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
+from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
 from spark_auto_mapper.type_definitions.native_types import AutoMapperNativeSimpleType
 
 _TAutoMapperDataType = TypeVar(
@@ -39,6 +37,8 @@ class AutoMapperArrayLikeBase(AutoMapperTextLikeBase):
         """
         if self.value is not None or not isinstance(self.value, list):
             return
+
+        from spark_auto_mapper.data_types.complex.complex_base import AutoMapperDataTypeComplexBase
 
         children_properties: Dict[AutoMapperDataTypeComplexBase, List[str]] = {
             v: list(v.value.keys())
