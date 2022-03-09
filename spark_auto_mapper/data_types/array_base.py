@@ -35,7 +35,7 @@ class AutoMapperArrayLikeBase(AutoMapperTextLikeBase):
         Spark expects the children of a list to have properties in the same order
         So if we have a schema we need to order in that order otherwise just make sure all children have the same order
         """
-        if self.value is not None or not isinstance(self.value, list):
+        if self.value is None or not isinstance(self.value, list):
             return
 
         from spark_auto_mapper.data_types.complex.complex_base import AutoMapperDataTypeComplexBase

@@ -6,8 +6,6 @@ from pyspark.sql.functions import array, when, coalesce, col, struct
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import lit, filter
 
-# noinspection PyUnresolvedReferences
-
 from spark_auto_mapper.data_types.complex.complex_base import (
     AutoMapperDataTypeComplexBase,
 )
