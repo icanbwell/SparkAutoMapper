@@ -1,21 +1,25 @@
 from typing import Dict
 
-from pyspark.sql import SparkSession, Column, DataFrame
-from pyspark.sql.functions import col, struct, when, array, coalesce, filter
-
-# noinspection PyUnresolvedReferences
-from pyspark.sql.functions import lit
-
-# noinspection PyUnresolvedReferences
+from pyspark.sql import SparkSession, DataFrame, Column
 from pyspark.sql.types import StructType, StructField, StringType
-
 from spark_auto_mapper.data_types.complex.complex_base import (
     AutoMapperDataTypeComplexBase,
 )
 
-from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.data_types.list import AutoMapperList
+
+from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
+from pyspark.sql.functions import (
+    lit,
+    concat,
+    array,
+    col,
+    struct,
+    when,
+    filter,
+    coalesce,
+)
 
 
 def test_auto_mapper_concat_multiple_items_structs_different_elements_with_schema(
@@ -86,25 +90,15 @@ def test_auto_mapper_concat_multiple_items_structs_different_elements_with_schem
         col("b.last_name").alias("c"),
         lit(None).alias("b"),
     )
-    assert str(sql_expressions["dst2"]) == str(
-        when(
-            array(
-                struct1,
-                struct2,
-            ).isNotNull(),
-            filter(
-                coalesce(
-                    array(
-                        struct1,
-                        struct2,
-                    ),
-                    array(),
-                ),
-                lambda x: x.isNotNull(),
-            ),
-        ).alias("dst2")
+    array1 = when(
+        array(struct1).isNotNull(),
+        filter(coalesce(array(struct1), array()), lambda x: x.isNotNull()),
     )
-
+    array2 = when(
+        array(struct2).isNotNull(),
+        filter(coalesce(array(struct2), array()), lambda x: x.isNotNull()),
+    )
+    assert str(sql_expressions["dst2"]) == str(concat(array1, array2).alias("dst2"))
     result_df: DataFrame = mapper.transform(df=df)
 
     # Assert
