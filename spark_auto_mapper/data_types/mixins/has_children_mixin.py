@@ -75,6 +75,9 @@ class HasChildrenMixin:
             v for v in self.children if isinstance(v, AutoMapperDataTypeComplexBase)
         ]:
             child.add_missing_values_and_order(ordered_superset_of_all_properties)
+            child.include_null_properties(
+                True
+            )  # must include null properties or will strip the ones we jsut added
 
     def set_children_schema(
         self, schema: Optional[Union[StructType, DataType]]
