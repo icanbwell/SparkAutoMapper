@@ -33,12 +33,12 @@ class AutoMapperWithComplex(AutoMapperContainer):
         super().__init__()
 
         # check if entity is using Extension and if yes, get schema WITH extension
-        field_names: List[str] = list(entity.get_child_mappers().keys())
-        has_extension: bool = "extension" in field_names
+        # field_names: List[str] = list(entity.get_child_mappers().keys())
+        # has_extension: bool = "extension" in field_names
 
         # ask entity for its schema
         schema: Union[StructType, DataType, None] = entity.get_schema(
-            include_extension=include_extension or has_extension
+            include_extension=include_extension  # or has_extension
         )
         column_schema: Dict[str, StructField] = {}
         if schema is not None and isinstance(schema, StructType):
@@ -50,7 +50,7 @@ class AutoMapperWithComplex(AutoMapperContainer):
                     extension_schema: Union[StructType, DataType, None]
                     # since there is a column called extension then get the schema with extension
                     extension_schema = mapper.get_schema(
-                        include_extension=include_extension or has_extension,
+                        include_extension=include_extension  # or has_extension,
                     )
                     if extension_schema is not None:
                         if (
@@ -62,10 +62,13 @@ class AutoMapperWithComplex(AutoMapperContainer):
                                 + [extension_schema.fields[0]]
                             )
             column_schema = (
-                {f.name: f for f in schema.fields if f.name in field_names}
-                if schema and use_schema
-                else {}
+                {f.name: f for f in schema.fields} if schema and use_schema else {}
             )
+            # column_schema = (
+            #     {f.name: f for f in schema.fields if f.name in field_names}
+            #     if schema and use_schema
+            #     else {}
+            # )
 
         self.generate_mappers(
             mappers_dict={

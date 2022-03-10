@@ -58,7 +58,7 @@ class AutoMapper(AutoMapperContainer):
         include_null_properties: bool = False,
         use_single_select: bool = True,
         verify_row_count: bool = True,
-        skip_schema_validation: List[str] = [],
+        skip_schema_validation: List[str] = ["extension"],
         skip_if_columns_null_or_empty: Optional[List[str]] = None,
         keep_null_rows: bool = False,
         filter_by: Optional[str] = None,
