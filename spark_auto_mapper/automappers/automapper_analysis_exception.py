@@ -11,7 +11,7 @@ class AutoMapperAnalysisException(Exception):
     def __init__(
         self,
         *,
-        automapper_name: str,
+        automapper_name: Optional[str],
         msg: str,
         column_name: str,
         check_schema_result: Optional[CheckSchemaResult],
@@ -28,7 +28,7 @@ class AutoMapperAnalysisException(Exception):
         self.column_name: str = column_name
         self.check_schema_result: Optional[CheckSchemaResult] = check_schema_result
         self.column_values: Optional[List[Any]] = column_values
-        self.automapper_name: str = automapper_name
+        self.automapper_name: Optional[str] = automapper_name
         super().__init__(msg)
 
     def __str__(self) -> str:

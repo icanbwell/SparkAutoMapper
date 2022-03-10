@@ -676,3 +676,16 @@ class AutoMapperDataTypeBase:
         :return: result of checking schema
         """
         return None
+
+    def filter_schema_by_fields_present(self, column_data_type: DataType) -> DataType:
+        fields: List[str] = self.get_fields()
+        if isinstance(column_data_type, StructType) and len(fields) > 0:
+            # return only the values that match the fields
+            column_data_type.fields = [
+                c
+                for c in column_data_type.fields
+                if c.name in fields or c.nullable is False
+            ]
+            column_data_type.names = [f.name for f in column_data_type.fields]
+
+        return column_data_type

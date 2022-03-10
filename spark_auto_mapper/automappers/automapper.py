@@ -44,29 +44,29 @@ class AutoMapper(AutoMapperContainer):
 
     # noinspection PyDefaultArgument
     def __init__(
-            self,
-            keys: Optional[List[str]] = None,
-            view: Optional[str] = None,
-            source_view: Optional[str] = None,
-            keep_duplicates: bool = False,
-            drop_key_columns: bool = True,
-            checkpoint_after_columns: Optional[int] = None,
-            checkpoint_path: Optional[Union[str, Path]] = None,
-            reuse_existing_view: bool = False,
-            use_schema: bool = True,
-            include_extension: bool = False,
-            include_null_properties: bool = False,
-            use_single_select: bool = True,
-            verify_row_count: bool = True,
-            skip_schema_validation: List[str] = [],
-            skip_if_columns_null_or_empty: Optional[List[str]] = None,
-            keep_null_rows: bool = False,
-            filter_by: Optional[str] = None,
-            logger: Optional[Logger] = None,
-            check_schema_for_all_columns: bool = False,
-            copy_all_unmapped_properties: bool = False,
-            copy_all_unmapped_properties_exclude: Optional[List[str]] = None,
-            log_level: Optional[Union[int, str]] = None,
+        self,
+        keys: Optional[List[str]] = None,
+        view: Optional[str] = None,
+        source_view: Optional[str] = None,
+        keep_duplicates: bool = False,
+        drop_key_columns: bool = True,
+        checkpoint_after_columns: Optional[int] = None,
+        checkpoint_path: Optional[Union[str, Path]] = None,
+        reuse_existing_view: bool = False,
+        use_schema: bool = True,
+        include_extension: bool = False,
+        include_null_properties: bool = False,
+        use_single_select: bool = True,
+        verify_row_count: bool = True,
+        skip_schema_validation: List[str] = [],
+        skip_if_columns_null_or_empty: Optional[List[str]] = None,
+        keep_null_rows: bool = False,
+        filter_by: Optional[str] = None,
+        logger: Optional[Logger] = None,
+        check_schema_for_all_columns: bool = False,
+        copy_all_unmapped_properties: bool = False,
+        copy_all_unmapped_properties_exclude: Optional[List[str]] = None,
+        log_level: Optional[Union[int, str]] = None,
     ):
         """
         Creates an AutoMapper
@@ -145,7 +145,7 @@ class AutoMapper(AutoMapperContainer):
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
     def _transform_with_data_frame_single_select(
-            self, df: DataFrame, source_df: DataFrame, keys: List[str]
+        self, df: DataFrame, source_df: DataFrame, keys: List[str]
     ) -> DataFrame:
         """
         This internal function transforms the data frame using the mappings in a single select command
@@ -171,7 +171,7 @@ class AutoMapper(AutoMapperContainer):
                     p for p in source_properties if p not in mapped_properties
                 ]
                 copy_all_unmapped_properties_exclude: List[str] = (
-                        self.copy_all_unmapped_properties_exclude or []
+                    self.copy_all_unmapped_properties_exclude or []
                 )
                 column_schema: Dict[str, StructField] = (
                     {f.name: f for f in source_df.schema} if self.use_schema else {}
@@ -181,8 +181,8 @@ class AutoMapper(AutoMapperContainer):
                 column_specs.extend(
                     [
                         AutoMapperDataTypeColumn(column_name)
-                            .get_column_spec(source_df=source_df, current_column=None)
-                            .cast(column_schema[column_name].dataType)
+                        .get_column_spec(source_df=source_df, current_column=None)
+                        .cast(column_schema[column_name].dataType)
                         if column_name in column_schema
                         else AutoMapperDataTypeColumn(column_name).get_column_spec(
                             source_df=source_df, current_column=None
@@ -215,8 +215,8 @@ class AutoMapper(AutoMapperContainer):
                         CheckSchemaResult
                     ] = mapper.check_schema(parent_column=None, source_df=source_df)
                     if (
-                            check_schema_result
-                            and len(check_schema_result.result.errors) > 0
+                        check_schema_result
+                        and len(check_schema_result.result.errors) > 0
                     ):
                         self.logger.info(
                             f"==== Schema Mismatch [{column_name}] ==="
@@ -231,8 +231,8 @@ class AutoMapper(AutoMapperContainer):
             if self.checkpoint_path:
                 checkpoint_path = (
                     Path(self.checkpoint_path)
-                        .joinpath(self.view or "df")
-                        .joinpath("final")
+                    .joinpath(self.view or "df")
+                    .joinpath("final")
                 )
                 df.write.parquet(str(checkpoint_path))
                 df = df.sql_ctx.read.parquet(str(checkpoint_path))
@@ -283,7 +283,7 @@ class AutoMapper(AutoMapperContainer):
                     )
                     msg: str = ""
                     if isinstance(e2, AnalysisException) and e2.desc.startswith(
-                            "cannot resolve 'array"
+                        "cannot resolve 'array"
                     ):
                         msg = (
                             "Looks like the elements of the array have different structures.  "
@@ -315,7 +315,7 @@ class AutoMapper(AutoMapperContainer):
                         df=df,
                         e=e2,
                         source_df=source_df,
-                        column_values=column_values
+                        column_values=column_values,
                     )
                     raise AutoMapperAnalysisException(
                         automapper_name=self.view,
@@ -336,7 +336,7 @@ class AutoMapper(AutoMapperContainer):
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
     def transform_with_data_frame(
-            self, df: DataFrame, source_df: Optional[DataFrame], keys: List[str]
+        self, df: DataFrame, source_df: Optional[DataFrame], keys: List[str]
     ) -> DataFrame:
         """
         Internal function called by base class to transform the data frame
@@ -361,8 +361,8 @@ class AutoMapper(AutoMapperContainer):
                         else:
                             checkpoint_path: Path = (
                                 Path(self.checkpoint_path)
-                                    .joinpath(self.view or "df")
-                                    .joinpath(str(current_child_number))
+                                .joinpath(self.view or "df")
+                                .joinpath(str(current_child_number))
                             )
                             df.write.parquet(str(checkpoint_path))
                             df = df.sql_ctx.read.parquet(str(checkpoint_path))
@@ -422,12 +422,12 @@ class AutoMapper(AutoMapperContainer):
 
     @staticmethod
     def _get_message_for_exception(
-            *,
-            column_name: str,
-            df: DataFrame,
-            e: Exception,
-            source_df: DataFrame,
-            column_values: Optional[List[Any]],
+        *,
+        column_name: str,
+        df: DataFrame,
+        e: Exception,
+        source_df: DataFrame,
+        column_values: Optional[List[Any]],
     ) -> str:
         """
         This internal function create a message string for the given exception
@@ -479,8 +479,8 @@ class AutoMapper(AutoMapperContainer):
         destination_df: DataFrame = (
             df.sql_ctx.table(self.view)
             if self.view
-               and self.reuse_existing_view
-               and SparkHelpers.spark_table_exists(sql_ctx=df.sql_ctx, view=self.view)
+            and self.reuse_existing_view
+            and SparkHelpers.spark_table_exists(sql_ctx=df.sql_ctx, view=self.view)
             else source_df.select(self.keys)
         )
 

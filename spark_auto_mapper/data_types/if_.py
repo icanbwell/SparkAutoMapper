@@ -16,7 +16,9 @@ from spark_auto_mapper.type_definitions.wrapper_types import (
 _TAutoMapperDataType = TypeVar("_TAutoMapperDataType", bound=AutoMapperAnyDataType)
 
 
-class AutoMapperIfDataType(AutoMapperDataTypeBase, HasChildrenMixin, Generic[_TAutoMapperDataType]):
+class AutoMapperIfDataType(
+    AutoMapperDataTypeBase, HasChildrenMixin, Generic[_TAutoMapperDataType]
+):
     """
     If check returns value if the checks passes else when_not
     """

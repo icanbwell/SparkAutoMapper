@@ -64,7 +64,11 @@ class AutoMapperWithColumnBase(AutoMapperBase):
                 )
             # if the type has a schema then apply it
             if self.column_schema:
-                column_spec = column_spec.cast(self.column_schema.dataType)
+                column_data_type: DataType = self.column_schema.dataType
+                column_data_type = self.value.filter_schema_by_fields_present(
+                    column_data_type
+                )
+                column_spec = column_spec.cast(column_data_type)
             # if dst_column already exists in source_df then prepend with ___ to make it unique
             if source_df is not None and self.dst_column in source_df.columns:
                 return column_spec.alias(f"___{self.dst_column}")
@@ -104,7 +108,9 @@ class AutoMapperWithColumnBase(AutoMapperBase):
             column_spec = child.get_column_spec(
                 source_df=source_df, current_column=None
             )
-            result = child.check_schema(parent_column=self.dst_column, source_df=source_df)
+            # result = child.check_schema(
+            #     parent_column=self.dst_column, source_df=source_df
+            # )
             try:
                 # get just a few rows so Spark can infer the schema
                 first_few_rows_df: DataFrame = (
