@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union, List
 from deprecated import deprecated
 
 from pyspark.sql import Column, DataFrame
@@ -34,3 +34,9 @@ class AutoMapperAmountDataType(AutoMapperDataTypeBase):
         ):
             column_spec = column_spec.cast("double")
         return column_spec
+
+    @property
+    def children(
+        self,
+    ) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
+        return self.value

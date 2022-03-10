@@ -1,4 +1,4 @@
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List, Union
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import struct
@@ -6,6 +6,7 @@ from pyspark.sql.functions import struct
 from spark_auto_mapper.data_types.complex.complex_base import (
     AutoMapperDataTypeComplexBase,
 )
+from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 
 
 class AutoMapperDataTypeStruct(AutoMapperDataTypeComplexBase):
@@ -24,3 +25,9 @@ class AutoMapperDataTypeStruct(AutoMapperDataTypeComplexBase):
                 for key, value in self.value.items()
             ]
         )
+
+    @property
+    def children(
+        self,
+    ) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
+        return list(self.value.values())

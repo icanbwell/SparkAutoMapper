@@ -1,4 +1,4 @@
-from typing import Generic, Optional, TypeVar
+from typing import Generic, Optional, TypeVar, List, Union
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.utils import AnalysisException
@@ -80,3 +80,9 @@ class AutoMapperIfColumnExistsType(
                     source_df=source_df, current_column=current_column
                 )
         return column_spec
+
+    @property
+    def children(
+        self,
+    ) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
+        return [c for c in [self.if_exists_column, self.if_not_exists] if c is not None]

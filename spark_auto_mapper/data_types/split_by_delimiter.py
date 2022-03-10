@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Optional, Union, List
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import split
@@ -40,3 +40,9 @@ class AutoMapperSplitByDelimiterDataType(AutoMapperArrayLikeBase):
             self.delimiter,
         )
         return column_spec
+
+    @property
+    def children(
+        self,
+    ) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
+        return self.column

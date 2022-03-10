@@ -100,3 +100,9 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
     #             if not (isinstance(v, AutoMapperDataTypeLiteral) and v.value is None)
     #         ]
     #     )
+
+    @property
+    def children(
+        self,
+    ) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
+        return list(self.value.values())

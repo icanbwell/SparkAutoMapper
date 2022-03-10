@@ -1,3 +1,4 @@
+from abc import abstractmethod
 from typing import Callable, List, Optional, TypeVar, Union, cast, Type
 
 # noinspection PyPackageRequirements
@@ -245,7 +246,7 @@ class AutoMapperDataTypeBase:
 
 
         :param self: Set by Python.  No need to pass.
-        :return: a flatten automapper type
+        :return: A flatten automapper type
         :example: A.flatten(A.column("column"))
         """
         from spark_auto_mapper.data_types.flatten import AutoMapperFlattenDataType
@@ -692,3 +693,13 @@ class AutoMapperDataTypeBase:
             new_column_data_type.names = [f.name for f in new_column_data_type.fields]
 
         return column_data_type
+
+    @property
+    @abstractmethod
+    def children(
+        self,
+    ) -> Union["AutoMapperDataTypeBase", List["AutoMapperDataTypeBase"]]:
+        """
+        The subclasses should implement this
+        """
+        raise NotImplementedError

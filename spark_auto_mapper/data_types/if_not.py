@@ -89,3 +89,9 @@ class AutoMapperIfNotDataType(AutoMapperDataTypeBase, Generic[_TAutoMapperDataTy
             )
 
         return column_spec
+
+    @property
+    def children(
+        self,
+    ) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
+        return self.value

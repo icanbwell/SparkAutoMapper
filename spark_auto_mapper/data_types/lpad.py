@@ -1,8 +1,9 @@
-from typing import Optional
+from typing import Optional, List, Union
 
 from pyspark.sql import DataFrame, Column
 from pyspark.sql.functions import lpad
 
+from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
 from spark_auto_mapper.type_definitions.wrapper_types import (
     AutoMapperColumnOrColumnLikeType,
@@ -33,3 +34,9 @@ class AutoMapperLPadDataType(AutoMapperTextLikeBase):
             pad=self.pad,
         )
         return column_spec
+
+    @property
+    def children(
+        self,
+    ) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
+        return self.column

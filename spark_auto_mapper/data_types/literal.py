@@ -1,10 +1,11 @@
 from datetime import date, datetime
-from typing import Union, Optional
+from typing import Union, Optional, List
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import lit
 from pyspark.sql.types import DataType
 
+from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
 from typing import TYPE_CHECKING
 
@@ -48,3 +49,9 @@ class AutoMapperDataTypeLiteral(AutoMapperTextLikeBase):
             )
 
         raise ValueError(f"value: {self.value} is not str, int,float, date or datetime")
+
+    @property
+    def children(
+        self,
+    ) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
+        return []

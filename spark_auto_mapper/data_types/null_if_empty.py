@@ -1,4 +1,4 @@
-from typing import TypeVar, Union, Generic, Optional
+from typing import TypeVar, Union, Generic, Optional, List
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import when, lit
@@ -49,3 +49,9 @@ class AutoMapperNullIfEmptyDataType(
         ).otherwise(value_spec)
 
         return column_spec
+
+    @property
+    def children(
+        self,
+    ) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
+        return self.value  # type: ignore

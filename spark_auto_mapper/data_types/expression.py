@@ -1,9 +1,10 @@
-from typing import Optional
+from typing import Optional, List, Union
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import expr
 
 from spark_auto_mapper.data_types.array_base import AutoMapperArrayLikeBase
+from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 
 
 class AutoMapperDataTypeExpression(AutoMapperArrayLikeBase):
@@ -20,3 +21,9 @@ class AutoMapperDataTypeExpression(AutoMapperArrayLikeBase):
             return expr(self.value)
 
         raise ValueError(f"value: {self.value} is not str")
+
+    @property
+    def children(
+        self,
+    ) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
+        return []

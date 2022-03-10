@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List, Union
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import date_format
@@ -35,3 +35,9 @@ class AutoMapperFormatDateTimeDataType(AutoMapperDataTypeBase):
             ),
             format=self.format_,
         )
+
+    @property
+    def children(
+        self,
+    ) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
+        return self.value

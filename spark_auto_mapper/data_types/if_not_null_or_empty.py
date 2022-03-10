@@ -1,4 +1,4 @@
-from typing import TypeVar, Union, Generic, Optional, cast
+from typing import TypeVar, Union, Generic, Optional, cast, List
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import when
@@ -39,13 +39,13 @@ class AutoMapperIfNotNullOrEmptyDataType(
             else AutoMapperValueParser.parse_value(value)
         )
         if when_null_or_empty:
-            self.when_null: AutoMapperDataTypeBase = (
+            self.when_null_or_empty: AutoMapperDataTypeBase = (
                 cast(AutoMapperDataTypeBase, when_null_or_empty)
                 if isinstance(value, AutoMapperDataTypeBase)
                 else AutoMapperValueParser.parse_value(value)
             )
         else:
-            self.when_null = AutoMapperDataTypeLiteral(None)
+            self.when_null_or_empty = AutoMapperDataTypeLiteral(None)
 
     def include_null_properties(self, include_null_properties: bool) -> None:
         self.value.include_null_properties(
@@ -62,7 +62,7 @@ class AutoMapperIfNotNullOrEmptyDataType(
             | self.check.get_column_spec(
                 source_df=source_df, current_column=current_column
             ).eqNullSafe(""),
-            self.when_null.get_column_spec(
+            self.when_null_or_empty.get_column_spec(
                 source_df=source_df, current_column=current_column
             ),
         ).otherwise(
@@ -72,3 +72,9 @@ class AutoMapperIfNotNullOrEmptyDataType(
         )
 
         return column_spec
+
+    @property
+    def children(
+        self,
+    ) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
+        return [c for c in [self.value, self.when_null_or_empty] if c is not None]

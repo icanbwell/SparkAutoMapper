@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List, Union
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import from_unixtime, to_timestamp
@@ -46,3 +46,9 @@ class AutoMapperUnixTimestampType(AutoMapperDataTypeBase):
                 source_df=source_df, current_column=current_column
             )
             return column_spec
+
+    @property
+    def children(
+        self,
+    ) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
+        return self.value

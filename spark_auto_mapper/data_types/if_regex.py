@@ -84,3 +84,9 @@ class AutoMapperIfRegExDataType(AutoMapperDataTypeBase, Generic[_TAutoMapperData
             )
 
         return column_spec
+
+    @property
+    def children(
+        self,
+    ) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
+        return [c for c in [self.value, self.else_] if c is not None]
