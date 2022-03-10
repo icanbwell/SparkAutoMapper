@@ -6,7 +6,7 @@ from pyspark.sql import Column, DataFrame
 from typing import TYPE_CHECKING
 
 # noinspection PyPackageRequirements
-from pyspark.sql.types import StructType, StringType, DataType
+from pyspark.sql.types import StructType, StringType, DataType, ArrayType
 from spark_auto_mapper.automappers.check_schema_result import CheckSchemaResult
 
 if TYPE_CHECKING:
@@ -679,13 +679,16 @@ class AutoMapperDataTypeBase:
 
     def filter_schema_by_fields_present(self, column_data_type: DataType) -> DataType:
         fields: List[str] = self.get_fields()
-        if isinstance(column_data_type, StructType) and len(fields) > 0:
+        new_column_data_type: DataType = column_data_type
+        if isinstance(new_column_data_type, ArrayType):
+            new_column_data_type = new_column_data_type.elementType
+        if isinstance(new_column_data_type, StructType) and len(fields) > 0:
             # return only the values that match the fields
-            column_data_type.fields = [
+            new_column_data_type.fields = [
                 c
-                for c in column_data_type.fields
+                for c in new_column_data_type.fields
                 if c.name in fields or c.nullable is False
             ]
-            column_data_type.names = [f.name for f in column_data_type.fields]
+            new_column_data_type.names = [f.name for f in new_column_data_type.fields]
 
         return column_data_type

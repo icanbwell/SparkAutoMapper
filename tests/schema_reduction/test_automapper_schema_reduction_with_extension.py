@@ -99,6 +99,7 @@ class MyProcessingStatusExtension(AutoMapperDataTypeComplexBase):
         return StructType(
             [
                 StructField("url", StringType()),
+                StructField("extra", StringType(), True),
                 StructField(
                     "extension",
                     ArrayType(
@@ -165,7 +166,12 @@ def test_auto_mapper_schema_reduction_with_extension(
     source_df: DataFrame = spark_session.table("patients")
 
     # Act
-    mapper = AutoMapper(view="members", source_view="patients",).complex(
+    mapper = AutoMapper(
+        view="members",
+        source_view="patients",
+        enable_schema_reduction=True,
+        skip_schema_validation=[],
+    ).complex(
         MyClass(
             name=A.column("last_name"),
             age=A.number(A.column("my_age")),
