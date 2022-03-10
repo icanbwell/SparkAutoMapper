@@ -20,8 +20,8 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
         super().__init__()
 
         # this flag specifies that we should include all values in the column_spec event NULLs
-        # self.include_nulls: bool = "include_nulls" in kwargs
-        self.include_nulls: bool = False
+        self.include_nulls: bool = "include_nulls" in kwargs
+        # self.include_nulls: bool = False
 
         self.value: Dict[str, AutoMapperDataTypeBase] = {}
         self.set_value_from_kwargs(kwargs)
@@ -47,13 +47,12 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
         self.set_value_from_kwargs(new_dict)
 
     def include_null_properties(self, include_null_properties: bool) -> None:
-        pass
-        # self.include_nulls = include_null_properties
-        # # now recursively set this into any other complex children
-        # for key, value in self.get_child_mappers().items():
-        #     value.include_null_properties(
-        #         include_null_properties=include_null_properties
-        #     )
+        self.include_nulls = include_null_properties
+        # now recursively set this into any other complex children
+        for key, value in self.get_child_mappers().items():
+            value.include_null_properties(
+                include_null_properties=include_null_properties
+            )
 
     def get_column_spec(
         self, source_df: Optional[DataFrame], current_column: Optional[Column]

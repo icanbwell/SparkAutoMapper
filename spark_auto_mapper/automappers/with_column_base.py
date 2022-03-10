@@ -65,9 +65,9 @@ class AutoMapperWithColumnBase(AutoMapperBase):
             # if the type has a schema then apply it
             if self.column_schema:
                 column_data_type: DataType = self.column_schema.dataType
-                column_data_type = self.value.filter_schema_by_fields_present(
-                    column_data_type
-                )
+                # column_data_type = self.value.filter_schema_by_fields_present(
+                #     column_data_type
+                # )
                 column_spec = column_spec.cast(column_data_type)
             # if dst_column already exists in source_df then prepend with ___ to make it unique
             if source_df is not None and self.dst_column in source_df.columns:
