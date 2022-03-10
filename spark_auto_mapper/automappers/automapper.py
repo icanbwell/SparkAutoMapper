@@ -86,7 +86,7 @@ class AutoMapper(AutoMapperContainer):
         :param include_null_properties: If you want to include null properties
         :param use_single_select: This is a faster way to run the AutoMapper since it will select
                 all the columns at once.
-                However this makes it harder to debug since you don't know what column failed
+                However, this makes it harder to debug since you don't know what column failed
         :param verify_row_count: verifies that the count of rows remains the same before and after the transformation
         :param skip_schema_validation: skip schema checks on these columns
         :param skip_if_columns_null_or_empty: skip creating the record if any of these columns are null or empty
