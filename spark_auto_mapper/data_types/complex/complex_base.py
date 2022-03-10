@@ -90,10 +90,13 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
         return None
 
     def get_fields(self) -> List[str]:
-        return list(
-            [
-                k
-                for k, v in self.value.items()
-                if not (isinstance(v, AutoMapperDataTypeLiteral) and v.value is None)
-            ]
-        )
+        return list(self.value.keys())
+
+    # def get_fields(self) -> List[str]:
+    #     return list(
+    #         [
+    #             k
+    #             for k, v in self.value.items()
+    #             if not (isinstance(v, AutoMapperDataTypeLiteral) and v.value is None)
+    #         ]
+    #     )
