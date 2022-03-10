@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING
 
 # noinspection PyPackageRequirements
 from pyspark.sql.types import StructType, StringType, DataType
+from spark_auto_mapper.automappers.check_schema_result import CheckSchemaResult
 
 if TYPE_CHECKING:
     from spark_auto_mapper.data_types.amount import AutoMapperAmountDataType
@@ -662,3 +663,29 @@ class AutoMapperDataTypeBase:
 
     def add_missing_values_and_order(self, expected_keys: List[str]) -> None:
         return
+
+    def check_schema(
+        self, parent_column: Optional[str], source_df: Optional[DataFrame]
+    ) -> Optional[CheckSchemaResult]:
+        """
+        Checks the schema
+
+
+        :param parent_column: parent column
+        :param source_df: source data frame
+        :return: result of checking schema
+        """
+        return None
+
+    def filter_schema_by_fields_present(self, column_data_type: DataType) -> DataType:
+        fields: List[str] = self.get_fields()
+        if isinstance(column_data_type, StructType) and len(fields) > 0:
+            # return only the values that match the fields
+            column_data_type.fields = [
+                c
+                for c in column_data_type.fields
+                if c.name in fields or c.nullable is False
+            ]
+            column_data_type.names = [f.name for f in column_data_type.fields]
+
+        return column_data_type

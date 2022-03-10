@@ -289,8 +289,9 @@ class AutoMapper(AutoMapperContainer):
                             "Looks like the elements of the array have different structures.  "
                             "All items in an array should have the exact same structure.  "
                             "You can pass in include_nulls to AutoMapperDataTypeComplexBase to force it to create "
-                            "null values for each element in the structure. "
+                            "null values for each element in the structure. \n"
                         )
+                        # find the data types of each item in the list
                     column_values: Optional[List[Any]] = None
                     # This can cause GC overhead limit reached error obfuscating the actual error
                     # try:
@@ -317,6 +318,7 @@ class AutoMapper(AutoMapperContainer):
                         column_values=column_values,
                     )
                     raise AutoMapperAnalysisException(
+                        automapper_name=self.view,
                         msg=msg,
                         column_name=column_name,
                         check_schema_result=check_schema_result,

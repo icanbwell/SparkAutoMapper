@@ -5,6 +5,7 @@ from pyspark.sql.functions import array, coalesce
 from pyspark.sql.functions import lit, filter
 from pyspark.sql.functions import when
 from pyspark.sql.types import StructType, ArrayType, StructField, DataType
+from spark_auto_mapper.automappers.check_schema_result import CheckSchemaResult
 
 from spark_auto_mapper.data_types.array_base import AutoMapperArrayLikeBase
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
@@ -197,3 +198,17 @@ class AutoMapperList(AutoMapperArrayLikeBase, HasChildrenMixin, Generic[_T]):
 
     def add_missing_values_and_order(self, expected_keys: List[str]) -> None:
         HasChildrenMixin.add_missing_values_and_order(self, expected_keys=expected_keys)
+
+    def check_schema(
+        self, parent_column: Optional[str], source_df: Optional[DataFrame]
+    ) -> Optional[CheckSchemaResult]:
+        # children: List[AutoMapperDataTypeBase]
+        # if not isinstance(self.children, list):
+        #     children = [self.children]
+        # else:
+        #     children = self.children
+
+        # child: AutoMapperDataTypeBase
+        # for child in children:
+        #     result = child.check_schema(parent_column=None, source_df=source_df)
+        return None

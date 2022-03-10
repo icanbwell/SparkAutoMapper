@@ -16,3 +16,6 @@ class CheckSchemaResult:
 
     def __str__(self) -> str:
         return str(self.result)
+
+    def to_string(self, include_info: bool = False) -> str:
+        return self.result.to_string(include_info=include_info)

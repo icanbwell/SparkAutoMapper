@@ -10,6 +10,8 @@ class AutoMapperAnalysisException(Exception):
 
     def __init__(
         self,
+        *,
+        automapper_name: Optional[str],
         msg: str,
         column_name: str,
         check_schema_result: Optional[CheckSchemaResult],
@@ -26,6 +28,7 @@ class AutoMapperAnalysisException(Exception):
         self.column_name: str = column_name
         self.check_schema_result: Optional[CheckSchemaResult] = check_schema_result
         self.column_values: Optional[List[Any]] = column_values
+        self.automapper_name: Optional[str] = automapper_name
         super().__init__(msg)
 
     def __str__(self) -> str:
@@ -33,8 +36,11 @@ class AutoMapperAnalysisException(Exception):
         String representation
         """
         result: str = "AutoMapperAnalysisException: \n"
+        result += f" in automapper [{self.automapper_name}] \n"
+        result += f" in column [{self.column_name}] \n"
+        result += super().__str__() + "\n"
         if self.check_schema_result:
-            result += str(self.check_schema_result)
+            result += self.check_schema_result.to_string() + "\n"
         if self.column_values:
             result += "\n"
             result += "Sample source values: \n"
