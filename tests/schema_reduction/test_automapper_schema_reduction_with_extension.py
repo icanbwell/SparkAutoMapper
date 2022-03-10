@@ -1,9 +1,12 @@
 from typing import Dict, Optional, Union
 
+# noinspection PyPackageRequirements
 from pyspark.sql import SparkSession, Column, DataFrame
 
-# noinspection PyUnresolvedReferences
+# noinspection PyPackageRequirements
 from pyspark.sql.functions import col
+
+# noinspection PyPackageRequirements
 from pyspark.sql.types import (
     ArrayType,
     LongType,
@@ -32,9 +35,15 @@ class MyProcessingStatusExtensionItem(AutoMapperDataTypeComplexBase):
         self,
         url: str,
         valueString: Optional[AutoMapperTextLikeBase] = None,
+        valueUrl: Optional[AutoMapperTextLikeBase] = None,
         valueDateTime: Optional[AutoMapperDateInputType] = None,
     ) -> None:
-        super().__init__(url=url, valueString=valueString, valueDateTime=valueDateTime)
+        super().__init__(
+            url=url,
+            valueString=valueString,
+            valueUrl=valueUrl,
+            valueDateTime=valueDateTime,
+        )
 
 
 class MyProcessingStatusExtension(AutoMapperDataTypeComplexBase):
@@ -78,6 +87,14 @@ class MyProcessingStatusExtension(AutoMapperDataTypeComplexBase):
     def get_schema(
         self, include_extension: bool
     ) -> Optional[Union[StructType, DataType]]:
+        return MyProcessingStatusExtension.get_schema_static(
+            include_extension=include_extension
+        )
+
+    @staticmethod
+    def get_schema_static(
+        include_extension: bool = False,
+    ) -> StructType:
         return StructType(
             [
                 StructField("url", StringType()),
@@ -88,6 +105,7 @@ class MyProcessingStatusExtension(AutoMapperDataTypeComplexBase):
                             [
                                 StructField("url", StringType()),
                                 StructField("valueString", StringType()),
+                                StructField("valueUrl", StringType()),
                                 StructField("valueDateTime", TimestampType()),
                             ]
                         )
@@ -121,6 +139,9 @@ class MyClass(AutoMapperDataTypeComplexBase):
             [
                 StructField("name", StringType(), False),
                 StructField("age", LongType(), True),
+                StructField(
+                    "extension", MyProcessingStatusExtension.get_schema_static(), True
+                ),
             ]
         )
         return schema
