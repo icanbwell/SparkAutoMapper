@@ -22,6 +22,7 @@ class AutoMapperContainer(AutoMapperBase):
         include_null_properties: bool,
         skip_schema_validation: List[str],
         skip_if_columns_null_or_empty: Optional[List[str]],
+        enable_schema_reduction: bool,
     ) -> None:
         column: str
         value: AutoMapperAnyDataType
@@ -36,6 +37,7 @@ class AutoMapperContainer(AutoMapperBase):
                 include_null_properties=include_null_properties
                 and column not in skip_schema_validation,
                 skip_if_columns_null_or_empty=skip_if_columns_null_or_empty,
+                enable_schema_reduction=enable_schema_reduction,
             )
             assert isinstance(automapper, AutoMapperWithColumnBase), type(automapper)
             self.mappers[column] = automapper

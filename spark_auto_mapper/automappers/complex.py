@@ -18,6 +18,7 @@ class AutoMapperWithComplex(AutoMapperContainer):
         include_null_properties: bool,
         skip_schema_validation: List[str],
         skip_if_columns_null_or_empty: Optional[List[str]],
+        enable_schema_reduction: bool,
     ) -> None:
         """
         Create mapping for an entity
@@ -41,6 +42,7 @@ class AutoMapperWithComplex(AutoMapperContainer):
             include_extension=include_extension or has_extension
         )
         column_schema: Dict[str, StructField] = {}
+        self.enable_schema_reduction: bool = enable_schema_reduction
         if schema is not None and isinstance(schema, StructType):
             # if entity has an extension then ask the extension for its schema
             column_name: str
@@ -78,4 +80,5 @@ class AutoMapperWithComplex(AutoMapperContainer):
             include_null_properties=include_null_properties or use_schema,
             skip_schema_validation=skip_schema_validation,
             skip_if_columns_null_or_empty=skip_if_columns_null_or_empty,
+            enable_schema_reduction=self.enable_schema_reduction,
         )

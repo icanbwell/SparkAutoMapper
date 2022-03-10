@@ -27,6 +27,7 @@ from spark_auto_mapper.data_types.number import AutoMapperNumberDataType
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 from spark_auto_mapper.type_definitions.defined_types import AutoMapperDateInputType
+from tests.conftest import clean_spark_session
 
 
 class MyProcessingStatusExtensionItem(AutoMapperDataTypeComplexBase):
@@ -151,6 +152,8 @@ def test_auto_mapper_schema_reduction_with_extension(
     spark_session: SparkSession,
 ) -> None:
     # Arrange
+    clean_spark_session(spark_session)
+
     spark_session.createDataFrame(
         [
             (1, "Qureshi", "Imran", 45),

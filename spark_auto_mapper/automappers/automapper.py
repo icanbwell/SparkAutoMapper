@@ -67,6 +67,7 @@ class AutoMapper(AutoMapperContainer):
         copy_all_unmapped_properties: bool = False,
         copy_all_unmapped_properties_exclude: Optional[List[str]] = None,
         log_level: Optional[Union[int, str]] = None,
+        enable_schema_reduction: bool = False,
     ):
         """
         Creates an AutoMapper
@@ -142,8 +143,10 @@ class AutoMapper(AutoMapperContainer):
         ] = copy_all_unmapped_properties_exclude
 
         self.entity_name: Optional[str] = None
+        self.enable_schema_reduction: bool = enable_schema_reduction
 
-    # noinspection PyMethodMayBeStatic,PyUnusedLocal
+        # noinspection PyMethodMayBeStatic,PyUnusedLocal
+
     def _transform_with_data_frame_single_select(
         self, df: DataFrame, source_df: DataFrame, keys: List[str]
     ) -> DataFrame:
@@ -618,6 +621,7 @@ class AutoMapper(AutoMapperContainer):
             include_null_properties=self.include_null_properties,
             skip_schema_validation=self.skip_schema_validation,
             skip_if_columns_null_or_empty=self.skip_if_columns_null_or_empty,
+            enable_schema_reduction=self.enable_schema_reduction,
         )
 
         self.entity_name = entity.__class__.__name__
