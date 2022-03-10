@@ -32,9 +32,15 @@ class AutoMapperWithComplex(AutoMapperContainer):
         """
         super().__init__()
 
+        # check if entity is using Extension and if yes, get schema WITH etension
+        has_extension: bool = False
+        for column_name, mapper in entity.get_child_mappers().items():
+            if column_name == "extension":
+                has_extension = True
+
         # ask entity for its schema
         schema: Union[StructType, DataType, None] = entity.get_schema(
-            include_extension=include_extension
+            include_extension=include_extension or has_extension
         )
         column_schema: Dict[str, StructField] = {}
         if schema is not None and isinstance(schema, StructType):
@@ -44,8 +50,9 @@ class AutoMapperWithComplex(AutoMapperContainer):
             for column_name, mapper in entity.get_child_mappers().items():
                 if column_name == "extension":
                     extension_schema: Union[StructType, DataType, None]
+                    # since there is a column called extension then get the schema with extension
                     extension_schema = mapper.get_schema(
-                        include_extension=include_extension
+                        include_extension=include_extension or has_extension
                     )
                     if extension_schema is not None:
                         if (
