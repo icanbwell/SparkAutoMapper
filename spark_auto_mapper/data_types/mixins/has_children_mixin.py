@@ -1,7 +1,7 @@
 from abc import ABCMeta, abstractmethod
 from typing import List, Union, Dict, Optional
 
-from pyspark.sql.types import StructType, StructField, DataType
+from pyspark.sql.types import StructType, StructField, DataType, ArrayType
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 
 
@@ -22,7 +22,7 @@ class HasChildrenMixin:
         The Mixin assumes the class implement this property
         """
 
-    def ensure_children_have_same_properties(self) -> None:
+    def ensure_children_have_same_properties(self, skip_nulls: bool) -> None:
         """
         Spark cannot handle children of a list having different properties.
         So we find the superset of properties and add them as null.
@@ -34,7 +34,7 @@ class HasChildrenMixin:
             return
 
         children_properties: Dict[AutoMapperDataTypeBase, List[str]] = {
-            v: v.get_fields(skip_nulls=True) for v in self.children
+            v: v.get_fields(skip_nulls=skip_nulls) for v in self.children
         }
         # find superset of properties and get them in the right order
         superset_of_all_properties: List[str] = []
@@ -106,3 +106,27 @@ class HasChildrenMixin:
             children = self.children
         for child in children:
             child.add_missing_values_and_order(expected_keys=expected_keys)
+
+    def filter_schema_by_fields_present(
+        self, column_data_type: DataType, skip_nulls: bool
+    ) -> DataType:
+        assert isinstance(
+            column_data_type, ArrayType
+        ), f"{type(column_data_type)} should be an array"
+
+        self.ensure_children_have_same_properties(skip_nulls=skip_nulls)
+
+        element_type = column_data_type.elementType
+        children: Union[
+            "AutoMapperDataTypeBase", List["AutoMapperDataTypeBase"]
+        ] = self.children
+        assert isinstance(children, list), f"{type(children)} should be a list"
+        if len(children) > 0:
+            should_skip_nulls: bool = len(children) == 0
+            child: "AutoMapperDataTypeBase"
+            for child in children:
+                child.filter_schema_by_fields_present(
+                    column_data_type=element_type, skip_nulls=should_skip_nulls
+                )
+
+        return column_data_type

@@ -35,15 +35,9 @@ def test_auto_mapper_concat_multiple_items_structs_different_elements(
 
     source_df: DataFrame = spark_session.table("patients")
 
-    df: DataFrame = source_df.select("member_id")
-    df.createOrReplaceTempView("members")
-
     # Act
     mapper = AutoMapper(
-        view="members",
-        source_view="patients",
-        keys=["member_id"],
-        drop_key_columns=False,
+        view="members", source_view="patients", enable_schema_reduction=True
     ).columns(
         dst2=AutoMapperList(
             [
@@ -113,7 +107,7 @@ def test_auto_mapper_concat_multiple_items_structs_different_elements(
     )
     assert str(sql_expressions["dst2"]) == str(concat(array1, array2).alias("dst2"))
 
-    result_df: DataFrame = mapper.transform(df=df)
+    result_df: DataFrame = mapper.transform(df=source_df)
 
     # Assert
     result_df.printSchema()

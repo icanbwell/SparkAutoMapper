@@ -2,6 +2,8 @@ from typing import List, Union, Optional
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import concat
+from pyspark.sql.types import DataType
+
 from spark_auto_mapper.data_types.array_base import AutoMapperArrayLikeBase
 
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
@@ -47,7 +49,7 @@ class AutoMapperConcatDataType(AutoMapperArrayLikeBase, HasChildrenMixin):
     def get_column_spec(
         self, source_df: Optional[DataFrame], current_column: Optional[Column]
     ) -> Column:
-        self.ensure_children_have_same_properties()
+        self.ensure_children_have_same_properties(skip_nulls=False)
         column_spec = concat(
             *[
                 col.get_column_spec(source_df=source_df, current_column=current_column)
@@ -65,3 +67,10 @@ class AutoMapperConcatDataType(AutoMapperArrayLikeBase, HasChildrenMixin):
 
     def add_missing_values_and_order(self, expected_keys: List[str]) -> None:
         HasChildrenMixin.add_missing_values_and_order(self, expected_keys=expected_keys)
+
+    def filter_schema_by_fields_present(
+        self, column_data_type: DataType, skip_nulls: bool
+    ) -> DataType:
+        return HasChildrenMixin.filter_schema_by_fields_present(
+            self, column_data_type=column_data_type, skip_nulls=skip_nulls
+        )

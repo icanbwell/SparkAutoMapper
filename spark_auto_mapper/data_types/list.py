@@ -92,7 +92,7 @@ class AutoMapperList(AutoMapperArrayLikeBase, HasChildrenMixin, Generic[_T]):
 
 
         """
-        self.ensure_children_have_same_properties()
+        self.ensure_children_have_same_properties(skip_nulls=self.remove_nulls)
         if isinstance(
             self.value, str
         ):  # if the src column is just string then consider it a sql expression
@@ -216,23 +216,6 @@ class AutoMapperList(AutoMapperArrayLikeBase, HasChildrenMixin, Generic[_T]):
     def filter_schema_by_fields_present(
         self, column_data_type: DataType, skip_nulls: bool
     ) -> DataType:
-        assert isinstance(
-            column_data_type, ArrayType
-        ), f"{type(column_data_type)} should be an array"
-
-        self.ensure_children_have_same_properties()
-
-        element_type = column_data_type.elementType
-        children: Union[
-            "AutoMapperDataTypeBase", List["AutoMapperDataTypeBase"]
-        ] = self.children
-        assert isinstance(children, list), f"{type(children)} should be a list"
-        if len(children) > 0:
-            should_skip_nulls: bool = len(children) == 0
-            child: "AutoMapperDataTypeBase"
-            for child in children:
-                child.filter_schema_by_fields_present(
-                    column_data_type=element_type, skip_nulls=should_skip_nulls
-                )
-
-        return column_data_type
+        return HasChildrenMixin.filter_schema_by_fields_present(
+            self, column_data_type=column_data_type, skip_nulls=skip_nulls
+        )
