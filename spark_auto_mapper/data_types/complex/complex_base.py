@@ -127,7 +127,8 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
             if len(field_list) > 0:
                 child.filter_schema_by_fields_present(
                     column_data_type=field_list[0].dataType,
-                    skip_null_properties=skip_null_properties,
+                    # no need to pass this since it only applies to the first level under a list
+                    skip_null_properties=True,
                 )
 
         fields: List[str] = self.get_fields(skip_null_properties=skip_null_properties)
