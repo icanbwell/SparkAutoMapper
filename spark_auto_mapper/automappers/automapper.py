@@ -96,6 +96,7 @@ class AutoMapper(AutoMapperContainer):
         :param copy_all_unmapped_properties: copy any property that is not explicitly mapped
         :param copy_all_unmapped_properties_exclude: exclude these columns when copy_all_unmapped_properties is set
         :param logger: logger used to log informational messages
+        :param enable_schema_reduction: enables remove properties from schema that are not present in the automapper
         """
         super().__init__()
         self.view: Optional[str] = view
@@ -144,8 +145,8 @@ class AutoMapper(AutoMapperContainer):
 
         self.entity_name: Optional[str] = None
         self.enable_schema_reduction: bool = enable_schema_reduction
-
-        # noinspection PyMethodMayBeStatic,PyUnusedLocal
+        if enable_schema_reduction:
+            self.skip_schema_validation = []  # no need to filter out extensions
 
     def _transform_with_data_frame_single_select(
         self, df: DataFrame, source_df: DataFrame, keys: List[str]
