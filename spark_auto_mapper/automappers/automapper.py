@@ -68,6 +68,7 @@ class AutoMapper(AutoMapperContainer):
         copy_all_unmapped_properties_exclude: Optional[List[str]] = None,
         log_level: Optional[Union[int, str]] = None,
         enable_schema_reduction: bool = False,
+        remove_duplicates_by_columns: Optional[List[str]] = None,
     ):
         """
         Creates an AutoMapper
@@ -97,6 +98,7 @@ class AutoMapper(AutoMapperContainer):
         :param copy_all_unmapped_properties_exclude: exclude these columns when copy_all_unmapped_properties is set
         :param logger: logger used to log informational messages
         :param enable_schema_reduction: enables remove properties from schema that are not present in the automapper
+        :param remove_duplicates_by_columns: remove duplicate rows where the value of these columns match
         """
         super().__init__()
         self.view: Optional[str] = view
@@ -147,6 +149,9 @@ class AutoMapper(AutoMapperContainer):
         self.enable_schema_reduction: bool = enable_schema_reduction
         if enable_schema_reduction:
             self.skip_schema_validation = []  # no need to filter out extensions
+        self.remove_duplicates_by_columns: Optional[
+            List[str]
+        ] = remove_duplicates_by_columns
 
     def _transform_with_data_frame_single_select(
         self, df: DataFrame, source_df: DataFrame, keys: List[str]
@@ -542,6 +547,12 @@ class AutoMapper(AutoMapperContainer):
         # remove duplicates
         if not self.keep_duplicates:
             result_df = result_df.drop_duplicates()
+
+        if (
+            self.remove_duplicates_by_columns
+            and len(self.remove_duplicates_by_columns) > 0
+        ):
+            result_df = result_df.drop_duplicates(self.remove_duplicates_by_columns)
 
         # if view was specified then create that view
         if self.view:
