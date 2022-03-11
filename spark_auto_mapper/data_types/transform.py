@@ -5,7 +5,6 @@ from pyspark.sql.functions import transform
 
 from spark_auto_mapper.data_types.array_base import AutoMapperArrayLikeBase
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
-from spark_auto_mapper.data_types.mixins.has_children_mixin import HasChildrenMixin
 from spark_auto_mapper.type_definitions.wrapper_types import (
     AutoMapperAnyDataType,
     AutoMapperColumnOrColumnLikeType,
@@ -15,7 +14,7 @@ _TAutoMapperDataType = TypeVar("_TAutoMapperDataType", bound=AutoMapperAnyDataTy
 
 
 class AutoMapperTransformDataType(
-    AutoMapperArrayLikeBase, HasChildrenMixin, Generic[_TAutoMapperDataType]
+    AutoMapperArrayLikeBase, Generic[_TAutoMapperDataType]
 ):
     def __init__(
         self,
@@ -60,11 +59,3 @@ class AutoMapperTransformDataType(
     @property
     def children(self) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
         return self.value  # type: ignore
-
-    def get_fields(self, skip_null_properties: bool) -> List[str]:
-        return HasChildrenMixin.get_fields(
-            self, skip_null_properties=skip_null_properties
-        )
-
-    def add_missing_values_and_order(self, expected_keys: List[str]) -> None:
-        HasChildrenMixin.add_missing_values_and_order(self, expected_keys=expected_keys)

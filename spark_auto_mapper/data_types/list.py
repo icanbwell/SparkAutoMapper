@@ -9,7 +9,6 @@ from spark_auto_mapper.automappers.check_schema_result import CheckSchemaResult
 
 from spark_auto_mapper.data_types.array_base import AutoMapperArrayLikeBase
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
-from spark_auto_mapper.data_types.mixins.has_children_mixin import HasChildrenMixin
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
 from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
 from spark_auto_mapper.type_definitions.native_types import AutoMapperNativeSimpleType
@@ -17,7 +16,7 @@ from spark_auto_mapper.type_definitions.native_types import AutoMapperNativeSimp
 _T = TypeVar("_T", bound=Union[AutoMapperNativeSimpleType, AutoMapperDataTypeBase])
 
 
-class AutoMapperList(AutoMapperArrayLikeBase, HasChildrenMixin, Generic[_T]):
+class AutoMapperList(AutoMapperArrayLikeBase, Generic[_T]):
     """
     Base class for lists
     Generics:  https://mypy.readthedocs.io/en/stable/generics.html
@@ -197,14 +196,6 @@ class AutoMapperList(AutoMapperArrayLikeBase, HasChildrenMixin, Generic[_T]):
     def children(self) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
         return self.value
 
-    def get_fields(self, skip_null_properties: bool) -> List[str]:
-        return HasChildrenMixin.get_fields(
-            self, skip_null_properties=skip_null_properties
-        )
-
-    def add_missing_values_and_order(self, expected_keys: List[str]) -> None:
-        HasChildrenMixin.add_missing_values_and_order(self, expected_keys=expected_keys)
-
     def check_schema(
         self, parent_column: Optional[str], source_df: Optional[DataFrame]
     ) -> Optional[CheckSchemaResult]:
@@ -218,12 +209,3 @@ class AutoMapperList(AutoMapperArrayLikeBase, HasChildrenMixin, Generic[_T]):
         # for child in children:
         #     result = child.check_schema(parent_column=None, source_df=source_df)
         return None
-
-    def filter_schema_by_fields_present(
-        self, column_data_type: DataType, skip_null_properties: bool
-    ) -> DataType:
-        return HasChildrenMixin.filter_schema_by_fields_present(
-            self,
-            column_data_type=column_data_type,
-            skip_null_properties=skip_null_properties,
-        )
