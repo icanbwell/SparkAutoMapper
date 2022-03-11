@@ -16,6 +16,10 @@ from pyspark.sql.types import (
     TimestampType,
     DataType,
 )
+from spark_data_frame_comparer.schema_comparer import (
+    SchemaComparer,
+    SchemaComparerResult,
+)
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.data_types.complex.complex_base import (
@@ -209,3 +213,41 @@ def test_auto_mapper_schema_reduction_with_extension(
     assert result_df.where("member_id == 1").select("name").collect()[0][0] == "Qureshi"
 
     assert dict(result_df.dtypes)["age"] in ("int", "long", "bigint")
+
+    # confirm schema
+    expected_schema: StructType = StructType(
+        [
+            StructField("name", StringType(), False),
+            StructField("age", LongType(), True),
+            StructField(
+                "extension",
+                ArrayType(
+                    StructType(
+                        [
+                            StructField("url", StringType()),
+                            StructField(
+                                "extension",
+                                ArrayType(
+                                    StructType(
+                                        [
+                                            StructField("url", StringType()),
+                                            StructField("valueString", StringType()),
+                                        ]
+                                    )
+                                ),
+                            ),
+                        ]
+                    )
+                ),
+                True,
+            ),
+        ]
+    )
+
+    result: SchemaComparerResult = SchemaComparer.compare_schema(
+        parent_column_name=None,
+        source_schema=result_df.schema,
+        desired_schema=expected_schema,
+    )
+
+    assert result.errors == []
