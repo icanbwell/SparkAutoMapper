@@ -49,7 +49,7 @@ class AutoMapperConcatDataType(AutoMapperArrayLikeBase, HasChildrenMixin):
     def get_column_spec(
         self, source_df: Optional[DataFrame], current_column: Optional[Column]
     ) -> Column:
-        self.ensure_children_have_same_properties(skip_nulls=False)
+        self.ensure_children_have_same_properties(skip_null_properties=False)
         column_spec = concat(
             *[
                 col.get_column_spec(source_df=source_df, current_column=current_column)
@@ -62,15 +62,19 @@ class AutoMapperConcatDataType(AutoMapperArrayLikeBase, HasChildrenMixin):
     def children(self) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
         return self.value
 
-    def get_fields(self, skip_nulls: bool) -> List[str]:
-        return HasChildrenMixin.get_fields(self, skip_nulls=skip_nulls)
+    def get_fields(self, skip_null_properties: bool) -> List[str]:
+        return HasChildrenMixin.get_fields(
+            self, skip_null_properties=skip_null_properties
+        )
 
     def add_missing_values_and_order(self, expected_keys: List[str]) -> None:
         HasChildrenMixin.add_missing_values_and_order(self, expected_keys=expected_keys)
 
     def filter_schema_by_fields_present(
-        self, column_data_type: DataType, skip_nulls: bool
+        self, column_data_type: DataType, skip_null_properties: bool
     ) -> DataType:
         return HasChildrenMixin.filter_schema_by_fields_present(
-            self, column_data_type=column_data_type, skip_nulls=skip_nulls
+            self,
+            column_data_type=column_data_type,
+            skip_null_properties=skip_null_properties,
         )

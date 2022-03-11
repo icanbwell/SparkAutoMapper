@@ -659,7 +659,7 @@ class AutoMapperDataTypeBase:
             ),
         )
 
-    def get_fields(self, skip_nulls: bool) -> List[str]:
+    def get_fields(self, skip_null_properties: bool) -> List[str]:
         return []
 
     def add_missing_values_and_order(self, expected_keys: List[str]) -> None:
@@ -679,7 +679,7 @@ class AutoMapperDataTypeBase:
         return None
 
     def filter_schema_by_fields_present(
-        self, column_data_type: DataType, skip_nulls: bool
+        self, column_data_type: DataType, skip_null_properties: bool
     ) -> DataType:
         if not isinstance(column_data_type, StructType) and not isinstance(
             column_data_type, StructType
@@ -697,16 +697,16 @@ class AutoMapperDataTypeBase:
             for index, child in enumerate(children):
                 child.filter_schema_by_fields_present(
                     column_data_type=column_data_type.fields[index].dataType,
-                    skip_nulls=skip_nulls,
+                    skip_null_properties=skip_null_properties,
                 )
         elif not isinstance(children, list) and children is not None:
             child = children
             child.filter_schema_by_fields_present(
                 column_data_type=column_data_type.fields[0].dataType,
-                skip_nulls=skip_nulls,
+                skip_null_properties=skip_null_properties,
             )
 
-        fields: List[str] = self.get_fields(skip_nulls=True)
+        fields: List[str] = self.get_fields(skip_null_properties=True)
         new_column_data_type: DataType = column_data_type
         if isinstance(new_column_data_type, StructType) and len(fields) > 0:
             # return only the values that match the fields

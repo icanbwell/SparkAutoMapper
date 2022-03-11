@@ -22,7 +22,7 @@ class HasChildrenMixin:
         The Mixin assumes the class implement this property
         """
 
-    def ensure_children_have_same_properties(self, skip_nulls: bool) -> None:
+    def ensure_children_have_same_properties(self, skip_null_properties: bool) -> None:
         """
         Spark cannot handle children of a list having different properties.
         So we find the superset of properties and add them as null.
@@ -34,7 +34,8 @@ class HasChildrenMixin:
             return
 
         children_properties: Dict[AutoMapperDataTypeBase, List[str]] = {
-            v: v.get_fields(skip_nulls=skip_nulls) for v in self.children
+            v: v.get_fields(skip_null_properties=skip_null_properties)
+            for v in self.children
         }
         # find superset of properties and get them in the right order
         superset_of_all_properties: List[str] = []
@@ -80,7 +81,7 @@ class HasChildrenMixin:
         """
         self.children_schema = schema
 
-    def get_fields(self, skip_nulls: bool) -> List[str]:
+    def get_fields(self, skip_null_properties: bool) -> List[str]:
         """
         Returns unique list of fields from the children
 
@@ -92,7 +93,9 @@ class HasChildrenMixin:
         else:
             children = self.children
         for child in children:
-            child_fields: List[str] = child.get_fields(skip_nulls=skip_nulls)
+            child_fields: List[str] = child.get_fields(
+                skip_null_properties=skip_null_properties
+            )
             for child_field in child_fields:
                 if child_field not in fields:
                     fields.append(child_field)
@@ -108,13 +111,15 @@ class HasChildrenMixin:
             child.add_missing_values_and_order(expected_keys=expected_keys)
 
     def filter_schema_by_fields_present(
-        self, column_data_type: DataType, skip_nulls: bool
+        self, column_data_type: DataType, skip_null_properties: bool
     ) -> DataType:
         assert isinstance(
             column_data_type, ArrayType
         ), f"{type(column_data_type)} should be an array"
 
-        self.ensure_children_have_same_properties(skip_nulls=skip_nulls)
+        self.ensure_children_have_same_properties(
+            skip_null_properties=skip_null_properties
+        )
 
         element_type = column_data_type.elementType
         children: Union[
@@ -122,11 +127,12 @@ class HasChildrenMixin:
         ] = self.children
         assert isinstance(children, list), f"{type(children)} should be a list"
         if len(children) > 0:
-            should_skip_nulls: bool = len(children) == 0
+            should_skip_null_properties: bool = len(children) == 0
             child: "AutoMapperDataTypeBase"
             for child in children:
                 child.filter_schema_by_fields_present(
-                    column_data_type=element_type, skip_nulls=should_skip_nulls
+                    column_data_type=element_type,
+                    skip_null_properties=should_skip_null_properties,
                 )
 
         return column_data_type

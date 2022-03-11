@@ -61,8 +61,10 @@ class AutoMapperTransformDataType(
     def children(self) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
         return self.value  # type: ignore
 
-    def get_fields(self, skip_nulls: bool) -> List[str]:
-        return HasChildrenMixin.get_fields(self, skip_nulls=skip_nulls)
+    def get_fields(self, skip_null_properties: bool) -> List[str]:
+        return HasChildrenMixin.get_fields(
+            self, skip_null_properties=skip_null_properties
+        )
 
     def add_missing_values_and_order(self, expected_keys: List[str]) -> None:
         HasChildrenMixin.add_missing_values_and_order(self, expected_keys=expected_keys)

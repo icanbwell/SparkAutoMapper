@@ -94,12 +94,12 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
     ) -> Optional[Union[StructType, DataType]]:
         return None
 
-    def get_fields(self, skip_nulls: bool) -> List[str]:
+    def get_fields(self, skip_null_properties: bool) -> List[str]:
         return list(
             [
                 k
                 for k, v in self.value.items()
-                if not skip_nulls
+                if not skip_null_properties
                 or (not (isinstance(v, AutoMapperDataTypeLiteral) and v.value is None))
             ]
         )
@@ -111,7 +111,7 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
         return list(self.value.values())
 
     def filter_schema_by_fields_present(
-        self, column_data_type: DataType, skip_nulls: bool
+        self, column_data_type: DataType, skip_null_properties: bool
     ) -> DataType:
         assert isinstance(
             column_data_type, StructType
@@ -126,10 +126,11 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
             ]
             if len(field_list) > 0:
                 child.filter_schema_by_fields_present(
-                    column_data_type=field_list[0].dataType, skip_nulls=skip_nulls
+                    column_data_type=field_list[0].dataType,
+                    skip_null_properties=skip_null_properties,
                 )
 
-        fields: List[str] = self.get_fields(skip_nulls=skip_nulls)
+        fields: List[str] = self.get_fields(skip_null_properties=skip_null_properties)
         new_column_data_type: DataType = column_data_type
         if isinstance(new_column_data_type, StructType) and len(fields) > 0:
             # return only the values that match the fields

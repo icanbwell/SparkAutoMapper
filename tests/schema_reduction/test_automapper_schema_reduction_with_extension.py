@@ -243,4 +243,4 @@ def test_auto_mapper_schema_reduction_with_extension(
         desired_schema=expected_schema,
     )
 
-    assert result.errors == []
+    assert result.errors == [], str(result)

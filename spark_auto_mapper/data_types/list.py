@@ -67,6 +67,7 @@ class AutoMapperList(AutoMapperArrayLikeBase, HasChildrenMixin, Generic[_T]):
                 )
         else:
             raise ValueError(f"{type(value)} is not supported")
+        self.skip_null_properties: bool = not include_null_properties
 
     def include_null_properties(self, include_null_properties: bool) -> None:
         """
@@ -74,6 +75,7 @@ class AutoMapperList(AutoMapperArrayLikeBase, HasChildrenMixin, Generic[_T]):
 
         :param include_null_properties: include if true
         """
+        self.skip_null_properties = not include_null_properties
         if isinstance(self.value, list):
             for item in self.value:
                 item.include_null_properties(
@@ -92,7 +94,9 @@ class AutoMapperList(AutoMapperArrayLikeBase, HasChildrenMixin, Generic[_T]):
 
 
         """
-        self.ensure_children_have_same_properties(skip_nulls=self.remove_nulls)
+        self.ensure_children_have_same_properties(
+            skip_null_properties=self.skip_null_properties
+        )
         if isinstance(
             self.value, str
         ):  # if the src column is just string then consider it a sql expression
@@ -193,8 +197,10 @@ class AutoMapperList(AutoMapperArrayLikeBase, HasChildrenMixin, Generic[_T]):
     def children(self) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
         return self.value
 
-    def get_fields(self, skip_nulls: bool) -> List[str]:
-        return HasChildrenMixin.get_fields(self, skip_nulls=skip_nulls)
+    def get_fields(self, skip_null_properties: bool) -> List[str]:
+        return HasChildrenMixin.get_fields(
+            self, skip_null_properties=skip_null_properties
+        )
 
     def add_missing_values_and_order(self, expected_keys: List[str]) -> None:
         HasChildrenMixin.add_missing_values_and_order(self, expected_keys=expected_keys)
@@ -214,8 +220,10 @@ class AutoMapperList(AutoMapperArrayLikeBase, HasChildrenMixin, Generic[_T]):
         return None
 
     def filter_schema_by_fields_present(
-        self, column_data_type: DataType, skip_nulls: bool
+        self, column_data_type: DataType, skip_null_properties: bool
     ) -> DataType:
         return HasChildrenMixin.filter_schema_by_fields_present(
-            self, column_data_type=column_data_type, skip_nulls=skip_nulls
+            self,
+            column_data_type=column_data_type,
+            skip_null_properties=skip_null_properties,
         )

@@ -19,12 +19,14 @@ from spark_auto_mapper.data_types.complex.complex_base import (
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.data_types.list import AutoMapperList
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
+from tests.conftest import clean_spark_session
 
 
 def test_auto_mapper_concat_multiple_items_structs_different_elements(
     spark_session: SparkSession,
 ) -> None:
     # Arrange
+    clean_spark_session(spark_session)
     spark_session.createDataFrame(
         [
             (1, "Qureshi", "Imran"),
