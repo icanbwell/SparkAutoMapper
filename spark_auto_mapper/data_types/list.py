@@ -193,8 +193,8 @@ class AutoMapperList(AutoMapperArrayLikeBase, HasChildrenMixin, Generic[_T]):
     def children(self) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
         return self.value
 
-    def get_fields(self) -> List[str]:
-        return HasChildrenMixin.get_fields(self)
+    def get_fields(self, skip_nulls: bool) -> List[str]:
+        return HasChildrenMixin.get_fields(self, skip_nulls=skip_nulls)
 
     def add_missing_values_and_order(self, expected_keys: List[str]) -> None:
         HasChildrenMixin.add_missing_values_and_order(self, expected_keys=expected_keys)
@@ -212,3 +212,19 @@ class AutoMapperList(AutoMapperArrayLikeBase, HasChildrenMixin, Generic[_T]):
         # for child in children:
         #     result = child.check_schema(parent_column=None, source_df=source_df)
         return None
+
+    def filter_schema_by_fields_present(self, column_data_type: DataType) -> DataType:
+        assert isinstance(
+            column_data_type, ArrayType
+        ), f"{type(column_data_type)} should be an array"
+        element_type = column_data_type.elementType
+        children: Union[
+            "AutoMapperDataTypeBase", List["AutoMapperDataTypeBase"]
+        ] = self.children
+        assert isinstance(children, list), f"{type(children)} should be a list"
+        if len(children) > 0:
+            child: "AutoMapperDataTypeBase"
+            for child in children:
+                child.filter_schema_by_fields_present(column_data_type=element_type)
+
+        return column_data_type

@@ -140,9 +140,12 @@ class MyClass(AutoMapperDataTypeComplexBase):
         schema: StructType = StructType(
             [
                 StructField("name", StringType(), False),
+                StructField("extra", LongType(), True),
                 StructField("age", LongType(), True),
                 StructField(
-                    "extension", MyProcessingStatusExtension.get_schema_static(), True
+                    "extension",
+                    ArrayType(MyProcessingStatusExtension.get_schema_static()),
+                    True,
                 ),
             ]
         )

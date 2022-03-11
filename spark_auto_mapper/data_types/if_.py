@@ -112,8 +112,8 @@ class AutoMapperIfDataType(
 
         return column_spec
 
-    def get_fields(self) -> List[str]:
-        return HasChildrenMixin.get_fields(self)
+    def get_fields(self, skip_nulls: bool) -> List[str]:
+        return HasChildrenMixin.get_fields(self, skip_nulls=skip_nulls)
 
     def add_missing_values_and_order(self, expected_keys: List[str]) -> None:
         HasChildrenMixin.add_missing_values_and_order(self, expected_keys=expected_keys)

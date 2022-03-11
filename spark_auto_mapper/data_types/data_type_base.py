@@ -659,7 +659,7 @@ class AutoMapperDataTypeBase:
             ),
         )
 
-    def get_fields(self) -> List[str]:
+    def get_fields(self, skip_nulls: bool) -> List[str]:
         return []
 
     def add_missing_values_and_order(self, expected_keys: List[str]) -> None:
@@ -679,10 +679,31 @@ class AutoMapperDataTypeBase:
         return None
 
     def filter_schema_by_fields_present(self, column_data_type: DataType) -> DataType:
-        fields: List[str] = self.get_fields()
+        if not isinstance(column_data_type, StructType) and not isinstance(
+            column_data_type, StructType
+        ):
+            # this is a basic type so nothing to do
+            return column_data_type
+
+        assert not isinstance(column_data_type, ArrayType)
+
+        children: Union[
+            "AutoMapperDataTypeBase", List["AutoMapperDataTypeBase"]
+        ] = self.children
+        if isinstance(children, list) and len(children) > 0:
+            child: "AutoMapperDataTypeBase"
+            for index, child in enumerate(children):
+                child.filter_schema_by_fields_present(
+                    column_data_type=column_data_type.fields[index].dataType
+                )
+        elif not isinstance(children, list) and children is not None:
+            child = children
+            child.filter_schema_by_fields_present(
+                column_data_type=column_data_type.fields[0].dataType
+            )
+
+        fields: List[str] = self.get_fields(skip_nulls=True)
         new_column_data_type: DataType = column_data_type
-        if isinstance(new_column_data_type, ArrayType):
-            new_column_data_type = new_column_data_type.elementType
         if isinstance(new_column_data_type, StructType) and len(fields) > 0:
             # return only the values that match the fields
             new_column_data_type.fields = [
