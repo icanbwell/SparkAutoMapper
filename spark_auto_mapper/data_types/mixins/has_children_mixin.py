@@ -34,7 +34,7 @@ class HasChildrenMixin:
             return
 
         children_properties: Dict[AutoMapperDataTypeBase, List[str]] = {
-            v: v.get_fields(skip_nulls=False) for v in self.children
+            v: v.get_fields(skip_nulls=True) for v in self.children
         }
         # find superset of properties and get them in the right order
         superset_of_all_properties: List[str] = []

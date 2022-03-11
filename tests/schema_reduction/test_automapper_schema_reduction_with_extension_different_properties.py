@@ -66,6 +66,13 @@ class MyProcessingStatusExtension(AutoMapperDataTypeComplexBase):
                 valueString=request_id,
             ),
         ]
+        if date_processed:
+            processing_status_extensions.append(
+                MyProcessingStatusExtensionItem(
+                    url="date_processed",
+                    valueDateTime=date_processed,
+                )
+            )
         self.extensions = processing_status_extensions
         super().__init__(
             url=definition_base_url,
