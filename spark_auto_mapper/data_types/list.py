@@ -213,18 +213,26 @@ class AutoMapperList(AutoMapperArrayLikeBase, HasChildrenMixin, Generic[_T]):
         #     result = child.check_schema(parent_column=None, source_df=source_df)
         return None
 
-    def filter_schema_by_fields_present(self, column_data_type: DataType) -> DataType:
+    def filter_schema_by_fields_present(
+        self, column_data_type: DataType, skip_nulls: bool
+    ) -> DataType:
         assert isinstance(
             column_data_type, ArrayType
         ), f"{type(column_data_type)} should be an array"
+
+        self.ensure_children_have_same_properties()
+
         element_type = column_data_type.elementType
         children: Union[
             "AutoMapperDataTypeBase", List["AutoMapperDataTypeBase"]
         ] = self.children
         assert isinstance(children, list), f"{type(children)} should be a list"
         if len(children) > 0:
+            should_skip_nulls: bool = len(children) == 0
             child: "AutoMapperDataTypeBase"
             for child in children:
-                child.filter_schema_by_fields_present(column_data_type=element_type)
+                child.filter_schema_by_fields_present(
+                    column_data_type=element_type, skip_nulls=should_skip_nulls
+                )
 
         return column_data_type

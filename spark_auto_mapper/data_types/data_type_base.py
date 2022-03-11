@@ -678,7 +678,9 @@ class AutoMapperDataTypeBase:
         """
         return None
 
-    def filter_schema_by_fields_present(self, column_data_type: DataType) -> DataType:
+    def filter_schema_by_fields_present(
+        self, column_data_type: DataType, skip_nulls: bool
+    ) -> DataType:
         if not isinstance(column_data_type, StructType) and not isinstance(
             column_data_type, StructType
         ):
@@ -694,12 +696,14 @@ class AutoMapperDataTypeBase:
             child: "AutoMapperDataTypeBase"
             for index, child in enumerate(children):
                 child.filter_schema_by_fields_present(
-                    column_data_type=column_data_type.fields[index].dataType
+                    column_data_type=column_data_type.fields[index].dataType,
+                    skip_nulls=skip_nulls,
                 )
         elif not isinstance(children, list) and children is not None:
             child = children
             child.filter_schema_by_fields_present(
-                column_data_type=column_data_type.fields[0].dataType
+                column_data_type=column_data_type.fields[0].dataType,
+                skip_nulls=skip_nulls,
             )
 
         fields: List[str] = self.get_fields(skip_nulls=True)

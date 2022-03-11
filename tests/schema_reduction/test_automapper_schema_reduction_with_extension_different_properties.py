@@ -156,7 +156,7 @@ class MyClass(AutoMapperDataTypeComplexBase):
         return schema
 
 
-def test_auto_mapper_schema_reduction_with_extension(
+def test_auto_mapper_schema_reduction_with_extension_different_properties(
     spark_session: SparkSession,
 ) -> None:
     # Arrange
@@ -232,6 +232,9 @@ def test_auto_mapper_schema_reduction_with_extension(
                                         [
                                             StructField("url", StringType()),
                                             StructField("valueString", StringType()),
+                                            StructField(
+                                                "valueDateTime", TimestampType()
+                                            ),
                                         ]
                                     )
                                 ),
@@ -250,4 +253,4 @@ def test_auto_mapper_schema_reduction_with_extension(
         desired_schema=expected_schema,
     )
 
-    assert result.errors == []
+    assert result.errors == [], str(result)

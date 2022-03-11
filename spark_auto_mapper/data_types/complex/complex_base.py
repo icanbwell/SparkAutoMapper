@@ -110,7 +110,9 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
     ) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
         return list(self.value.values())
 
-    def filter_schema_by_fields_present(self, column_data_type: DataType) -> DataType:
+    def filter_schema_by_fields_present(
+        self, column_data_type: DataType, skip_nulls: bool
+    ) -> DataType:
         assert isinstance(
             column_data_type, StructType
         ), f"{type(column_data_type)} should be StructType"
@@ -124,10 +126,10 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
             ]
             if len(field_list) > 0:
                 child.filter_schema_by_fields_present(
-                    column_data_type=field_list[0].dataType
+                    column_data_type=field_list[0].dataType, skip_nulls=skip_nulls
                 )
 
-        fields: List[str] = self.get_fields(skip_nulls=True)
+        fields: List[str] = self.get_fields(skip_nulls=skip_nulls)
         new_column_data_type: DataType = column_data_type
         if isinstance(new_column_data_type, StructType) and len(fields) > 0:
             # return only the values that match the fields
