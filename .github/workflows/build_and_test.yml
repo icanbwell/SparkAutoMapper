@@ -22,7 +22,7 @@ jobs:
 
       - name: Set cache permissions
         run: |
-          mkdir ~/.local/share && mkdir ~/.local/share/virtualenvs
+          mkdir ~/.local && mkdir ~/.local/share && mkdir ~/.local/share/virtualenvs
           chown -R $(whoami) ~/.local/share/virtualenvs/
 
       - name: Cache pip dependencies
