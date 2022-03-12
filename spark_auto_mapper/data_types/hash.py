@@ -40,3 +40,9 @@ class AutoMapperHashDataType(AutoMapperTextLikeBase):
             ]
         ).cast("string")
         return column_spec
+
+    @property
+    def children(
+        self,
+    ) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
+        return self.value

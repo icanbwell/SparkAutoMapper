@@ -45,3 +45,9 @@ class AutoMapperArrayMaxDataType(AutoMapperTextLikeBase):
             item.include_null_properties(
                 include_null_properties=include_null_properties
             )
+
+    @property
+    def children(
+        self,
+    ) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
+        return self.value

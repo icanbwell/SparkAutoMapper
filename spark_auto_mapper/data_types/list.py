@@ -9,7 +9,6 @@ from spark_auto_mapper.automappers.check_schema_result import CheckSchemaResult
 
 from spark_auto_mapper.data_types.array_base import AutoMapperArrayLikeBase
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
-from spark_auto_mapper.data_types.mixins.has_children_mixin import HasChildrenMixin
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
 from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
 from spark_auto_mapper.type_definitions.native_types import AutoMapperNativeSimpleType
@@ -17,7 +16,7 @@ from spark_auto_mapper.type_definitions.native_types import AutoMapperNativeSimp
 _T = TypeVar("_T", bound=Union[AutoMapperNativeSimpleType, AutoMapperDataTypeBase])
 
 
-class AutoMapperList(AutoMapperArrayLikeBase, HasChildrenMixin, Generic[_T]):
+class AutoMapperList(AutoMapperArrayLikeBase, Generic[_T]):
     """
     Base class for lists
     Generics:  https://mypy.readthedocs.io/en/stable/generics.html
@@ -67,6 +66,7 @@ class AutoMapperList(AutoMapperArrayLikeBase, HasChildrenMixin, Generic[_T]):
                 )
         else:
             raise ValueError(f"{type(value)} is not supported")
+        self.skip_null_properties: bool = not include_null_properties
 
     def include_null_properties(self, include_null_properties: bool) -> None:
         """
@@ -74,6 +74,7 @@ class AutoMapperList(AutoMapperArrayLikeBase, HasChildrenMixin, Generic[_T]):
 
         :param include_null_properties: include if true
         """
+        self.skip_null_properties = not include_null_properties
         if isinstance(self.value, list):
             for item in self.value:
                 item.include_null_properties(
@@ -92,7 +93,9 @@ class AutoMapperList(AutoMapperArrayLikeBase, HasChildrenMixin, Generic[_T]):
 
 
         """
-        self.ensure_children_have_same_properties()
+        self.ensure_children_have_same_properties(
+            skip_null_properties=self.skip_null_properties
+        )
         if isinstance(
             self.value, str
         ):  # if the src column is just string then consider it a sql expression
@@ -192,12 +195,6 @@ class AutoMapperList(AutoMapperArrayLikeBase, HasChildrenMixin, Generic[_T]):
     @property
     def children(self) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
         return self.value
-
-    def get_fields(self) -> List[str]:
-        return HasChildrenMixin.get_fields(self)
-
-    def add_missing_values_and_order(self, expected_keys: List[str]) -> None:
-        HasChildrenMixin.add_missing_values_and_order(self, expected_keys=expected_keys)
 
     def check_schema(
         self, parent_column: Optional[str], source_df: Optional[DataFrame]

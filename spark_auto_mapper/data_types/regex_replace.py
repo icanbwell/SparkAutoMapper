@@ -1,8 +1,9 @@
-from typing import Optional
+from typing import Optional, List, Union
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import regexp_replace
 
+from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
 from spark_auto_mapper.type_definitions.wrapper_types import (
     AutoMapperColumnOrColumnLikeType,
@@ -34,3 +35,9 @@ class AutoMapperRegExReplaceDataType(AutoMapperTextLikeBase):
             replacement=self.replacement,
         )
         return column_spec
+
+    @property
+    def children(
+        self,
+    ) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
+        return self.column

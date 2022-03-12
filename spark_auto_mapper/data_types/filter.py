@@ -1,4 +1,4 @@
-from typing import Callable, Optional, Union
+from typing import Callable, Optional, Union, List
 
 from pyspark.sql import DataFrame, Column
 from pyspark.sql.functions import filter
@@ -37,3 +37,9 @@ class AutoMapperFilterDataType(AutoMapperArrayLikeBase):
             ),
             self.func,
         )
+
+    @property
+    def children(
+        self,
+    ) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
+        return self.column

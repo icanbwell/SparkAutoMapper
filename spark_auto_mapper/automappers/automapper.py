@@ -67,6 +67,8 @@ class AutoMapper(AutoMapperContainer):
         copy_all_unmapped_properties: bool = False,
         copy_all_unmapped_properties_exclude: Optional[List[str]] = None,
         log_level: Optional[Union[int, str]] = None,
+        enable_schema_reduction: bool = False,
+        remove_duplicates_by_columns: Optional[List[str]] = None,
     ):
         """
         Creates an AutoMapper
@@ -86,7 +88,7 @@ class AutoMapper(AutoMapperContainer):
         :param include_null_properties: If you want to include null properties
         :param use_single_select: This is a faster way to run the AutoMapper since it will select
                 all the columns at once.
-                However this makes it harder to debug since you don't know what column failed
+                However, this makes it harder to debug since you don't know what column failed
         :param verify_row_count: verifies that the count of rows remains the same before and after the transformation
         :param skip_schema_validation: skip schema checks on these columns
         :param skip_if_columns_null_or_empty: skip creating the record if any of these columns are null or empty
@@ -95,6 +97,8 @@ class AutoMapper(AutoMapperContainer):
         :param copy_all_unmapped_properties: copy any property that is not explicitly mapped
         :param copy_all_unmapped_properties_exclude: exclude these columns when copy_all_unmapped_properties is set
         :param logger: logger used to log informational messages
+        :param enable_schema_reduction: enables remove properties from schema that are not present in the automapper
+        :param remove_duplicates_by_columns: remove duplicate rows where the value of these columns match
         """
         super().__init__()
         self.view: Optional[str] = view
@@ -142,8 +146,13 @@ class AutoMapper(AutoMapperContainer):
         ] = copy_all_unmapped_properties_exclude
 
         self.entity_name: Optional[str] = None
+        self.enable_schema_reduction: bool = enable_schema_reduction
+        if enable_schema_reduction:
+            self.skip_schema_validation = []  # no need to filter out extensions
+        self.remove_duplicates_by_columns: Optional[
+            List[str]
+        ] = remove_duplicates_by_columns
 
-    # noinspection PyMethodMayBeStatic,PyUnusedLocal
     def _transform_with_data_frame_single_select(
         self, df: DataFrame, source_df: DataFrame, keys: List[str]
     ) -> DataFrame:
@@ -539,6 +548,12 @@ class AutoMapper(AutoMapperContainer):
         if not self.keep_duplicates:
             result_df = result_df.drop_duplicates()
 
+        if (
+            self.remove_duplicates_by_columns
+            and len(self.remove_duplicates_by_columns) > 0
+        ):
+            result_df = result_df.drop_duplicates(self.remove_duplicates_by_columns)
+
         # if view was specified then create that view
         if self.view:
             result_df.createOrReplaceTempView(self.view)
@@ -618,6 +633,7 @@ class AutoMapper(AutoMapperContainer):
             include_null_properties=self.include_null_properties,
             skip_schema_validation=self.skip_schema_validation,
             skip_if_columns_null_or_empty=self.skip_if_columns_null_or_empty,
+            enable_schema_reduction=self.enable_schema_reduction,
         )
 
         self.entity_name = entity.__class__.__name__

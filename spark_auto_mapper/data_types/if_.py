@@ -6,7 +6,6 @@ from pyspark.sql.functions import when
 from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
 
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
-from spark_auto_mapper.data_types.mixins.has_children_mixin import HasChildrenMixin
 from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
 from spark_auto_mapper.type_definitions.wrapper_types import (
     AutoMapperColumnOrColumnLikeType,
@@ -16,9 +15,7 @@ from spark_auto_mapper.type_definitions.wrapper_types import (
 _TAutoMapperDataType = TypeVar("_TAutoMapperDataType", bound=AutoMapperAnyDataType)
 
 
-class AutoMapperIfDataType(
-    AutoMapperDataTypeBase, HasChildrenMixin, Generic[_TAutoMapperDataType]
-):
+class AutoMapperIfDataType(AutoMapperDataTypeBase, Generic[_TAutoMapperDataType]):
     """
     If check returns value if the checks passes else when_not
     """
@@ -111,9 +108,3 @@ class AutoMapperIfDataType(
             )
 
         return column_spec
-
-    def get_fields(self) -> List[str]:
-        return HasChildrenMixin.get_fields(self)
-
-    def add_missing_values_and_order(self, expected_keys: List[str]) -> None:
-        HasChildrenMixin.add_missing_values_and_order(self, expected_keys=expected_keys)

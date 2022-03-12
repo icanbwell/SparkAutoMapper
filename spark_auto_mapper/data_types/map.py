@@ -1,4 +1,4 @@
-from typing import Dict, Optional
+from typing import Dict, Optional, List, Union
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import when
@@ -78,3 +78,9 @@ class AutoMapperMapDataType(AutoMapperDataTypeExpression):
 
         assert column_spec is not None
         return column_spec
+
+    @property
+    def children(
+        self,
+    ) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
+        return list(self.mapping.values())

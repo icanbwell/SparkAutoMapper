@@ -1,4 +1,4 @@
-from typing import Generic, Optional, TypeVar, Union
+from typing import Generic, Optional, TypeVar, Union, List
 
 from pyspark.sql import DataFrame, Column
 
@@ -30,3 +30,9 @@ class AutoMapperFirstDataType(AutoMapperArrayLikeBase, Generic[_TAutoMapperDataT
         )
 
         return column_spec[0]
+
+    @property
+    def children(
+        self,
+    ) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
+        return self.column

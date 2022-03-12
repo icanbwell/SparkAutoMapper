@@ -1,4 +1,4 @@
-from typing import Generic, Optional, TypeVar, List
+from typing import Generic, Optional, TypeVar, List, Union
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.utils import AnalysisException
@@ -66,3 +66,9 @@ class AutoMapperFirstValidColumnType(
 
         assert column_spec is not None
         return column_spec
+
+    @property
+    def children(
+        self,
+    ) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
+        return self.columns

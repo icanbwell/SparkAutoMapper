@@ -1,9 +1,9 @@
-from typing import Optional
+from typing import Optional, List, Union
 
 from pyspark.sql import Column, DataFrame
 
 # noinspection PyUnresolvedReferences
-
+from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
 
 
@@ -16,3 +16,9 @@ class AutoMapperDataTypeColumnWrapper(AutoMapperTextLikeBase):
         self, source_df: Optional[DataFrame], current_column: Optional[Column]
     ) -> Column:
         return self.value
+
+    @property
+    def children(
+        self,
+    ) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
+        return []

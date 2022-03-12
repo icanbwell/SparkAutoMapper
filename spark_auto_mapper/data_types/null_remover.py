@@ -110,3 +110,9 @@ class AutoMapperNullRemover(AutoMapperDataTypeBase, Generic[_T]):
                     return None
                 return StructType([StructField("extension", ArrayType(schema))])
         return None
+
+    @property
+    def children(
+        self,
+    ) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
+        return self.value

@@ -1,11 +1,12 @@
 import re
-from typing import Optional, List
+from typing import Optional, List, Union
 
 from pyspark.sql import Column, DataFrame
 
 # noinspection PyUnresolvedReferences
 
 from spark_auto_mapper.data_types.array_base import AutoMapperArrayLikeBase
+from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 
 
 class AutoMapperDataTypeField(AutoMapperArrayLikeBase):
@@ -36,3 +37,9 @@ class AutoMapperDataTypeField(AutoMapperArrayLikeBase):
                 )
 
         raise ValueError(f"value: {self.value} is not str")
+
+    @property
+    def children(
+        self,
+    ) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
+        return []

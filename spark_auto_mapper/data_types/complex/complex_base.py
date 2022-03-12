@@ -1,8 +1,13 @@
 from typing import Dict, Any, Optional, Union, List, OrderedDict
 
+# noinspection PyPackageRequirements
 from pyspark.sql import Column, DataFrame
+
+# noinspection PyPackageRequirements
 from pyspark.sql.functions import struct
-from pyspark.sql.types import StructType, DataType
+
+# noinspection PyPackageRequirements
+from pyspark.sql.types import StructType, DataType, StructField
 
 from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
 from spark_auto_mapper.helpers.python_keyword_cleaner import PythonKeywordCleaner
@@ -89,14 +94,52 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
     ) -> Optional[Union[StructType, DataType]]:
         return None
 
-    def get_fields(self) -> List[str]:
-        return list(self.value.keys())
+    def get_fields(self, skip_null_properties: bool) -> List[str]:
+        return list(
+            [
+                k
+                for k, v in self.value.items()
+                if not skip_null_properties
+                or (not (isinstance(v, AutoMapperDataTypeLiteral) and v.value is None))
+            ]
+        )
 
-    # def get_fields(self) -> List[str]:
-    #     return list(
-    #         [
-    #             k
-    #             for k, v in self.value.items()
-    #             if not (isinstance(v, AutoMapperDataTypeLiteral) and v.value is None)
-    #         ]
-    #     )
+    @property
+    def children(
+        self,
+    ) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
+        return list(self.value.values())
+
+    def filter_schema_by_fields_present(
+        self, column_data_type: DataType, skip_null_properties: bool
+    ) -> DataType:
+        assert isinstance(
+            column_data_type, StructType
+        ), f"{type(column_data_type)} should be StructType"
+
+        children: Dict[str, AutoMapperDataTypeBase] = self.value
+        name: str
+        child: "AutoMapperDataTypeBase"
+        for name, child in children.items():
+            field_list: List[StructField] = [
+                f for f in column_data_type.fields if f.name == name
+            ]
+            if len(field_list) > 0:
+                child.filter_schema_by_fields_present(
+                    column_data_type=field_list[0].dataType,
+                    # no need to pass this since it only applies to the first level under a list
+                    skip_null_properties=True,
+                )
+
+        fields: List[str] = self.get_fields(skip_null_properties=skip_null_properties)
+        new_column_data_type: DataType = column_data_type
+        if isinstance(new_column_data_type, StructType) and len(fields) > 0:
+            # return only the values that match the fields
+            new_column_data_type.fields = [
+                c
+                for c in new_column_data_type.fields
+                if c.name in fields or c.nullable is False
+            ]
+            new_column_data_type.names = [f.name for f in new_column_data_type.fields]
+
+        return column_data_type

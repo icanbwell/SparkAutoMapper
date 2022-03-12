@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Optional, Union, List
 
 from pyspark.sql import DataFrame, Column
 from pyspark.sql.functions import flatten, filter
@@ -36,3 +36,9 @@ class AutoMapperFlattenDataType(AutoMapperArrayLikeBase):
                 lambda x: x.isNotNull(),
             )
         )
+
+    @property
+    def children(
+        self,
+    ) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
+        return self.column

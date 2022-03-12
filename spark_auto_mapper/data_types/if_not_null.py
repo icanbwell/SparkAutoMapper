@@ -1,4 +1,4 @@
-from typing import TypeVar, Union, Generic, Optional, cast
+from typing import TypeVar, Union, Generic, Optional, cast, List
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import when
@@ -71,3 +71,9 @@ class AutoMapperIfNotNullDataType(
         )
 
         return column_spec
+
+    @property
+    def children(
+        self,
+    ) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
+        return [c for c in [self.value, self.when_null] if c is not None]

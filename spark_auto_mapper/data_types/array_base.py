@@ -1,4 +1,4 @@
-from typing import Optional, TypeVar, Union
+from typing import Optional, TypeVar, Union, List
 
 from pyspark.sql import DataFrame, Column
 
@@ -19,3 +19,9 @@ class AutoMapperArrayLikeBase(AutoMapperTextLikeBase):
         self, source_df: Optional[DataFrame], current_column: Optional[Column]
     ) -> Column:
         raise NotImplementedError  # base classes should implement this
+
+    @property
+    def children(
+        self,
+    ) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
+        return []
