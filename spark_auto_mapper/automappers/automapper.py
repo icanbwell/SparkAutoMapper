@@ -121,11 +121,13 @@ class AutoMapper(AutoMapperContainer):
         self.keep_null_rows: bool = keep_null_rows
         self.filter_by: Optional[str] = filter_by
         self.logger: Logger = logger  # type: ignore
+        self.log_level: Optional[Union[int, str]] = log_level or os.environ.get(
+            "LOGLEVEL"
+        )
         if not self.logger:
             self.logger = getLogger(__name__)
-            log_level = log_level or os.environ.get("LOGLEVEL")
-            if log_level:
-                self.logger.setLevel(log_level)
+            if self.log_level is not None:
+                self.logger.setLevel(self.log_level)
             if self.logger.handlers:
                 pass
             else:
@@ -320,7 +322,8 @@ class AutoMapper(AutoMapperContainer):
                     #     column_values = None
 
                     msg += self._get_message_for_exception(
-                        column_name=column_name + ": " + str(check_schema_result),
+                        column_name=column_name,
+                        check_schema_result=check_schema_result,
                         df=df,
                         e=e2,
                         source_df=source_df,
@@ -336,7 +339,12 @@ class AutoMapper(AutoMapperContainer):
         except Exception as e:
             self.logger.error("====  OOPS ===========")
             msg = self._get_message_for_exception(
-                column_name="", df=df, e=e, source_df=source_df, column_values=None
+                column_name="",
+                check_schema_result=None,
+                df=df,
+                e=e,
+                source_df=source_df,
+                column_values=None,
             )
             raise Exception(msg) from e
 
@@ -399,6 +407,7 @@ class AutoMapper(AutoMapperContainer):
                 if source_df is not None:
                     msg += self._get_message_for_exception(
                         column_name=column_name,
+                        check_schema_result=None,
                         df=df,
                         e=e,
                         source_df=source_df,
@@ -409,6 +418,7 @@ class AutoMapper(AutoMapperContainer):
                 msg = (
                     self._get_message_for_exception(
                         column_name=column_name,
+                        check_schema_result=None,
                         df=df,
                         e=e,
                         source_df=source_df,
@@ -429,10 +439,11 @@ class AutoMapper(AutoMapperContainer):
 
         return df
 
-    @staticmethod
     def _get_message_for_exception(
+        self,
         *,
         column_name: str,
+        check_schema_result: Optional[CheckSchemaResult],
         df: DataFrame,
         e: Exception,
         source_df: DataFrame,
@@ -451,8 +462,18 @@ class AutoMapper(AutoMapperContainer):
         # write out the full list of columns
         columns_in_source: List[str] = list(source_df.columns)
         columns_in_destination: List[str] = list(df.columns)
-        msg: str = f", Processing column:[{column_name}]"
-        msg += f"column values: [{','.join(str(column_values))}]"
+        msg: str = ""
+        if column_name is not None:
+            msg += f", Processing column:[{column_name}]\n"
+        if check_schema_result is not None:
+            msg += check_schema_result.to_string(
+                include_info=True
+                if self.log_level and self.log_level == "DEBUG"
+                else False
+            )
+            msg += "\n"
+        if column_values is not None:
+            msg += f"column values: [{','.join(str(column_values))}]"
         msg += str(e)
         msg += f", Source columns:[{','.join(columns_in_source)}]"
         msg += f", Destination columns:[{','.join(columns_in_destination)}]"
