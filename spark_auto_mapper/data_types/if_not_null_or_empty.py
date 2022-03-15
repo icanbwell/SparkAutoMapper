@@ -77,4 +77,17 @@ class AutoMapperIfNotNullOrEmptyDataType(
     def children(
         self,
     ) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
-        return [c for c in [self.value, self.when_null_or_empty] if c is not None]
+        result: List[AutoMapperDataTypeBase] = []
+        if self.value is not None:
+            result = result + (
+                self.value.children
+                if isinstance(self.value.children, list)
+                else [self.value.children]
+            )
+        if self.when_null_or_empty is not None:
+            result = result + (
+                self.when_null_or_empty.children
+                if isinstance(self.when_null_or_empty.children, list)
+                else [self.when_null_or_empty.children]
+            )
+        return result

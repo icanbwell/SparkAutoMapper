@@ -40,6 +40,7 @@ class AutoMapperDataTypeBase:
     """
 
     def __init__(self) -> None:
+        self.schema: Optional[Union[StructType, DataType]] = None
         self.children_schema: Optional[Union[StructType, DataType]] = None
 
     # noinspection PyMethodMayBeStatic
@@ -862,7 +863,6 @@ class AutoMapperDataTypeBase:
         ):
             return column_data_type
 
-        # if this is an array then use the mixin
         if isinstance(column_data_type, ArrayType):
             return self._filter_schema_by_fields_present_for_array(
                 column_name=column_name,
@@ -880,6 +880,105 @@ class AutoMapperDataTypeBase:
             column_path=column_path,
             column_data_type=column_data_type,
             skip_null_properties=skip_null_properties,
+        )
+
+    def _set_schema_for_array(
+        self,
+        *,
+        column_name: Optional[str],
+        column_path: Optional[str],
+        column_data_type: DataType,
+    ) -> None:
+        assert isinstance(
+            column_data_type, ArrayType
+        ), f"{type(column_data_type)} should be ArrayType for {column_name} with path {column_path}"
+
+        element_type = column_data_type.elementType
+        self.set_children_schema(element_type)
+        children: Union[
+            AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]
+        ] = self.children
+        assert isinstance(children, list), f"{type(children)} should be a list"
+        if len(children) > 0:
+            child: AutoMapperDataTypeBase
+            for child in children:
+                child.set_schema(
+                    column_name=column_name,
+                    column_path=column_path,
+                    column_data_type=element_type,
+                )
+
+    # noinspection PyUnusedLocal
+    def _set_schema_for_struct(
+        self,
+        *,
+        column_name: Optional[str],
+        column_path: Optional[str],
+        column_data_type: DataType,
+    ) -> None:
+        assert isinstance(
+            column_data_type, StructType
+        ), f"{type(column_data_type)} should be StructType for {column_name} with path {column_path}"
+
+        children: Union[
+            "AutoMapperDataTypeBase", List["AutoMapperDataTypeBase"]
+        ] = self.children
+        if isinstance(children, list) and len(children) > 0:
+            child: "AutoMapperDataTypeBase"
+            for index, child in enumerate(children):
+                child.set_schema(
+                    column_name=column_data_type.fields[index].name,
+                    column_path=f"{column_path}.{column_data_type.fields[index].name}",
+                    column_data_type=column_data_type.fields[index].dataType,
+                )
+        elif not isinstance(children, list) and children is not None:
+            child = children
+            child.set_schema(
+                column_name=column_data_type.fields[0].name,
+                column_path=f"{column_path}.{column_data_type.fields[0].name}",
+                column_data_type=column_data_type.fields[0].dataType,
+            )
+
+    def set_schema(
+        self,
+        *,
+        column_name: Optional[str],
+        column_path: Optional[str],
+        column_data_type: DataType,
+    ) -> None:
+        """
+        Sets the schema for this AutoMapper type
+
+
+        :param column_name: column name
+        :param column_path: full path to column
+        :param column_data_type: schema for this mapper
+        """
+
+        self.schema = column_data_type
+
+        # if this is a basic type so nothing to do
+        if not isinstance(column_data_type, StructType) and not isinstance(
+            column_data_type, ArrayType
+        ):
+            return
+
+        if isinstance(column_data_type, ArrayType):
+            self._set_schema_for_array(
+                column_name=column_name,
+                column_path=column_path,
+                column_data_type=column_data_type,
+            )
+            return
+
+        assert isinstance(
+            column_data_type, StructType
+        ), f"{type(column_data_type)} should be StructType for {column_name} with path {column_path}"
+
+        self._set_schema_for_struct(
+            column_name=column_name,
+            column_path=column_path,
+            column_data_type=column_data_type,
         )
 
     @property

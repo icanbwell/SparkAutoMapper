@@ -67,7 +67,15 @@ class AutoMapperWithColumnBase(AutoMapperBase):
             # if the type has a schema then apply it
             if self.column_schema:
                 column_data_type: DataType = self.column_schema.dataType
+                self.value.set_schema(
+                    column_name=self.dst_column,
+                    column_path=self.dst_column,
+                    column_data_type=column_data_type,
+                )
                 if self.enable_schema_reduction:
+                    # first disable generation of null properties since we are doing schema reduction
+                    self.value.include_null_properties(include_null_properties=False)
+                    # second ask the mapper to reduce schema that is not used
                     column_data_type = self.value.filter_schema_by_fields_present(
                         column_name=self.dst_column,
                         column_path=self.dst_column,
@@ -117,6 +125,7 @@ class AutoMapperWithColumnBase(AutoMapperBase):
             # result = child.check_schema(
             #     parent_column=self.dst_column, source_df=source_df
             # )
+
             try:
                 # get just a few rows so Spark can infer the schema
                 first_few_rows_df: DataFrame = (
