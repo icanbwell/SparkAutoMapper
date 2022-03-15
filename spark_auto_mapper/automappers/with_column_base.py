@@ -51,6 +51,12 @@ class AutoMapperWithColumnBase(AutoMapperBase):
         # if value is an AutoMapper then ask it for its column spec
         if isinstance(self.value, AutoMapperDataTypeBase):
             child: AutoMapperDataTypeBase = self.value
+            if self.column_schema:
+                self.value.set_schema(
+                    column_name=self.dst_column,
+                    column_path=self.dst_column,
+                    column_data_type=self.column_schema.dataType,
+                )
             column_spec = child.get_column_spec(
                 source_df=source_df, current_column=None
             )
@@ -67,11 +73,6 @@ class AutoMapperWithColumnBase(AutoMapperBase):
             # if the type has a schema then apply it
             if self.column_schema:
                 column_data_type: DataType = self.column_schema.dataType
-                self.value.set_schema(
-                    column_name=self.dst_column,
-                    column_path=self.dst_column,
-                    column_data_type=column_data_type,
-                )
                 if self.enable_schema_reduction:
                     # first disable generation of null properties since we are doing schema reduction
                     self.value.include_null_properties(include_null_properties=False)
