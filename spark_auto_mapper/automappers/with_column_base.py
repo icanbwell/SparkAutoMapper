@@ -34,7 +34,7 @@ class AutoMapperWithColumnBase(AutoMapperBase):
         self.dst_column: str = dst_column
         self.column_schema: Optional[StructField] = column_schema
         self.value: AutoMapperDataTypeBase = (
-            AutoMapperValueParser.parse_value(value)
+            AutoMapperValueParser.parse_value(column_name=dst_column, value=value)
             if not isinstance(value, AutoMapperDataTypeBase)
             else value
         )

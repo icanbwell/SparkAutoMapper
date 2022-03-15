@@ -38,25 +38,25 @@ class AutoMapperIfDataType(AutoMapperDataTypeBase, Generic[_TAutoMapperDataType]
             self.check: Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]] = [
                 a
                 if isinstance(a, AutoMapperDataTypeBase)
-                else AutoMapperValueParser.parse_value(a)
+                else AutoMapperValueParser.parse_value(value=a)
                 for a in check
             ]
         else:
             self.check = (
                 check
                 if isinstance(check, AutoMapperDataTypeBase)
-                else AutoMapperValueParser.parse_value(check)
+                else AutoMapperValueParser.parse_value(value=check)
             )
         self.value: AutoMapperDataTypeBase = (
             value
             if isinstance(value, AutoMapperDataTypeBase)
-            else AutoMapperValueParser.parse_value(value)
+            else AutoMapperValueParser.parse_value(value=value)
         )
         if else_:
             self.else_: AutoMapperDataTypeBase = (
                 cast(AutoMapperDataTypeBase, else_)
                 if isinstance(value, AutoMapperDataTypeBase)
-                else AutoMapperValueParser.parse_value(value)
+                else AutoMapperValueParser.parse_value(value=value)
             )
         else:
             self.else_ = AutoMapperDataTypeLiteral(None)

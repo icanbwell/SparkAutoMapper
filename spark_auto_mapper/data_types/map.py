@@ -32,7 +32,7 @@ class AutoMapperMapDataType(AutoMapperDataTypeExpression):
             key: (
                 value
                 if isinstance(value, AutoMapperDataTypeBase)
-                else AutoMapperValueParser.parse_value(value)
+                else AutoMapperValueParser.parse_value(value=value)
             )
             for key, value in mapping.items()
         }
@@ -40,7 +40,7 @@ class AutoMapperMapDataType(AutoMapperDataTypeExpression):
         self.default: AutoMapperDataTypeBase = (
             default
             if isinstance(default, AutoMapperDataTypeBase)
-            else AutoMapperValueParser.parse_value(default)
+            else AutoMapperValueParser.parse_value(value=default)
         )
 
     def get_column_spec(

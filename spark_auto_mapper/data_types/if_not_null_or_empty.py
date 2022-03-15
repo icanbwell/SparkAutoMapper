@@ -36,13 +36,13 @@ class AutoMapperIfNotNullOrEmptyDataType(
         self.value: AutoMapperDataTypeBase = (
             value
             if isinstance(value, AutoMapperDataTypeBase)
-            else AutoMapperValueParser.parse_value(value)
+            else AutoMapperValueParser.parse_value(value=value)
         )
         if when_null_or_empty:
             self.when_null_or_empty: AutoMapperDataTypeBase = (
                 cast(AutoMapperDataTypeBase, when_null_or_empty)
                 if isinstance(value, AutoMapperDataTypeBase)
-                else AutoMapperValueParser.parse_value(value)
+                else AutoMapperValueParser.parse_value(value=value)
             )
         else:
             self.when_null_or_empty = AutoMapperDataTypeLiteral(None)

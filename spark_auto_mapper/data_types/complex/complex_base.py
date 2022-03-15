@@ -37,7 +37,9 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
         self.value = {
             PythonKeywordCleaner.from_python_safe(
                 name=parameter_name
-            ): AutoMapperValueParser.parse_value(parameter_value)
+            ): AutoMapperValueParser.parse_value(
+                column_name=parameter_name, value=parameter_value
+            )
             for parameter_name, parameter_value in kwargs.items()
         }
 

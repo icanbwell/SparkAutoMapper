@@ -40,6 +40,7 @@ class AutoMapperDataTypeBase:
     """
 
     def __init__(self) -> None:
+        self.column_name: Optional[str] = None
         self.schema: Optional[Union[StructType, DataType]] = None
         self.children_schema: Optional[Union[StructType, DataType]] = None
 
@@ -926,6 +927,8 @@ class AutoMapperDataTypeBase:
         if isinstance(children, list) and len(children) > 0:
             child: "AutoMapperDataTypeBase"
             for index, child in enumerate(children):
+                if index >= len(column_data_type.fields):
+                    assert index < len(column_data_type.fields)
                 child.set_schema(
                     column_name=column_data_type.fields[index].name,
                     column_path=f"{column_path}.{column_data_type.fields[index].name}",
@@ -990,3 +993,9 @@ class AutoMapperDataTypeBase:
         The subclasses should implement this
         """
         raise NotImplementedError
+
+    def set_column_name(self, column_name: str) -> None:
+        """
+        Sets the name for this automapper
+        """
+        self.column_name = column_name

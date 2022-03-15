@@ -47,7 +47,7 @@ class AutoMapperNullRemover(AutoMapperDataTypeBase, Generic[_T]):
         if isinstance(value, AutoMapperDataTypeBase):
             self.value = value
         elif isinstance(value, List):
-            self.value = [AutoMapperValueParser.parse_value(v) for v in value]
+            self.value = [AutoMapperValueParser.parse_value(value=v) for v in value]
             # if there are more than two items we have to maintain the same schema in children or Spark errors
             if include_null_properties:
                 self.include_null_properties(

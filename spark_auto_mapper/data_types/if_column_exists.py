@@ -31,14 +31,14 @@ class AutoMapperIfColumnExistsType(
         super().__init__()
 
         self.column: AutoMapperColumnOrColumnLikeType = (
-            AutoMapperValueParser.parse_value(column)
+            AutoMapperValueParser.parse_value(value=column)
         )
         self.if_exists_column: Optional[AutoMapperDataTypeBase] = None
         if if_exists:
             self.if_exists_column = (
                 if_exists
                 if isinstance(if_exists, AutoMapperDataTypeBase)
-                else AutoMapperValueParser.parse_value(if_exists)
+                else AutoMapperValueParser.parse_value(value=if_exists)
             )
 
         self.if_not_exists: Optional[AutoMapperDataTypeBase] = None
@@ -46,7 +46,7 @@ class AutoMapperIfColumnExistsType(
             self.if_not_exists = (
                 if_not_exists
                 if isinstance(if_not_exists, AutoMapperDataTypeBase)
-                else AutoMapperValueParser.parse_value(if_not_exists)
+                else AutoMapperValueParser.parse_value(value=if_not_exists)
             )
 
     def get_column_spec(

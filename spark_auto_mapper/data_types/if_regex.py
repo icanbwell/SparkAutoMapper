@@ -34,13 +34,13 @@ class AutoMapperIfRegExDataType(AutoMapperDataTypeBase, Generic[_TAutoMapperData
         self.value: AutoMapperDataTypeBase = (
             value
             if isinstance(value, AutoMapperDataTypeBase)
-            else AutoMapperValueParser.parse_value(value)
+            else AutoMapperValueParser.parse_value(value=value)
         )
         if else_:
             self.else_: AutoMapperDataTypeBase = (
                 cast(AutoMapperDataTypeBase, else_)
                 if isinstance(value, AutoMapperDataTypeBase)
-                else AutoMapperValueParser.parse_value(value)
+                else AutoMapperValueParser.parse_value(value=value)
             )
         else:
             self.else_ = AutoMapperDataTypeLiteral(None)

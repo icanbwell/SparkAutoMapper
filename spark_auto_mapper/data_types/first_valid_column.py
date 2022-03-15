@@ -31,7 +31,7 @@ class AutoMapperFirstValidColumnType(
         super().__init__()
 
         self.columns: List[AutoMapperColumnOrColumnLikeType] = [
-            AutoMapperValueParser.parse_value(column) for column in columns
+            AutoMapperValueParser.parse_value(value=column) for column in columns
         ]
 
     def get_column_spec(

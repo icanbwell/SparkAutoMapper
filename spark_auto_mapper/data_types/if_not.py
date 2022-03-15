@@ -31,19 +31,19 @@ class AutoMapperIfNotDataType(AutoMapperDataTypeBase, Generic[_TAutoMapperDataTy
             self.check: Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]] = [
                 a
                 if isinstance(a, AutoMapperDataTypeBase)
-                else AutoMapperValueParser.parse_value(a)
+                else AutoMapperValueParser.parse_value(value=a)
                 for a in check
             ]
         else:
             self.check = (
                 check
                 if isinstance(check, AutoMapperDataTypeBase)
-                else AutoMapperValueParser.parse_value(check)
+                else AutoMapperValueParser.parse_value(value=check)
             )
         self.value: AutoMapperDataTypeBase = (
             value
             if isinstance(value, AutoMapperDataTypeBase)
-            else AutoMapperValueParser.parse_value(value)
+            else AutoMapperValueParser.parse_value(value=value)
         )
 
     def include_null_properties(self, include_null_properties: bool) -> None:
