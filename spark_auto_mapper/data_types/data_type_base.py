@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 # noinspection PyPackageRequirements
 from pyspark.sql.types import StructType, StringType, DataType, ArrayType, StructField
 from spark_auto_mapper.automappers.check_schema_result import CheckSchemaResult
+from spark_auto_mapper.helpers.python_keyword_cleaner import PythonKeywordCleaner
 
 if TYPE_CHECKING:
     from spark_auto_mapper.data_types.amount import AutoMapperAmountDataType
@@ -927,19 +928,41 @@ class AutoMapperDataTypeBase:
         if isinstance(children, list) and len(children) > 0:
             child: "AutoMapperDataTypeBase"
             for index, child in enumerate(children):
-                if index >= len(column_data_type.fields):
-                    assert index < len(column_data_type.fields)
+                assert child.column_name
+                clean_child_name: str = PythonKeywordCleaner.from_python_safe(
+                    child.column_name
+                )
+                matching_fields = [
+                    f for f in column_data_type.fields if f.name == clean_child_name
+                ]
+                assert len(matching_fields) == 1, (
+                    f"Schema match failed for column {column_path}.{clean_child_name}"
+                    f" in schema fields"
+                    f": [{','.join([f.name for f in column_data_type.fields])}]"
+                )
+                field: StructField = matching_fields[0]
                 child.set_schema(
-                    column_name=column_data_type.fields[index].name,
-                    column_path=f"{column_path}.{column_data_type.fields[index].name}",
-                    column_data_type=column_data_type.fields[index].dataType,
+                    column_name=field.name,
+                    column_path=f"{column_path}.{field.name}",
+                    column_data_type=field.dataType,
                 )
         elif not isinstance(children, list) and children is not None:
             child = children
+            assert child.column_name
+            clean_child_name = PythonKeywordCleaner.from_python_safe(child.column_name)
+            matching_fields = [
+                f for f in column_data_type.fields if f.name == clean_child_name
+            ]
+            assert len(matching_fields) == 1, (
+                f"Schema match failed for column {column_path}.{clean_child_name}"
+                f" in schema fields"
+                f": [{','.join([f.name for f in column_data_type.fields])}]"
+            )
+            field = matching_fields[0]
             child.set_schema(
-                column_name=column_data_type.fields[0].name,
-                column_path=f"{column_path}.{column_data_type.fields[0].name}",
-                column_data_type=column_data_type.fields[0].dataType,
+                column_name=field.name,
+                column_path=f"{column_path}.{field.name}",
+                column_data_type=field.dataType,
             )
 
     def set_schema(
