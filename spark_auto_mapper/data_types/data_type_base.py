@@ -1022,3 +1022,10 @@ class AutoMapperDataTypeBase:
         Sets the name for this automapper
         """
         self.column_name = column_name
+
+    def __repr__(self) -> str:
+        return (
+            f"{self.column_name}: {self.__class__.__name__}"
+            if self.column_name is not None
+            else self.__class__.__name__
+        )

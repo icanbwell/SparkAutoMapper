@@ -151,6 +151,8 @@ class AutoMapperList(AutoMapperArrayLikeBase, Generic[_T]):
     def get_schema(
         self, include_extension: bool, extension_fields: Optional[List[str]] = None
     ) -> Optional[Union[StructType, DataType]]:
+        if self.schema:
+            return self.schema
         if self.children_schema:
             return self.children_schema
         if isinstance(self.value, list):
