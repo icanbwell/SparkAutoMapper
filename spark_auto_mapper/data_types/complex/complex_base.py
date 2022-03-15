@@ -111,11 +111,16 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
         return list(self.value.values())
 
     def filter_schema_by_fields_present(
-        self, column_data_type: DataType, skip_null_properties: bool
+        self,
+        *,
+        column_name: Optional[str],
+        column_path: Optional[str],
+        column_data_type: DataType,
+        skip_null_properties: bool,
     ) -> DataType:
         assert isinstance(
             column_data_type, StructType
-        ), f"{type(column_data_type)} should be StructType"
+        ), f"{type(column_data_type)} should be StructType for {column_name} with path {column_path}"
 
         children: Dict[str, AutoMapperDataTypeBase] = self.value
         name: str
@@ -126,6 +131,8 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
             ]
             if len(field_list) > 0:
                 child.filter_schema_by_fields_present(
+                    column_name=field_list[0].name,
+                    column_path=f"{column_path}.{field_list[0].name}",
                     column_data_type=field_list[0].dataType,
                     # no need to pass this since it only applies to the first level under a list
                     skip_null_properties=True,

@@ -768,11 +768,16 @@ class AutoMapperDataTypeBase:
             child.add_missing_values_and_order(expected_keys=expected_keys)
 
     def _filter_schema_by_fields_present_for_array(
-        self, column_data_type: DataType, skip_null_properties: bool
+        self,
+        *,
+        column_name: Optional[str],
+        column_path: Optional[str],
+        column_data_type: DataType,
+        skip_null_properties: bool,
     ) -> DataType:
         assert isinstance(
             column_data_type, ArrayType
-        ), f"{type(column_data_type)} should be an array"
+        ), f"{type(column_data_type)} should be ArrayType for {column_name} with path {column_path}"
 
         self.ensure_children_have_same_properties(
             skip_null_properties=skip_null_properties
@@ -788,16 +793,26 @@ class AutoMapperDataTypeBase:
             child: AutoMapperDataTypeBase
             for child in children:
                 child.filter_schema_by_fields_present(
+                    column_name=column_name,
+                    column_path=column_path,
                     column_data_type=element_type,
                     skip_null_properties=should_skip_null_properties,
                 )
 
         return column_data_type
 
+    # noinspection PyUnusedLocal
     def _filter_schema_by_fields_present_for_struct(
-        self, column_data_type: DataType, skip_null_properties: bool
+        self,
+        *,
+        column_name: Optional[str],
+        column_path: Optional[str],
+        column_data_type: DataType,
+        skip_null_properties: bool,
     ) -> DataType:
-        assert isinstance(column_data_type, StructType)
+        assert isinstance(
+            column_data_type, StructType
+        ), f"{type(column_data_type)} should be StructType for {column_name} with path {column_path}"
 
         children: Union[
             "AutoMapperDataTypeBase", List["AutoMapperDataTypeBase"]
@@ -806,12 +821,16 @@ class AutoMapperDataTypeBase:
             child: "AutoMapperDataTypeBase"
             for index, child in enumerate(children):
                 child.filter_schema_by_fields_present(
+                    column_name=column_data_type.fields[index].name,
+                    column_path=f"{column_path}.{column_data_type.fields[index].name}",
                     column_data_type=column_data_type.fields[index].dataType,
                     skip_null_properties=skip_null_properties,
                 )
         elif not isinstance(children, list) and children is not None:
             child = children
             child.filter_schema_by_fields_present(
+                column_name=column_data_type.fields[0].name,
+                column_path=f"{column_path}.{column_data_type.fields[0].name}",
                 column_data_type=column_data_type.fields[0].dataType,
                 skip_null_properties=skip_null_properties,
             )
@@ -830,7 +849,12 @@ class AutoMapperDataTypeBase:
         return column_data_type
 
     def filter_schema_by_fields_present(
-        self, column_data_type: DataType, skip_null_properties: bool
+        self,
+        *,
+        column_name: Optional[str],
+        column_path: Optional[str],
+        column_data_type: DataType,
+        skip_null_properties: bool,
     ) -> DataType:
         # if this is a basic type so nothing to do
         if not isinstance(column_data_type, StructType) and not isinstance(
@@ -841,16 +865,21 @@ class AutoMapperDataTypeBase:
         # if this is an array then use the mixin
         if isinstance(column_data_type, ArrayType):
             return self._filter_schema_by_fields_present_for_array(
+                column_name=column_name,
+                column_path=column_path,
                 column_data_type=column_data_type,
                 skip_null_properties=skip_null_properties,
             )
 
         assert isinstance(
             column_data_type, StructType
-        ), f"{type(column_data_type)} is not StructType"
+        ), f"{type(column_data_type)} should be StructType for {column_name} with path {column_path}"
 
         return self._filter_schema_by_fields_present_for_struct(
-            column_data_type=column_data_type, skip_null_properties=skip_null_properties
+            column_name=column_name,
+            column_path=column_path,
+            column_data_type=column_data_type,
+            skip_null_properties=skip_null_properties,
         )
 
     @property
