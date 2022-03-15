@@ -419,7 +419,7 @@ class AutoMapperDataTypeBase:
     # override this if your inherited class has a defined schema
     # noinspection PyMethodMayBeStatic
     def get_schema(
-        self, include_extension: bool
+        self, include_extension: bool, extension_fields: Optional[List[str]] = None
     ) -> Optional[Union[StructType, DataType]]:
         return None
 

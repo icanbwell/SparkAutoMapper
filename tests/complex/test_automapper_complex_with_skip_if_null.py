@@ -1,4 +1,4 @@
-from typing import Dict, Optional, Union
+from typing import Dict, Optional, Union, List
 
 from pyspark.sql import SparkSession, Column, DataFrame
 
@@ -25,7 +25,7 @@ class MyClass(AutoMapperDataTypeComplexBase):
         super().__init__(id_=id_, name=name, age=age)
 
     def get_schema(
-        self, include_extension: bool
+        self, include_extension: bool, extension_fields: Optional[List[str]] = None
     ) -> Optional[Union[StructType, DataType]]:
         schema: StructType = StructType(
             [

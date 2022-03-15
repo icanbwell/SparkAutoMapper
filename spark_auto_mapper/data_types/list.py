@@ -149,7 +149,7 @@ class AutoMapperList(AutoMapperArrayLikeBase, Generic[_T]):
 
     # noinspection PyMethodMayBeStatic
     def get_schema(
-        self, include_extension: bool
+        self, include_extension: bool, extension_fields: Optional[List[str]] = None
     ) -> Optional[Union[StructType, DataType]]:
         if self.children_schema:
             return self.children_schema
@@ -159,7 +159,10 @@ class AutoMapperList(AutoMapperArrayLikeBase, Generic[_T]):
                 first_element = self.value[0]
                 schema: Optional[
                     Union[StructType, DataType]
-                ] = first_element.get_schema(include_extension=include_extension)
+                ] = first_element.get_schema(
+                    include_extension=include_extension,
+                    extension_fields=extension_fields,
+                )
                 if schema is None:
                     return None
                 return StructType([StructField("extension", ArrayType(schema))])
