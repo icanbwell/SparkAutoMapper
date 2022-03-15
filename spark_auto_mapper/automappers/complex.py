@@ -37,9 +37,29 @@ class AutoMapperWithComplex(AutoMapperContainer):
         field_names: List[str] = list(entity.get_child_mappers().keys())
         has_extension: bool = "extension" in field_names
 
+        # TODO: should detect from schema what fields are being used
+        standard_extension_fields: List[str] = [
+            "valueBoolean",
+            "valueCode",
+            "valueDate",
+            "valueDateTime",
+            "valueDecimal",
+            "valueId",
+            "valueInteger",
+            "valuePositiveInt",
+            "valueString",
+            "valueTime",
+            "valueUnsignedInt",
+            "valueUri",
+            "valueUrl",
+            "valueReference",
+            "valueCodeableConcept",
+            "valueAddress",
+        ]
         # ask entity for its schema
         schema: Union[StructType, DataType, None] = entity.get_schema(
-            include_extension=include_extension or has_extension
+            include_extension=include_extension or has_extension,
+            extension_fields=standard_extension_fields,
         )
         column_schema: Dict[str, StructField] = {}
         self.enable_schema_reduction: bool = enable_schema_reduction
@@ -53,6 +73,7 @@ class AutoMapperWithComplex(AutoMapperContainer):
                     # since there is a column called extension then get the schema with extension
                     extension_schema = mapper.get_schema(
                         include_extension=include_extension or has_extension,
+                        extension_fields=standard_extension_fields,
                     )
                     if extension_schema is not None:
                         if (
