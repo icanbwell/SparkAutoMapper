@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 # noinspection PyPackageRequirements
 from pyspark.sql.types import StructType, StringType, DataType, ArrayType, StructField
 from spark_auto_mapper.automappers.check_schema_result import CheckSchemaResult
+from spark_auto_mapper.helpers.field_node import FieldNode
 from spark_auto_mapper.helpers.python_keyword_cleaner import PythonKeywordCleaner
 
 if TYPE_CHECKING:
@@ -689,7 +690,7 @@ class AutoMapperDataTypeBase:
         if self.children is None or not isinstance(self.children, list):
             return
 
-        children_properties: Dict[AutoMapperDataTypeBase, List[str]] = {
+        children_properties: Dict[AutoMapperDataTypeBase, List[FieldNode]] = {
             v: v.get_fields(skip_null_properties=skip_null_properties)
             for v in self.children
         }
@@ -697,8 +698,8 @@ class AutoMapperDataTypeBase:
         superset_of_all_properties: List[str] = []
         for child, child_properties in children_properties.items():
             for child_property in child_properties:
-                if child_property not in superset_of_all_properties:
-                    superset_of_all_properties.append(child_property)
+                if child_property.name not in superset_of_all_properties:
+                    superset_of_all_properties.append(child_property.name)
 
         ordered_superset_of_all_properties: List[str] = []
         if self.children_schema and isinstance(self.children_schema, StructType):
@@ -709,9 +710,9 @@ class AutoMapperDataTypeBase:
                     ordered_superset_of_all_properties.append(field_name_safe)
             # confirm that there wasn't any field missing from schema
             missing_properties: List[str] = []
-            for child_property in superset_of_all_properties:
-                if child_property not in ordered_superset_of_all_properties:
-                    missing_properties.append(child_property)
+            for child_property_name in superset_of_all_properties:
+                if child_property_name not in ordered_superset_of_all_properties:
+                    missing_properties.append(child_property_name)
             assert len(missing_properties) == 0, (
                 f"List had items with properties not present in schema:"
                 f" {','.join(missing_properties)}."
@@ -737,12 +738,12 @@ class AutoMapperDataTypeBase:
         """
         self.children_schema = schema
 
-    def get_fields(self, skip_null_properties: bool) -> List[str]:
+    def get_fields(self, skip_null_properties: bool) -> List[FieldNode]:
         """
         Returns unique list of fields from the children
 
         """
-        fields: List[str] = []
+        fields: List[FieldNode] = []
 
         children: List[AutoMapperDataTypeBase]
         if not isinstance(self.children, list):
@@ -750,7 +751,7 @@ class AutoMapperDataTypeBase:
         else:
             children = self.children
         for child in children:
-            child_fields: List[str] = child.get_fields(
+            child_fields: List[FieldNode] = child.get_fields(
                 skip_null_properties=skip_null_properties
             )
             for child_field in child_fields:
@@ -838,14 +839,14 @@ class AutoMapperDataTypeBase:
                 skip_null_properties=skip_null_properties,
             )
 
-        fields: List[str] = self.get_fields(skip_null_properties=True)
+        fields: List[FieldNode] = self.get_fields(skip_null_properties=True)
         new_column_data_type: DataType = column_data_type
         if isinstance(new_column_data_type, StructType) and len(fields) > 0:
             # return only the values that match the fields
             new_column_data_type.fields = [
                 c
                 for c in new_column_data_type.fields
-                if c.name in fields or c.nullable is False
+                if c.name in [f.name for f in fields] or c.nullable is False
             ]
             new_column_data_type.names = [f.name for f in new_column_data_type.fields]
 
