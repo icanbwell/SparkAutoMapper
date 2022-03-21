@@ -1,4 +1,4 @@
-from typing import Dict, Optional, Union
+from typing import Dict, Optional, Union, List
 
 # noinspection PyPackageRequirements
 from pyspark.sql import SparkSession, Column, DataFrame
@@ -90,7 +90,7 @@ class MyProcessingStatusExtension(AutoMapperDataTypeComplexBase):
             )
 
     def get_schema(
-        self, include_extension: bool
+        self, include_extension: bool, extension_fields: Optional[List[str]] = None
     ) -> Optional[Union[StructType, DataType]]:
         return MyProcessingStatusExtension.get_schema_static(
             include_extension=include_extension
@@ -139,7 +139,7 @@ class MyClass(AutoMapperDataTypeComplexBase):
         super().__init__(name=name, age=age, extension=extension)
 
     def get_schema(
-        self, include_extension: bool
+        self, include_extension: bool, extension_fields: Optional[List[str]] = None
     ) -> Optional[Union[StructType, DataType]]:
         schema: StructType = StructType(
             [

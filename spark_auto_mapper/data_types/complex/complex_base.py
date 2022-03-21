@@ -10,6 +10,7 @@ from pyspark.sql.functions import struct
 from pyspark.sql.types import StructType, DataType, StructField
 
 from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
+from spark_auto_mapper.helpers.field_node import FieldNode
 from spark_auto_mapper.helpers.python_keyword_cleaner import PythonKeywordCleaner
 from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
 
@@ -37,7 +38,9 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
         self.value = {
             PythonKeywordCleaner.from_python_safe(
                 name=parameter_name
-            ): AutoMapperValueParser.parse_value(parameter_value)
+            ): AutoMapperValueParser.parse_value(
+                column_name=parameter_name, value=parameter_value
+            )
             for parameter_name, parameter_value in kwargs.items()
         }
 
@@ -90,14 +93,14 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
     # override this if your inherited class has a defined schema
     # noinspection PyMethodMayBeStatic
     def get_schema(
-        self, include_extension: bool
+        self, include_extension: bool, extension_fields: Optional[List[str]] = None
     ) -> Optional[Union[StructType, DataType]]:
         return None
 
-    def get_fields(self, skip_null_properties: bool) -> List[str]:
+    def get_fields(self, skip_null_properties: bool) -> List[FieldNode]:
         return list(
             [
-                k
+                FieldNode(k)
                 for k, v in self.value.items()
                 if not skip_null_properties
                 or (not (isinstance(v, AutoMapperDataTypeLiteral) and v.value is None))
@@ -138,14 +141,16 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
                     skip_null_properties=True,
                 )
 
-        fields: List[str] = self.get_fields(skip_null_properties=skip_null_properties)
+        fields: List[FieldNode] = self.get_fields(
+            skip_null_properties=skip_null_properties
+        )
         new_column_data_type: DataType = column_data_type
         if isinstance(new_column_data_type, StructType) and len(fields) > 0:
             # return only the values that match the fields
             new_column_data_type.fields = [
                 c
                 for c in new_column_data_type.fields
-                if c.name in fields or c.nullable is False
+                if c.name in [f.name for f in fields] or c.nullable is False
             ]
             new_column_data_type.names = [f.name for f in new_column_data_type.fields]
 

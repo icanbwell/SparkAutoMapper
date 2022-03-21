@@ -9,6 +9,8 @@ from typing import TYPE_CHECKING
 # noinspection PyPackageRequirements
 from pyspark.sql.types import StructType, StringType, DataType, ArrayType, StructField
 from spark_auto_mapper.automappers.check_schema_result import CheckSchemaResult
+from spark_auto_mapper.helpers.field_node import FieldNode
+from spark_auto_mapper.helpers.python_keyword_cleaner import PythonKeywordCleaner
 
 if TYPE_CHECKING:
     from spark_auto_mapper.data_types.amount import AutoMapperAmountDataType
@@ -40,6 +42,8 @@ class AutoMapperDataTypeBase:
     """
 
     def __init__(self) -> None:
+        self.column_name: Optional[str] = None
+        self.schema: Optional[Union[StructType, DataType]] = None
         self.children_schema: Optional[Union[StructType, DataType]] = None
 
     # noinspection PyMethodMayBeStatic
@@ -416,7 +420,7 @@ class AutoMapperDataTypeBase:
     # override this if your inherited class has a defined schema
     # noinspection PyMethodMayBeStatic
     def get_schema(
-        self, include_extension: bool
+        self, include_extension: bool, extension_fields: Optional[List[str]] = None
     ) -> Optional[Union[StructType, DataType]]:
         return None
 
@@ -686,7 +690,7 @@ class AutoMapperDataTypeBase:
         if self.children is None or not isinstance(self.children, list):
             return
 
-        children_properties: Dict[AutoMapperDataTypeBase, List[str]] = {
+        children_properties: Dict[AutoMapperDataTypeBase, List[FieldNode]] = {
             v: v.get_fields(skip_null_properties=skip_null_properties)
             for v in self.children
         }
@@ -694,8 +698,8 @@ class AutoMapperDataTypeBase:
         superset_of_all_properties: List[str] = []
         for child, child_properties in children_properties.items():
             for child_property in child_properties:
-                if child_property not in superset_of_all_properties:
-                    superset_of_all_properties.append(child_property)
+                if child_property.name not in superset_of_all_properties:
+                    superset_of_all_properties.append(child_property.name)
 
         ordered_superset_of_all_properties: List[str] = []
         if self.children_schema and isinstance(self.children_schema, StructType):
@@ -706,9 +710,9 @@ class AutoMapperDataTypeBase:
                     ordered_superset_of_all_properties.append(field_name_safe)
             # confirm that there wasn't any field missing from schema
             missing_properties: List[str] = []
-            for child_property in superset_of_all_properties:
-                if child_property not in ordered_superset_of_all_properties:
-                    missing_properties.append(child_property)
+            for child_property_name in superset_of_all_properties:
+                if child_property_name not in ordered_superset_of_all_properties:
+                    missing_properties.append(child_property_name)
             assert len(missing_properties) == 0, (
                 f"List had items with properties not present in schema:"
                 f" {','.join(missing_properties)}."
@@ -734,12 +738,12 @@ class AutoMapperDataTypeBase:
         """
         self.children_schema = schema
 
-    def get_fields(self, skip_null_properties: bool) -> List[str]:
+    def get_fields(self, skip_null_properties: bool) -> List[FieldNode]:
         """
         Returns unique list of fields from the children
 
         """
-        fields: List[str] = []
+        fields: List[FieldNode] = []
 
         children: List[AutoMapperDataTypeBase]
         if not isinstance(self.children, list):
@@ -747,7 +751,7 @@ class AutoMapperDataTypeBase:
         else:
             children = self.children
         for child in children:
-            child_fields: List[str] = child.get_fields(
+            child_fields: List[FieldNode] = child.get_fields(
                 skip_null_properties=skip_null_properties
             )
             for child_field in child_fields:
@@ -835,14 +839,14 @@ class AutoMapperDataTypeBase:
                 skip_null_properties=skip_null_properties,
             )
 
-        fields: List[str] = self.get_fields(skip_null_properties=True)
+        fields: List[FieldNode] = self.get_fields(skip_null_properties=True)
         new_column_data_type: DataType = column_data_type
         if isinstance(new_column_data_type, StructType) and len(fields) > 0:
             # return only the values that match the fields
             new_column_data_type.fields = [
                 c
                 for c in new_column_data_type.fields
-                if c.name in fields or c.nullable is False
+                if c.name in [f.name for f in fields] or c.nullable is False
             ]
             new_column_data_type.names = [f.name for f in new_column_data_type.fields]
 
@@ -862,7 +866,6 @@ class AutoMapperDataTypeBase:
         ):
             return column_data_type
 
-        # if this is an array then use the mixin
         if isinstance(column_data_type, ArrayType):
             return self._filter_schema_by_fields_present_for_array(
                 column_name=column_name,
@@ -882,6 +885,129 @@ class AutoMapperDataTypeBase:
             skip_null_properties=skip_null_properties,
         )
 
+    def _set_schema_for_array(
+        self,
+        *,
+        column_name: Optional[str],
+        column_path: Optional[str],
+        column_data_type: DataType,
+    ) -> None:
+        assert isinstance(
+            column_data_type, ArrayType
+        ), f"{type(column_data_type)} should be ArrayType for {column_name} with path {column_path}"
+
+        element_type = column_data_type.elementType
+        self.set_children_schema(element_type)
+        children: Union[
+            AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]
+        ] = self.children
+        assert isinstance(children, list), f"{type(children)} should be a list"
+        if len(children) > 0:
+            child: AutoMapperDataTypeBase
+            for child in children:
+                child.set_schema(
+                    column_name=column_name,
+                    column_path=column_path,
+                    column_data_type=element_type,
+                )
+
+    # noinspection PyUnusedLocal
+    def _set_schema_for_struct(
+        self,
+        *,
+        column_name: Optional[str],
+        column_path: Optional[str],
+        column_data_type: DataType,
+    ) -> None:
+        assert isinstance(
+            column_data_type, StructType
+        ), f"{type(column_data_type)} should be StructType for {column_name} with path {column_path}"
+
+        children: Union[
+            "AutoMapperDataTypeBase", List["AutoMapperDataTypeBase"]
+        ] = self.children
+        if isinstance(children, list) and len(children) > 0:
+            child: "AutoMapperDataTypeBase"
+            for index, child in enumerate(children):
+                assert child.column_name
+                clean_child_name: str = PythonKeywordCleaner.from_python_safe(
+                    child.column_name
+                )
+                matching_fields = [
+                    f for f in column_data_type.fields if f.name == clean_child_name
+                ]
+                assert len(matching_fields) == 1, (
+                    f"Schema match failed for column {column_path}.{clean_child_name}"
+                    f" in schema fields"
+                    f": [{','.join([f.name for f in column_data_type.fields])}]"
+                )
+                field: StructField = matching_fields[0]
+                child.set_schema(
+                    column_name=field.name,
+                    column_path=f"{column_path}.{field.name}",
+                    column_data_type=field.dataType,
+                )
+        elif not isinstance(children, list) and children is not None:
+            child = children
+            assert child.column_name
+            clean_child_name = PythonKeywordCleaner.from_python_safe(child.column_name)
+            matching_fields = [
+                f for f in column_data_type.fields if f.name == clean_child_name
+            ]
+            assert len(matching_fields) == 1, (
+                f"Schema match failed for column {column_path}.{clean_child_name}"
+                f" in schema fields"
+                f": [{','.join([f.name for f in column_data_type.fields])}]"
+            )
+            field = matching_fields[0]
+            child.set_schema(
+                column_name=field.name,
+                column_path=f"{column_path}.{field.name}",
+                column_data_type=field.dataType,
+            )
+
+    def set_schema(
+        self,
+        *,
+        column_name: Optional[str],
+        column_path: Optional[str],
+        column_data_type: DataType,
+    ) -> None:
+        """
+        Sets the schema for this AutoMapper type
+
+
+        :param column_name: column name
+        :param column_path: full path to column
+        :param column_data_type: schema for this mapper
+        """
+
+        self.schema = column_data_type
+
+        # if this is a basic type so nothing to do
+        if not isinstance(column_data_type, StructType) and not isinstance(
+            column_data_type, ArrayType
+        ):
+            return
+
+        if isinstance(column_data_type, ArrayType):
+            self._set_schema_for_array(
+                column_name=column_name,
+                column_path=column_path,
+                column_data_type=column_data_type,
+            )
+            return
+
+        assert isinstance(
+            column_data_type, StructType
+        ), f"{type(column_data_type)} should be StructType for {column_name} with path {column_path}"
+
+        self._set_schema_for_struct(
+            column_name=column_name,
+            column_path=column_path,
+            column_data_type=column_data_type,
+        )
+
     @property
     @abstractmethod
     def children(
@@ -891,3 +1017,16 @@ class AutoMapperDataTypeBase:
         The subclasses should implement this
         """
         raise NotImplementedError
+
+    def set_column_name(self, column_name: str) -> None:
+        """
+        Sets the name for this automapper
+        """
+        self.column_name = column_name
+
+    def __repr__(self) -> str:
+        return (
+            f"{self.column_name}: {self.__class__.__name__}"
+            if self.column_name is not None
+            else self.__class__.__name__
+        )

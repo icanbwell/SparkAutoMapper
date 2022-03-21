@@ -23,7 +23,7 @@ class AutoMapperDecimalDataType(AutoMapperDataTypeBase):
         self.value: AutoMapperDataTypeBase = (
             value
             if isinstance(value, AutoMapperDataTypeBase)
-            else AutoMapperValueParser.parse_value(value)
+            else AutoMapperValueParser.parse_value(value=value)
         )
 
     def get_column_spec(

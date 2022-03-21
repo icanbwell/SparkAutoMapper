@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from typing import Union, Dict, Any, List
+from typing import Union, Dict, Any, List, Optional
 
 from pyspark.sql import Column
 from pyspark.sql.types import DateType, FloatType, IntegerType
@@ -12,8 +12,26 @@ from spark_auto_mapper.type_definitions.defined_types import AutoMapperAnyDataTy
 class AutoMapperValueParser:
     @staticmethod
     def parse_value(
+        *,
+        column_name: Optional[str] = None,
         value: Union[Dict[str, Any], List[Any], AutoMapperAnyDataType],
-        include_nulls: bool = False,
+    ) -> AutoMapperDataTypeBase:
+        """
+        Parses the value and if the value is an AutoMapper then it just returns it otherwise it creates an
+        AutoMapper with the value
+
+
+        :param column_name: name of column
+        :param value: value
+        """
+        result: AutoMapperDataTypeBase = AutoMapperValueParser._parse_value(value=value)
+        if column_name is not None:
+            result.set_column_name(column_name=column_name)
+        return result
+
+    @staticmethod
+    def _parse_value(
+        value: Union[Dict[str, Any], List[Any], AutoMapperAnyDataType]
     ) -> AutoMapperDataTypeBase:
         # convert any short syntax to long syntax
         if isinstance(value, str):
