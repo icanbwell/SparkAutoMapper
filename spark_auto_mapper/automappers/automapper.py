@@ -69,6 +69,7 @@ class AutoMapper(AutoMapperContainer):
         log_level: Optional[Union[int, str]] = None,
         enable_schema_reduction: bool = False,
         remove_duplicates_by_columns: Optional[List[str]] = None,
+        extension_fields: Optional[List[str]] = None,
     ):
         """
         Creates an AutoMapper
@@ -154,6 +155,7 @@ class AutoMapper(AutoMapperContainer):
         self.remove_duplicates_by_columns: Optional[
             List[str]
         ] = remove_duplicates_by_columns
+        self.extension_fields: Optional[List[str]] = extension_fields
 
     def _transform_with_data_frame_single_select(
         self, df: DataFrame, source_df: DataFrame, keys: List[str]
@@ -655,6 +657,7 @@ class AutoMapper(AutoMapperContainer):
             skip_schema_validation=self.skip_schema_validation,
             skip_if_columns_null_or_empty=self.skip_if_columns_null_or_empty,
             enable_schema_reduction=self.enable_schema_reduction,
+            extension_fields=self.extension_fields,
         )
 
         self.entity_name = entity.__class__.__name__
