@@ -67,7 +67,7 @@ class AutoMapper(AutoMapperContainer):
         copy_all_unmapped_properties: bool = False,
         copy_all_unmapped_properties_exclude: Optional[List[str]] = None,
         log_level: Optional[Union[int, str]] = None,
-        enable_schema_reduction: bool = False,
+        enable_schema_pruning: bool = False,
         remove_duplicates_by_columns: Optional[List[str]] = None,
         extension_fields: Optional[List[str]] = None,
     ):
@@ -86,6 +86,7 @@ class AutoMapper(AutoMapperContainer):
         :param use_schema: apply schema to columns
         :param include_extension: By default we don't include extension elements since they take up a lot of schema.
                 If you're using extensions then set this
+        :param extension_fields: fields to enable in extensions
         :param include_null_properties: If you want to include null properties
         :param use_single_select: This is a faster way to run the AutoMapper since it will select
                 all the columns at once.
@@ -98,7 +99,7 @@ class AutoMapper(AutoMapperContainer):
         :param copy_all_unmapped_properties: copy any property that is not explicitly mapped
         :param copy_all_unmapped_properties_exclude: exclude these columns when copy_all_unmapped_properties is set
         :param logger: logger used to log informational messages
-        :param enable_schema_reduction: enables remove properties from schema that are not present in the automapper
+        :param enable_schema_pruning: remove properties from schema that are not present in the automapper
         :param remove_duplicates_by_columns: remove duplicate rows where the value of these columns match
         """
         super().__init__()
@@ -149,8 +150,8 @@ class AutoMapper(AutoMapperContainer):
         ] = copy_all_unmapped_properties_exclude
 
         self.entity_name: Optional[str] = None
-        self.enable_schema_reduction: bool = enable_schema_reduction
-        if enable_schema_reduction:
+        self.enable_schema_pruning: bool = enable_schema_pruning
+        if enable_schema_pruning:
             self.skip_schema_validation = []  # no need to filter out extensions
         self.remove_duplicates_by_columns: Optional[
             List[str]
@@ -656,7 +657,7 @@ class AutoMapper(AutoMapperContainer):
             include_null_properties=self.include_null_properties,
             skip_schema_validation=self.skip_schema_validation,
             skip_if_columns_null_or_empty=self.skip_if_columns_null_or_empty,
-            enable_schema_reduction=self.enable_schema_reduction,
+            enable_schema_pruning=self.enable_schema_pruning,
             extension_fields=self.extension_fields,
         )
 

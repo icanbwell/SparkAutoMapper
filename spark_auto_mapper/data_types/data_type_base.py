@@ -690,6 +690,9 @@ class AutoMapperDataTypeBase:
         if self.children is None or not isinstance(self.children, list):
             return
 
+        for child in self.children:
+            assert isinstance(child, AutoMapperDataTypeBase), f"{type(child)}"
+
         children_properties: Dict[AutoMapperDataTypeBase, List[FieldNode]] = {
             v: v.get_fields(skip_null_properties=skip_null_properties)
             for v in self.children
@@ -929,7 +932,10 @@ class AutoMapperDataTypeBase:
         if isinstance(children, list) and len(children) > 0:
             child: "AutoMapperDataTypeBase"
             for index, child in enumerate(children):
-                assert child.column_name
+                assert isinstance(child, AutoMapperDataTypeBase), f"{type(child)}"
+                if not child.column_name:
+                    continue
+                assert child.column_name, f"No column name for {child}"
                 clean_child_name: str = PythonKeywordCleaner.from_python_safe(
                     child.column_name
                 )

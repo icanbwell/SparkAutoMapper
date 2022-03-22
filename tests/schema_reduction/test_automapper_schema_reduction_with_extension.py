@@ -169,7 +169,7 @@ def test_auto_mapper_schema_reduction_with_extension(
     mapper = AutoMapper(
         view="members",
         source_view="patients",
-        enable_schema_reduction=True,
+        enable_schema_pruning=True,
         skip_schema_validation=[],
     ).complex(
         MyClass(

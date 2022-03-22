@@ -1,4 +1,4 @@
-FROM imranq2/spark-py:3.0.50
+FROM imranq2/spark-py:3.0.54
 # https://github.com/imranq2/kubernetes.spark_python
 USER root
 

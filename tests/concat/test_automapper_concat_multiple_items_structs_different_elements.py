@@ -39,7 +39,7 @@ def test_auto_mapper_concat_multiple_items_structs_different_elements(
 
     # Act
     mapper = AutoMapper(
-        view="members", source_view="patients", enable_schema_reduction=True
+        view="members", source_view="patients", enable_schema_pruning=True
     ).columns(
         dst2=AutoMapperList(
             [

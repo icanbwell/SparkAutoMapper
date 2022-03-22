@@ -58,4 +58,8 @@ class AutoMapperConcatDataType(AutoMapperArrayLikeBase):
 
     @property
     def children(self) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
-        return self.value
+        result: List[AutoMapperDataTypeBase] = []
+        if self.value is not None:
+            for my_value in self.value:
+                result.append(my_value)
+        return result
