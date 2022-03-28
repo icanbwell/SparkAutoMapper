@@ -35,7 +35,7 @@ class MyClass(AutoMapperDataTypeComplexBase):
         return schema
 
 
-def test_auto_mapper_schema_reduction_with_defined_class(
+def test_auto_mapper_schema_pruning_with_defined_class(
     spark_session: SparkSession,
 ) -> None:
     # Arrange

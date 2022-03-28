@@ -48,7 +48,7 @@ setup(
     install_requires=[
         "pyspark==3.1.1",
         "logger>=1.4",
-        "sparkdataframecomparer>=1.0.0",
+        "sparkdataframecomparer>=1.0.2",
         "deprecated>=1.2.12",
         "numpy>=1.7",
     ],

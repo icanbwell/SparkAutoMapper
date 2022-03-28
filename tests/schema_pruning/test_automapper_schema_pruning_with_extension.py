@@ -70,13 +70,6 @@ class MyProcessingStatusExtension(AutoMapperDataTypeComplexBase):
                 valueString=request_id,
             ),
         ]
-        if date_processed:
-            processing_status_extensions.append(
-                MyProcessingStatusExtensionItem(
-                    url="date_processed",
-                    valueDateTime=date_processed,
-                )
-            )
         self.extensions = processing_status_extensions
         super().__init__(
             url=definition_base_url,
@@ -156,7 +149,7 @@ class MyClass(AutoMapperDataTypeComplexBase):
         return schema
 
 
-def test_auto_mapper_schema_reduction_with_extension_different_properties(
+def test_auto_mapper_schema_pruning_with_extension(
     spark_session: SparkSession,
 ) -> None:
     # Arrange
@@ -232,9 +225,6 @@ def test_auto_mapper_schema_reduction_with_extension_different_properties(
                                         [
                                             StructField("url", StringType()),
                                             StructField("valueString", StringType()),
-                                            StructField(
-                                                "valueDateTime", TimestampType()
-                                            ),
                                         ]
                                     )
                                 ),
