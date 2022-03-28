@@ -52,8 +52,7 @@ def test_auto_mapper_schema_pruning_with_defined_class(
 
     # Act
     mapper = AutoMapper(
-        view="members",
-        source_view="patients",
+        view="members", source_view="patients", enable_schema_pruning=True
     ).complex(MyClass(name=A.column("last_name"), age=A.number(A.column("my_age"))))
 
     assert isinstance(mapper, AutoMapper)
