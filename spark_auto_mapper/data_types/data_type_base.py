@@ -1102,12 +1102,12 @@ class AutoMapperDataTypeBase:
                 f" in schema fields"
                 f": [{','.join([f.name for f in column_data_type.fields])}]"
             )
-            field = matching_fields[0]
+            child_field = matching_fields[0]
             child.mark_used_fields_in_schema(
-                column_name=field.name,
-                column_path=f"{column_path}.{field.name}",
-                field=field,
-                column_data_type=field.dataType,
+                column_name=child_field.name,
+                column_path=f"{column_path}.{child_field.name}",
+                field=child_field,
+                column_data_type=child_field.dataType,
             )
 
     def mark_used_fields_in_schema(
