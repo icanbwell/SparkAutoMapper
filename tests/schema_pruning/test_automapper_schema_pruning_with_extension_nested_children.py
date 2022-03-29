@@ -41,14 +41,51 @@ class MyProcessingStatusExtensionItem(AutoMapperDataTypeComplexBase):
         url: str,
         valueString: Optional[AutoMapperTextLikeBase] = None,
         valueUrl: Optional[AutoMapperTextLikeBase] = None,
-        valueDateTime: Optional[AutoMapperDateInputType] = None,
     ) -> None:
         super().__init__(
             url=url,
             valueString=valueString,
             valueUrl=valueUrl,
+        )
+
+
+class MyProcessingStatusExtensionItem2(AutoMapperDataTypeComplexBase):
+    # noinspection PyPep8Naming
+    def __init__(
+        self,
+        url: str,
+        valueString: Optional[AutoMapperTextLikeBase] = None,
+        valueDateTime: Optional[AutoMapperDateInputType] = None,
+    ) -> None:
+        super().__init__(
+            url=url,
+            valueString=valueString,
             valueDateTime=valueDateTime,
         )
+
+
+def get_extension_schema(
+    include_extension: bool = False,
+) -> StructType:
+    return StructType(
+        [
+            StructField("url", StringType()),
+            StructField("extra", StringType(), True),
+            StructField(
+                "extension",
+                ArrayType(
+                    StructType(
+                        [
+                            StructField("url", StringType()),
+                            StructField("valueString", StringType()),
+                            StructField("valueUrl", StringType()),
+                            StructField("valueDateTime", TimestampType()),
+                        ]
+                    )
+                ),
+            ),
+        ]
+    )
 
 
 class MyProcessingStatusExtension(AutoMapperDataTypeComplexBase):
@@ -57,7 +94,6 @@ class MyProcessingStatusExtension(AutoMapperDataTypeComplexBase):
         self,
         processing_status: AutoMapperTextLikeBase,
         request_id: AutoMapperTextLikeBase,
-        date_processed: Optional[AutoMapperDateInputType] = None,
     ) -> None:
         definition_base_url = "https://raw.githubusercontent.com/imranq2/SparkAutoMapper.FHIR/main/StructureDefinition/"
         processing_status_extensions = [
@@ -70,13 +106,6 @@ class MyProcessingStatusExtension(AutoMapperDataTypeComplexBase):
                 valueString=request_id,
             ),
         ]
-        if date_processed:
-            processing_status_extensions.append(
-                MyProcessingStatusExtensionItem(
-                    url="date_processed",
-                    valueDateTime=date_processed,
-                )
-            )
         self.extensions = processing_status_extensions
         super().__init__(
             url=definition_base_url,
@@ -92,14 +121,6 @@ class MyProcessingStatusExtension(AutoMapperDataTypeComplexBase):
     def get_schema(
         self, include_extension: bool, extension_fields: Optional[List[str]] = None
     ) -> Optional[Union[StructType, DataType]]:
-        return MyProcessingStatusExtension.get_schema_static(
-            include_extension=include_extension
-        )
-
-    @staticmethod
-    def get_schema_static(
-        include_extension: bool = False,
-    ) -> StructType:
         return StructType(
             [
                 StructField("url", StringType()),
@@ -112,7 +133,6 @@ class MyProcessingStatusExtension(AutoMapperDataTypeComplexBase):
                                 StructField("url", StringType()),
                                 StructField("valueString", StringType()),
                                 StructField("valueUrl", StringType()),
-                                StructField("valueDateTime", TimestampType()),
                             ]
                         )
                     ),
@@ -139,22 +159,19 @@ class MyProcessingStatusExtension2(AutoMapperDataTypeComplexBase):
     ) -> None:
         definition_base_url = "https://raw.githubusercontent.com/imranq2/SparkAutoMapper.FHIR/main/StructureDefinition/"
         processing_status_extensions = [
-            MyProcessingStatusExtensionItem(
+            MyProcessingStatusExtensionItem2(
                 url="processing_status",
                 valueString=processing_status,
             ),
-            MyProcessingStatusExtensionItem(
+            MyProcessingStatusExtensionItem2(
                 url="request_id",
                 valueString=request_id,
             ),
+            MyProcessingStatusExtensionItem2(
+                url="date_processed",
+                valueDateTime=date_processed,
+            ),
         ]
-        if date_processed:
-            processing_status_extensions.append(
-                MyProcessingStatusExtensionItem(
-                    url="date_processed",
-                    valueDateTime=date_processed,
-                )
-            )
         self.extensions = processing_status_extensions
         super().__init__(
             url=definition_base_url,
@@ -170,14 +187,6 @@ class MyProcessingStatusExtension2(AutoMapperDataTypeComplexBase):
     def get_schema(
         self, include_extension: bool, extension_fields: Optional[List[str]] = None
     ) -> Optional[Union[StructType, DataType]]:
-        return MyProcessingStatusExtension.get_schema_static(
-            include_extension=include_extension
-        )
-
-    @staticmethod
-    def get_schema_static(
-        include_extension: bool = False,
-    ) -> StructType:
         return StructType(
             [
                 StructField("url", StringType()),
@@ -189,7 +198,6 @@ class MyProcessingStatusExtension2(AutoMapperDataTypeComplexBase):
                             [
                                 StructField("url", StringType()),
                                 StructField("valueString", StringType()),
-                                StructField("valueUrl", StringType()),
                                 StructField("valueDateTime", TimestampType()),
                             ]
                         )
@@ -226,7 +234,7 @@ class MyClass(AutoMapperDataTypeComplexBase):
                 StructField("age", LongType(), True),
                 StructField(
                     "extension",
-                    ArrayType(MyProcessingStatusExtension.get_schema_static()),
+                    ArrayType(get_extension_schema()),
                     True,
                 ),
             ]
@@ -234,7 +242,7 @@ class MyClass(AutoMapperDataTypeComplexBase):
         return schema
 
 
-def test_auto_mapper_schema_pruning_with_extension_different_properties(
+def test_auto_mapper_schema_pruning_with_extension_nested_children(
     spark_session: SparkSession,
 ) -> None:
     # Arrange
@@ -265,7 +273,6 @@ def test_auto_mapper_schema_pruning_with_extension_different_properties(
                     MyProcessingStatusExtension(
                         processing_status=A.text("foo"),
                         request_id=A.text("bar"),
-                        date_processed=A.date("2021-01-01"),
                     ),
                     MyProcessingStatusExtension2(
                         processing_status=A.text("foo"),
@@ -276,6 +283,10 @@ def test_auto_mapper_schema_pruning_with_extension_different_properties(
             ),
         )
     )
+
+    # schema = get_extension_schema()
+
+    # annotated_struct_type: AnnotatedStructType = AnnotatedStructType.parse(struct_type=schema)
 
     assert isinstance(mapper, AutoMapper)
     sql_expressions: Dict[str, Column] = mapper.get_column_specs(source_df=source_df)

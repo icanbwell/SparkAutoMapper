@@ -1014,6 +1014,152 @@ class AutoMapperDataTypeBase:
             column_data_type=column_data_type,
         )
 
+    def _mark_used_fields_in_schema_for_array(
+        self,
+        *,
+        column_name: Optional[str],
+        column_path: Optional[str],
+        field: StructField,
+        column_data_type: DataType,
+    ) -> None:
+        assert isinstance(field, StructField)
+        assert isinstance(column_data_type, DataType)
+        assert isinstance(
+            column_data_type, ArrayType
+        ), f"{type(column_data_type)} should be ArrayType for {column_name} with path {column_path}"
+
+        element_type = column_data_type.elementType
+        # self.set_children_schema(element_type)
+        children: Union[
+            AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]
+        ] = self.children
+        assert isinstance(children, list), f"{type(children)} should be a list"
+        if len(children) > 0:
+            child: AutoMapperDataTypeBase
+            for child in children:
+                child.mark_used_fields_in_schema(
+                    column_name=column_name,
+                    column_path=column_path,
+                    field=field,
+                    column_data_type=element_type,
+                )
+
+    # noinspection PyUnusedLocal
+    def _mark_used_fields_in_schema_for_struct(
+        self,
+        *,
+        column_name: Optional[str],
+        column_path: Optional[str],
+        field: StructField,
+        column_data_type: DataType,
+    ) -> None:
+        assert isinstance(field, StructField)
+        assert isinstance(column_data_type, DataType)
+
+        assert isinstance(
+            column_data_type, StructType
+        ), f"{type(column_data_type)} should be StructType for {column_name} with path {column_path}"
+
+        children: Union[
+            "AutoMapperDataTypeBase", List["AutoMapperDataTypeBase"]
+        ] = self.children
+        if isinstance(children, list) and len(children) > 0:
+            child: "AutoMapperDataTypeBase"
+            for index, child in enumerate(children):
+                assert isinstance(child, AutoMapperDataTypeBase), f"{type(child)}"
+                if not child.column_name:
+                    continue
+                assert child.column_name, f"No column name for {child}"
+                clean_child_name: str = PythonKeywordCleaner.from_python_safe(
+                    child.column_name
+                )
+                matching_fields = [
+                    f for f in column_data_type.fields if f.name == clean_child_name
+                ]
+                if len(matching_fields) == 0:
+                    pass
+                assert len(matching_fields) == 1, (
+                    f"Schema match failed for column {column_path}.{clean_child_name}"
+                    f" in schema fields"
+                    f": [{','.join([f.name for f in column_data_type.fields])}]"
+                )
+                child_field: StructField = matching_fields[0]
+                child.mark_used_fields_in_schema(
+                    column_name=child_field.name,
+                    column_path=f"{column_path}.{child_field.name}",
+                    field=child_field,
+                    column_data_type=child_field.dataType,
+                )
+        elif not isinstance(children, list) and children is not None:
+            child = children
+            assert child.column_name
+            clean_child_name = PythonKeywordCleaner.from_python_safe(child.column_name)
+            matching_fields = [
+                f for f in column_data_type.fields if f.name == clean_child_name
+            ]
+            assert len(matching_fields) == 1, (
+                f"Schema match failed for column {column_path}.{clean_child_name}"
+                f" in schema fields"
+                f": [{','.join([f.name for f in column_data_type.fields])}]"
+            )
+            field = matching_fields[0]
+            child.mark_used_fields_in_schema(
+                column_name=field.name,
+                column_path=f"{column_path}.{field.name}",
+                field=field,
+                column_data_type=field.dataType,
+            )
+
+    def mark_used_fields_in_schema(
+        self,
+        *,
+        column_name: Optional[str],
+        column_path: Optional[str],
+        field: StructField,
+        column_data_type: DataType,
+    ) -> None:
+        """
+        Sets the fields as used schema for this AutoMapper type
+
+
+        :param column_name: column name
+        :param column_path: full path to column
+        :param field: schema field for this mapper
+        :param column_data_type: schema for this mapper
+        """
+
+        assert isinstance(field, StructField)
+        assert isinstance(column_data_type, DataType)
+
+        # self.schema = column_data_type
+
+        # if this is a basic type so nothing to do
+        if not isinstance(column_data_type, StructType) and not isinstance(
+            column_data_type, ArrayType
+        ):
+            setattr(field, "used", True)
+            return
+
+        if isinstance(column_data_type, ArrayType):
+            self._mark_used_fields_in_schema_for_array(
+                column_name=column_name,
+                column_path=column_path,
+                field=field,
+                column_data_type=column_data_type,
+            )
+            return
+
+        assert isinstance(
+            column_data_type, StructType
+        ), f"{type(column_data_type)} should be StructType for {column_name} with path {column_path}"
+
+        self._mark_used_fields_in_schema_for_struct(
+            column_name=column_name,
+            column_path=column_path,
+            field=field,
+            column_data_type=column_data_type,
+        )
+
     @property
     @abstractmethod
     def children(
