@@ -40,12 +40,10 @@ class MyProcessingStatusExtensionItem(AutoMapperDataTypeComplexBase):
         self,
         url: str,
         valueString: Optional[AutoMapperTextLikeBase] = None,
-        valueUrl: Optional[AutoMapperTextLikeBase] = None,
     ) -> None:
         super().__init__(
             url=url,
             valueString=valueString,
-            valueUrl=valueUrl,
         )
 
 
@@ -132,7 +130,6 @@ class MyProcessingStatusExtension(AutoMapperDataTypeComplexBase):
                             [
                                 StructField("url", StringType()),
                                 StructField("valueString", StringType()),
-                                StructField("valueUrl", StringType()),
                             ]
                         )
                     ),
