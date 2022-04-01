@@ -48,4 +48,9 @@ def test_automapper_array_filter_simple(spark_session: SparkSession) -> None:
     )
     result_df: DataFrame = mapper.transform(df=source_df)
 
+    result_df.printSchema()
     result_df.show(truncate=False)
+
+    assert result_df.count() == 2
+    assert result_df.select("age").collect()[0][0] == []
+    assert result_df.select("age").collect()[1][0][0]["array2"][0]["reference"] == "bar"
