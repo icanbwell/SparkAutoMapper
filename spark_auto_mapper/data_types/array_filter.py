@@ -1,7 +1,7 @@
 from typing import List, Optional, Union, TypeVar
 
 from pyspark.sql import DataFrame, Column
-from pyspark.sql.functions import exists
+from pyspark.sql.functions import filter, exists
 
 from spark_auto_mapper.data_types.array_base import AutoMapperArrayLikeBase
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
@@ -38,23 +38,18 @@ class AutoMapperArrayFilterDataType(AutoMapperArrayLikeBase):
     ) -> Column:
         #  filter(schedule, exists(schedule, filter(schedule.actor, r -> r.reference == 'Location/unitypoint-421411630')))
 
-        # column_spec = filter(
-        #     self.array_field.get_column_spec(source_df=source_df, current_column=current_column),
-        #     exists(self.array_field.get_column_spec(source_df=source_df, current_column=current_column),
-        #            filter(self.inner_array_field.get_column_spec(source_df=source_df, current_column=current_column),
-        #                   lambda x: x[f"{self.match_property}"] == self.match_value.get_column_spec(
-        #                                                 source_df=source_df, current_column=current_column)
-        #                   )
-        #            )
-        # )
-
-        return exists(
-            self.inner_array_field.get_column_spec(
+        return filter(
+            self.array_field.get_column_spec(
                 source_df=source_df, current_column=current_column
             ),
-            lambda x: x[self.match_property]
-            == self.match_value.get_column_spec(
-                source_df=source_df, current_column=current_column
+            lambda y: exists(
+                self.inner_array_field.get_column_spec(
+                    source_df=source_df, current_column=current_column
+                ),
+                lambda x: x[self.match_property]
+                == self.match_value.get_column_spec(
+                    source_df=source_df, current_column=current_column
+                ),
             ),
         )
 
