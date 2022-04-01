@@ -44,11 +44,11 @@ class AutoMapperArrayFilterDataType(AutoMapperArrayLikeBase):
             ),
             lambda y: exists(
                 self.inner_array_field.get_column_spec(
-                    source_df=source_df, current_column=current_column
+                    source_df=source_df, current_column=y
                 ),
                 lambda x: x[self.match_property]
                 == self.match_value.get_column_spec(
-                    source_df=source_df, current_column=current_column
+                    source_df=source_df, current_column=y
                 ),
             ),
         )

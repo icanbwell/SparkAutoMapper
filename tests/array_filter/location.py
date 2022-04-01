@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from pyspark.sql.types import (
     StructType,
@@ -28,13 +28,15 @@ class AutoMapperElasticSearchLocation(AutoMapperDataTypeComplexBase):
         super().include_null_properties(include_null_properties=True)
 
     @staticmethod
-    def schema() -> StructType:
+    def my_schema() -> StructType:
         return StructType(
             [
                 StructField("name", StringType()),
-                StructField("scheduling", AutoMapperElasticSearchSchedule.schema()),
+                StructField("scheduling", AutoMapperElasticSearchSchedule.my_schema()),
             ]
         )
 
-    def get_schema(self, include_extension: bool) -> Optional[StructType]:
-        return AutoMapperElasticSearchLocation.schema()
+    def get_schema(
+        self, include_extension: bool, extension_fields: Optional[List[str]] = None
+    ) -> Optional[StructType]:
+        return AutoMapperElasticSearchLocation.my_schema()
