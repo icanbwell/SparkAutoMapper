@@ -1,3 +1,6 @@
+from os import path
+from pathlib import Path
+from shutil import rmtree
 from typing import Dict
 
 from pyspark.sql import SparkSession, DataFrame, Column
@@ -11,9 +14,17 @@ from pyspark.sql.types import (
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
+from tests.array_filter.location import AutoMapperElasticSearchLocation
+from tests.array_filter.schedule import AutoMapperElasticSearchSchedule
 
 
 def test_automapper_array_filter(spark_session: SparkSession) -> None:
+    data_dir: Path = Path(__file__).parent.joinpath("./")
+
+    temp_folder = data_dir.joinpath("temp")
+    if path.isdir(temp_folder):
+        rmtree(temp_folder)
+
     schema = StructType(
         [
             StructField("row_id", dataType=IntegerType(), nullable=False),
@@ -22,7 +33,7 @@ def test_automapper_array_filter(spark_session: SparkSession) -> None:
                 dataType=ArrayType(
                     StructType(
                         [
-                            StructField("id", StringType(), True),
+                            StructField("name", StringType(), True),
                         ]
                     )
                 ),
@@ -32,7 +43,7 @@ def test_automapper_array_filter(spark_session: SparkSession) -> None:
                 dataType=ArrayType(
                     StructType(
                         [
-                            StructField("id", StringType(), True),
+                            StructField("name", StringType(), True),
                             StructField(
                                 "actor",
                                 ArrayType(
@@ -62,17 +73,17 @@ def test_automapper_array_filter(spark_session: SparkSession) -> None:
         [
             (
                 1,
-                [{"id": "location-100"}, {"id": "location-200"}],
+                [{"name": "location-100"}],
                 [
                     {
-                        "id": "schedule-1",
+                        "name": "schedule-1",
                         "actor": [
                             {"reference": "location-100"},
                             {"reference": "practitioner-role-100"},
                         ],
                     },
                     {
-                        "id": "schedule-2",
+                        "name": "schedule-2",
                         "actor": [
                             {"reference": "location-200"},
                             {"reference": "practitioner-role-200"},
@@ -89,14 +100,22 @@ def test_automapper_array_filter(spark_session: SparkSession) -> None:
     source_df.printSchema()
     source_df.show(truncate=False)
 
+    schedule = A.column("schedule")
+    location = A.column("location")
+
     mapper = AutoMapper(
         view="schedule", source_view="patients", keys=["row_id"]
     ).columns(
-        schedule=A.array_filter(
-            array_field=A.column("schedule"),
-            inner_array_field=A.flatten(A.column("schedule").select(A.field("actor"))),
-            match_property="reference",
-            match_value=A.column("location").select_one(A.field("id")),
+        location=location.select(
+            AutoMapperElasticSearchLocation(
+                name=A.field("name"),
+                scheduling=A.array_filter(
+                    match_value=A.field("name"),
+                    array_field=schedule,
+                    inner_array_field=A.flatten(schedule.select(A.field("actor"))),
+                    match_property="reference",
+                ).select_one(AutoMapperElasticSearchSchedule(name=A.field("name"))),
+            )
         )
     )
 
@@ -110,5 +129,6 @@ def test_automapper_array_filter(spark_session: SparkSession) -> None:
 
     # Assert
     print("------RESULTS------")
+    result_df.coalesce(1).write.json(str(temp_folder))
     result_df.printSchema()
-    result_df.show()
+    result_df.show(truncate=False)
