@@ -114,4 +114,6 @@ def test_automapper_array_filter_expression_only(spark_session: SparkSession) ->
         ),
     )
 
+    print(f"{my_expression}")
+
     source_df.select(my_expression).show()
