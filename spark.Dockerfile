@@ -1,5 +1,5 @@
-FROM imranq2/spark-py:3.0.54
-# https://github.com/imranq2/kubernetes.spark_python
+FROM imranq2/helix.spark:amd64-3.1.2.3
+# https://github.com/icanbwell/helix.spark
 USER root
 
 ENV PYTHONPATH=/sam
