@@ -19,6 +19,7 @@ from spark_auto_mapper.data_types.complex.complex_base import (
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.data_types.list import AutoMapperList
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
+from spark_auto_mapper.helpers.expression_comparer import assert_compare_expressions
 from tests.conftest import clean_spark_session
 
 
@@ -107,7 +108,9 @@ def test_auto_mapper_concat_multiple_items_structs_different_elements(
             lambda x: x.isNotNull(),
         ),
     )
-    assert str(sql_expressions["dst2"]) == str(concat(array1, array2).alias("dst2"))
+    assert_compare_expressions(
+        sql_expressions["dst2"], concat(array1, array2).alias("dst2")
+    )
 
     result_df: DataFrame = mapper.transform(df=source_df)
 

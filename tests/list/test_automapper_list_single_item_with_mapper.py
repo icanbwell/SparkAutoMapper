@@ -7,6 +7,7 @@ from pyspark.sql.functions import lit, filter
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.data_types.list import AutoMapperList
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
+from spark_auto_mapper.helpers.expression_comparer import assert_compare_expressions
 
 
 def test_auto_mapper_array_single_item_with_mapper(spark_session: SparkSession) -> None:
@@ -37,14 +38,15 @@ def test_auto_mapper_array_single_item_with_mapper(spark_session: SparkSession) 
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
-    assert str(sql_expressions["dst2"]) == str(
+    assert_compare_expressions(
+        sql_expressions["dst2"],
         when(
             array(struct(lit("address1").alias("addr"))).isNotNull(),
             filter(
                 coalesce(array(struct(lit("address1").alias("addr"))), array()),
                 lambda x: x.isNotNull(),
             ),
-        ).alias("dst2")
+        ).alias("dst2"),
     )
 
     result_df: DataFrame = mapper.transform(df=df)

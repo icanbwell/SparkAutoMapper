@@ -9,6 +9,7 @@ from pytest import approx
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
+from spark_auto_mapper.helpers.expression_comparer import assert_compare_expressions
 
 
 def test_auto_mapper_amount(spark_session: SparkSession) -> None:
@@ -43,11 +44,12 @@ def test_auto_mapper_amount(spark_session: SparkSession) -> None:
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
-    assert str(sql_expressions["age"]) == str(
-        col("b.my_age").cast("double").alias("age")
+    assert_compare_expressions(
+        sql_expressions["age"], col("b.my_age").cast("double").alias("age")
     )
-    assert str(sql_expressions["null_col"]) == str(
-        lit(None).cast("double").alias("null_col")
+
+    assert_compare_expressions(
+        sql_expressions["null_col"], lit(None).cast("double").alias("null_col")
     )
 
     result_df: DataFrame = mapper.transform(df=df)

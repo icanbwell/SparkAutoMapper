@@ -5,6 +5,7 @@ from pyspark.sql.functions import expr, struct
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
+from spark_auto_mapper.helpers.expression_comparer import assert_compare_expressions
 
 
 def test_auto_mapper_complex_with_mappers(spark_session: SparkSession) -> None:
@@ -38,11 +39,12 @@ def test_auto_mapper_complex_with_mappers(spark_session: SparkSession) -> None:
     result_df: DataFrame = mapper.transform(df=df)
 
     # Assert
-    assert str(sql_expressions["dst2"]) == str(
+    assert_compare_expressions(
+        sql_expressions["dst2"],
         struct(
             expr("usual").alias("use"),
             struct(expr("foo").alias("given")).alias("family"),
-        ).alias("dst2")
+        ).alias("dst2"),
     )
 
     result_df.printSchema()

@@ -8,6 +8,7 @@ from pyspark.sql.functions import col, lit
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
+from spark_auto_mapper.helpers.expression_comparer import assert_compare_expressions
 
 
 def test_auto_mapper_number(spark_session: SparkSession) -> None:
@@ -42,13 +43,13 @@ def test_auto_mapper_number(spark_session: SparkSession) -> None:
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
-    assert str(sql_expressions["age"]) in (
-        str(col("b.my_age").cast("int").alias("age")),
-        str(col("b.my_age").cast("long").alias("age")),
+    assert_compare_expressions(
+        sql_expressions["age"],
+        col("b.my_age").cast("long").alias("age"),
     )
 
-    assert str(sql_expressions["null_field"]) == str(
-        lit(None).cast("long").alias("null_field")
+    assert_compare_expressions(
+        sql_expressions["null_field"], lit(None).cast("long").alias("null_field")
     )
 
     result_df: DataFrame = mapper.transform(df=df)
