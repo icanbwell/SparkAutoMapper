@@ -16,6 +16,7 @@ from spark_auto_mapper.data_types.complex.complex_base import (
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.data_types.list import AutoMapperList
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
+from spark_auto_mapper.helpers.expression_comparer import assert_compare_expressions
 
 
 def test_auto_mapper_array_multiple_items_structs_different_elements_with_schema(
@@ -79,7 +80,8 @@ def test_auto_mapper_array_multiple_items_structs_different_elements_with_schema
         col("b.last_name").alias("c"),
         lit(None).alias("b"),
     )
-    assert str(sql_expressions["dst2"]) == str(
+    assert_compare_expressions(
+        sql_expressions["dst2"],
         when(
             array(
                 struct1,
@@ -95,7 +97,7 @@ def test_auto_mapper_array_multiple_items_structs_different_elements_with_schema
                 ),
                 lambda x: x.isNotNull(),
             ),
-        ).alias("dst2")
+        ).alias("dst2"),
     )
 
     result_df: DataFrame = mapper.transform(df=df)

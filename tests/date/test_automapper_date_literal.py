@@ -9,6 +9,7 @@ from pyspark.sql.functions import coalesce, to_date
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
+from spark_auto_mapper.helpers.expression_comparer import assert_compare_expressions
 
 
 def test_auto_mapper_date_literal(spark_session: SparkSession) -> None:
@@ -39,12 +40,13 @@ def test_auto_mapper_date_literal(spark_session: SparkSession) -> None:
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
-    assert str(sql_expressions["birthDate"]) == str(
+    assert_compare_expressions(
+        sql_expressions["birthDate"],
         coalesce(
             to_date(lit("1970-01-01"), format="y-M-d"),
             to_date(lit("1970-01-01"), format="yyyyMMdd"),
             to_date(lit("1970-01-01"), format="M/d/y"),
-        ).alias("birthDate")
+        ).alias("birthDate"),
     )
 
     result_df: DataFrame = mapper.transform(df=df)

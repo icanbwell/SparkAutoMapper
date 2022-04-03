@@ -21,6 +21,8 @@ from pyspark.sql.functions import (
     coalesce,
 )
 
+from spark_auto_mapper.helpers.expression_comparer import assert_compare_expressions
+
 
 def test_auto_mapper_concat_multiple_items_structs_different_elements_with_schema(
     spark_session: SparkSession,
@@ -96,7 +98,9 @@ def test_auto_mapper_concat_multiple_items_structs_different_elements_with_schem
         array(struct2).isNotNull(),
         filter(coalesce(array(struct2), array()), lambda x: x.isNotNull()),
     )
-    assert str(sql_expressions["dst2"]) == str(concat(array1, array2).alias("dst2"))
+    assert_compare_expressions(
+        sql_expressions["dst2"], concat(array1, array2).alias("dst2")
+    )
     result_df: DataFrame = mapper.transform(df=df)
 
     # Assert
