@@ -18,6 +18,7 @@ from spark_auto_mapper.data_types.complex.complex_base import (
 )
 from spark_auto_mapper.data_types.list import AutoMapperList
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
+from spark_auto_mapper.helpers.expression_comparer import assert_compare_expressions
 
 
 def test_auto_mapper_list_addition_multiple_items_structs_different_elements_with_schema(
@@ -91,7 +92,7 @@ def test_auto_mapper_list_addition_multiple_items_structs_different_elements_wit
         array(struct1, struct2).isNotNull(),
         filter(coalesce(array(struct1, struct2), array()), lambda x: x.isNotNull()),
     )
-    assert str(sql_expressions["dst2"]) == str(array1.alias("dst2"))
+    assert_compare_expressions(sql_expressions["dst2"], array1.alias("dst2"))
     result_df: DataFrame = mapper.transform(df=df)
 
     # Assert

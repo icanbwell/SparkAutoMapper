@@ -7,6 +7,7 @@ from pyspark.sql.functions import filter, transform
 from spark_auto_mapper.data_types.complex.complex_base import (
     AutoMapperDataTypeComplexBase,
 )
+from spark_auto_mapper.helpers.expression_comparer import assert_compare_expressions
 
 from tests.conftest import clean_spark_session
 
@@ -46,11 +47,12 @@ def test_automapper_filter_and_transform_fluent(spark_session: SparkSession) -> 
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
-    assert str(sql_expressions["age"]) == str(
+    assert_compare_expressions(
+        sql_expressions["age"],
         transform(
             filter("b.identifier", lambda x: x["use"] == lit("usual")),
             lambda x: struct(x["value"].alias("bar"), x["system"].alias("bar2")),
-        ).alias("age")
+        ).alias("age"),
     )
     result_df: DataFrame = mapper.transform(df=source_df)
 

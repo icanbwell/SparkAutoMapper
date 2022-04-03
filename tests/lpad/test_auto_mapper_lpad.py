@@ -7,6 +7,7 @@ from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 from pyspark.sql import SparkSession, DataFrame, Column
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
+from spark_auto_mapper.helpers.expression_comparer import assert_compare_expressions
 
 
 def test_auto_mapper_lpad(spark_session: SparkSession) -> None:
@@ -34,8 +35,9 @@ def test_auto_mapper_lpad(spark_session: SparkSession) -> None:
     assert isinstance(mapper, AutoMapper)
     sql_expressions: Dict[str, Column] = mapper.get_column_specs(source_df=source_df)
 
-    assert str(sql_expressions["my_column"]) == str(
-        lpad(col=col("b.empi"), len=9, pad="0").alias("my_column")
+    assert_compare_expressions(
+        sql_expressions["my_column"],
+        lpad(col=col("b.empi"), len=9, pad="0").alias("my_column"),
     )
 
     result_df: DataFrame = mapper.transform(df=df)

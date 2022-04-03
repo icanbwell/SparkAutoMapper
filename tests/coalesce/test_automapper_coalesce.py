@@ -9,6 +9,7 @@ from pyspark.sql.types import StringType
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
+from spark_auto_mapper.helpers.expression_comparer import assert_compare_expressions
 
 
 def test_auto_mapper_coalesce(spark_session: SparkSession) -> None:
@@ -41,12 +42,13 @@ def test_auto_mapper_coalesce(spark_session: SparkSession) -> None:
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
-    assert str(sql_expressions["my_column"]) == str(
+    assert_compare_expressions(
+        sql_expressions["my_column"],
         coalesce(
             col("b.last_name"),
             col("b.date_of_birth"),
             lit("last_resort").cast(StringType()),
-        ).alias("my_column")
+        ).alias("my_column"),
     )
 
     result_df: DataFrame = mapper.transform(df=df)
