@@ -73,7 +73,8 @@ def test_automapper_array_filter(spark_session: SparkSession) -> None:
         [
             (
                 1,
-                [{"name": "location-100"}],
+                [{"name": "location-100"},
+                 {"name": "location-200"}],
                 [
                     {
                         "name": "schedule-1",
@@ -100,24 +101,31 @@ def test_automapper_array_filter(spark_session: SparkSession) -> None:
     source_df.printSchema()
     source_df.show(truncate=False)
 
-    schedule = A.column("schedule")
-    location = A.column("location")
-
     mapper = AutoMapper(
         view="schedule", source_view="patients", keys=["row_id"]
     ).columns(
-        location=location.select(
+        location=A.column("location").select(
             AutoMapperElasticSearchLocation(
                 name=A.field("name"),
                 scheduling=A.array_filter(
-                    match_value=A.field("name"),
-                    array_field=schedule,
-                    inner_array_field=A.flatten(schedule.select(A.field("actor"))),
+                    array_field= A.column("schedule"),
+                    inner_array_field=A.field("actor"),
                     match_property="reference",
+                    match_value=A.field("name"),
                 ).select_one(AutoMapperElasticSearchSchedule(name=A.field("name"))),
             )
         )
     )
+    # mapper = AutoMapper(
+    #     view="schedule", source_view="patients", keys=["row_id"]
+    # ).columns(
+    #     location=A.array_filter(
+    #                 array_field=schedule,
+    #                 inner_array_field=A.field("actor"),
+    #                 match_property="reference",
+    #                 match_value=A.column("location").select_one(A.field("name")),
+    #             )
+    # )
 
     assert isinstance(mapper, AutoMapper)
     sql_expressions: Dict[str, Column] = mapper.get_column_specs(source_df=source_df)
