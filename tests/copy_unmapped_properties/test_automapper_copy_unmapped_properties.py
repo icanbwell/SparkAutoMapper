@@ -5,7 +5,7 @@ from spark_auto_mapper.automappers.automapper import AutoMapper
 from tests.conftest import clean_spark_session
 
 
-def test_auto_mapper_full_no_keys(spark_session: SparkSession) -> None:
+def test_automapper_copy_unmapped_properties(spark_session: SparkSession) -> None:
     # Arrange
     clean_spark_session(session=spark_session)
     spark_session.createDataFrame(

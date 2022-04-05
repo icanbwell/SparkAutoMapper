@@ -194,9 +194,13 @@ class AutoMapper(AutoMapperContainer):
                 # for each unmapped property add a simple A.column()
                 column_specs.extend(
                     [
-                        AutoMapperDataTypeColumn(column_name).cast(
-                            column_schema[column_name].dataType  # type: ignore
+                        AutoMapperDataTypeColumn(column_name)
+                        .get_column_spec(
+                            source_df=source_df,
+                            current_column=None,
+                            parent_columns=None,
                         )
+                        .cast(column_schema[column_name].dataType)
                         if column_name in column_schema
                         else AutoMapperDataTypeColumn(column_name).get_column_spec(
                             source_df=source_df,
@@ -210,6 +214,8 @@ class AutoMapper(AutoMapperContainer):
 
             if not self.drop_key_columns:
                 column_specs = [col(f"b.{c}") for c in keys] + column_specs
+
+            print(f"COLUMN SPECS --- {column_specs}")
 
             self.logger.debug(f"-------- automapper ({self.view}) column specs ------")
             self.logger.debug(self.to_debug_string(source_df=source_df))
