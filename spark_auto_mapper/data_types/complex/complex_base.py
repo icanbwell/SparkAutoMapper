@@ -62,12 +62,20 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
                 include_null_properties=include_null_properties
             )
 
-    def get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column], parent_columns: Optional[List[Column]]) -> Column:
+    def get_column_spec(
+        self,
+        source_df: Optional[DataFrame],
+        current_column: Optional[Column],
+        parent_columns: Optional[List[Column]],
+    ) -> Column:
         valid_columns = self.get_child_mappers()
         column_spec: Column = struct(
             *[
                 self.get_value(
-                    value=value, source_df=source_df, current_column=current_column, parent_columns=parent_columns
+                    value=value,
+                    source_df=source_df,
+                    current_column=current_column,
+                    parent_columns=parent_columns,
                 ).alias(key)
                 for key, value in valid_columns.items()
             ]

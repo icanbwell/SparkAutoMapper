@@ -194,12 +194,15 @@ class AutoMapper(AutoMapperContainer):
                 # for each unmapped property add a simple A.column()
                 column_specs.extend(
                     [
-                        AutoMapperDataTypeColumn(column_name)
-                        .cast(column_schema[column_name].dataType)
+                        AutoMapperDataTypeColumn(column_name).cast(
+                            column_schema[column_name].dataType  # type: ignore
+                        )
                         if column_name in column_schema
-                        else AutoMapperDataTypeColumn(column_name).get_column_spec(source_df=source_df,
-                                                                                   current_column=None,
-                                                                                   parent_columns=None)
+                        else AutoMapperDataTypeColumn(column_name).get_column_spec(
+                            source_df=source_df,
+                            current_column=None,
+                            parent_columns=None,
+                        )
                         for column_name in unmapped_properties
                         if column_name not in copy_all_unmapped_properties_exclude
                     ]

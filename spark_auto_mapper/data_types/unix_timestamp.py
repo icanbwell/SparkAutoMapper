@@ -1,4 +1,4 @@
-from typing import Optional, List, Union, Dict
+from typing import List, Optional, Union
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import from_unixtime, to_timestamp
@@ -25,11 +25,20 @@ class AutoMapperUnixTimestampType(AutoMapperDataTypeBase):
             else AutoMapperValueParser.parse_value(value=value)
         )
 
-    def get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column], parent_columns: Optional[List[Column]]) -> Column:
+    def get_column_spec(
+        self,
+        source_df: Optional[DataFrame],
+        current_column: Optional[Column],
+        parent_columns: Optional[List[Column]],
+    ) -> Column:
         # Convert from unix timestamp
         column_spec: Column = to_timestamp(
             from_unixtime(
-                self.value.get_column_spec(source_df=source_df, current_column=current_column, parent_columns=parent_columns),
+                self.value.get_column_spec(
+                    source_df=source_df,
+                    current_column=current_column,
+                    parent_columns=parent_columns,
+                ),
                 format="yyyy-MM-dd HH:mm:ss",
             ),
             format="yyyy-MM-dd HH:mm:ss",
@@ -38,8 +47,11 @@ class AutoMapperUnixTimestampType(AutoMapperDataTypeBase):
         if source_df is not None:
             return column_spec
         else:
-            column_spec = self.value.get_column_spec(source_df=source_df, current_column=current_column,
-                                                     parent_columns=parent_columns)
+            column_spec = self.value.get_column_spec(
+                source_df=source_df,
+                current_column=current_column,
+                parent_columns=parent_columns,
+            )
             return column_spec
 
     @property

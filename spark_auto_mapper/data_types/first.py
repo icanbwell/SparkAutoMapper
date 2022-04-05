@@ -1,4 +1,4 @@
-from typing import Generic, Optional, TypeVar, Union, List, Dict
+from typing import Generic, List, Optional, TypeVar, Union
 
 from pyspark.sql import DataFrame, Column
 
@@ -22,9 +22,17 @@ class AutoMapperFirstDataType(AutoMapperArrayLikeBase, Generic[_TAutoMapperDataT
             AutoMapperDataTypeBase, AutoMapperColumnOrColumnLikeType
         ] = column
 
-    def get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column], parent_columns: Optional[List[Column]]) -> Column:
-        column_spec: Column = self.column.get_column_spec(source_df=source_df, current_column=current_column,
-                                                          parent_columns=parent_columns)
+    def get_column_spec(
+        self,
+        source_df: Optional[DataFrame],
+        current_column: Optional[Column],
+        parent_columns: Optional[List[Column]],
+    ) -> Column:
+        column_spec: Column = self.column.get_column_spec(
+            source_df=source_df,
+            current_column=current_column,
+            parent_columns=parent_columns,
+        )
 
         return column_spec[0]
 

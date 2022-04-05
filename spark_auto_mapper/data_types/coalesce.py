@@ -1,4 +1,4 @@
-from typing import List, Union, TypeVar, Optional, Dict
+from typing import List, Optional, TypeVar, Union
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import coalesce
@@ -29,10 +29,19 @@ class AutoMapperCoalesceDataType(AutoMapperTextLikeBase):
             for value in args
         ]
 
-    def get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column], parent_columns: Optional[List[Column]]) -> Column:
+    def get_column_spec(
+        self,
+        source_df: Optional[DataFrame],
+        current_column: Optional[Column],
+        parent_columns: Optional[List[Column]],
+    ) -> Column:
         column_spec = coalesce(
             *[
-                col.get_column_spec(source_df=source_df, current_column=current_column, parent_columns=parent_columns)
+                col.get_column_spec(
+                    source_df=source_df,
+                    current_column=current_column,
+                    parent_columns=parent_columns,
+                )
                 for col in self.value
             ]
         )

@@ -1,4 +1,4 @@
-from typing import Optional, List, Union, Dict
+from typing import List, Optional, Union
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import substring
@@ -24,9 +24,18 @@ class AutoMapperSubstringDataType(AutoMapperTextLikeBase):
         self.start: int = start
         self.length: int = length
 
-    def get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column], parent_columns: Optional[List[Column]]) -> Column:
+    def get_column_spec(
+        self,
+        source_df: Optional[DataFrame],
+        current_column: Optional[Column],
+        parent_columns: Optional[List[Column]],
+    ) -> Column:
         column_spec = substring(
-            self.column.get_column_spec(source_df=source_df, current_column=current_column, parent_columns=parent_columns),
+            self.column.get_column_spec(
+                source_df=source_df,
+                current_column=current_column,
+                parent_columns=parent_columns,
+            ),
             self.start,
             self.length,
         )

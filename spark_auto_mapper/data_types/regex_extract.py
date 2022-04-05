@@ -1,4 +1,4 @@
-from typing import Optional, List, Union, Dict
+from typing import List, Optional, Union
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import regexp_extract
@@ -27,9 +27,18 @@ class AutoMapperRegExExtractDataType(AutoMapperTextLikeBase):
         self.pattern: str = pattern
         self.index: int = index
 
-    def get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column], parent_columns: Optional[List[Column]]) -> Column:
+    def get_column_spec(
+        self,
+        source_df: Optional[DataFrame],
+        current_column: Optional[Column],
+        parent_columns: Optional[List[Column]],
+    ) -> Column:
         column_spec = regexp_extract(
-            self.column.get_column_spec(source_df=source_df, current_column=current_column, parent_columns=parent_columns),
+            self.column.get_column_spec(
+                source_df=source_df,
+                current_column=current_column,
+                parent_columns=parent_columns,
+            ),
             pattern=self.pattern,
             idx=self.index,
         )

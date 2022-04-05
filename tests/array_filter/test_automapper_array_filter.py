@@ -4,7 +4,7 @@ from shutil import rmtree
 from typing import Dict
 
 from pyspark.sql import SparkSession, DataFrame, Column
-from pyspark.sql.functions import col, exists, lit, filter, transform, struct
+from pyspark.sql.functions import col, exists, filter, struct, transform
 from pyspark.sql.types import (
     StructType,
     IntegerType,
@@ -75,8 +75,7 @@ def test_automapper_array_filter(spark_session: SparkSession) -> None:
         [
             (
                 1,
-                [{"name": "location-100"},
-                 {"name": "location-200"}],
+                [{"name": "location-100"}, {"name": "location-200"}],
                 [
                     {
                         "name": "schedule-1",
@@ -124,24 +123,27 @@ def test_automapper_array_filter(spark_session: SparkSession) -> None:
     print("------COLUMN SPECS------")
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
-    assert_compare_expressions(sql_expressions["location"], transform(
-        col("b.location"),
-        lambda l: (
-            struct(
-                l["name"].alias("name"),
-                transform(
-                    filter(
-                        col("b.schedule"),
-                        lambda s: exists(
-                            s["actor"],
-                            lambda a: a["reference"] == l["name"],  # type: ignore
+    assert_compare_expressions(
+        sql_expressions["location"],
+        transform(
+            col("b.location"),
+            lambda l: (
+                struct(
+                    l["name"].alias("name"),
+                    transform(
+                        filter(
+                            col("b.schedule"),
+                            lambda s: exists(
+                                s["actor"],
+                                lambda a: a["reference"] == l["name"],  # type: ignore
+                            ),
                         ),
-                    ),
-                    lambda s: struct(s["name"].alias("name")),
-                )[0].alias("scheduling"),
-            )
-        ),
-    ).alias("___location"))
+                        lambda s: struct(s["name"].alias("name")),
+                    )[0].alias("scheduling"),
+                )
+            ),
+        ).alias("___location"),
+    )
     result_df: DataFrame = mapper.transform(df=source_df)
 
     # Assert

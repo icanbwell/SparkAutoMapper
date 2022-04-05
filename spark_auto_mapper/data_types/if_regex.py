@@ -1,4 +1,4 @@
-from typing import TypeVar, Union, Generic, Optional, cast, List, Dict
+from typing import Generic, List, Optional, TypeVar, Union, cast
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import when
@@ -50,25 +50,52 @@ class AutoMapperIfRegExDataType(AutoMapperDataTypeBase, Generic[_TAutoMapperData
             include_null_properties=include_null_properties
         )
 
-    def get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column], parent_columns: Optional[List[Column]]) -> Column:
+    def get_column_spec(
+        self,
+        source_df: Optional[DataFrame],
+        current_column: Optional[Column],
+        parent_columns: Optional[List[Column]],
+    ) -> Column:
         # rlike takes a string and not a column
         if isinstance(self.check, list):
             value: str = self.check[0]
             column_spec = when(
-                self.column.get_column_spec(source_df=source_df, current_column=current_column,
-                                            parent_columns=parent_columns).rlike(value),
-                self.value.get_column_spec(source_df=source_df, current_column=current_column, parent_columns=parent_columns),
+                self.column.get_column_spec(
+                    source_df=source_df,
+                    current_column=current_column,
+                    parent_columns=parent_columns,
+                ).rlike(value),
+                self.value.get_column_spec(
+                    source_df=source_df,
+                    current_column=current_column,
+                    parent_columns=parent_columns,
+                ),
             ).otherwise(
-                self.else_.get_column_spec(source_df=source_df, current_column=current_column, parent_columns=parent_columns)
+                self.else_.get_column_spec(
+                    source_df=source_df,
+                    current_column=current_column,
+                    parent_columns=parent_columns,
+                )
             )
         else:
             value = self.check
             column_spec = when(
-                self.column.get_column_spec(source_df=source_df, current_column=current_column,
-                                            parent_columns=parent_columns).rlike(value),
-                self.value.get_column_spec(source_df=source_df, current_column=current_column, parent_columns=parent_columns),
+                self.column.get_column_spec(
+                    source_df=source_df,
+                    current_column=current_column,
+                    parent_columns=parent_columns,
+                ).rlike(value),
+                self.value.get_column_spec(
+                    source_df=source_df,
+                    current_column=current_column,
+                    parent_columns=parent_columns,
+                ),
             ).otherwise(
-                self.else_.get_column_spec(source_df=source_df, current_column=current_column, parent_columns=parent_columns)
+                self.else_.get_column_spec(
+                    source_df=source_df,
+                    current_column=current_column,
+                    parent_columns=parent_columns,
+                )
             )
 
         return column_spec

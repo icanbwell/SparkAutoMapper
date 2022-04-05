@@ -1,4 +1,4 @@
-from typing import Optional, List, Union, Dict
+from typing import List, Optional, Union
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import date_format
@@ -26,9 +26,18 @@ class AutoMapperFormatDateTimeDataType(AutoMapperDataTypeBase):
         )
         self.format_: str = format_
 
-    def get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column], parent_columns: Optional[List[Column]]) -> Column:
+    def get_column_spec(
+        self,
+        source_df: Optional[DataFrame],
+        current_column: Optional[Column],
+        parent_columns: Optional[List[Column]],
+    ) -> Column:
         return date_format(
-            self.value.get_column_spec(source_df=source_df, current_column=current_column, parent_columns=parent_columns),
+            self.value.get_column_spec(
+                source_df=source_df,
+                current_column=current_column,
+                parent_columns=parent_columns,
+            ),
             format=self.format_,
         )
 

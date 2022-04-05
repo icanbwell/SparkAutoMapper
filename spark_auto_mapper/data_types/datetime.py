@@ -1,4 +1,4 @@
-from typing import Optional, List, Union, Dict
+from typing import List, Optional, Union
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import coalesce, to_timestamp
@@ -31,14 +31,19 @@ class AutoMapperDateTimeDataType(AutoMapperDataTypeBase):
         self.formats: Optional[List[str]] = formats
 
     def get_column_spec(
-        self, source_df: Optional[DataFrame], current_column: Optional[Column], parent_columns: Optional[List[Column]]
+        self,
+        source_df: Optional[DataFrame],
+        current_column: Optional[Column],
+        parent_columns: Optional[List[Column]],
     ) -> Column:
         # if column is not of type date then convert it to date
         formats_column_specs: List[Column] = (
             [
                 to_timestamp(
                     self.value.get_column_spec(
-                        source_df=source_df, current_column=current_column,  parent_columns=parent_columns
+                        source_df=source_df,
+                        current_column=current_column,
+                        parent_columns=parent_columns,
                     ),
                     format=format_,
                 )
@@ -48,7 +53,9 @@ class AutoMapperDateTimeDataType(AutoMapperDataTypeBase):
             else [
                 to_timestamp(
                     self.value.get_column_spec(
-                        source_df=source_df, current_column=current_column, parent_columns=parent_columns
+                        source_df=source_df,
+                        current_column=current_column,
+                        parent_columns=parent_columns,
                     )
                 )
             ]
@@ -63,7 +70,9 @@ class AutoMapperDateTimeDataType(AutoMapperDataTypeBase):
             return coalesce(*formats_column_specs)
         else:
             column_spec = self.value.get_column_spec(
-                source_df=source_df, current_column=current_column, parent_columns=parent_columns
+                source_df=source_df,
+                current_column=current_column,
+                parent_columns=parent_columns,
             )
             return column_spec
 

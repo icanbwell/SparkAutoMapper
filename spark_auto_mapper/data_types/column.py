@@ -1,5 +1,5 @@
 import re
-from typing import Optional, List, Union, Dict
+from typing import List, Optional, Union
 
 from pyspark.sql import Column, DataFrame
 
@@ -18,7 +18,12 @@ class AutoMapperDataTypeColumn(AutoMapperArrayLikeBase):
         else:
             self.value = value
 
-    def get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column], parent_columns: Optional[List[Column]]) -> Column:
+    def get_column_spec(
+        self,
+        source_df: Optional[DataFrame],
+        current_column: Optional[Column],
+        parent_columns: Optional[List[Column]],
+    ) -> Column:
         if isinstance(self.value, str):
             if not self.value.startswith("a.") and not self.value.startswith("b."):
                 # prepend with "b." in case the column exists in both a and b tables

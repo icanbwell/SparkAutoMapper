@@ -1,4 +1,4 @@
-from typing import Generic, Optional, TypeVar, Union, List, Dict
+from typing import Generic, List, Optional, TypeVar, Union
 
 from pyspark.sql import DataFrame, Column
 from pyspark.sql.functions import transform
@@ -36,10 +36,17 @@ class AutoMapperTransformDataType(
                 include_null_properties=include_null_properties
             )
 
-    def get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column], parent_columns: Optional[List[Column]]) -> Column:
-        column_spec: Column = self.column.get_column_spec(source_df=source_df, 
-                                                          current_column=current_column,
-                                                          parent_columns=parent_columns)
+    def get_column_spec(
+        self,
+        source_df: Optional[DataFrame],
+        current_column: Optional[Column],
+        parent_columns: Optional[List[Column]],
+    ) -> Column:
+        column_spec: Column = self.column.get_column_spec(
+            source_df=source_df,
+            current_column=current_column,
+            parent_columns=parent_columns,
+        )
 
         if not isinstance(self.value, AutoMapperDataTypeBase):
             return column_spec
@@ -47,9 +54,9 @@ class AutoMapperTransformDataType(
         def get_column_spec_for_column(x: Column) -> Column:
             if not isinstance(self.value, AutoMapperDataTypeBase):
                 return x
-            value_get_column_spec: Column = self.value.get_column_spec(source_df=source_df,
-                                                                       current_column=x,
-                                                                       parent_columns=parent_columns)
+            value_get_column_spec: Column = self.value.get_column_spec(
+                source_df=source_df, current_column=x, parent_columns=parent_columns
+            )
             return value_get_column_spec
 
         return transform(column_spec, get_column_spec_for_column)

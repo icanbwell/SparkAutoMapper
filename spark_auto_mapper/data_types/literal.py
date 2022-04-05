@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from typing import Union, Optional, List, Dict
+from typing import List, Optional, Union
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import lit
@@ -24,7 +24,12 @@ class AutoMapperDataTypeLiteral(AutoMapperTextLikeBase):
         self.value: Union[AutoMapperNativeSimpleType, AutoMapperTextInputType] = value
         self.type_: Optional[DataType] = type_
 
-    def get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column], parent_columns: Optional[List[Column]]) -> Column:
+    def get_column_spec(
+        self,
+        source_df: Optional[DataFrame],
+        current_column: Optional[Column],
+        parent_columns: Optional[List[Column]],
+    ) -> Column:
         if self.value is None:
             return lit(None)
         if (
@@ -37,10 +42,17 @@ class AutoMapperDataTypeLiteral(AutoMapperTextLikeBase):
             return lit(self.value).cast(self.type_) if self.type_ else lit(self.value)
         if isinstance(self.value, AutoMapperTextLikeBase):
             return (
-                self.value.get_column_spec(source_df=source_df, current_column=current_column,
-                                           parent_columns=parent_columns).cast(self.type_)
+                self.value.get_column_spec(
+                    source_df=source_df,
+                    current_column=current_column,
+                    parent_columns=parent_columns,
+                ).cast(self.type_)
                 if self.type_
-                else self.value.get_column_spec(source_df=source_df, current_column=current_column, parent_columns=parent_columns)
+                else self.value.get_column_spec(
+                    source_df=source_df,
+                    current_column=current_column,
+                    parent_columns=parent_columns,
+                )
             )
 
         raise ValueError(f"value: {self.value} is not str, int,float, date or datetime")

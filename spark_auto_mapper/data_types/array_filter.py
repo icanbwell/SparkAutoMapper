@@ -1,4 +1,4 @@
-from typing import List, Optional, Union, TypeVar, Dict
+from typing import List, Optional, TypeVar, Union
 
 from pyspark.sql import DataFrame, Column
 from pyspark.sql.functions import filter, exists
@@ -17,6 +17,7 @@ class AutoMapperArrayFilterDataType(AutoMapperArrayLikeBase):
     """
     Filters an array based on the existence of a value in a nested array
     """
+
     def __init__(
         self,
         array_field: AutoMapperColumnOrColumnLikeType,
@@ -36,23 +37,35 @@ class AutoMapperArrayFilterDataType(AutoMapperArrayLikeBase):
             include_null_properties=include_null_properties
         )
 
-    def get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column], parent_columns: Optional[List[Column]]) -> Column:
+    def get_column_spec(
+        self,
+        source_df: Optional[DataFrame],
+        current_column: Optional[Column],
+        parent_columns: Optional[List[Column]],
+    ) -> Column:
         if parent_columns is None:
             parent_columns = []
+        if current_column is not None:
+            parent_columns.append(current_column)
 
         return filter(
             self.array_field.get_column_spec(
                 source_df=source_df,
                 current_column=current_column,
-                parent_columns=parent_columns),
+                parent_columns=parent_columns,
+            ),
             lambda y: exists(
-                self.inner_array_field.get_column_spec(source_df=source_df,
-                                                       current_column=y,
-                                                       parent_columns=parent_columns + [current_column]),
-                lambda x: x[self.match_property] == self.match_value.get_column_spec(
+                self.inner_array_field.get_column_spec(
                     source_df=source_df,
                     current_column=y,
-                    parent_columns=parent_columns + [current_column]),
+                    parent_columns=parent_columns,
+                ),
+                lambda x: x[self.match_property]
+                == self.match_value.get_column_spec(
+                    source_df=source_df,
+                    current_column=y,
+                    parent_columns=parent_columns,
+                ),
             ),
         )
 

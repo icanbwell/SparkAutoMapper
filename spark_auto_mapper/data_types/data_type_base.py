@@ -47,7 +47,12 @@ class AutoMapperDataTypeBase:
         self.children_schema: Optional[Union[StructType, DataType]] = None
 
     # noinspection PyMethodMayBeStatic
-    def get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column], parent_columns: Optional[List[Column]]) -> Column:
+    def get_column_spec(
+        self,
+        source_df: Optional[DataFrame],
+        current_column: Optional[Column],
+        parent_columns: Optional[List[Column]],
+    ) -> Column:
         """
         Gets the column spec for this automapper data type
 
@@ -63,7 +68,7 @@ class AutoMapperDataTypeBase:
         value: "AutoMapperDataTypeBase",
         source_df: Optional[DataFrame],
         current_column: Optional[Column],
-        parent_columns: Optional[List[Column]]
+        parent_columns: Optional[List[Column]],
     ) -> Column:
         """
         Gets the value for this automapper
@@ -75,7 +80,11 @@ class AutoMapperDataTypeBase:
         """
         assert isinstance(value, AutoMapperDataTypeBase)
         child: AutoMapperDataTypeBase = value
-        return child.get_column_spec(source_df=source_df, current_column=current_column, parent_columns=parent_columns)
+        return child.get_column_spec(
+            source_df=source_df,
+            current_column=current_column,
+            parent_columns=parent_columns,
+        )
 
     def include_null_properties(self, include_null_properties: bool) -> None:
         pass  # sub-classes can implement if they support this
