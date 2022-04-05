@@ -1,4 +1,4 @@
-from typing import Optional, TypeVar, Union, List
+from typing import Optional, TypeVar, Union, List, Dict
 
 from pyspark.sql import DataFrame, Column
 
@@ -15,9 +15,7 @@ _TAutoMapperDataType = TypeVar(
 
 class AutoMapperArrayLikeBase(AutoMapperTextLikeBase):
     # noinspection PyMethodMayBeStatic
-    def get_column_spec(
-        self, source_df: Optional[DataFrame], current_column: Optional[Column]
-    ) -> Column:
+    def get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column], parent_columns: Optional[List[Column]]) -> Column:
         raise NotImplementedError  # base classes should implement this
 
     @property

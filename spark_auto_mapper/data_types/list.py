@@ -1,4 +1,4 @@
-from typing import Union, List, Optional, Generic, TypeVar
+from typing import Union, List, Optional, Generic, TypeVar, Dict
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import array, coalesce
@@ -85,9 +85,7 @@ class AutoMapperList(AutoMapperArrayLikeBase, Generic[_T]):
                 include_null_properties=include_null_properties
             )
 
-    def get_column_spec(
-        self, source_df: Optional[DataFrame], current_column: Optional[Column]
-    ) -> Column:
+    def get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column], parent_columns: Optional[List[Column]]) -> Column:
         """
         returns a Spark Column definition
 
@@ -105,7 +103,7 @@ class AutoMapperList(AutoMapperArrayLikeBase, Generic[_T]):
             inner_array = array(
                 *[
                     self.get_value(
-                        item, source_df=source_df, current_column=current_column
+                        item, source_df=source_df, current_column=current_column, parent_columns=parent_columns
                     )
                     for item in self.value
                 ]
@@ -126,9 +124,8 @@ class AutoMapperList(AutoMapperArrayLikeBase, Generic[_T]):
         # if value is an AutoMapper then ask it for its column spec
         if isinstance(self.value, AutoMapperDataTypeBase):
             child: AutoMapperDataTypeBase = self.value
-            inner_child_spec = child.get_column_spec(
-                source_df=source_df, current_column=current_column
-            )
+            inner_child_spec = child.get_column_spec(source_df=source_df, current_column=current_column,
+                                                     parent_columns=parent_columns)
             return (
                 when(
                     inner_child_spec.isNotNull(),

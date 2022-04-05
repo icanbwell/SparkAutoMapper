@@ -1,4 +1,4 @@
-from typing import Generic, Optional, TypeVar, List, Union
+from typing import Generic, Optional, TypeVar, List, Union, Dict
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.utils import AnalysisException
@@ -34,17 +34,14 @@ class AutoMapperFirstValidColumnType(
             AutoMapperValueParser.parse_value(value=column) for column in columns
         ]
 
-    def get_column_spec(
-        self, source_df: Optional[DataFrame], current_column: Optional[Column]
-    ) -> Column:
+    def get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column], parent_columns: Optional[List[Column]]) -> Column:
         column_spec = None
 
         for column in self.columns:
             # noinspection PyBroadException
             try:
-                column_spec = column.get_column_spec(
-                    source_df=source_df, current_column=current_column
-                )
+                column_spec = column.get_column_spec(source_df=source_df, current_column=current_column,
+                                                     parent_columns=parent_columns)
             except Exception:
                 # By definition, if we are unable to resolve a column spec, for whatever reason, the column definition
                 # is not valid and should try the next column.

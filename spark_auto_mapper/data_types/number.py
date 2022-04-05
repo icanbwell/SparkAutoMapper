@@ -1,4 +1,4 @@
-from typing import Optional, List, Union
+from typing import Optional, List, Union, Dict
 
 from pyspark.sql import Column, DataFrame
 
@@ -17,24 +17,20 @@ class AutoMapperNumberDataType(AutoMapperDataTypeBase):
             else AutoMapperValueParser.parse_value(value=value)
         )
 
-    def get_column_spec(
-        self, source_df: Optional[DataFrame], current_column: Optional[Column]
-    ) -> Column:
+    def get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column], parent_columns: Optional[List[Column]]) -> Column:
         if (
             source_df is not None
             and isinstance(self.value, AutoMapperDataTypeColumn)
             and dict(source_df.dtypes)[self.value.value] in ("long", "int", "bigint")
         ):
             # Don't parse to long if it's already a long
-            column_spec = self.value.get_column_spec(
-                source_df=source_df, current_column=current_column
-            )
+            column_spec = self.value.get_column_spec(source_df=source_df, current_column=current_column,
+                                                     parent_columns=parent_columns)
             return column_spec
         else:
             # parse the amount here
-            column_spec = self.value.get_column_spec(
-                source_df=source_df, current_column=current_column
-            ).cast("long")
+            column_spec = self.value.get_column_spec(source_df=source_df, current_column=current_column,
+                                                     parent_columns=parent_columns).cast("long")
             return column_spec
 
     @property

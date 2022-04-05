@@ -126,8 +126,9 @@ class MyProcessingStatusExtension(AutoMapperDataTypeComplexBase):
         value: AutoMapperDataTypeBase,
         source_df: Optional[DataFrame],
         current_column: Optional[Column],
+        parent_columns: Optional[List[Column]]
     ) -> Column:
-        return super().get_value(value, source_df, current_column)
+        return super().get_value(value, source_df, current_column, parent_columns)
 
 
 class MyClass(AutoMapperDataTypeComplexBase):

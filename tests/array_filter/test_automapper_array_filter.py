@@ -111,7 +111,7 @@ def test_automapper_array_filter(spark_session: SparkSession) -> None:
                     array_field= A.column("schedule"),
                     inner_array_field=A.field("actor"),
                     match_property="reference",
-                    match_value=A.field("name"),
+                    match_value=A.field("{parent}.name"),
                 ).select_one(AutoMapperElasticSearchSchedule(name=A.field("name"))),
             )
         )

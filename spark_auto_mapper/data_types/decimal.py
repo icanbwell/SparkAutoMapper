@@ -1,4 +1,4 @@
-from typing import Optional, List, Union
+from typing import Optional, List, Union, Dict
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.types import DecimalType
@@ -26,24 +26,20 @@ class AutoMapperDecimalDataType(AutoMapperDataTypeBase):
             else AutoMapperValueParser.parse_value(value=value)
         )
 
-    def get_column_spec(
-        self, source_df: Optional[DataFrame], current_column: Optional[Column]
-    ) -> Column:
+    def get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column], parent_columns: Optional[List[Column]]) -> Column:
         if (
             source_df is not None
             and isinstance(self.value, AutoMapperDataTypeColumn)
             and "decimal" not in dict(source_df.dtypes)[self.value.value]
         ):
             # parse the amount here
-            column_spec = self.value.get_column_spec(
-                source_df=source_df, current_column=current_column
-            ).cast(DecimalType(precision=self.precision, scale=self.scale))
+            column_spec = self.value.get_column_spec(source_df=source_df, current_column=current_column,
+                                                     parent_columns=parent_columns).cast(DecimalType(precision=self.precision, scale=self.scale))
             return column_spec
         else:
             # Already a decimal
-            column_spec = self.value.get_column_spec(
-                source_df=source_df, current_column=current_column
-            )
+            column_spec = self.value.get_column_spec(source_df=source_df, current_column=current_column,
+                                                     parent_columns=parent_columns)
             return column_spec
 
     @property

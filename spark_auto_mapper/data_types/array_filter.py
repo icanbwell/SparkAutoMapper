@@ -1,4 +1,4 @@
-from typing import List, Optional, Union, TypeVar
+from typing import List, Optional, Union, TypeVar, Dict
 
 from pyspark.sql import DataFrame, Column
 from pyspark.sql.functions import filter, exists
@@ -33,23 +33,24 @@ class AutoMapperArrayFilterDataType(AutoMapperArrayLikeBase):
             include_null_properties=include_null_properties
         )
 
-    def get_column_spec(
-        self, source_df: Optional[DataFrame], current_column: Optional[Column]
-    ) -> Column:
+    def get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column], parent_columns: Optional[List[Column]]) -> Column:
         #  filter(schedule, exists(schedule, filter(schedule.actor, r -> r.reference == 'Location/unitypoint-421411630')))
+        if parent_columns is None:
+            parent_columns = []
 
         return filter(
             self.array_field.get_column_spec(
-                source_df=source_df, current_column=current_column
-            ),
+                source_df=source_df,
+                current_column=current_column,
+                parent_columns=parent_columns),
             lambda y: exists(
-                self.inner_array_field.get_column_spec(
-                    source_df=source_df, current_column=y
-                ),
-                lambda x: x[self.match_property]
-                == self.match_value.get_column_spec(
-                    source_df=source_df, current_column=y
-                ),
+                self.inner_array_field.get_column_spec(source_df=source_df,
+                                                       current_column=y,
+                                                       parent_columns=parent_columns + [current_column]),
+                lambda x: x[self.match_property] == self.match_value.get_column_spec(
+                    source_df=source_df,
+                    current_column=y,
+                    parent_columns=parent_columns + [current_column]),
             ),
         )
 

@@ -1,4 +1,4 @@
-from typing import Generic, Optional, TypeVar, List, Union
+from typing import Generic, Optional, TypeVar, List, Union, Dict
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.utils import AnalysisException
@@ -49,12 +49,9 @@ class AutoMapperIfColumnExistsType(
                 else AutoMapperValueParser.parse_value(value=if_not_exists)
             )
 
-    def get_column_spec(
-        self, source_df: Optional[DataFrame], current_column: Optional[Column]
-    ) -> Column:
-        column_spec = self.column.get_column_spec(
-            source_df=source_df, current_column=current_column
-        )
+    def get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column], parent_columns: Optional[List[Column]]) -> Column:
+        column_spec = self.column.get_column_spec(source_df=source_df, current_column=current_column,
+                                                  parent_columns=parent_columns)
         # noinspection Mypy,PyProtectedMember
         col_name: str = (
             column_spec._jc.toString()  # type: ignore
@@ -67,18 +64,17 @@ class AutoMapperIfColumnExistsType(
                 source_df.selectExpr(col_name.replace("b.", ""))
                 # col exists so we use the if_exists
                 if self.if_exists_column:
-                    column_spec = self.if_exists_column.get_column_spec(
-                        source_df=source_df, current_column=current_column
-                    )
+                    column_spec = self.if_exists_column.get_column_spec(source_df=source_df,
+                                                                        current_column=current_column,
+                                                                        parent_columns=parent_columns)
         except AnalysisException:
             if self.if_not_exists:
-                column_spec = self.if_not_exists.get_column_spec(
-                    source_df=source_df, current_column=current_column
-                )
+                column_spec = self.if_not_exists.get_column_spec(source_df=source_df, current_column=current_column,
+                                                                 parent_columns=parent_columns)
             else:
-                column_spec = AutoMapperDataTypeLiteral(None).get_column_spec(
-                    source_df=source_df, current_column=current_column
-                )
+                column_spec = AutoMapperDataTypeLiteral(None).get_column_spec(source_df=source_df,
+                                                                              current_column=current_column,
+                                                                              parent_columns=parent_columns)
         return column_spec
 
     @property
