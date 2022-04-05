@@ -14,6 +14,9 @@ _TAutoMapperDataType = TypeVar("_TAutoMapperDataType", bound=AutoMapperAnyDataTy
 
 
 class AutoMapperArrayFilterDataType(AutoMapperArrayLikeBase):
+    """
+    Filters an array based on the existence of a value in a nested array
+    """
     def __init__(
         self,
         array_field: AutoMapperColumnOrColumnLikeType,
@@ -34,7 +37,6 @@ class AutoMapperArrayFilterDataType(AutoMapperArrayLikeBase):
         )
 
     def get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column], parent_columns: Optional[List[Column]]) -> Column:
-        #  filter(schedule, exists(schedule, filter(schedule.actor, r -> r.reference == 'Location/unitypoint-421411630')))
         if parent_columns is None:
             parent_columns = []
 

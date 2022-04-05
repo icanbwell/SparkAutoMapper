@@ -4,6 +4,7 @@ from shutil import rmtree
 from typing import Dict
 
 from pyspark.sql import SparkSession, DataFrame, Column
+from pyspark.sql.functions import col, exists, lit, filter, transform, struct
 from pyspark.sql.types import (
     StructType,
     IntegerType,
@@ -14,6 +15,7 @@ from pyspark.sql.types import (
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
+from spark_auto_mapper.helpers.expression_comparer import assert_compare_expressions
 from tests.array_filter.location import AutoMapperElasticSearchLocation
 from tests.array_filter.schedule import AutoMapperElasticSearchSchedule
 
@@ -108,7 +110,7 @@ def test_automapper_array_filter(spark_session: SparkSession) -> None:
             AutoMapperElasticSearchLocation(
                 name=A.field("name"),
                 scheduling=A.array_filter(
-                    array_field= A.column("schedule"),
+                    array_field=A.column("schedule"),
                     inner_array_field=A.field("actor"),
                     match_property="reference",
                     match_value=A.field("{parent}.name"),
@@ -116,23 +118,30 @@ def test_automapper_array_filter(spark_session: SparkSession) -> None:
             )
         )
     )
-    # mapper = AutoMapper(
-    #     view="schedule", source_view="patients", keys=["row_id"]
-    # ).columns(
-    #     location=A.array_filter(
-    #                 array_field=schedule,
-    #                 inner_array_field=A.field("actor"),
-    #                 match_property="reference",
-    #                 match_value=A.column("location").select_one(A.field("name")),
-    #             )
-    # )
 
     assert isinstance(mapper, AutoMapper)
     sql_expressions: Dict[str, Column] = mapper.get_column_specs(source_df=source_df)
     print("------COLUMN SPECS------")
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
-
+    assert_compare_expressions(sql_expressions["location"], transform(
+        col("b.location"),
+        lambda l: (
+            struct(
+                l["name"].alias("name"),
+                transform(
+                    filter(
+                        col("b.schedule"),
+                        lambda s: exists(
+                            s["actor"],
+                            lambda a: a["reference"] == l["name"],  # type: ignore
+                        ),
+                    ),
+                    lambda s: struct(s["name"].alias("name")),
+                )[0].alias("scheduling"),
+            )
+        ),
+    ).alias("___location"))
     result_df: DataFrame = mapper.transform(df=source_df)
 
     # Assert

@@ -18,6 +18,9 @@ class AutoMapperDataTypeField(AutoMapperArrayLikeBase):
             self.value = value
 
     def get_column_spec(self, source_df: Optional[DataFrame], current_column: Optional[Column], parent_columns: Optional[List[Column]]) -> Column:
+        """
+        
+        """
         if isinstance(self.value, str):
             if current_column is not None:
                 # noinspection RegExpSingleCharAlternation

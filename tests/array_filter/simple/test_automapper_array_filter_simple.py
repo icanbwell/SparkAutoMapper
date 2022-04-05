@@ -1,9 +1,11 @@
 from pathlib import Path
 from typing import Dict
 
+import pytest
 from pyspark.sql import SparkSession, DataFrame, Column
 from pyspark.sql.functions import filter, exists, col
 
+from spark_auto_mapper.helpers.expression_comparer import assert_compare_expressions
 from tests.conftest import clean_spark_session
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
@@ -38,14 +40,13 @@ def test_automapper_array_filter_simple(spark_session: SparkSession) -> None:
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
-    assert str(sql_expressions["age"]) == str(
-        filter(
+    assert_compare_expressions(sql_expressions["age"], filter(
             col("b.array1"),
             lambda y: exists(
                 y["array2"], lambda x: x["reference"] == lit("bar").cast("string")
             ),
-        ).alias("age")
-    )
+        ).alias("age"))
+    
     result_df: DataFrame = mapper.transform(df=source_df)
 
     result_df.printSchema()
