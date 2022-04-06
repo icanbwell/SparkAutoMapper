@@ -574,8 +574,9 @@ class AutoMapperHelpers:
 
         :param array_field: outer array we want to return values from based on the inner array filter
         :param inner_array_field: array we check for the existence of a value on one of its fields
-        :param match_property: a field on the inner array we want to check for the value
-        :param match_value: a field containing the value we want to test against match property
+        :param match_property: the field name on the inner array to use for the check
+        :param match_value: a field containing the value we want to test against match property field. to access
+        the parent column the syntax '{parent}.field' can be used.
         """
         return AutoMapperNestedArrayFilterDataType(
             array_field=array_field,
