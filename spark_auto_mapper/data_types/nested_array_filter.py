@@ -13,7 +13,7 @@ from spark_auto_mapper.type_definitions.wrapper_types import (
 _TAutoMapperDataType = TypeVar("_TAutoMapperDataType", bound=AutoMapperAnyDataType)
 
 
-class AutoMapperArrayFilterDataType(AutoMapperArrayLikeBase):
+class AutoMapperNestedArrayFilterDataType(AutoMapperArrayLikeBase):
     """
     Filters an array based on the existence of a value in a nested array
     """

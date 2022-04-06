@@ -1,3 +1,4 @@
+from os import environ
 from pathlib import Path
 from typing import Dict
 
@@ -12,9 +13,13 @@ from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
 from pyspark.sql.functions import lit
 
 
-def test_automapper_array_filter_simple(spark_session: SparkSession) -> None:
+def test_automapper_nested_array_filter_simple_with_array(
+    spark_session: SparkSession,
+) -> None:
     clean_spark_session(spark_session)
     data_dir: Path = Path(__file__).parent.joinpath("./")
+
+    environ["LOGLEVEL"] = "DEBUG"
 
     data_json_file: Path = data_dir.joinpath("data.json")
 
@@ -26,7 +31,7 @@ def test_automapper_array_filter_simple(spark_session: SparkSession) -> None:
 
     # Act
     mapper = AutoMapper(view="members", source_view="patients").columns(
-        age=A.array_filter(
+        age=A.nested_array_filter(
             array_field=A.column("array1"),
             inner_array_field=A.field("array2"),
             match_property="reference",
@@ -48,7 +53,6 @@ def test_automapper_array_filter_simple(spark_session: SparkSession) -> None:
             ),
         ).alias("age"),
     )
-
     result_df: DataFrame = mapper.transform(df=source_df)
 
     result_df.printSchema()

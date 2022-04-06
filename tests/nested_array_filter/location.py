@@ -11,7 +11,7 @@ from spark_auto_mapper.data_types.complex.complex_base import (
     AutoMapperDataTypeComplexBase,
 )
 from spark_auto_mapper.type_definitions.defined_types import AutoMapperString
-from tests.array_filter.schedule import AutoMapperElasticSearchSchedule
+from tests.nested_array_filter.schedule import AutoMapperElasticSearchSchedule
 
 
 class AutoMapperElasticSearchLocation(AutoMapperDataTypeComplexBase):

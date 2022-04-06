@@ -7,7 +7,9 @@ from pyspark.sql.types import StringType
 from pyspark.sql import Column
 
 from spark_auto_mapper.data_types.array_distinct import AutoMapperArrayDistinctDataType
-from spark_auto_mapper.data_types.array_filter import AutoMapperArrayFilterDataType
+from spark_auto_mapper.data_types.nested_array_filter import (
+    AutoMapperNestedArrayFilterDataType,
+)
 from spark_auto_mapper.data_types.array_max import AutoMapperArrayMaxDataType
 from spark_auto_mapper.data_types.array_base import AutoMapperArrayLikeBase
 from spark_auto_mapper.data_types.coalesce import AutoMapperCoalesceDataType
@@ -560,12 +562,12 @@ class AutoMapperHelpers:
         )
 
     @staticmethod
-    def array_filter(
+    def nested_array_filter(
         array_field: AutoMapperColumnOrColumnLikeType,
         inner_array_field: AutoMapperColumnOrColumnLikeType,
         match_property: str,
         match_value: AutoMapperColumnOrColumnLikeType,
-    ) -> AutoMapperArrayFilterDataType:
+    ) -> AutoMapperNestedArrayFilterDataType:
         """
         Filters an array by searching an inner array for a certain value on a property of the inner array
 
@@ -575,7 +577,7 @@ class AutoMapperHelpers:
         :param match_property: a field on the inner array we want to check for the value
         :param match_value: a field containing the value we want to test against match property
         """
-        return AutoMapperArrayFilterDataType(
+        return AutoMapperNestedArrayFilterDataType(
             array_field=array_field,
             inner_array_field=inner_array_field,
             match_property=match_property,

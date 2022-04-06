@@ -13,7 +13,9 @@ from pyspark.sql.types import (
 )
 
 
-def test_automapper_array_filter_expression_only(spark_session: SparkSession) -> None:
+def test_automapper_nested_array_filter_expression_only(
+    spark_session: SparkSession,
+) -> None:
     data_dir: Path = Path(__file__).parent.joinpath("./")
 
     temp_folder = data_dir.joinpath("temp")
