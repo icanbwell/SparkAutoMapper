@@ -1,4 +1,4 @@
-from typing import Optional, List, Union
+from typing import List, Optional, Union
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import expr
@@ -13,7 +13,10 @@ class AutoMapperDataTypeExpression(AutoMapperArrayLikeBase):
         self.value: str = value
 
     def get_column_spec(
-        self, source_df: Optional[DataFrame], current_column: Optional[Column]
+        self,
+        source_df: Optional[DataFrame],
+        current_column: Optional[Column],
+        parent_columns: Optional[List[Column]],
     ) -> Column:
         if isinstance(
             self.value, str

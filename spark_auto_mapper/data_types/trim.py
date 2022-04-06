@@ -1,4 +1,4 @@
-from typing import Optional, List, Union
+from typing import List, Optional, Union
 
 from pyspark.sql import Column, DataFrame
 
@@ -23,11 +23,16 @@ class AutoMapperTrimDataType(AutoMapperTextLikeBase):
         self.column: AutoMapperColumnOrColumnLikeType = column
 
     def get_column_spec(
-        self, source_df: Optional[DataFrame], current_column: Optional[Column]
+        self,
+        source_df: Optional[DataFrame],
+        current_column: Optional[Column],
+        parent_columns: Optional[List[Column]],
     ) -> Column:
         column_spec = trim(
             self.column.get_column_spec(
-                source_df=source_df, current_column=current_column
+                source_df=source_df,
+                current_column=current_column,
+                parent_columns=parent_columns,
             )
         )
         return column_spec

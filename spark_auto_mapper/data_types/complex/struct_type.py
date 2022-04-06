@@ -15,12 +15,18 @@ class AutoMapperDataTypeStruct(AutoMapperDataTypeComplexBase):
         super().__init__(**value)
 
     def get_column_spec(
-        self, source_df: Optional[DataFrame], current_column: Optional[Column]
+        self,
+        source_df: Optional[DataFrame],
+        current_column: Optional[Column],
+        parent_columns: Optional[List[Column]],
     ) -> Column:
         return struct(
             *[
                 self.get_value(
-                    value=value, source_df=source_df, current_column=current_column
+                    value=value,
+                    source_df=source_df,
+                    current_column=current_column,
+                    parent_columns=parent_columns,
                 ).alias(key)
                 for key, value in self.value.items()
             ]

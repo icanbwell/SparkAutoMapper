@@ -1,0 +1,34 @@
+[
+  {
+    "array1": [
+      {
+        "array2": [
+          {
+            "reference": "foo"
+          }
+        ]
+      }
+    ],
+    "column2": [
+      {
+        "name": "foo"
+      }
+    ]
+  },
+  {
+    "array1": [
+      {
+        "array2": [
+          {
+            "reference": "bar"
+          }
+        ]
+      }
+    ],
+    "column2": [
+      {
+        "name": "foo"
+      }
+    ]
+  }
+]

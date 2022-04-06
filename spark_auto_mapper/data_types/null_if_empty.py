@@ -1,4 +1,4 @@
-from typing import TypeVar, Union, Generic, Optional, List
+from typing import Generic, List, Optional, TypeVar, Union
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import when, lit
@@ -34,11 +34,16 @@ class AutoMapperNullIfEmptyDataType(
             )
 
     def get_column_spec(
-        self, source_df: Optional[DataFrame], current_column: Optional[Column]
+        self,
+        source_df: Optional[DataFrame],
+        current_column: Optional[Column],
+        parent_columns: Optional[List[Column]],
     ) -> Column:
         value_spec = (
             self.value.get_column_spec(
-                source_df=source_df, current_column=current_column
+                source_df=source_df,
+                current_column=current_column,
+                parent_columns=parent_columns,
             )
             if isinstance(self.value, AutoMapperDataTypeBase)
             else lit(self.value)

@@ -13,7 +13,9 @@ def fix_generated_lambda_variable_names(expression_text: str) -> str:
     :param expression_text: text of expression
     :returns cleaned expression text
     """
-    return re.sub(r"x_([0-9]+)", "x", expression_text)
+    replace_lambda_variables = re.sub(r"x_([0-9]+)", "x", expression_text)
+    replace_casts = re.sub(r"CAST\((.*)\s\w*\s\w*\)", r"\1", replace_lambda_variables)
+    return replace_casts
 
 
 def assert_compare_expressions(expression1: Column, expression2: Column) -> None:
