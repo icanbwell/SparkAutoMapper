@@ -1,4 +1,4 @@
-from typing import Generic, Optional, TypeVar, Union, List
+from typing import Generic, List, Optional, TypeVar, Union
 
 from pyspark.sql import DataFrame, Column
 from pyspark.sql.functions import transform
@@ -37,10 +37,15 @@ class AutoMapperTransformDataType(
             )
 
     def get_column_spec(
-        self, source_df: Optional[DataFrame], current_column: Optional[Column]
+        self,
+        source_df: Optional[DataFrame],
+        current_column: Optional[Column],
+        parent_columns: Optional[List[Column]],
     ) -> Column:
         column_spec: Column = self.column.get_column_spec(
-            source_df=source_df, current_column=current_column
+            source_df=source_df,
+            current_column=current_column,
+            parent_columns=parent_columns,
         )
 
         if not isinstance(self.value, AutoMapperDataTypeBase):
@@ -50,7 +55,7 @@ class AutoMapperTransformDataType(
             if not isinstance(self.value, AutoMapperDataTypeBase):
                 return x
             value_get_column_spec: Column = self.value.get_column_spec(
-                source_df=source_df, current_column=x
+                source_df=source_df, current_column=x, parent_columns=parent_columns
             )
             return value_get_column_spec
 

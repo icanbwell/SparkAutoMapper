@@ -48,13 +48,17 @@ class AutoMapperDataTypeBase:
 
     # noinspection PyMethodMayBeStatic
     def get_column_spec(
-        self, source_df: Optional[DataFrame], current_column: Optional[Column]
+        self,
+        source_df: Optional[DataFrame],
+        current_column: Optional[Column],
+        parent_columns: Optional[List[Column]],
     ) -> Column:
         """
         Gets the column spec for this automapper data type
 
         :param source_df: source data frame in case the automapper type needs that data to decide what to do
         :param current_column: (Optional) this is set when we are inside an array
+        :param parent_columns: Optional[List[Column]]: (Optional) a dictionary of parent columns for use inside nested arrays
         """
         raise NotImplementedError  # base classes should implement this
 
@@ -64,6 +68,7 @@ class AutoMapperDataTypeBase:
         value: "AutoMapperDataTypeBase",
         source_df: Optional[DataFrame],
         current_column: Optional[Column],
+        parent_columns: Optional[List[Column]],
     ) -> Column:
         """
         Gets the value for this automapper
@@ -71,10 +76,15 @@ class AutoMapperDataTypeBase:
         :param value: current value
         :param source_df: source data frame in case the automapper type needs that data to decide what to do
         :param current_column: (Optional) this is set when we are inside an array
+        :param parent_columns: (Optional) set when inside a nested lambda to access parent columns
         """
         assert isinstance(value, AutoMapperDataTypeBase)
         child: AutoMapperDataTypeBase = value
-        return child.get_column_spec(source_df=source_df, current_column=current_column)
+        return child.get_column_spec(
+            source_df=source_df,
+            current_column=current_column,
+            parent_columns=parent_columns,
+        )
 
     def include_null_properties(self, include_null_properties: bool) -> None:
         pass  # sub-classes can implement if they support this

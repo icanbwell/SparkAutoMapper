@@ -1,4 +1,4 @@
-from typing import TypeVar, Union, Generic, Optional, cast, List
+from typing import Generic, List, Optional, TypeVar, Union, cast
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import when
@@ -67,43 +67,62 @@ class AutoMapperIfDataType(AutoMapperDataTypeBase, Generic[_TAutoMapperDataType]
         )
 
     def get_column_spec(
-        self, source_df: Optional[DataFrame], current_column: Optional[Column]
+        self,
+        source_df: Optional[DataFrame],
+        current_column: Optional[Column],
+        parent_columns: Optional[List[Column]],
     ) -> Column:
         if isinstance(self.check, list):
             column_spec = when(
                 self.column.get_column_spec(
-                    source_df=source_df, current_column=current_column
+                    source_df=source_df,
+                    current_column=current_column,
+                    parent_columns=parent_columns,
                 ).isin(
                     *[
                         c.get_column_spec(
-                            source_df=source_df, current_column=current_column
+                            source_df=source_df,
+                            current_column=current_column,
+                            parent_columns=parent_columns,
                         )
                         for c in self.check
                     ]
                 ),
                 self.value.get_column_spec(
-                    source_df=source_df, current_column=current_column
+                    source_df=source_df,
+                    current_column=current_column,
+                    parent_columns=parent_columns,
                 ),
             ).otherwise(
                 self.else_.get_column_spec(
-                    source_df=source_df, current_column=current_column
+                    source_df=source_df,
+                    current_column=current_column,
+                    parent_columns=parent_columns,
                 )
             )
         else:
             column_spec = when(
                 self.column.get_column_spec(
-                    source_df=source_df, current_column=current_column
+                    source_df=source_df,
+                    current_column=current_column,
+                    parent_columns=parent_columns,
                 ).eqNullSafe(
                     self.check.get_column_spec(
-                        source_df=source_df, current_column=current_column
+                        source_df=source_df,
+                        current_column=current_column,
+                        parent_columns=parent_columns,
                     )
                 ),
                 self.value.get_column_spec(
-                    source_df=source_df, current_column=current_column
+                    source_df=source_df,
+                    current_column=current_column,
+                    parent_columns=parent_columns,
                 ),
             ).otherwise(
                 self.else_.get_column_spec(
-                    source_df=source_df, current_column=current_column
+                    source_df=source_df,
+                    current_column=current_column,
+                    parent_columns=parent_columns,
                 )
             )
 

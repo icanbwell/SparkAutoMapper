@@ -1,5 +1,5 @@
 import re
-from typing import Optional, List, Union
+from typing import List, Optional, Union
 
 from pyspark.sql import Column, DataFrame
 
@@ -18,15 +18,25 @@ class AutoMapperDataTypeField(AutoMapperArrayLikeBase):
             self.value = value
 
     def get_column_spec(
-        self, source_df: Optional[DataFrame], current_column: Optional[Column]
+        self,
+        source_df: Optional[DataFrame],
+        current_column: Optional[Column],
+        parent_columns: Optional[List[Column]],
     ) -> Column:
+        """ """
         if isinstance(self.value, str):
             if current_column is not None:
                 # noinspection RegExpSingleCharAlternation
                 elements: List[str] = re.split(r"\.|\[|]", self.value)
                 my_column: Column = current_column
+                if len(elements) > 1 and "{parent}" in elements:
+                    # we want to use the parent column and pop {parent} off the list of elements
+                    if parent_columns is not None and len(parent_columns) > 0:
+                        elements.remove("{parent}")
+                        my_column = parent_columns[-1]
                 for element in elements:
                     if element != "_" and element != "":
+                        # select the field from column by field name ex: x_0['name']
                         my_column = my_column[
                             element if not element.isnumeric() else int(element)
                         ]
