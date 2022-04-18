@@ -72,7 +72,7 @@ class AutoMapperWithColumnBase(AutoMapperBase):
                     #     column_data_type=self.column_schema.dataType,
                     # )
             column_spec = child.get_column_spec(
-                source_df=source_df, current_column=None
+                source_df=source_df, current_column=None, parent_columns=None
             )
             if self.skip_if_columns_null_or_empty:
                 columns_to_check = f"b.{self.skip_if_columns_null_or_empty[0]}"  # TODO: handle more than one
@@ -82,7 +82,9 @@ class AutoMapperWithColumnBase(AutoMapperBase):
                     | col(columns_to_check).eqNullSafe(""),
                     lit(None),
                 ).otherwise(
-                    self.value.get_column_spec(source_df=source_df, current_column=None)
+                    self.value.get_column_spec(
+                        source_df=source_df, current_column=None, parent_columns=None
+                    )
                 )
             # if the type has a schema then apply it
             if self.column_schema:
@@ -135,7 +137,7 @@ class AutoMapperWithColumnBase(AutoMapperBase):
         if source_df and self.column_schema:
             child: AutoMapperDataTypeBase = self.value
             column_spec = child.get_column_spec(
-                source_df=source_df, current_column=None
+                source_df=source_df, current_column=None, parent_columns=None
             )
             # result = child.check_schema(
             #     parent_column=self.dst_column, source_df=source_df

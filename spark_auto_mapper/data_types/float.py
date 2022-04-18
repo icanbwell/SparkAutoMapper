@@ -1,4 +1,4 @@
-from typing import Optional, List, Union
+from typing import List, Optional, Union
 
 from pyspark.sql import Column, DataFrame
 
@@ -17,7 +17,10 @@ class AutoMapperFloatDataType(AutoMapperDataTypeBase):
         )
 
     def get_column_spec(
-        self, source_df: Optional[DataFrame], current_column: Optional[Column]
+        self,
+        source_df: Optional[DataFrame],
+        current_column: Optional[Column],
+        parent_columns: Optional[List[Column]],
     ) -> Column:
         if (
             isinstance(self.value, AutoMapperDataTypeColumn)
@@ -26,12 +29,16 @@ class AutoMapperFloatDataType(AutoMapperDataTypeBase):
         ):
             # parse the amount here
             column_spec = self.value.get_column_spec(
-                source_df=source_df, current_column=current_column
+                source_df=source_df,
+                current_column=current_column,
+                parent_columns=parent_columns,
             ).cast("float")
             return column_spec
         else:
             column_spec = self.value.get_column_spec(
-                source_df=source_df, current_column=current_column
+                source_df=source_df,
+                current_column=current_column,
+                parent_columns=parent_columns,
             )
             return column_spec
 

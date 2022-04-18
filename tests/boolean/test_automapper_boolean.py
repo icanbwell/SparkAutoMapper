@@ -7,6 +7,7 @@ from pyspark.sql.functions import col, lit
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
+from spark_auto_mapper.helpers.expression_comparer import assert_compare_expressions
 
 
 def test_auto_mapper_boolean(spark_session: SparkSession) -> None:
@@ -37,11 +38,11 @@ def test_auto_mapper_boolean(spark_session: SparkSession) -> None:
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
-    assert str(sql_expressions["age"]) == str(
-        col("b.my_age").cast("boolean").alias("age")
+    assert_compare_expressions(
+        sql_expressions["age"], col("b.my_age").cast("boolean").alias("age")
     )
-    assert str(sql_expressions["is_active"]) == str(
-        lit("False").cast("boolean").alias("is_active")
+    assert_compare_expressions(
+        sql_expressions["is_active"], lit("False").cast("boolean").alias("is_active")
     )
 
     result_df: DataFrame = mapper.transform(df=df)

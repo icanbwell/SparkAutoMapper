@@ -44,10 +44,15 @@ class AutoMapperMapDataType(AutoMapperDataTypeExpression):
         )
 
     def get_column_spec(
-        self, source_df: Optional[DataFrame], current_column: Optional[Column]
+        self,
+        source_df: Optional[DataFrame],
+        current_column: Optional[Column],
+        parent_columns: Optional[List[Column]],
     ) -> Column:
         inner_column_spec: Column = self.column.get_column_spec(
-            source_df=source_df, current_column=current_column
+            source_df=source_df,
+            current_column=current_column,
+            parent_columns=parent_columns,
         )
 
         column_spec: Optional[Column] = None
@@ -58,21 +63,27 @@ class AutoMapperMapDataType(AutoMapperDataTypeExpression):
                 column_spec = column_spec.when(
                     inner_column_spec.eqNullSafe(key),  # type: ignore
                     value.get_column_spec(
-                        source_df=source_df, current_column=current_column
+                        source_df=source_df,
+                        current_column=current_column,
+                        parent_columns=parent_columns,
                     ),
                 )
             else:
                 column_spec = when(
                     inner_column_spec.eqNullSafe(key),  # type: ignore
                     value.get_column_spec(
-                        source_df=source_df, current_column=current_column
+                        source_df=source_df,
+                        current_column=current_column,
+                        parent_columns=parent_columns,
                     ),
                 )
 
         if column_spec is not None:
             column_spec = column_spec.otherwise(
                 self.default.get_column_spec(
-                    source_df=source_df, current_column=current_column
+                    source_df=source_df,
+                    current_column=current_column,
+                    parent_columns=parent_columns,
                 )
             )
 

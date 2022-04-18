@@ -1,4 +1,4 @@
-from typing import Optional, Union, List
+from typing import List, Optional, Union
 from deprecated import deprecated
 
 from pyspark.sql import Column, DataFrame
@@ -22,10 +22,15 @@ class AutoMapperAmountDataType(AutoMapperDataTypeBase):
         )
 
     def get_column_spec(
-        self, source_df: Optional[DataFrame], current_column: Optional[Column]
+        self,
+        source_df: Optional[DataFrame],
+        current_column: Optional[Column],
+        parent_columns: Optional[List[Column]],
     ) -> Column:
         column_spec = self.value.get_column_spec(
-            source_df=source_df, current_column=current_column
+            source_df=source_df,
+            current_column=current_column,
+            parent_columns=parent_columns,
         )
         if not (
             isinstance(self.value, AutoMapperDataTypeColumn)

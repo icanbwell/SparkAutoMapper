@@ -1,4 +1,4 @@
-from typing import Optional, Union, List
+from typing import List, Optional, Union
 
 from pyspark.sql import DataFrame, Column
 from pyspark.sql.functions import flatten, filter
@@ -26,12 +26,17 @@ class AutoMapperFlattenDataType(AutoMapperArrayLikeBase):
         )
 
     def get_column_spec(
-        self, source_df: Optional[DataFrame], current_column: Optional[Column]
+        self,
+        source_df: Optional[DataFrame],
+        current_column: Optional[Column],
+        parent_columns: Optional[List[Column]],
     ) -> Column:
         return flatten(
             filter(
                 self.column.get_column_spec(
-                    source_df=source_df, current_column=current_column
+                    source_df=source_df,
+                    current_column=current_column,
+                    parent_columns=parent_columns,
                 ),
                 lambda x: x.isNotNull(),
             )

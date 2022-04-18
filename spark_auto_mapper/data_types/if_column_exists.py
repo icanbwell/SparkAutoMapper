@@ -1,4 +1,4 @@
-from typing import Generic, Optional, TypeVar, List, Union
+from typing import Generic, List, Optional, TypeVar, Union
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.utils import AnalysisException
@@ -50,10 +50,15 @@ class AutoMapperIfColumnExistsType(
             )
 
     def get_column_spec(
-        self, source_df: Optional[DataFrame], current_column: Optional[Column]
+        self,
+        source_df: Optional[DataFrame],
+        current_column: Optional[Column],
+        parent_columns: Optional[List[Column]],
     ) -> Column:
         column_spec = self.column.get_column_spec(
-            source_df=source_df, current_column=current_column
+            source_df=source_df,
+            current_column=current_column,
+            parent_columns=parent_columns,
         )
         # noinspection Mypy,PyProtectedMember
         col_name: str = (
@@ -68,16 +73,22 @@ class AutoMapperIfColumnExistsType(
                 # col exists so we use the if_exists
                 if self.if_exists_column:
                     column_spec = self.if_exists_column.get_column_spec(
-                        source_df=source_df, current_column=current_column
+                        source_df=source_df,
+                        current_column=current_column,
+                        parent_columns=parent_columns,
                     )
         except AnalysisException:
             if self.if_not_exists:
                 column_spec = self.if_not_exists.get_column_spec(
-                    source_df=source_df, current_column=current_column
+                    source_df=source_df,
+                    current_column=current_column,
+                    parent_columns=parent_columns,
                 )
             else:
                 column_spec = AutoMapperDataTypeLiteral(None).get_column_spec(
-                    source_df=source_df, current_column=current_column
+                    source_df=source_df,
+                    current_column=current_column,
+                    parent_columns=parent_columns,
                 )
         return column_spec
 

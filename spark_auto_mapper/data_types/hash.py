@@ -1,4 +1,4 @@
-from typing import List, Union, Optional
+from typing import List, Optional, Union
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import hash
@@ -31,11 +31,18 @@ class AutoMapperHashDataType(AutoMapperTextLikeBase):
         ]
 
     def get_column_spec(
-        self, source_df: Optional[DataFrame], current_column: Optional[Column]
+        self,
+        source_df: Optional[DataFrame],
+        current_column: Optional[Column],
+        parent_columns: Optional[List[Column]],
     ) -> Column:
         column_spec = hash(
             *[
-                col.get_column_spec(source_df=source_df, current_column=current_column)
+                col.get_column_spec(
+                    source_df=source_df,
+                    current_column=current_column,
+                    parent_columns=parent_columns,
+                )
                 for col in self.value
             ]
         ).cast("string")

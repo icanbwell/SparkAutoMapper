@@ -1,4 +1,4 @@
-from typing import Union, List, Optional, Generic, TypeVar
+from typing import Generic, List, Optional, TypeVar, Union
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import array
@@ -68,13 +68,19 @@ class AutoMapperNullRemover(AutoMapperDataTypeBase, Generic[_T]):
             )
 
     def get_column_spec(
-        self, source_df: Optional[DataFrame], current_column: Optional[Column]
+        self,
+        source_df: Optional[DataFrame],
+        current_column: Optional[Column],
+        parent_columns: Optional[List[Column]],
     ) -> Column:
         if isinstance(self.value, list):  # if the src column is a list then iterate
             inner_array = array(
                 *[
                     self.get_value(
-                        item, source_df=source_df, current_column=current_column
+                        item,
+                        source_df=source_df,
+                        current_column=current_column,
+                        parent_columns=parent_columns,
                     )
                     for item in self.value
                 ]
@@ -88,7 +94,9 @@ class AutoMapperNullRemover(AutoMapperDataTypeBase, Generic[_T]):
         if isinstance(self.value, AutoMapperDataTypeBase):
             child: AutoMapperDataTypeBase = self.value
             inner_child_spec = child.get_column_spec(
-                source_df=source_df, current_column=current_column
+                source_df=source_df,
+                current_column=current_column,
+                parent_columns=parent_columns,
             )
             return when(
                 inner_child_spec.isNotNull(),

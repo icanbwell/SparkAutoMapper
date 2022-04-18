@@ -30,6 +30,7 @@ from spark_auto_mapper.data_types.list import AutoMapperList
 from spark_auto_mapper.data_types.number import AutoMapperNumberDataType
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
+from spark_auto_mapper.helpers.expression_comparer import assert_compare_expressions
 from spark_auto_mapper.type_definitions.defined_types import AutoMapperDateInputType
 from tests.conftest import clean_spark_session
 
@@ -118,8 +119,9 @@ class MyProcessingStatusExtension(AutoMapperDataTypeComplexBase):
         value: AutoMapperDataTypeBase,
         source_df: Optional[DataFrame],
         current_column: Optional[Column],
+        parent_columns: Optional[List[Column]],
     ) -> Column:
-        return super().get_value(value, source_df, current_column)
+        return super().get_value(value, source_df, current_column, parent_columns)
 
 
 class MyClass(AutoMapperDataTypeComplexBase):
@@ -195,10 +197,12 @@ def test_auto_mapper_schema_pruning_with_extension(
     result_df: DataFrame = mapper.transform(df=source_df)
 
     # Assert
-    assert str(sql_expressions["name"]) == str(
-        col("b.last_name").cast("string").alias("name")
+    assert_compare_expressions(
+        sql_expressions["name"], col("b.last_name").cast("string").alias("name")
     )
-    assert str(sql_expressions["age"]) == str(col("b.my_age").cast("long").alias("age"))
+    assert_compare_expressions(
+        sql_expressions["age"], col("b.my_age").cast("long").alias("age")
+    )
 
     result_df.printSchema()
     result_df.show(truncate=False)

@@ -7,6 +7,7 @@ from pyspark.sql.functions import col, when, lit
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
+from spark_auto_mapper.helpers.expression_comparer import assert_compare_expressions
 
 
 def test_automapper_map_no_default(spark_session: SparkSession) -> None:
@@ -35,11 +36,12 @@ def test_automapper_map_no_default(spark_session: SparkSession) -> None:
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
-    assert str(sql_expressions["has_kids"]) == str(
+    assert_compare_expressions(
+        sql_expressions["has_kids"],
         when(col("b.has_kids").eqNullSafe(lit("Y")), lit("Yes"))
         .when(col("b.has_kids").eqNullSafe(lit("N")), lit("No"))
         .otherwise(lit(None))
-        .alias("___has_kids")
+        .alias("___has_kids"),
     )
 
     result_df: DataFrame = mapper.transform(df=df)

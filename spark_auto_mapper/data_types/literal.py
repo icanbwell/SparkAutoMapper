@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from typing import Union, Optional, List
+from typing import List, Optional, Union
 
 from pyspark.sql import Column, DataFrame
 from pyspark.sql.functions import lit
@@ -25,7 +25,10 @@ class AutoMapperDataTypeLiteral(AutoMapperTextLikeBase):
         self.type_: Optional[DataType] = type_
 
     def get_column_spec(
-        self, source_df: Optional[DataFrame], current_column: Optional[Column]
+        self,
+        source_df: Optional[DataFrame],
+        current_column: Optional[Column],
+        parent_columns: Optional[List[Column]],
     ) -> Column:
         if self.value is None:
             return lit(None)
@@ -40,11 +43,15 @@ class AutoMapperDataTypeLiteral(AutoMapperTextLikeBase):
         if isinstance(self.value, AutoMapperTextLikeBase):
             return (
                 self.value.get_column_spec(
-                    source_df=source_df, current_column=current_column
+                    source_df=source_df,
+                    current_column=current_column,
+                    parent_columns=parent_columns,
                 ).cast(self.type_)
                 if self.type_
                 else self.value.get_column_spec(
-                    source_df=source_df, current_column=current_column
+                    source_df=source_df,
+                    current_column=current_column,
+                    parent_columns=parent_columns,
                 )
             )
 

@@ -8,6 +8,7 @@ from pyspark.sql.functions import from_unixtime, to_timestamp
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.helpers.automapper_helpers import AutoMapperHelpers as A
+from spark_auto_mapper.helpers.expression_comparer import assert_compare_expressions
 
 
 def test_auto_mapper_datetime_column_default(spark_session: SparkSession) -> None:
@@ -38,10 +39,11 @@ def test_auto_mapper_datetime_column_default(spark_session: SparkSession) -> Non
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
-    assert str(sql_expressions["literal_val"]) == str(
+    assert_compare_expressions(
+        sql_expressions["literal_val"],
         to_timestamp(
             from_unixtime("1609390500", "yyyy-MM-dd HH:mm:ss"), "yyyy-MM-dd HH:mm:ss"
-        ).alias("literal_val")
+        ).alias("literal_val"),
     )
 
     result_df: DataFrame = mapper.transform(df=df)
