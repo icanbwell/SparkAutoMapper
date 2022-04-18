@@ -51,7 +51,7 @@ sphinx-html:
 	cp -a docsrc/_build/html/. docs
 
 .PHONY:pipenv-setup
-pipenv-setup:devdocker ## Brings up the bash shell in dev docker
+pipenv-setup:devdocker ## Puts the current dependencies in setup.py
 	docker-compose run --rm --name sam_tests dev pipenv-setup sync --pipfile
 
 .PHONY:shell

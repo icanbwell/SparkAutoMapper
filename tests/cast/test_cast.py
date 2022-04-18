@@ -15,6 +15,7 @@ from pyspark.sql.types import (
     DataType,
     ArrayType,
 )
+from tests.conftest import clean_spark_session
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.data_types.complex.complex_base import (
@@ -50,6 +51,7 @@ class MyClass(AutoMapperDataTypeComplexBase):
 
 
 def test_auto_mapper_cast(spark_session: SparkSession) -> None:
+    clean_spark_session(session=spark_session)
     # Arrange
     spark_session.createDataFrame(
         [
@@ -57,9 +59,9 @@ def test_auto_mapper_cast(spark_session: SparkSession) -> None:
             (2, "Vidal", "Michael", 35),
         ],
         ["member_id", "last_name", "first_name", "my_age"],
-    ).createOrReplaceTempView("patients")
+    ).createOrReplaceTempView("patients1")
 
-    source_df: DataFrame = spark_session.table("patients")
+    source_df: DataFrame = spark_session.table("patients1")
 
     source_df = source_df.withColumn("an_array", array())
     source_df.createOrReplaceTempView("patients")

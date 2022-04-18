@@ -4,6 +4,7 @@ from pyspark.sql import SparkSession, Column, DataFrame, Row
 
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import lit
+from tests.conftest import clean_spark_session
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
@@ -11,6 +12,7 @@ from spark_auto_mapper.helpers.expression_comparer import assert_compare_express
 
 
 def test_auto_mapper_datatype_literal(spark_session: SparkSession) -> None:
+    clean_spark_session(session=spark_session)
     # Arrange
     spark_session.createDataFrame(
         [
@@ -18,14 +20,14 @@ def test_auto_mapper_datatype_literal(spark_session: SparkSession) -> None:
             (2, "Vidal", "Michael"),
         ],
         ["member_id", "last_name", "first_name"],
-    ).createOrReplaceTempView("patients")
+    ).createOrReplaceTempView("patients2")
 
-    source_df: DataFrame = spark_session.table("patients")
+    source_df: DataFrame = spark_session.table("patients2")
 
     # Act
     mapper = AutoMapper(
         view="members",
-        source_view="patients",
+        source_view="patients2",
         keys=["member_id"],
         drop_key_columns=False,
     ).columns(

@@ -50,7 +50,7 @@ setup(
         "logger>=1.4",
         "sparkdataframecomparer>=1.0.3",
         "deprecated>=1.2.12",
-        "numpy<=1.21.4",
+        "numpy>=1.7",
     ],
     name=package_name,
     version=version,
