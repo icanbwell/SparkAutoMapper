@@ -16,7 +16,6 @@ if TYPE_CHECKING:
     from spark_auto_mapper.data_types.amount import AutoMapperAmountDataType
     from spark_auto_mapper.data_types.array_base import AutoMapperArrayLikeBase
     from spark_auto_mapper.data_types.boolean import AutoMapperBooleanDataType
-    from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
     from spark_auto_mapper.data_types.number import AutoMapperNumberDataType
     from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
     from spark_auto_mapper.data_types.datetime import AutoMapperDateTimeDataType
@@ -402,6 +401,9 @@ class AutoMapperDataTypeBase:
         :return: a text automapper type
         :example: A.column("paid").to_text()
         """
+
+        from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
+
         return AutoMapperDataTypeLiteral(self, StringType())
 
     # noinspection PyMethodMayBeStatic

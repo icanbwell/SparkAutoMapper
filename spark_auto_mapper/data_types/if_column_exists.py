@@ -1,3 +1,4 @@
+import re
 from typing import Generic, List, Optional, TypeVar, Union
 
 from pyspark.sql import Column, DataFrame
@@ -26,7 +27,7 @@ class AutoMapperIfColumnExistsType(
         self,
         column: AutoMapperColumnOrColumnLikeType,
         if_exists: Optional[_TAutoMapperDataType],
-        if_not_exists: Optional[_TAutoMapperDataType],
+        if_not_exists: Optional[_TAutoMapperDataType] = None,
     ):
         super().__init__()
 
@@ -49,6 +50,16 @@ class AutoMapperIfColumnExistsType(
                 else AutoMapperValueParser.parse_value(value=if_not_exists)
             )
 
+    def include_null_properties(self, include_null_properties: bool) -> None:
+        if self.if_exists_column is not None:
+            self.if_exists_column.include_null_properties(
+                include_null_properties=include_null_properties
+            )
+        if self.if_not_exists is not None:
+            self.if_not_exists.include_null_properties(
+                include_null_properties=include_null_properties
+            )
+
     def get_column_spec(
         self,
         source_df: Optional[DataFrame],
@@ -69,7 +80,11 @@ class AutoMapperIfColumnExistsType(
             # anything, just triggers the analyzer to check validity, which is what we want.
             # If SparkSQL AnalysisException is thrown, fall-back to the default, otherwise we can proceed.
             if source_df:
-                source_df.selectExpr(col_name.replace("b.", ""))
+                clean_col_name = col_name.replace("b.", "")
+                # replace properties[foo][bar] with properties.foo.bar
+                # noinspection RegExpRedundantEscape
+                clean_col_name = re.sub(r"\[([^\]]+)\]", r".\1", clean_col_name)
+                source_df.selectExpr(clean_col_name)
                 # col exists so we use the if_exists
                 if self.if_exists_column:
                     column_spec = self.if_exists_column.get_column_spec(

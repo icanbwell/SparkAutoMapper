@@ -114,6 +114,7 @@ class AutoMapperList(AutoMapperArrayLikeBase, Generic[_T]):
                         parent_columns=parent_columns,
                     )
                     for item in self.value
+                    if item is not None
                 ]
             )
             return (
