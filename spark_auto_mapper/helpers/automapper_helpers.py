@@ -615,7 +615,7 @@ class AutoMapperHelpers:
 
         :param column: column to check
         :param func: func to test against array
-        :return: a filter automapper type
+        :return: a exists automapper type
         """
         return AutoMapperExistsDataType(column=column, func=func)
 
