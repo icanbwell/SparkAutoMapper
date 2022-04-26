@@ -7,6 +7,7 @@ from pyspark.sql.types import StringType
 from pyspark.sql import Column
 
 from spark_auto_mapper.data_types.array_distinct import AutoMapperArrayDistinctDataType
+from spark_auto_mapper.data_types.exists import AutoMapperExistsDataType
 from spark_auto_mapper.data_types.nested_array_filter import (
     AutoMapperNestedArrayFilterDataType,
 )
@@ -603,6 +604,20 @@ class AutoMapperHelpers:
         #     AutoMapperFilterDataType(column=column, func=func)
         # )
         return AutoMapperFilterDataType(column=column, func=func)
+
+    @staticmethod
+    def exists(
+        column: AutoMapperColumnOrColumnLikeType, func: Callable[[Column], Column]
+    ) -> AutoMapperExistsDataType:
+        """
+        Tests whether a predicate holds for one or more elements in the array
+
+
+        :param column: column to check
+        :param func: func to test against array
+        :return: a filter automapper type
+        """
+        return AutoMapperExistsDataType(column=column, func=func)
 
     @staticmethod
     def transform(

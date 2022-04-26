@@ -1,0 +1,120 @@
+{
+  "resourceType": "Schedule",
+  "id": "unitypoint-1972943439-420933383",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2022-04-06T00:31:36.000Z",
+    "source": "https://flatfile.salesforce.com/unitypoint/providers",
+    "security": [
+      {
+        "system": "https://www.icanbwell.com/owner",
+        "code": "unitypoint"
+      },
+      {
+        "system": "https://www.icanbwell.com/access",
+        "code": "unitypoint"
+      },
+      {
+        "system": "https://www.icanbwell.com/vendor",
+        "code": "salesforce"
+      },
+      {
+        "system": "https://www.icanbwell.com/access",
+        "code": "salesforce"
+      }
+    ]
+  },
+  "extension": [
+    {
+      "id": "UPnt-providersearch",
+      "extension": [
+        {
+          "id": "forsystem",
+          "url": "forSystem",
+          "valueUri": "https://www.unitypoint.org/provider-search-service"
+        },
+        {
+          "id": "searchable",
+          "url": "searchCharacteristic",
+          "valueCodeableConcept": {
+            "id": "UPnt-searchable-value",
+            "coding": [
+              {
+                "id": "UPnt-searchable-value-coding",
+                "system": "https://raw.githubusercontent.com/imranq2/SparkAutoMapper.FHIR/main/ValueSet/search_characteristic",
+                "code": "searchable"
+              }
+            ]
+          }
+        },
+        {
+          "id": "bookable",
+          "url": "bookable",
+          "valueCodeableConcept": {
+            "id": "UPnt-bookable-value",
+            "coding": [
+              {
+                "id": "UPnt-bookable-online-value-coding",
+                "system": "https://raw.githubusercontent.com/imranq2/SparkAutoMapper.FHIR/main/ValueSet/search_characteristic",
+                "code": "bookable-online"
+              },
+              {
+                "id": "UPnt-bookable-phone-value-coding",
+                "system": "https://raw.githubusercontent.com/imranq2/SparkAutoMapper.FHIR/main/ValueSet/search_characteristic",
+                "code": "bookable-phone"
+              }
+            ]
+          }
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/imranq2/SparkAutoMapper.FHIR/main/StructureDefinition/provider_search"
+    }
+  ],
+  "active": true,
+  "serviceType": [
+    {
+      "id": "visit-type-23428",
+      "coding": [
+        {
+          "id": "coding",
+          "system": "https://unitypoint.org/epic",
+          "code": "23428",
+          "display": "VIRTUAL CARE-FOLLOW UP"
+        }
+      ],
+      "text": "Virtual Visit"
+    },
+    {
+      "id": "visit-type-29201",
+      "coding": [
+        {
+          "id": "coding",
+          "system": "https://unitypoint.org/epic",
+          "code": "29201",
+          "display": "OFFICE VISIT 1 OR 2 CONCERNS"
+        }
+      ],
+      "text": "Standard Office Visit"
+    },
+    {
+      "id": "visit-type-29202",
+      "coding": [
+        {
+          "id": "coding",
+          "system": "https://unitypoint.org/epic",
+          "code": "29202",
+          "display": "OFFICE VISIT 3+ CONCERNS"
+        }
+      ],
+      "text": "Extended Office Visit"
+    }
+  ],
+  "actor": [
+    {
+      "reference": "PractitionerRole/unitypoint-1972943439"
+    },
+    {
+      "reference": "Location/unitypoint-420933383"
+    }
+  ]
+}
