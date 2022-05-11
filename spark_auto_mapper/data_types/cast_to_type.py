@@ -1,20 +1,18 @@
 from typing import List, Optional, Union
-from deprecated import deprecated
 
+# noinspection PyPackageRequirements
 from pyspark.sql import Column, DataFrame
 
 from spark_auto_mapper.data_types.column import AutoMapperDataTypeColumn
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
-from spark_auto_mapper.type_definitions.defined_types import AutoMapperAmountInputType
 
 
-@deprecated(
-    version="0.2.15", reason="Use DecimalType instead to provide a fixed precision"
-)
-class AutoMapperAmountDataType(AutoMapperDataTypeBase):
-    def __init__(self, value: AutoMapperAmountInputType):
+class AutoMapperCastToTypeDataType(AutoMapperDataTypeBase):
+    def __init__(self, value: AutoMapperDataTypeBase, type_: str):
         super().__init__()
+        assert type_, "type_ must be specified"
+        self.type_: str = type_
         self.value: AutoMapperDataTypeBase = (
             value
             if isinstance(value, AutoMapperDataTypeBase)
@@ -35,9 +33,9 @@ class AutoMapperAmountDataType(AutoMapperDataTypeBase):
         if not (
             isinstance(self.value, AutoMapperDataTypeColumn)
             and source_df
-            and dict(source_df.dtypes)[self.value.value] in ["float", "double"]
+            and dict(source_df.dtypes)[self.value.value] in [self.type_]
         ):
-            column_spec = column_spec.cast("double")
+            column_spec = column_spec.cast(self.type_)
         return column_spec
 
     @property

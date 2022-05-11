@@ -406,6 +406,42 @@ class AutoMapperDataTypeBase:
 
         return AutoMapperDataTypeLiteral(self, StringType())
 
+    def to_string(self: _TAutoMapperDataType) -> "AutoMapperTextLikeBase":
+        """
+        converts the value to a string type by casting
+
+
+        :param self: Set by Python.  No need to pass.
+        :return: a text automapper type
+        :example: A.column("paid").to_text()
+        """
+
+        from spark_auto_mapper.data_types.cast_to_type import (
+            AutoMapperCastToTypeDataType,
+        )
+        from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
+
+        return cast(
+            AutoMapperTextLikeBase, AutoMapperCastToTypeDataType(self, "string")
+        )
+
+    def to_type(self: _TAutoMapperDataType, type_: str) -> "AutoMapperDataTypeBase":
+        """
+        converts the value to the specified type
+
+
+        :param self: Set by Python.  No need to pass.
+        :param type_: type to convert the value to
+        :return: a text automapper type
+        :example: A.column("paid").to_text()
+        """
+
+        from spark_auto_mapper.data_types.cast_to_type import (
+            AutoMapperCastToTypeDataType,
+        )
+
+        return AutoMapperCastToTypeDataType(self, type_)
+
     # noinspection PyMethodMayBeStatic
     def join_using_delimiter(
         self: _TAutoMapperDataType, delimiter: str
