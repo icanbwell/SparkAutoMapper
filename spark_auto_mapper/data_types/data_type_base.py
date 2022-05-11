@@ -57,7 +57,8 @@ class AutoMapperDataTypeBase:
 
         :param source_df: source data frame in case the automapper type needs that data to decide what to do
         :param current_column: (Optional) this is set when we are inside an array
-        :param parent_columns: Optional[List[Column]]: (Optional) a dictionary of parent columns for use inside nested arrays
+        :param parent_columns: Optional[List[Column]]: (Optional) a dictionary of parent columns
+                                for use inside nested arrays
         """
         raise NotImplementedError  # base classes should implement this
 
@@ -424,6 +425,23 @@ class AutoMapperDataTypeBase:
         return cast(
             AutoMapperTextLikeBase, AutoMapperCastToTypeDataType(self, "string")
         )
+
+    def to_json(self: _TAutoMapperDataType) -> "AutoMapperTextLikeBase":
+        """
+        converts the value (array or struct) to a string by converting to json
+
+
+        :param self: Set by Python.  No need to pass.
+        :return: a text automapper type
+        :example: A.column("paid").to_text()
+        """
+
+        from spark_auto_mapper.data_types.to_json import (
+            AutoMapperToJsonDataType,
+        )
+        from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
+
+        return cast(AutoMapperTextLikeBase, AutoMapperToJsonDataType(self))
 
     def to_type(self: _TAutoMapperDataType, type_: str) -> "AutoMapperDataTypeBase":
         """
