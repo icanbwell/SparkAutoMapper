@@ -3,7 +3,6 @@ from typing import List, Optional, Union
 # noinspection PyPackageRequirements
 from pyspark.sql import Column, DataFrame
 
-from spark_auto_mapper.data_types.column import AutoMapperDataTypeColumn
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
 
@@ -30,12 +29,7 @@ class AutoMapperCastToTypeDataType(AutoMapperDataTypeBase):
             current_column=current_column,
             parent_columns=parent_columns,
         )
-        if not (
-            isinstance(self.value, AutoMapperDataTypeColumn)
-            and source_df
-            and dict(source_df.dtypes)[self.value.value] in [self.type_]
-        ):
-            column_spec = column_spec.cast(self.type_)
+        column_spec = column_spec.cast(self.type_)
         return column_spec
 
     @property
