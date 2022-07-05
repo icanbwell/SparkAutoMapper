@@ -60,6 +60,7 @@ class AutoMapper(AutoMapperContainer):
         verify_row_count: bool = True,
         skip_schema_validation: List[str] = ["extension"],
         skip_if_columns_null_or_empty: Optional[List[str]] = None,
+        skip_if_columns_do_not_exist: Optional[List[str]] = None,
         keep_null_rows: bool = False,
         filter_by: Optional[str] = None,
         logger: Optional[Logger] = None,
@@ -94,6 +95,7 @@ class AutoMapper(AutoMapperContainer):
         :param verify_row_count: verifies that the count of rows remains the same before and after the transformation
         :param skip_schema_validation: skip schema checks on these columns
         :param skip_if_columns_null_or_empty: skip creating the record if any of these columns are null or empty
+        :param skip_if_columns_do_not_exist: skip creating the record if any of these columns do not exist in the source.
         :param keep_null_rows: whether to keep the null rows instead of removing them
         :param filter_by: (Optional) SQL expression that is used to filter
         :param copy_all_unmapped_properties: copy any property that is not explicitly mapped
@@ -120,6 +122,9 @@ class AutoMapper(AutoMapperContainer):
         self.skip_if_columns_null_or_empty: Optional[
             List[str]
         ] = skip_if_columns_null_or_empty
+        self.skip_if_columns_do_not_exist: Optional[
+            List[str]
+        ] = skip_if_columns_do_not_exist
         self.keep_null_rows: bool = keep_null_rows
         self.filter_by: Optional[str] = filter_by
         self.logger: Logger = logger  # type: ignore
@@ -665,6 +670,7 @@ class AutoMapper(AutoMapperContainer):
             include_null_properties=self.include_null_properties,
             skip_schema_validation=self.skip_schema_validation,
             skip_if_columns_null_or_empty=self.skip_if_columns_null_or_empty,
+            skip_if_columns_do_not_exist=self.skip_if_columns_do_not_exist,
             enable_schema_pruning=self.enable_schema_pruning,
             extension_fields=self.extension_fields,
         )

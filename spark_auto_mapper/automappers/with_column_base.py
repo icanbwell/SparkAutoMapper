@@ -24,6 +24,7 @@ class AutoMapperWithColumnBase(AutoMapperBase):
         include_null_properties: bool,
         enable_schema_pruning: bool,
         skip_if_columns_null_or_empty: Optional[List[str]] = None,
+        skip_if_columns_do_not_exist: Optional[List[str]] = None,
     ) -> None:
         """
         This class handles assigning to a single column
@@ -41,6 +42,9 @@ class AutoMapperWithColumnBase(AutoMapperBase):
         self.skip_if_columns_null_or_empty: Optional[
             List[str]
         ] = skip_if_columns_null_or_empty
+        self.skip_if_columns_do_not_exist: Optional[
+            List[str]
+        ] = skip_if_columns_do_not_exist
         if include_null_properties:
             self.value.include_null_properties(
                 include_null_properties=include_null_properties
@@ -73,6 +77,15 @@ class AutoMapperWithColumnBase(AutoMapperBase):
                         source_df=source_df, current_column=None, parent_columns=None
                     )
                 )
+
+            if self.skip_if_columns_do_not_exist:
+                columns_to_check = f"b.{self.skip_if_columns_do_not_exist[0]}"  # TODO: handle more than one
+                # wrap column spec in when
+                if columns_to_check in source_df.columns:
+                    return column_spec.alias(f"___{self.dst_column}")
+                else:
+                    return lit(None)
+
             # if the type has a schema then apply it
             if self.column_schema:
                 column_data_type: DataType = self.column_schema.dataType
