@@ -79,16 +79,13 @@ class AutoMapperWithColumnBase(AutoMapperBase):
                 )
 
             if self.skip_if_columns_do_not_exist:
-                columns_to_check = f"b.{self.skip_if_columns_do_not_exist[0]}"  # TODO: handle more than one
-                # wrap column spec in when
-                column_spec = when(
-                    columns_to_check not in source_df.columns,
-                    lit(None),
-                ).otherwise(
+                columns_to_check = f"b.{self.skip_if_columns_do_not_exist[0]}"
+                if columns_to_check not in source_df.columns:
+                    column_spec = lit(None)
+                else:
                     self.value.get_column_spec(
-                        source_df=source_df, current_column=None, parent_columns=None
-                    )
-                )
+                            source_df=source_df, current_column=None, parent_columns=None
+                        )
 
             # if the type has a schema then apply it
             if self.column_schema:
