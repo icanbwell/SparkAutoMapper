@@ -60,7 +60,7 @@ class AutoMapper(AutoMapperContainer):
         verify_row_count: bool = True,
         skip_schema_validation: List[str] = ["extension"],
         skip_if_columns_null_or_empty: Optional[List[str]] = None,
-        skip_if_columns_do_not_exist: str = None,
+        skip_if_columns_do_not_exist: Optional[str] = None,
         keep_null_rows: bool = False,
         filter_by: Optional[str] = None,
         logger: Optional[Logger] = None,
@@ -122,7 +122,7 @@ class AutoMapper(AutoMapperContainer):
         self.skip_if_columns_null_or_empty: Optional[
             List[str]
         ] = skip_if_columns_null_or_empty
-        self.skip_if_columns_do_not_exist: str = skip_if_columns_do_not_exist
+        self.skip_if_columns_do_not_exist: Optional[str] = skip_if_columns_do_not_exist
         self.keep_null_rows: bool = keep_null_rows
         self.filter_by: Optional[str] = filter_by
         self.logger: Logger = logger  # type: ignore

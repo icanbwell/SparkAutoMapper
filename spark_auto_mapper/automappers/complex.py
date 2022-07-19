@@ -18,7 +18,7 @@ class AutoMapperWithComplex(AutoMapperContainer):
         include_null_properties: bool,
         skip_schema_validation: List[str],
         skip_if_columns_null_or_empty: Optional[List[str]],
-        skip_if_columns_do_not_exist: Optional[List[str]],
+        skip_if_columns_do_not_exist: Optional[str],
         enable_schema_pruning: bool,
         extension_fields: Optional[List[str]],
     ) -> None:

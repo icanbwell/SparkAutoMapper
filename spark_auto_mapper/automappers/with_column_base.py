@@ -24,7 +24,7 @@ class AutoMapperWithColumnBase(AutoMapperBase):
         include_null_properties: bool,
         enable_schema_pruning: bool,
         skip_if_columns_null_or_empty: Optional[List[str]] = None,
-        skip_if_columns_do_not_exist: str = None,
+        skip_if_columns_do_not_exist: Optional[str] = None,
     ) -> None:
         """
         This class handles assigning to a single column
@@ -42,7 +42,7 @@ class AutoMapperWithColumnBase(AutoMapperBase):
         self.skip_if_columns_null_or_empty: Optional[
             List[str]
         ] = skip_if_columns_null_or_empty
-        self.skip_if_columns_do_not_exist: str = skip_if_columns_do_not_exist
+        self.skip_if_columns_do_not_exist: Optional[str] = skip_if_columns_do_not_exist
         if include_null_properties:
             self.value.include_null_properties(
                 include_null_properties=include_null_properties
