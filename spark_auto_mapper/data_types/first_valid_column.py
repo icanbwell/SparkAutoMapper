@@ -57,7 +57,7 @@ class AutoMapperFirstValidColumnType(
 
             # noinspection Mypy,PyProtectedMember
             col_name = (
-                column_spec._jc.expr().sql()  # type: ignore
+                column_spec._jc.expr().sql()
             )  # Get spark representation of the column as an expression
             try:
                 # Force spark analyzer to confirm that column/expression is possible. This does not actually compute
