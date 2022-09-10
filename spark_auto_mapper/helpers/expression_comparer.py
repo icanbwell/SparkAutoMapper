@@ -43,4 +43,6 @@ def assert_compare_expressions(
     expression_text2: str = fix_generated_lambda_variable_names(
         str(expression2), ignore_casts=ignore_casts
     )
-    assert expression_text1 == expression_text2
+    assert (
+        expression_text1 == expression_text2
+    ), f"{expression_text1} did not match {expression_text2}"

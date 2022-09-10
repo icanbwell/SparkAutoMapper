@@ -46,9 +46,9 @@ fix_setuptools()
 # create the package setup
 setup(
     install_requires=[
-        "pyspark<3.2,>=3.1.1",
+        "pyspark>=3.1.1",
         "logger>=1.4",
-        "sparkdataframecomparer>=1.0.4",
+        "sparkdataframecomparer>=1.0.6",
         "deprecated>=1.2.12",
         "numpy>=1.7",
     ],

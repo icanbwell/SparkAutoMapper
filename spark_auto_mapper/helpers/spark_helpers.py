@@ -1,5 +1,4 @@
-# noinspection PyProtectedMember
-from pyspark import SQLContext
+from pyspark.sql.context import SQLContext
 
 
 class SparkHelpers:

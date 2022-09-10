@@ -1,7 +1,7 @@
 from typing import Dict
 
 from pyspark.sql import SparkSession, DataFrame, Column
-from pyspark.sql.functions import col, exists, filter, struct, transform
+from pyspark.sql.functions import col, exists, filter, struct, transform, lit
 from pyspark.sql.types import (
     StructType,
     IntegerType,
@@ -258,7 +258,8 @@ def test_automapper_nested_array_filter_with_text(spark_session: SparkSession) -
                             col("b.schedule"),
                             lambda s: exists(
                                 s["actor"],
-                                lambda a: a["reference"] == "practitioner-role-200",
+                                lambda a: a["reference"]
+                                == lit("practitioner-role-200").cast("string"),
                             ),
                         ),
                         lambda s: struct(s["name"].alias("name")),
