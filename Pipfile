@@ -6,7 +6,7 @@ name = "pypi"
 [packages]
 pyspark = ">=3.1.1"
 logger = ">=1.4"
-sparkdataframecomparer = ">=1.0.5.a2"
+sparkdataframecomparer = ">=1.0.6"
 Deprecated = ">=1.2.12"
 numpy = ">=1.7"
 
@@ -18,7 +18,7 @@ pre-commit=">=2.18.0"
 autoflake=">=1.4"
 flake8 = ">=4.0.1"
 mypy = "==0.971"
-pytest = "==7.1.1"
+pytest = "==7.1.2"
 black = ">=22.3.0"
 importlib-metadata = ">=4.0.1"
 py4j = "==0.10.9.5" # https://spark.apache.org/docs/latest/api/python/getting_started/install.html#dependencies
