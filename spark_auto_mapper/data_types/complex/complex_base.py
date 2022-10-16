@@ -4,7 +4,7 @@ from typing import Dict, Any, Optional, Union, List, OrderedDict
 from pyspark.sql import Column, DataFrame
 
 # noinspection PyPackageRequirements
-from pyspark.sql.functions import struct
+from pyspark.sql.functions import struct, when, to_json, lit
 
 # noinspection PyPackageRequirements
 from pyspark.sql.types import StructType, DataType, StructField
@@ -27,6 +27,8 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
 
         # this flag specifies that we should include all values in the column_spec event NULLs
         self.include_nulls: bool = "include_nulls" in kwargs
+
+        self.remove_empty_structs: bool = kwargs.get("remove_empty_structs", True)
         # self.include_nulls: bool = False
 
         self.value: Dict[str, AutoMapperDataTypeBase] = {}
@@ -69,16 +71,21 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
         parent_columns: Optional[List[Column]],
     ) -> Column:
         valid_columns = self.get_child_mappers()
-        column_spec: Column = struct(
-            *[
-                self.get_value(
-                    value=value,
-                    source_df=source_df,
-                    current_column=current_column,
-                    parent_columns=parent_columns,
-                ).alias(key)
-                for key, value in valid_columns.items()
-            ]
+        struct_members = [
+            self.get_value(
+                value=value,
+                source_df=source_df,
+                current_column=current_column,
+                parent_columns=parent_columns,
+            ).alias(key)
+            for key, value in valid_columns.items()
+        ]
+        column_spec: Column = (
+            when(
+                to_json(struct(*struct_members)).eqNullSafe("{}"), lit(None)
+            ).otherwise(struct(*struct_members))
+            if self.remove_empty_structs
+            else struct(*struct_members)
         )
         return column_spec
 
