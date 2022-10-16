@@ -1,9 +1,10 @@
 from typing import Generic, List, Optional, TypeVar, Union
 
 from pyspark.sql import Column, DataFrame
-from pyspark.sql.functions import when, lit
+from pyspark.sql.functions import when, lit, to_json, size
 
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
+from spark_auto_mapper.data_types.list import AutoMapperList
 from spark_auto_mapper.type_definitions.native_types import AutoMapperNativeSimpleType
 
 _TAutoMapperDataType = TypeVar(
@@ -48,8 +49,19 @@ class AutoMapperNullIfEmptyDataType(
             if isinstance(self.value, AutoMapperDataTypeBase)
             else lit(self.value)
         )
+        from spark_auto_mapper.data_types.complex.complex_base import (
+            AutoMapperDataTypeComplexBase,
+        )
+
         column_spec = when(
-            value_spec.eqNullSafe(""),
+            # if struct then check if it is empty
+            (value_spec.isNull()) | (to_json(value_spec).eqNullSafe("{}"))
+            if isinstance(self.value, AutoMapperDataTypeComplexBase)
+            # if array then check if it is empty
+            else (value_spec.isNull()) | (size(value_spec) == 0)
+            if isinstance(self.value, AutoMapperList)
+            # else check if string is empty
+            else value_spec.eqNullSafe(""),
             lit(None),
         ).otherwise(value_spec)
 

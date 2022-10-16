@@ -28,7 +28,7 @@ class AutoMapperDataTypeComplexBase(AutoMapperDataTypeBase):
         # this flag specifies that we should include all values in the column_spec event NULLs
         self.include_nulls: bool = "include_nulls" in kwargs
 
-        self.remove_empty_structs: bool = kwargs.get("remove_empty_structs", True)
+        self.remove_empty_structs: bool = kwargs.get("remove_empty_structs", False)
         # self.include_nulls: bool = False
 
         self.value: Dict[str, AutoMapperDataTypeBase] = {}
