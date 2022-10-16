@@ -43,7 +43,7 @@ class AutoMapperDataTypeField(AutoMapperArrayLikeBase):
                 return my_column
             else:
                 raise ValueError(
-                    ".field() should only be used when iterating over an array"
+                    f".field() should only be used when iterating over an array for column {self.column_name}"
                 )
 
         raise ValueError(f"value: {self.value} is not str")
