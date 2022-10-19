@@ -215,8 +215,6 @@ class AutoMapper(AutoMapperContainer):
             if not self.drop_key_columns:
                 column_specs = [col(f"b.{c}") for c in keys] + column_specs
 
-            print(f"COLUMN SPECS --- {column_specs}")
-
             self.logger.debug(f"-------- automapper ({self.view}) column specs ------")
             self.logger.debug(self.to_debug_string(source_df=source_df))
             self.logger.debug(
