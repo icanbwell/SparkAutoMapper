@@ -215,19 +215,22 @@ class AutoMapper(AutoMapperContainer):
             if not self.drop_key_columns:
                 column_specs = [col(f"b.{c}") for c in keys] + column_specs
 
-            self.logger.debug(f"-------- automapper ({self.view}) column specs ------")
-            self.logger.debug(self.to_debug_string(source_df=source_df))
-            self.logger.debug(
-                f"-------- end automapper ({self.view}) column specs ------"
-            )
-            self.logger.debug(
-                f"-------- automapper ({self.source_view}) source_df schema ------"
-            )
-            # noinspection PyProtectedMember
-            self.logger.debug(source_df._jdf.schema().treeString())
-            self.logger.debug(
-                f"-------- end automapper ({self.source_view}) source_df schema ------"
-            )
+            if self.log_level and self.log_level == "DEBUG":
+                self.logger.debug(
+                    f"-------- automapper ({self.view}) column specs ------"
+                )
+                self.logger.debug(self.to_debug_string(source_df=source_df))
+                self.logger.debug(
+                    f"-------- end automapper ({self.view}) column specs ------"
+                )
+                self.logger.debug(
+                    f"-------- automapper ({self.source_view}) source_df schema ------"
+                )
+                # noinspection PyProtectedMember
+                self.logger.debug(source_df._jdf.schema().treeString())
+                self.logger.debug(
+                    f"-------- end automapper ({self.source_view}) source_df schema ------"
+                )
 
             if self.check_schema_for_all_columns:
                 for column_name, mapper in self.mappers.items():
@@ -247,6 +250,13 @@ class AutoMapper(AutoMapperContainer):
 
             # run all the selects
             df = source_df.alias("b").select(*column_specs)
+
+            if self.log_level and self.log_level == "DEBUG":
+                print(
+                    f"------------  Start Execution Plan for view {self.view} -----------"
+                )
+                df.explain(extended="cost")
+                print("------------  End Execution Plan -----------")
             # write out final checkpoint for this automapper
             if self.checkpoint_path:
                 checkpoint_path = (
@@ -264,14 +274,15 @@ class AutoMapper(AutoMapperContainer):
             self.logger.warning(
                 f"-------- end automapper ({self.view}) column specs ------"
             )
-            self.logger.debug(
-                f"-------- automapper ({self.source_view}) source_df schema ------"
-            )
-            # noinspection PyProtectedMember
-            self.logger.debug(source_df._jdf.schema().treeString())
-            self.logger.debug(
-                f"-------- end automapper ({self.source_view}) source_df schema ------"
-            )
+            if self.log_level and self.log_level == "DEBUG":
+                self.logger.debug(
+                    f"-------- automapper ({self.source_view}) source_df schema ------"
+                )
+                # noinspection PyProtectedMember
+                self.logger.debug(source_df._jdf.schema().treeString())
+                self.logger.debug(
+                    f"-------- end automapper ({self.source_view}) source_df schema ------"
+                )
             # iterate through each column to find the problem child
             for column_name, mapper in self.mappers.items():
                 try:
