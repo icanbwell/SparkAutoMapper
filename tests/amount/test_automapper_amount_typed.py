@@ -29,7 +29,7 @@ def test_auto_mapper_amount_typed(spark_session: SparkSession) -> None:
 
     # Act
     mapper = AutoMapper(
-        view="members", source_view="patients", keys=["member_id"]
+        view="members", source_view="patients", keys=["member_id"], log_level="DEBUG"
     ).columns(age=A.amount(A.column("my_age")))
 
     assert isinstance(mapper, AutoMapper)
