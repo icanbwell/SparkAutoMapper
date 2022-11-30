@@ -14,28 +14,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
         with:
           python-version: '3.7'
-
-      - name: Set cache permissions
-        run: |
-          mkdir ~/.local && mkdir ~/.local/share && mkdir ~/.local/share/virtualenvs
-          chown -R $(whoami) ~/.local/share/virtualenvs/
-
-      - name: Cache pip dependencies
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-pip-deps-warehouse-p
-        with:
-          path: ~/.local/share/virtualenvs/
-          key: ${{ runner.os }}-${{ env.CACHE_SEED }}-${{ github.job }}-${{ env.cache-name }}-${{ hashFiles('Pipfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ env.CACHE_SEED }}-${{ github.job }}-${{ env.cache-name }}-
-            ${{ runner.os }}-${{ env.CACHE_SEED }}-${{ github.job }}-
-            ${{ runner.os }}-${{ env.CACHE_SEED }}-
-            ${{ runner.os }}-
 
       - name: pre-commit
         run: make run-pre-commit
