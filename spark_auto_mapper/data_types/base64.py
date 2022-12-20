@@ -40,5 +40,3 @@ class AutoMapperBase64DataType(AutoMapperTextLikeBase):
         self,
     ) -> Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]]:
         return self.column
-
-

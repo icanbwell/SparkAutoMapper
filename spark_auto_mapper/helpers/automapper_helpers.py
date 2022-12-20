@@ -768,9 +768,7 @@ class AutoMapperHelpers:
         return AutoMapperUnixTimestampType(value=value)
 
     @staticmethod
-    def base64(
-            column: AutoMapperColumnOrColumnLikeType
-    ) -> AutoMapperBase64DataType:
+    def base64(column: AutoMapperColumnOrColumnLikeType) -> AutoMapperBase64DataType:
         """
         Computes the BASE64 encoding and returns it as a string
 
