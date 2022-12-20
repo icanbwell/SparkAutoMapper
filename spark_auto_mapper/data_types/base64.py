@@ -12,7 +12,7 @@ from spark_auto_mapper.type_definitions.wrapper_types import (
 
 class AutoMapperBase64DataType(AutoMapperTextLikeBase):
     """
-    Joins array and forms a string using the given delimiter
+    Computes the BASE64 encoding and returns it as a string
     """
 
     def __init__(self, column: AutoMapperColumnOrColumnLikeType):
