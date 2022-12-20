@@ -483,6 +483,25 @@ class AutoMapperDataTypeBase:
             AutoMapperJoinUsingDelimiterDataType(column=self, delimiter=delimiter),
         )
 
+    # noinspection PyMethodMayBeStatic
+    def base64(self: _TAutoMapperDataType) -> "AutoMapperTextLikeBase":
+        """
+        Computes the BASE64 encoding of the column
+
+
+        :param self: Set by Python.  No need to pass.
+        :return: a base64 automapper type
+        :example: A.column("data").base64()
+        """
+        from spark_auto_mapper.data_types.base64 import (
+            AutoMapperBase64DataType,
+        )
+
+        return cast(
+            AutoMapperTextLikeBase,
+            AutoMapperBase64DataType(column=self),
+        )
+
     # override this if your inherited class has a defined schema
     # noinspection PyMethodMayBeStatic
     def get_schema(
