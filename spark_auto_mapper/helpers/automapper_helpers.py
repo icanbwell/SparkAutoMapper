@@ -7,6 +7,7 @@ from pyspark.sql.types import StringType
 from pyspark.sql import Column
 
 from spark_auto_mapper.data_types.array_distinct import AutoMapperArrayDistinctDataType
+from spark_auto_mapper.data_types.base64 import AutoMapperBase64DataType
 from spark_auto_mapper.data_types.exists import AutoMapperExistsDataType
 from spark_auto_mapper.data_types.nested_array_filter import (
     AutoMapperNestedArrayFilterDataType,
@@ -765,3 +766,13 @@ class AutoMapperHelpers:
         :return: a join automapper type
         """
         return AutoMapperUnixTimestampType(value=value)
+
+    @staticmethod
+    def base64(column: AutoMapperColumnOrColumnLikeType) -> AutoMapperBase64DataType:
+        """
+        Computes the BASE64 encoding and returns it as a string
+
+        :param column: column whose contents to use
+        :return: a base64 automapper type
+        """
+        return AutoMapperBase64DataType(column=column)
