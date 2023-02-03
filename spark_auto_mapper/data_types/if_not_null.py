@@ -53,6 +53,11 @@ class AutoMapperIfNotNullDataType(
         self.value.include_null_properties(
             include_null_properties=include_null_properties
         )
+        # apply the same include_null_properties value to when_null in case the check fails. if we are using a struct
+        # for both value and when_null then we need to ensure nulls are handled the same for both
+        self.when_null.include_null_properties(
+            include_null_properties=include_null_properties
+        )
 
     def get_column_spec(
         self,
