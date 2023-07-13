@@ -1,0 +1,48 @@
+[
+  {
+    "practitioner": "practitioner-1",
+    "organization": [
+      {
+        "id": "org-1",
+        "name": "Organization 1"
+      },
+      {
+        "id": "org-2",
+        "name": "Organization 2"
+      }
+    ],
+    "location": [
+      {
+        "id": "loc-1",
+        "managingOrganization": {
+          "reference": "org-2"
+        }
+      }
+    ]
+  },
+  {
+    "practitioner": "practitioner-2",
+    "organization": [
+      {
+        "id": "org-1",
+        "name": "Organization 1"
+      },
+      {
+        "id": "org-3",
+        "name": "Organization 3"
+      },
+      {
+        "id": "org-4",
+        "name": "Organization 4"
+      }
+    ],
+    "location": [
+      {
+        "id": "loc-2",
+        "managingOrganization": {
+          "reference": "org-3"
+        }
+      }
+    ]
+  }
+]
