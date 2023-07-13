@@ -12,6 +12,9 @@ from spark_auto_mapper.data_types.exists import AutoMapperExistsDataType
 from spark_auto_mapper.data_types.nested_array_filter import (
     AutoMapperNestedArrayFilterDataType,
 )
+from spark_auto_mapper.data_types.cross_column_filter import (
+    AutoMapperCrossColumnFilterDataType,
+)
 from spark_auto_mapper.data_types.array_max import AutoMapperArrayMaxDataType
 from spark_auto_mapper.data_types.array_base import AutoMapperArrayLikeBase
 from spark_auto_mapper.data_types.coalesce import AutoMapperCoalesceDataType
@@ -583,6 +586,28 @@ class AutoMapperHelpers:
         return AutoMapperNestedArrayFilterDataType(
             array_field=array_field,
             inner_array_field=inner_array_field,
+            match_property=match_property,
+            match_value=match_value,
+        )
+
+    @staticmethod
+    def cross_column_filter(
+        array_field: AutoMapperColumnOrColumnLikeType,
+        match_property: str,
+        match_value: AutoMapperColumnOrColumnLikeType,
+    ) -> AutoMapperCrossColumnFilterDataType:
+        """
+        Filters an array in one column (or an outer array), matching a top level property of that column (or an
+        outer array) on a value in a different column. Similar to nested_array_filter, except the filter value does
+        not come from an array on the source column.
+
+        :param array_field: the column (or an outer array) we want to return values from
+        :param match_property: the field name on the column (or the outer array) we are filtering.
+        :param match_value: a field in the source column that containts the value we want to test against match_property
+        field. to access the parent column the syntax '{parent}.field' can be used.
+        """
+        return AutoMapperCrossColumnFilterDataType(
+            array_field=array_field,
             match_property=match_property,
             match_value=match_value,
         )
