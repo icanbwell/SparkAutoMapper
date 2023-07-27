@@ -4,9 +4,9 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-pyspark = ">=3.1.1"
+pyspark = "==3.3.0" # cannot go to 3.4 yet because we are on spark 3.3 
 logger = ">=1.4"
-sparkdataframecomparer = ">=1.0.6"
+sparkdataframecomparer = ">=2.0.1"
 Deprecated = ">=1.2.12"
 numpy = ">=1.7"
 
@@ -32,7 +32,7 @@ pipenv-setup = ">=3.2.0"
 vistir="==0.6.1" # https://github.com/Madoshakalaka/pipenv-setup/issues/138
 
 [requires]
-python_version = "3.7"
+python_version = "3.10"
 
 [pipenv]
 allow_prereleases = true
