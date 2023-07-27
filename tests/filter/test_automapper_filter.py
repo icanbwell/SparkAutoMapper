@@ -1,15 +1,10 @@
 from pathlib import Path
-from typing import Dict, Optional, List, Union
+from typing import Dict
 
 from pyspark.sql import SparkSession, DataFrame, Column
 from pyspark.sql.functions import filter
-from pyspark.sql.types import StructType, DataType, StructField, StringType
 
-from spark_auto_mapper.data_types.complex.complex_base import (
-    AutoMapperDataTypeComplexBase,
-)
 from spark_auto_mapper.helpers.expression_comparer import assert_compare_expressions
-from spark_auto_mapper.type_definitions.defined_types import AutoMapperString
 from tests.conftest import clean_spark_session
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
