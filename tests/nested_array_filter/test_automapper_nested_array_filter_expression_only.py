@@ -107,7 +107,7 @@ def test_automapper_nested_array_filter_expression_only(
                         col("schedule"),
                         lambda s: exists(
                             s["actor"],
-                            lambda a: a["reference"] == l["name"],  # type: ignore
+                            lambda a: a["reference"] == l["name"],
                         ),
                     ),
                     lambda s: struct(s["name"].alias("name")),
