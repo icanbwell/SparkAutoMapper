@@ -230,7 +230,7 @@ class AutoMapperDataTypeBase:
 
         return cast(_TAutoMapperDataType, AutoMapperDataTypeExpression(value))
 
-    def current(self) -> _TAutoMapperDataType:
+    def current(self) -> _TAutoMapperDataType:  # type: ignore
         """
         Specifies to use the current item
 
@@ -241,7 +241,7 @@ class AutoMapperDataTypeBase:
         return self.field("_")
 
     # noinspection PyMethodMayBeStatic
-    def field(self, value: str) -> _TAutoMapperDataType:
+    def field(self, value: str) -> _TAutoMapperDataType:  # type: ignore
         """
         Specifies that the value parameter should be used as a field name
 
