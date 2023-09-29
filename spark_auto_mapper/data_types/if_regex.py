@@ -1,7 +1,7 @@
 from typing import Generic, List, Optional, TypeVar, Union, cast
 
 from pyspark.sql import Column, DataFrame
-from pyspark.sql.functions import when
+from pyspark.sql.functions import when, lit
 
 from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
 
@@ -58,25 +58,41 @@ class AutoMapperIfRegExDataType(AutoMapperDataTypeBase, Generic[_TAutoMapperData
     ) -> Column:
         # rlike takes a string and not a column
         if isinstance(self.check, list):
-            value: str = self.check[0]
-            column_spec = when(
-                self.column.get_column_spec(
-                    source_df=source_df,
-                    current_column=current_column,
-                    parent_columns=parent_columns,
-                ).rlike(value),
-                self.value.get_column_spec(
-                    source_df=source_df,
-                    current_column=current_column,
-                    parent_columns=parent_columns,
-                ),
-            ).otherwise(
-                self.else_.get_column_spec(
-                    source_df=source_df,
-                    current_column=current_column,
-                    parent_columns=parent_columns,
+            value_list: List[str] = self.check
+            column_spec = None
+            for value in value_list:
+                column_spec = column_spec.when(
+                    self.column.get_column_spec(
+                        source_df=source_df,
+                        current_column=current_column,
+                        parent_columns=parent_columns,
+                    ).rlike(value),
+                    self.value.get_column_spec(
+                        source_df=source_df,
+                        current_column=current_column,
+                        parent_columns=parent_columns,
+                    )
+                ) if column_spec is not None else when(
+                    self.column.get_column_spec(
+                        source_df=source_df,
+                        current_column=current_column,
+                        parent_columns=parent_columns,
+                    ).rlike(value),
+                    self.value.get_column_spec(
+                        source_df=source_df,
+                        current_column=current_column,
+                        parent_columns=parent_columns,
+                    )
                 )
-            )
+
+            if column_spec is not None:
+                column_spec = column_spec.otherwise(
+                    self.else_.get_column_spec(
+                        source_df=source_df,
+                        current_column=current_column,
+                        parent_columns=parent_columns,
+                    )
+                )
         else:
             value = self.check
             column_spec = when(
