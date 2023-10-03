@@ -103,3 +103,60 @@ def test_automapper_complex_with_skip_if_null(spark_session: SparkSession) -> No
     assert result_df.where("id == 1").select("name").collect()[0][0] == "Qureshi"
 
     assert dict(result_df.dtypes)["age"] in ("int", "long", "bigint")
+
+    # Case when multiple columns are present in skip_if_columns_null_or_empty
+    mapper = AutoMapper(
+        view="members",
+        source_view="patients",
+        keys=["member_id"],
+        drop_key_columns=True,
+        skip_if_columns_null_or_empty=["first_name", "last_name"],
+    ).complex(
+        MyClass(
+            id_=A.column("member_id"),
+            name=A.column("last_name"),
+            age=A.number(A.column("my_age")),
+        )
+    )
+
+    assert isinstance(mapper, AutoMapper)
+    sql_expressions = mapper.get_column_specs(source_df=source_df)
+    for column_name, sql_expression in sql_expressions.items():
+        print(f"{column_name}: {sql_expression}")
+
+    result_df = mapper.transform(df=df)
+
+    # Assert
+    assert_compare_expressions(
+        sql_expressions["name"],
+        when(
+            col("b.first_name").isNull() | col("b.first_name").eqNullSafe(""), lit(None)
+        )
+        .when(
+            col("b.last_name").isNull() | col("b.last_name").eqNullSafe(""), lit(None)
+        )
+        .otherwise(col("b.last_name"))
+        .cast(StringType())
+        .alias("name"),
+    )
+    assert_compare_expressions(
+        sql_expressions["age"],
+        when(
+            col("b.first_name").isNull() | col("b.first_name").eqNullSafe(""), lit(None)
+        )
+        .when(
+            col("b.last_name").isNull() | col("b.last_name").eqNullSafe(""), lit(None)
+        )
+        .otherwise(col("b.my_age"))
+        .cast(LongType())
+        .alias("age"),
+    )
+
+    result_df.printSchema()
+
+    result_df.show()
+
+    assert result_df.count() == 1
+    assert result_df.where("id == 1").select("name").collect()[0][0] == "Qureshi"
+
+    assert dict(result_df.dtypes)["age"] in ("int", "long", "bigint")
