@@ -3,7 +3,7 @@ from typing import Dict, Optional, Union, List
 from pyspark.sql import SparkSession, Column, DataFrame
 
 # noinspection PyUnresolvedReferences
-from pyspark.sql.functions import col, when, lit
+from pyspark.sql.functions import col, when, lit, size
 from pyspark.sql.types import StructType, StructField, StringType, LongType, DataType
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
@@ -160,3 +160,69 @@ def test_automapper_complex_with_skip_if_null(spark_session: SparkSession) -> No
     assert result_df.where("id == 1").select("name").collect()[0][0] == "Qureshi"
 
     assert dict(result_df.dtypes)["age"] in ("int", "long", "bigint")
+
+    # Case when list column type is given in skip_if_column_null_or_empty field
+    # Arrange
+    spark_session.createDataFrame(
+        [
+            (1, "Qureshi", "Imran", 45, ["123", "456"]),
+            (2, "Goel", "Shubham", 35, []),
+        ],
+        ["member_id", "last_name", "first_name", "my_age", "list_of_ids"],
+    ).createOrReplaceTempView("patients")
+
+    source_df = spark_session.table("patients")
+
+    df = source_df.select("member_id")
+    df.createOrReplaceTempView("members")
+
+    # Map
+    mapper = AutoMapper(
+        view="members",
+        source_view="patients",
+        keys=["member_id"],
+        drop_key_columns=True,
+        skip_if_columns_null_or_empty=["first_name", "list_of_ids"],
+    ).complex(
+        MyClass(
+            id_=A.column("member_id"),
+            name=A.column("last_name"),
+            age=A.number(A.column("my_age")),
+        )
+    )
+
+    assert isinstance(mapper, AutoMapper)
+    sql_expressions = mapper.get_column_specs(source_df=source_df)
+    for column_name, sql_expression in sql_expressions.items():
+        print(f"{column_name}: {sql_expression}")
+
+    result_df = mapper.transform(df=df)
+
+    # Assert
+    assert_compare_expressions(
+        sql_expressions["name"],
+        when(
+            col("b.first_name").isNull() | col("b.first_name").eqNullSafe(""), lit(None)
+        )
+        .when(col("b.list_of_ids").isNull() | (size("b.list_of_ids") == 0), lit(None))
+        .otherwise(col("b.last_name"))
+        .cast(StringType())
+        .alias("name"),
+    )
+    assert_compare_expressions(
+        sql_expressions["age"],
+        when(
+            col("b.first_name").isNull() | col("b.first_name").eqNullSafe(""), lit(None)
+        )
+        .when(col("b.list_of_ids").isNull() | (size("b.list_of_ids") == 0), lit(None))
+        .otherwise(col("b.my_age"))
+        .cast(LongType())
+        .alias("age"),
+    )
+
+    result_df.printSchema()
+
+    result_df.show()
+
+    assert result_df.count() == 1
+    assert result_df.where("id == 1").select("name").collect()[0][0] == "Qureshi"
