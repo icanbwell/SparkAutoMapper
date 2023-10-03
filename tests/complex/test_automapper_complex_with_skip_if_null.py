@@ -120,11 +120,11 @@ def test_automapper_complex_with_skip_if_null(spark_session: SparkSession) -> No
     )
 
     assert isinstance(mapper, AutoMapper)
-    sql_expressions: Dict[str, Column] = mapper.get_column_specs(source_df=source_df)
+    sql_expressions = mapper.get_column_specs(source_df=source_df)
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
-    result_df: DataFrame = mapper.transform(df=df)
+    result_df = mapper.transform(df=df)
 
     # Assert
     assert_compare_expressions(

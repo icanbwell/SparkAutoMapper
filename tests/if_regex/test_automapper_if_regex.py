@@ -18,7 +18,7 @@ def test_automapper_if_regex(spark_session: SparkSession) -> None:
         [
             (1, "Qureshi", "Imran", "54"),
             (2, "Vidal", "Michael", None),
-            (3, "Goel", "Shubham", "699")
+            (3, "Goel", "Shubham", "699"),
         ],
         ["member_id", "last_name", "first_name", "my_age"],
     ).createOrReplaceTempView("patients")
@@ -77,7 +77,7 @@ def test_automapper_if_regex(spark_session: SparkSession) -> None:
     )
 
     assert isinstance(mapper, AutoMapper)
-    sql_expressions: Dict[str, Column] = mapper.get_column_specs(source_df=source_df)
+    sql_expressions = mapper.get_column_specs(source_df=source_df)
     for column_name, sql_expression in sql_expressions.items():
         print(f"{column_name}: {sql_expression}")
 
@@ -91,7 +91,7 @@ def test_automapper_if_regex(spark_session: SparkSession) -> None:
         .alias("age"),
     )
 
-    result_df: DataFrame = mapper.transform(df=df)
+    result_df = mapper.transform(df=df)
 
     # Assert
     result_df.printSchema()

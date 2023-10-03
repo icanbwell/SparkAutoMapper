@@ -59,33 +59,37 @@ class AutoMapperIfRegExDataType(AutoMapperDataTypeBase, Generic[_TAutoMapperData
         # rlike takes a string and not a column
         if isinstance(self.check, list):
             value_list: List[str] = self.check
-            column_spec = None
+            column_spec: Column = lit(None)
             for value in value_list:
-                column_spec = column_spec.when(
-                    self.column.get_column_spec(
-                        source_df=source_df,
-                        current_column=current_column,
-                        parent_columns=parent_columns,
-                    ).rlike(value),
-                    self.value.get_column_spec(
-                        source_df=source_df,
-                        current_column=current_column,
-                        parent_columns=parent_columns,
+                column_spec = (
+                    column_spec.when(
+                        self.column.get_column_spec(
+                            source_df=source_df,
+                            current_column=current_column,
+                            parent_columns=parent_columns,
+                        ).rlike(value),
+                        self.value.get_column_spec(
+                            source_df=source_df,
+                            current_column=current_column,
+                            parent_columns=parent_columns,
+                        ),
                     )
-                ) if column_spec is not None else when(
-                    self.column.get_column_spec(
-                        source_df=source_df,
-                        current_column=current_column,
-                        parent_columns=parent_columns,
-                    ).rlike(value),
-                    self.value.get_column_spec(
-                        source_df=source_df,
-                        current_column=current_column,
-                        parent_columns=parent_columns,
+                    if column_spec is not lit(None)
+                    else when(
+                        self.column.get_column_spec(
+                            source_df=source_df,
+                            current_column=current_column,
+                            parent_columns=parent_columns,
+                        ).rlike(value),
+                        self.value.get_column_spec(
+                            source_df=source_df,
+                            current_column=current_column,
+                            parent_columns=parent_columns,
+                        ),
                     )
                 )
 
-            if column_spec is not None:
+            if column_spec is not lit(None):
                 column_spec = column_spec.otherwise(
                     self.else_.get_column_spec(
                         source_df=source_df,
