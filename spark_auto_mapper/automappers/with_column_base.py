@@ -63,8 +63,8 @@ class AutoMapperWithColumnBase(AutoMapperBase):
             )
             if self.skip_if_columns_null_or_empty:
                 is_first_when_case = True
-                for columns in self.skip_if_columns_null_or_empty:
-                    column_to_check = f"b.{columns}"
+                for column in self.skip_if_columns_null_or_empty:
+                    column_to_check = f"b.{column}"
                     # wrap column spec in when
                     column_spec = (
                         when(
