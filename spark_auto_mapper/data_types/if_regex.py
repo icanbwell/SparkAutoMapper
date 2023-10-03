@@ -59,6 +59,7 @@ class AutoMapperIfRegExDataType(AutoMapperDataTypeBase, Generic[_TAutoMapperData
         # rlike takes a string and not a column
         if isinstance(self.check, list):
             value_list: List[str] = self.check
+            is_first_when_case = True
             column_spec: Column = lit(None)
             for value in value_list:
                 column_spec = (
@@ -74,7 +75,7 @@ class AutoMapperIfRegExDataType(AutoMapperDataTypeBase, Generic[_TAutoMapperData
                             parent_columns=parent_columns,
                         ),
                     )
-                    if column_spec is not lit(None)
+                    if not is_first_when_case
                     else when(
                         self.column.get_column_spec(
                             source_df=source_df,
@@ -88,6 +89,7 @@ class AutoMapperIfRegExDataType(AutoMapperDataTypeBase, Generic[_TAutoMapperData
                         ),
                     )
                 )
+                is_first_when_case = False
 
             if column_spec is not lit(None):
                 column_spec = column_spec.otherwise(
