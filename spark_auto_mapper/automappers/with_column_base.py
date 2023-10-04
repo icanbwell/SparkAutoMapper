@@ -4,7 +4,7 @@ from pyspark.sql import Column, DataFrame
 
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import col, when, lit, size
-from pyspark.sql.types import DataType, StructField
+from pyspark.sql.types import DataType, StructField, ArrayType
 from pyspark.sql.utils import AnalysisException
 from spark_data_frame_comparer.schema_comparer import SchemaComparer
 
@@ -62,12 +62,16 @@ class AutoMapperWithColumnBase(AutoMapperBase):
                 source_df=source_df, current_column=None, parent_columns=None
             )
             if self.skip_if_columns_null_or_empty:
-                column_type_dict = dict(source_df.dtypes)  # type: ignore
                 is_first_when_case = True
                 for column in self.skip_if_columns_null_or_empty:
+                    column_type = (
+                        source_df.select(column).schema[column.split(".")[-1]].dataType  # type: ignore
+                        if "." in column
+                        else source_df.schema[column].dataType  # type: ignore
+                    )
                     column_to_check = f"b.{column}"
                     # wrap column spec in when
-                    if column_type_dict[column].startswith("array"):
+                    if isinstance(column_type, ArrayType):
                         column_spec = (
                             when(
                                 col(column_to_check).isNull()
