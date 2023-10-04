@@ -4,7 +4,15 @@ from pyspark.sql import SparkSession, Column, DataFrame
 
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import col, when, lit, size
-from pyspark.sql.types import StructType, StructField, StringType, LongType, DataType
+from pyspark.sql.types import (
+    StructType,
+    StructField,
+    StringType,
+    LongType,
+    DataType,
+    IntegerType,
+    ArrayType,
+)
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.data_types.complex.complex_base import (
@@ -226,3 +234,80 @@ def test_automapper_complex_with_skip_if_null(spark_session: SparkSession) -> No
 
     assert result_df.count() == 1
     assert result_df.where("id == 1").select("name").collect()[0][0] == "Qureshi"
+
+    # Case when nested columns are present in skip_if_columns_null field
+    spark_session.createDataFrame(
+        [
+            (1, "Qureshi", "Imran", 45, {"nid": 123, "ssn": "", "lis": ["123"]}),
+            (2, "Goel", "Shubham", 35, {"nid": 456, "ssn": "456", "lis": ["123"]}),
+            (3, "Chawla", "Gagan", 12, {"nid": 456, "ssn": "456", "lis": []}),
+        ],
+        StructType(
+            [
+                StructField("member_id", IntegerType()),
+                StructField("last_name", StringType()),
+                StructField("first_name", StringType()),
+                StructField("my_age", IntegerType()),
+                StructField(
+                    "exploded",
+                    StructType(
+                        [
+                            StructField("nid", StringType()),
+                            StructField("ssn", StringType()),
+                            StructField("lis", ArrayType(StringType())),
+                        ]
+                    ),
+                ),
+            ]
+        ),
+    ).createOrReplaceTempView("patients")
+
+    source_df = spark_session.table("patients")
+
+    df = source_df.select("member_id")
+    df.createOrReplaceTempView("members")
+
+    # Map
+    mapper = AutoMapper(
+        view="members",
+        source_view="patients",
+        keys=["member_id"],
+        drop_key_columns=True,
+        skip_if_columns_null_or_empty=["first_name", "exploded.ssn", "exploded.lis"],
+    ).complex(
+        MyClass(
+            id_=A.column("member_id"),
+            name=A.column("last_name"),
+            age=A.number(A.column("my_age")),
+        )
+    )
+
+    assert isinstance(mapper, AutoMapper)
+    sql_expressions = mapper.get_column_specs(source_df=source_df)
+    for column_name, sql_expression in sql_expressions.items():
+        print(f"{column_name}: {sql_expression}")
+
+    result_df = mapper.transform(df=df)
+
+    # Assert
+    assert_compare_expressions(
+        sql_expressions["name"],
+        when(
+            col("b.first_name").isNull() | col("b.first_name").eqNullSafe(""), lit(None)
+        )
+        .when(
+            col("b.exploded.ssn").isNull() | col("b.exploded.ssn").eqNullSafe(""),
+            lit(None),
+        )
+        .when(col("b.exploded.lis").isNull() | (size("b.exploded.lis") == 0), lit(None))
+        .otherwise(col("b.last_name"))
+        .cast(StringType())
+        .alias("name"),
+    )
+
+    result_df.printSchema()
+
+    result_df.show()
+
+    assert result_df.count() == 1
+    assert result_df.where("id == 2").select("name").collect()[0][0] == "Goel"
