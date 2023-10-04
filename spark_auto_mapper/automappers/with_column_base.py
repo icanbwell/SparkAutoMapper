@@ -3,7 +3,7 @@ from typing import List, Dict, Optional
 from pyspark.sql import Column, DataFrame
 
 # noinspection PyUnresolvedReferences
-from pyspark.sql.functions import col, when, lit
+from pyspark.sql.functions import col, when, lit, size
 from pyspark.sql.types import DataType, StructField
 from pyspark.sql.utils import AnalysisException
 from spark_data_frame_comparer.schema_comparer import SchemaComparer
@@ -62,23 +62,39 @@ class AutoMapperWithColumnBase(AutoMapperBase):
                 source_df=source_df, current_column=None, parent_columns=None
             )
             if self.skip_if_columns_null_or_empty:
+                column_type_dict = dict(source_df.dtypes)  # type: ignore
                 is_first_when_case = True
                 for column in self.skip_if_columns_null_or_empty:
                     column_to_check = f"b.{column}"
                     # wrap column spec in when
-                    column_spec = (
-                        when(
-                            col(column_to_check).isNull()
-                            | col(column_to_check).eqNullSafe(""),
-                            lit(None),
+                    if column_type_dict[column].startswith("array"):
+                        column_spec = (
+                            when(
+                                col(column_to_check).isNull()
+                                | (size(col(column_to_check)) == 0),
+                                lit(None),
+                            )
+                            if is_first_when_case
+                            else column_spec.when(
+                                col(column_to_check).isNull()
+                                | (size(col(column_to_check)) == 0),
+                                lit(None),
+                            )
                         )
-                        if is_first_when_case
-                        else column_spec.when(
-                            col(column_to_check).isNull()
-                            | col(column_to_check).eqNullSafe(""),
-                            lit(None),
+                    else:
+                        column_spec = (
+                            when(
+                                col(column_to_check).isNull()
+                                | col(column_to_check).eqNullSafe(""),
+                                lit(None),
+                            )
+                            if is_first_when_case
+                            else column_spec.when(
+                                col(column_to_check).isNull()
+                                | col(column_to_check).eqNullSafe(""),
+                                lit(None),
+                            )
                         )
-                    )
                     is_first_when_case = False
 
                 column_spec = column_spec.otherwise(
