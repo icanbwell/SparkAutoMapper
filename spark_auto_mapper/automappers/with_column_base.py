@@ -67,7 +67,7 @@ class AutoMapperWithColumnBase(AutoMapperBase):
                 for column in self.skip_if_columns_null_or_empty:
                     column_to_check = f"b.{column}"
                     # wrap column spec in when
-                    if "array" in column_type_dict[column]:
+                    if column_type_dict[column].startswith("array"):
                         column_spec = (
                             when(
                                 col(column_to_check).isNull()
