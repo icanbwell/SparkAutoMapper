@@ -13,6 +13,8 @@ from pyspark.sql.types import (
     TimestampType,
     DateType,
     MapType,
+    ByteType,
+    BinaryType,
 )
 from pyspark.sql.utils import AnalysisException
 from spark_data_frame_comparer.schema_comparer import SchemaComparer
@@ -80,7 +82,10 @@ class AutoMapperWithColumnBase(AutoMapperBase):
                     )
                     column_to_check = f"b.{column}"
                     # wrap column spec in when
-                    if isinstance(column_type, (StringType, TimestampType, DateType)):
+                    if isinstance(
+                        column_type,
+                        (StringType, TimestampType, DateType, ByteType, BinaryType),
+                    ):
                         column_spec = (
                             when(
                                 col(column_to_check).isNull()
