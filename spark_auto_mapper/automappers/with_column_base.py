@@ -3,8 +3,17 @@ from typing import List, Dict, Optional
 from pyspark.sql import Column, DataFrame
 
 # noinspection PyUnresolvedReferences
-from pyspark.sql.functions import col, when, lit, size
-from pyspark.sql.types import DataType, StructField, ArrayType, StringType
+from pyspark.sql.functions import col, when, lit, size, struct
+from pyspark.sql.types import (
+    DataType,
+    StructField,
+    ArrayType,
+    StringType,
+    StructType,
+    TimestampType,
+    DateType,
+    MapType,
+)
 from pyspark.sql.utils import AnalysisException
 from spark_data_frame_comparer.schema_comparer import SchemaComparer
 
@@ -71,7 +80,21 @@ class AutoMapperWithColumnBase(AutoMapperBase):
                     )
                     column_to_check = f"b.{column}"
                     # wrap column spec in when
-                    if isinstance(column_type, ArrayType):
+                    if isinstance(column_type, (StringType, TimestampType, DateType)):
+                        column_spec = (
+                            when(
+                                col(column_to_check).isNull()
+                                | col(column_to_check).eqNullSafe(""),
+                                lit(None),
+                            )
+                            if is_first_when_case
+                            else column_spec.when(
+                                col(column_to_check).isNull()
+                                | col(column_to_check).eqNullSafe(""),
+                                lit(None),
+                            )
+                        )
+                    elif isinstance(column_type, (ArrayType, MapType)):
                         column_spec = (
                             when(
                                 col(column_to_check).isNull()
@@ -85,17 +108,17 @@ class AutoMapperWithColumnBase(AutoMapperBase):
                                 lit(None),
                             )
                         )
-                    elif isinstance(column_type, StringType):
+                    elif isinstance(column_type, StructType):
                         column_spec = (
                             when(
                                 col(column_to_check).isNull()
-                                | col(column_to_check).eqNullSafe(""),
+                                | (col(column_to_check) == struct()),
                                 lit(None),
                             )
                             if is_first_when_case
                             else column_spec.when(
                                 col(column_to_check).isNull()
-                                | col(column_to_check).eqNullSafe(""),
+                                | (col(column_to_check) == struct()),
                                 lit(None),
                             )
                         )
