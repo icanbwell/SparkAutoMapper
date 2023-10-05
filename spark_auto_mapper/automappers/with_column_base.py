@@ -3,13 +3,12 @@ from typing import List, Dict, Optional
 from pyspark.sql import Column, DataFrame
 
 # noinspection PyUnresolvedReferences
-from pyspark.sql.functions import col, when, lit, size, struct
+from pyspark.sql.functions import col, when, lit, size
 from pyspark.sql.types import (
     DataType,
     StructField,
     ArrayType,
     StringType,
-    StructType,
     TimestampType,
     DateType,
     MapType,
@@ -110,20 +109,6 @@ class AutoMapperWithColumnBase(AutoMapperBase):
                             else column_spec.when(
                                 col(column_to_check).isNull()
                                 | (size(col(column_to_check)) == 0),
-                                lit(None),
-                            )
-                        )
-                    elif isinstance(column_type, StructType):
-                        column_spec = (
-                            when(
-                                col(column_to_check).isNull()
-                                | (col(column_to_check) == struct()),
-                                lit(None),
-                            )
-                            if is_first_when_case
-                            else column_spec.when(
-                                col(column_to_check).isNull()
-                                | (col(column_to_check) == struct()),
                                 lit(None),
                             )
                         )
