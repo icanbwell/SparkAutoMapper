@@ -4,7 +4,7 @@ from pyspark.sql import Column, DataFrame
 
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import col, when, lit, size
-from pyspark.sql.types import DataType, StructField, ArrayType
+from pyspark.sql.types import DataType, StructField, ArrayType, StringType
 from pyspark.sql.utils import AnalysisException
 from spark_data_frame_comparer.schema_comparer import SchemaComparer
 
@@ -85,7 +85,7 @@ class AutoMapperWithColumnBase(AutoMapperBase):
                                 lit(None),
                             )
                         )
-                    else:
+                    elif isinstance(column_type, StringType):
                         column_spec = (
                             when(
                                 col(column_to_check).isNull()
@@ -96,6 +96,18 @@ class AutoMapperWithColumnBase(AutoMapperBase):
                             else column_spec.when(
                                 col(column_to_check).isNull()
                                 | col(column_to_check).eqNullSafe(""),
+                                lit(None),
+                            )
+                        )
+                    else:
+                        column_spec = (
+                            when(
+                                col(column_to_check).isNull(),
+                                lit(None),
+                            )
+                            if is_first_when_case
+                            else column_spec.when(
+                                col(column_to_check).isNull(),
                                 lit(None),
                             )
                         )
