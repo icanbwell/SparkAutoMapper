@@ -9,6 +9,7 @@ from pyspark.sql import Column
 from spark_auto_mapper.data_types.array_distinct import AutoMapperArrayDistinctDataType
 from spark_auto_mapper.data_types.base64 import AutoMapperBase64DataType
 from spark_auto_mapper.data_types.exists import AutoMapperExistsDataType
+from spark_auto_mapper.data_types.hash_abs import AutoMapperHashAbsDataType
 from spark_auto_mapper.data_types.nested_array_filter import (
     AutoMapperNestedArrayFilterDataType,
 )
@@ -506,6 +507,21 @@ class AutoMapperHelpers:
         :return: a concat automapper type
         """
         return AutoMapperHashDataType(*args)
+
+    @staticmethod
+    def hash_abs(
+        *args: Union[
+            AutoMapperNativeTextType, AutoMapperWrapperType, AutoMapperTextLikeBase
+        ]
+    ) -> AutoMapperHashAbsDataType:
+        """
+        Calculates the hash code of given columns, and returns the absolute value of the result as an int column.
+
+
+        :param args: string or column
+        :return: a concat automapper type
+        """
+        return AutoMapperHashAbsDataType(*args)
 
     @staticmethod
     def coalesce(*args: _TAutoMapperDataType) -> _TAutoMapperDataType:
