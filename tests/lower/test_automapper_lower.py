@@ -12,7 +12,6 @@ from spark_auto_mapper.helpers.expression_comparer import assert_compare_express
 
 
 def test_auto_mapper_lower(spark_session: SparkSession) -> None:
-
     # Arrange
     patient_1 = ["Shubham", "GOEL"]
     patient_2 = ["John", "Wick"]
@@ -51,8 +50,10 @@ def test_auto_mapper_lower(spark_session: SparkSession) -> None:
     result_df.show()
 
     assert (
-        result_df.where("member_id == 1").select("my_column").collect()[0][0] == patient_1[1].lower()
+        result_df.where("member_id == 1").select("my_column").collect()[0][0]
+        == patient_1[1].lower()
     )
     assert (
-        result_df.where("member_id == 2").select("my_column").collect()[0][0] == patient_2[1].lower()
+        result_df.where("member_id == 2").select("my_column").collect()[0][0]
+        == patient_2[1].lower()
     )

@@ -361,9 +361,7 @@ class AutoMapperHelpers:
         return AutoMapperSubstringDataType(column=column, start=0, length=length)
 
     @staticmethod
-    def lower(
-            column: AutoMapperColumnOrColumnLikeType
-    ) -> AutoMapperLowerDataType:
+    def lower(column: AutoMapperColumnOrColumnLikeType) -> AutoMapperLowerDataType:
         """
         Converts a string column to lower case.
 
