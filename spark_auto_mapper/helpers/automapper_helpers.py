@@ -10,6 +10,7 @@ from spark_auto_mapper.data_types.array_distinct import AutoMapperArrayDistinctD
 from spark_auto_mapper.data_types.base64 import AutoMapperBase64DataType
 from spark_auto_mapper.data_types.exists import AutoMapperExistsDataType
 from spark_auto_mapper.data_types.hash_abs import AutoMapperHashAbsDataType
+from spark_auto_mapper.data_types.lower import AutoMapperLowerDataType
 from spark_auto_mapper.data_types.nested_array_filter import (
     AutoMapperNestedArrayFilterDataType,
 )
@@ -358,6 +359,16 @@ class AutoMapperHelpers:
         :return: a concat automapper type
         """
         return AutoMapperSubstringDataType(column=column, start=0, length=length)
+
+    @staticmethod
+    def lower(column: AutoMapperColumnOrColumnLikeType) -> AutoMapperLowerDataType:
+        """
+        Converts a string column to lower case.
+
+        :param column: column whose contents to use
+        :return: a lower automapper type
+        """
+        return AutoMapperLowerDataType(column=column)
 
     @staticmethod
     def right(
