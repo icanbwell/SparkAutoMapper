@@ -21,6 +21,7 @@ from spark_data_frame_comparer.schema_comparer import SchemaComparer
 from spark_auto_mapper.automappers.automapper_base import AutoMapperBase
 from spark_auto_mapper.automappers.check_schema_result import CheckSchemaResult
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
+from spark_auto_mapper.schema_pruning.schema_pruner import SchemaPruner
 from spark_auto_mapper.type_definitions.defined_types import AutoMapperAnyDataType
 from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
 
@@ -63,11 +64,23 @@ class AutoMapperWithColumnBase(AutoMapperBase):
             child: AutoMapperDataTypeBase = self.value
             if self.column_schema:
                 if self.enable_schema_pruning:
-                    self.value.set_schema(
+                    self.value.mark_used_fields_in_schema(
                         column_name=self.dst_column,
                         column_path=self.dst_column,
+                        field=self.column_schema,
                         column_data_type=self.column_schema.dataType,
                     )
+                    # remove all fields without "used" property
+                    SchemaPruner.prune_schema(
+                        field=self.column_schema,
+                        field_data_type=self.column_schema.dataType,
+                    )
+
+                    # self.value.set_schema(
+                    #     column_name=self.dst_column,
+                    #     column_path=self.dst_column,
+                    #     column_data_type=self.column_schema.dataType,
+                    # )
             column_spec = child.get_column_spec(
                 source_df=source_df, current_column=None, parent_columns=None
             )
@@ -134,16 +147,16 @@ class AutoMapperWithColumnBase(AutoMapperBase):
             # if the type has a schema then apply it
             if self.column_schema:
                 column_data_type: DataType = self.column_schema.dataType
-                if self.enable_schema_pruning:
-                    # first disable generation of null properties since we are doing schema reduction
-                    self.value.include_null_properties(include_null_properties=False)
-                    # second ask the mapper to reduce schema that is not used
-                    column_data_type = self.value.filter_schema_by_fields_present(
-                        column_name=self.dst_column,
-                        column_path=self.dst_column,
-                        column_data_type=column_data_type,
-                        skip_null_properties=True,
-                    )
+                # if self.enable_schema_pruning:
+                #     # first disable generation of null properties since we are doing schema reduction
+                #     self.value.include_null_properties(include_null_properties=False)
+                #     # second ask the mapper to reduce schema that is not used
+                #     column_data_type = self.value.filter_schema_by_fields_present(
+                #         column_name=self.dst_column,
+                #         column_path=self.dst_column,
+                #         column_data_type=column_data_type,
+                #         skip_null_properties=True,
+                #     )
                 column_spec = column_spec.cast(column_data_type)
             # if dst_column already exists in source_df then prepend with ___ to make it unique
             if source_df is not None and self.dst_column in source_df.columns:
@@ -201,7 +214,8 @@ class AutoMapperWithColumnBase(AutoMapperBase):
                     desired_schema=desired_schema,
                 )
                 return CheckSchemaResult(result=result)
-            except AnalysisException:
+            except AnalysisException as e:
+                print(e)
                 return None
         else:
             return None
