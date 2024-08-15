@@ -22,9 +22,9 @@ class AutoMapperSplitByDelimiterDataType(AutoMapperArrayLikeBase):
     ):
         super().__init__()
 
-        self.column: Union[
-            AutoMapperDataTypeBase, AutoMapperColumnOrColumnLikeType
-        ] = column
+        self.column: Union[AutoMapperDataTypeBase, AutoMapperColumnOrColumnLikeType] = (
+            column
+        )
         # if simple string passed in then convert to regex
         self.delimiter: str = (
             delimiter if delimiter.startswith("[") else f"[{delimiter}]"

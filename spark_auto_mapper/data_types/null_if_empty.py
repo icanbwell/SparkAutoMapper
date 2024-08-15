@@ -55,13 +55,17 @@ class AutoMapperNullIfEmptyDataType(
 
         column_spec = when(
             # if struct then check if it is empty
-            (value_spec.isNull()) | (to_json(value_spec).eqNullSafe("{}"))
-            if isinstance(self.value, AutoMapperDataTypeComplexBase)
-            # if array then check if it is empty
-            else (value_spec.isNull()) | (size(value_spec) == 0)
-            if isinstance(self.value, AutoMapperList)
-            # else check if string is empty
-            else value_spec.eqNullSafe(""),
+            (
+                (value_spec.isNull()) | (to_json(value_spec).eqNullSafe("{}"))
+                if isinstance(self.value, AutoMapperDataTypeComplexBase)
+                # if array then check if it is empty
+                else (
+                    (value_spec.isNull()) | (size(value_spec) == 0)
+                    if isinstance(self.value, AutoMapperList)
+                    # else check if string is empty
+                    else value_spec.eqNullSafe("")
+                )
+            ),
             lit(None),
         ).otherwise(value_spec)
 

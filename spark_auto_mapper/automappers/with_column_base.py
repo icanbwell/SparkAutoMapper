@@ -15,7 +15,7 @@ from pyspark.sql.types import (
     ByteType,
     BinaryType,
 )
-from pyspark.sql.utils import AnalysisException
+from pyspark.errors import AnalysisException
 from spark_data_frame_comparer.schema_comparer import SchemaComparer
 
 from spark_auto_mapper.automappers.automapper_base import AutoMapperBase
@@ -48,9 +48,9 @@ class AutoMapperWithColumnBase(AutoMapperBase):
             if not isinstance(value, AutoMapperDataTypeBase)
             else value
         )
-        self.skip_if_columns_null_or_empty: Optional[
-            List[str]
-        ] = skip_if_columns_null_or_empty
+        self.skip_if_columns_null_or_empty: Optional[List[str]] = (
+            skip_if_columns_null_or_empty
+        )
         if include_null_properties:
             self.value.include_null_properties(
                 include_null_properties=include_null_properties

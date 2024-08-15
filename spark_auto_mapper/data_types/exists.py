@@ -18,9 +18,9 @@ class AutoMapperExistsDataType(AutoMapperArrayLikeBase):
     ) -> None:
         super().__init__()
 
-        self.column: Union[
-            AutoMapperDataTypeBase, AutoMapperColumnOrColumnLikeType
-        ] = column
+        self.column: Union[AutoMapperDataTypeBase, AutoMapperColumnOrColumnLikeType] = (
+            column
+        )
         self.func: Callable[[Column], Column] = func
 
     def include_null_properties(self, include_null_properties: bool) -> None:

@@ -18,9 +18,9 @@ class AutoMapperFirstDataType(AutoMapperArrayLikeBase, Generic[_TAutoMapperDataT
     ) -> None:
         super().__init__()
 
-        self.column: Union[
-            AutoMapperDataTypeBase, AutoMapperColumnOrColumnLikeType
-        ] = column
+        self.column: Union[AutoMapperDataTypeBase, AutoMapperColumnOrColumnLikeType] = (
+            column
+        )
 
     def get_column_spec(
         self,

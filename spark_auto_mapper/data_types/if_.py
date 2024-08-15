@@ -36,9 +36,11 @@ class AutoMapperIfDataType(AutoMapperDataTypeBase, Generic[_TAutoMapperDataType]
         self.column: AutoMapperColumnOrColumnLikeType = column
         if isinstance(check, list):
             self.check: Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]] = [
-                a
-                if isinstance(a, AutoMapperDataTypeBase)
-                else AutoMapperValueParser.parse_value(value=a)
+                (
+                    a
+                    if isinstance(a, AutoMapperDataTypeBase)
+                    else AutoMapperValueParser.parse_value(value=a)
+                )
                 for a in check
             ]
         else:
