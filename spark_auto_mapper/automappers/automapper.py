@@ -17,7 +17,7 @@ from pyspark.sql.functions import monotonically_increasing_id
 from pyspark.sql.types import StructField
 
 # noinspection PyPackageRequirements
-from pyspark.sql.utils import AnalysisException
+from pyspark.errors import AnalysisException
 
 from spark_auto_mapper.automappers.automapper_analysis_exception import (
     AutoMapperAnalysisException,
@@ -117,9 +117,9 @@ class AutoMapper(AutoMapperContainer):
         self.use_single_select: bool = use_single_select
         self.verify_row_count: bool = verify_row_count
         self.skip_schema_validation: List[str] = skip_schema_validation
-        self.skip_if_columns_null_or_empty: Optional[
-            List[str]
-        ] = skip_if_columns_null_or_empty
+        self.skip_if_columns_null_or_empty: Optional[List[str]] = (
+            skip_if_columns_null_or_empty
+        )
         self.keep_null_rows: bool = keep_null_rows
         self.filter_by: Optional[str] = filter_by
         self.logger: Logger = logger  # type: ignore
@@ -145,17 +145,17 @@ class AutoMapper(AutoMapperContainer):
 
         self.check_schema_for_all_columns: bool = check_schema_for_all_columns
         self.copy_all_unmapped_properties: bool = copy_all_unmapped_properties
-        self.copy_all_unmapped_properties_exclude: Optional[
-            List[str]
-        ] = copy_all_unmapped_properties_exclude
+        self.copy_all_unmapped_properties_exclude: Optional[List[str]] = (
+            copy_all_unmapped_properties_exclude
+        )
 
         self.entity_name: Optional[str] = None
         self.enable_schema_pruning: bool = enable_schema_pruning
         if enable_schema_pruning:
             self.skip_schema_validation = []  # no need to filter out extensions
-        self.remove_duplicates_by_columns: Optional[
-            List[str]
-        ] = remove_duplicates_by_columns
+        self.remove_duplicates_by_columns: Optional[List[str]] = (
+            remove_duplicates_by_columns
+        )
         self.extension_fields: Optional[List[str]] = extension_fields
 
     def _transform_with_data_frame_single_select(
@@ -194,18 +194,20 @@ class AutoMapper(AutoMapperContainer):
                 # for each unmapped property add a simple A.column()
                 column_specs.extend(
                     [
-                        AutoMapperDataTypeColumn(column_name)
-                        .get_column_spec(
-                            source_df=source_df,
-                            current_column=None,
-                            parent_columns=None,
-                        )
-                        .cast(column_schema[column_name].dataType)
-                        if column_name in column_schema
-                        else AutoMapperDataTypeColumn(column_name).get_column_spec(
-                            source_df=source_df,
-                            current_column=None,
-                            parent_columns=None,
+                        (
+                            AutoMapperDataTypeColumn(column_name)
+                            .get_column_spec(
+                                source_df=source_df,
+                                current_column=None,
+                                parent_columns=None,
+                            )
+                            .cast(column_schema[column_name].dataType)
+                            if column_name in column_schema
+                            else AutoMapperDataTypeColumn(column_name).get_column_spec(
+                                source_df=source_df,
+                                current_column=None,
+                                parent_columns=None,
+                            )
                         )
                         for column_name in unmapped_properties
                         if column_name not in copy_all_unmapped_properties_exclude
@@ -234,9 +236,9 @@ class AutoMapper(AutoMapperContainer):
 
             if self.check_schema_for_all_columns:
                 for column_name, mapper in self.mappers.items():
-                    check_schema_result: Optional[
-                        CheckSchemaResult
-                    ] = mapper.check_schema(parent_column=None, source_df=source_df)
+                    check_schema_result: Optional[CheckSchemaResult] = (
+                        mapper.check_schema(parent_column=None, source_df=source_df)
+                    )
                     if (
                         check_schema_result
                         and len(check_schema_result.result.errors) > 0
@@ -313,7 +315,7 @@ class AutoMapper(AutoMapperContainer):
                         parent_column=None, source_df=source_df
                     )
                     msg: str = ""
-                    if isinstance(e2, AnalysisException) and e2.desc.startswith(
+                    if isinstance(e2, AnalysisException) and e2.message.startswith(
                         "cannot resolve 'array"
                     ):
                         msg = (
@@ -417,7 +419,7 @@ class AutoMapper(AutoMapperContainer):
 
             except AnalysisException as e:
                 msg: str = ""
-                if e.desc.startswith("cannot resolve 'array"):
+                if e.message.startswith("cannot resolve 'array"):
                     msg = (
                         "Looks like the elements of the array have different structures.  "
                         "All items in an array should have the exact same structure.  "
@@ -487,9 +489,9 @@ class AutoMapper(AutoMapperContainer):
             msg += f", Processing column:[{column_name}]\n"
         if check_schema_result is not None:
             msg += check_schema_result.to_string(
-                include_info=True
-                if self.log_level and self.log_level == "DEBUG"
-                else False
+                include_info=(
+                    True if self.log_level and self.log_level == "DEBUG" else False
+                )
             )
             msg += "\n"
         if column_values is not None:
@@ -636,9 +638,11 @@ class AutoMapper(AutoMapperContainer):
         # To work around protected keywords as column names, allow a trailing underscore in the definition that gets
         # stripped at registration time.
         col_spec = {
-            column_name[:-1]
-            if column_name and column_name != "_" and column_name.endswith("_")
-            else column_name: column_def
+            (
+                column_name[:-1]
+                if column_name and column_name != "_" and column_name.endswith("_")
+                else column_name
+            ): column_def
             for column_name, column_def in kwargs.items()
         }
         columns_mapper: AutoMapperColumns = AutoMapperColumns(**col_spec)

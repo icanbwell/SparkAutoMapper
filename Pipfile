@@ -4,35 +4,49 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-pyspark = "==3.3.0" # cannot go to 3.4 yet because we are on spark 3.3 
+# py4j is needed for connecting to the JVM
+py4j="==0.10.9.7" # https://spark.apache.org/docs/latest/api/python/getting_started/install.html#dependencies
+# pyspark is needed for working with Spark
+pyspark="==3.5.1"  # should match the version of spark we use for testing
 logger = ">=1.4"
-sparkdataframecomparer = ">=2.0.2"
+sparkdataframecomparer = ">=2.0.4"
 Deprecated = ">=1.2.12"
-numpy = ">=1.7"
+numpy = ">=1.15"
 
 [dev-packages]
-setuptools=">=60.9.3"
-wheel=">=0.37.1"
-twine=">=3.8.0"
-pre-commit=">=2.18.0"
-autoflake=">=1.4"
-mypy = "==1.4.1"
-pytest = "==7.1.2"
-black = ">=22.3.0"
-importlib-metadata = ">=4.0.1"
-py4j = "==0.10.9.5" # https://spark.apache.org/docs/latest/api/python/getting_started/install.html#dependencies
-pyspark="==3.3.0"  # should match the version of spark we use for testing
-pygments = ">=2.8.1" # not directly required, pinned by Snyk to avoid a vulnerability
-types-Deprecated=">=0.1.2"
+# setuptools is needed for building the package
+setuptools=">=72.1.0"
+packaging=">=24.1"
+# wheel is needed for building the package
+wheel = ">=0.43.0"
+twine=">=5.1.1"
+# pre-commit is needed for running code quality checks
+pre-commit=">=3.7.1"
+# autoflake is needed for removing unused imports
+autoflake=">=2.3.1"
+# mypy is needed for type checking
+mypy = ">=1.10.1"
+# pytest is needed for running tests
+pytest = ">=8.2.2"
+# black is needed for formatting code
+black = ">=24.4.2"
+# importlib-metadata is needed for working with metadata
+importlib-metadata = ">=5.2.0"
+pygments = ">=2.18.0" # not directly required, pinned by Snyk to avoid a vulnerability
+types-Deprecated=">=1.2.9.20240311"
+# Sphinx is needed for generating documentation
 Sphinx="==4.1.2"
-sphinx-autoapi="==1.8.4"
-sphinx-rtd-theme="==0.5.2"
-myst-parser="==0.15.1"
-pipenv-setup = ">=3.2.0"
-vistir="==0.6.1" # https://github.com/Madoshakalaka/pipenv-setup/issues/138
+# sphinx-autoapi is needed for generating API documentation
+sphinx-autoapi="==2.0.0"
+# sphinx-rtd-theme is needed for the Read the Docs theme
+sphinx-rtd-theme="==1.0.0"
+# myst-parser is needed for parsing Markdown
+myst-parser="==0.17.2"
+
+vistir=">=0.6.1" # https://github.com/Madoshakalaka/pipenv-setup/issues/138
 
 [requires]
-python_version = "3.10"
+python_version = "3.12"
 
 [pipenv]
 allow_prereleases = true

@@ -168,11 +168,11 @@ class AutoMapperList(AutoMapperArrayLikeBase, Generic[_T]):
             # get schema for first element
             if len(self.value) > 0:
                 first_element = self.value[0]
-                schema: Optional[
-                    Union[StructType, DataType]
-                ] = first_element.get_schema(
-                    include_extension=include_extension,
-                    extension_fields=extension_fields,
+                schema: Optional[Union[StructType, DataType]] = (
+                    first_element.get_schema(
+                        include_extension=include_extension,
+                        extension_fields=extension_fields,
+                    )
                 )
                 if schema is None:
                     return None

@@ -16,9 +16,9 @@ class AutoMapperFlattenDataType(AutoMapperArrayLikeBase):
     ) -> None:
         super().__init__()
 
-        self.column: Union[
-            AutoMapperDataTypeBase, AutoMapperColumnOrColumnLikeType
-        ] = column
+        self.column: Union[AutoMapperDataTypeBase, AutoMapperColumnOrColumnLikeType] = (
+            column
+        )
 
     def include_null_properties(self, include_null_properties: bool) -> None:
         self.column.include_null_properties(

@@ -23,9 +23,9 @@ class AutoMapperTransformDataType(
     ) -> None:
         super().__init__()
 
-        self.column: Union[
-            AutoMapperDataTypeBase, AutoMapperColumnOrColumnLikeType
-        ] = column
+        self.column: Union[AutoMapperDataTypeBase, AutoMapperColumnOrColumnLikeType] = (
+            column
+        )
         self.value: _TAutoMapperDataType = value
         # always include null properties in a transform operation
         self.include_null_properties(include_null_properties=True)

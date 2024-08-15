@@ -876,9 +876,9 @@ class AutoMapperDataTypeBase:
         )
 
         element_type = column_data_type.elementType
-        children: Union[
-            AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]
-        ] = self.children
+        children: Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]] = (
+            self.children
+        )
         assert isinstance(children, list), f"{type(children)} should be a list"
         if len(children) > 0:
             should_skip_null_properties: bool = len(children) == 0
@@ -906,9 +906,9 @@ class AutoMapperDataTypeBase:
             column_data_type, StructType
         ), f"{type(column_data_type)} should be StructType for {column_name} with path {column_path}"
 
-        children: Union[
-            "AutoMapperDataTypeBase", List["AutoMapperDataTypeBase"]
-        ] = self.children
+        children: Union["AutoMapperDataTypeBase", List["AutoMapperDataTypeBase"]] = (
+            self.children
+        )
         if isinstance(children, list) and len(children) > 0:
             child: "AutoMapperDataTypeBase"
             for index, child in enumerate(children):
@@ -986,9 +986,9 @@ class AutoMapperDataTypeBase:
 
         element_type = column_data_type.elementType
         self.set_children_schema(element_type)
-        children: Union[
-            AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]
-        ] = self.children
+        children: Union[AutoMapperDataTypeBase, List[AutoMapperDataTypeBase]] = (
+            self.children
+        )
         assert isinstance(children, list), f"{type(children)} should be a list"
         if len(children) > 0:
             child: AutoMapperDataTypeBase
@@ -1011,9 +1011,9 @@ class AutoMapperDataTypeBase:
             column_data_type, StructType
         ), f"{type(column_data_type)} should be StructType for {column_name} with path {column_path}"
 
-        children: Union[
-            "AutoMapperDataTypeBase", List["AutoMapperDataTypeBase"]
-        ] = self.children
+        children: Union["AutoMapperDataTypeBase", List["AutoMapperDataTypeBase"]] = (
+            self.children
+        )
         if isinstance(children, list) and len(children) > 0:
             child: "AutoMapperDataTypeBase"
             for index, child in enumerate(children):

@@ -29,9 +29,11 @@ class AutoMapperConcatDataType(AutoMapperArrayLikeBase):
         super().__init__()
 
         self.value: List[AutoMapperDataTypeBase] = [
-            value
-            if isinstance(value, AutoMapperDataTypeBase)
-            else AutoMapperValueParser.parse_value(value=value)
+            (
+                value
+                if isinstance(value, AutoMapperDataTypeBase)
+                else AutoMapperValueParser.parse_value(value=value)
+            )
             for value in args
         ]
 

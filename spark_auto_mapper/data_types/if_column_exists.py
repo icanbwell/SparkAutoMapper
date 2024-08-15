@@ -2,7 +2,7 @@ import re
 from typing import Generic, List, Optional, TypeVar, Union
 
 from pyspark.sql import Column, DataFrame
-from pyspark.sql.utils import AnalysisException
+from pyspark.errors import AnalysisException
 
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 from spark_auto_mapper.data_types.literal import AutoMapperDataTypeLiteral
