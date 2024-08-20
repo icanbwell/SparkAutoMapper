@@ -1,11 +1,15 @@
-from pyspark.sql.context import SQLContext
+from pyspark.sql import SparkSession
 
 
 class SparkHelpers:
     @staticmethod
-    def spark_table_exists(sql_ctx: SQLContext, view: str) -> bool:
+    def spark_table_exists(
+        spark_session: SparkSession, view: str, database: str = "default"
+    ) -> bool:
         """
         :return:
         """
-        # noinspection PyBroadException
-        return view in sql_ctx.tableNames()
+        return view in [
+            row.tableName
+            for row in spark_session.sql(f"SHOW TABLES IN {database}").collect()
+        ]
