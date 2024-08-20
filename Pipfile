@@ -25,7 +25,7 @@ pre-commit=">=3.7.1"
 # autoflake is needed for removing unused imports
 autoflake=">=2.3.1"
 # mypy is needed for type checking
-mypy = ">=1.10.1"
+mypy = ">=1.11.1"
 # pytest is needed for running tests
 pytest = ">=8.2.2"
 # black is needed for formatting code
@@ -43,7 +43,15 @@ sphinx-rtd-theme="==1.0.0"
 # myst-parser is needed for parsing Markdown
 myst-parser="==0.17.2"
 
-vistir=">=0.6.1" # https://github.com/Madoshakalaka/pipenv-setup/issues/138
+# These dependencies are required for pipenv-setup.  They conflict with ones above, so we install these
+# only when running pipenv-setup
+[pipenvsetup]
+# vistr is needed for visualizing the dependency graph
+vistir=">=0.6.1, <0.7.0" # https://github.com/Madoshakalaka/pipenv-setup/issues/138
+# plete is needed for tab completion
+plette = "<1.0.0" # https://github.com/Madoshakalaka/pipenv-setup/issues/138
+# pipenv-setup is needed for updating setup.py with the dependencies for anyone installing this package
+pipenv-setup = ">=3.2.0"
 
 [requires]
 python_version = "3.12"
