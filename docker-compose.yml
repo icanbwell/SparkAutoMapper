@@ -1,6 +1,7 @@
 version: '3.5'
 services:
   dev:
+    user: root
     build:
       dockerfile: spark.Dockerfile
       context: .
