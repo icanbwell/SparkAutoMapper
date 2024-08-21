@@ -1,5 +1,4 @@
 # noinspection Mypy
-from typing import Any
 
 from setuptools import setup, find_packages
 from os import path, getcwd
@@ -18,38 +17,16 @@ try:
 except IOError:
     raise
 
-
-def fix_setuptools() -> None:
-    """Work around bugs in setuptools.
-
-    Some versions of setuptools are broken and raise SandboxViolation for normal
-    operations in a virtualenv. We therefore disable the sandbox to avoid these
-    issues.
-    """
-    try:
-        from setuptools.sandbox import DirectorySandbox
-
-        # noinspection PyUnusedLocal
-        def violation(operation: Any, *args: Any, **_: Any) -> None:
-            print("SandboxViolation: %s" % (args,))
-
-        DirectorySandbox._violation = violation
-    except ImportError:
-        pass
-
-
-# Fix bugs in setuptools.
-fix_setuptools()
-
 # classifiers list is here: https://pypi.org/classifiers/
 
 # create the package setup
 setup(
     install_requires=[
+        "py4j==0.10.9.7",
         "pyspark==3.5.1",
         "logger>=1.4",
         "sparkdataframecomparer>=2.0.4",
-        "Deprecated>=1.2.12",
+        "deprecated>=1.2.12",
         "numpy>=1.15",
     ],
     name=package_name,

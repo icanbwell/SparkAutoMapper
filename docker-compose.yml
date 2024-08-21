@@ -8,6 +8,5 @@ services:
     image: sparkautomapper_dev
     volumes:
       - ./:/sam/
-      - ~/.local/share/virtualenvs:/.local/share/virtualenvs:rw
     container_name: sam_dev
     working_dir: /sam

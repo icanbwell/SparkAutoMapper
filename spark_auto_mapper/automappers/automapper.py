@@ -267,7 +267,7 @@ class AutoMapper(AutoMapperContainer):
                     .joinpath("final")
                 )
                 df.write.parquet(str(checkpoint_path))
-                df = df.sql_ctx.read.parquet(str(checkpoint_path))
+                df = df.sparkSession.read.parquet(str(checkpoint_path))
         except (AnalysisException, ValueError):
             self.logger.warning(
                 f"-------- automapper ({self.view}) column specs ------"
@@ -404,7 +404,7 @@ class AutoMapper(AutoMapperContainer):
                                 .joinpath(str(current_child_number))
                             )
                             df.write.parquet(str(checkpoint_path))
-                            df = df.sql_ctx.read.parquet(str(checkpoint_path))
+                            df = df.sparkSession.read.parquet(str(checkpoint_path))
 
                 before_row_count: int = -1
                 if self.verify_row_count:
@@ -457,7 +457,7 @@ class AutoMapper(AutoMapperContainer):
                 Path(self.checkpoint_path).joinpath(self.view or "df").joinpath("final")
             )
             df.write.parquet(str(checkpoint_path))
-            df = df.sql_ctx.read.parquet(str(checkpoint_path))
+            df = df.sparkSession.read.parquet(str(checkpoint_path))
 
         return df
 
@@ -511,13 +511,13 @@ class AutoMapper(AutoMapperContainer):
         """
         # if source_view is specified then load that else assume that df is the source view
         source_df: DataFrame = (
-            df.sql_ctx.table(self.source_view) if self.source_view else df
+            df.sparkSession.table(self.source_view) if self.source_view else df
         )
         # if keys are not specified then add a __row_id column to both the source and the destination
         #   and use that as key
         if not self.keys or len(self.keys) == 0:
             assert not self.view or not SparkHelpers.spark_table_exists(
-                sql_ctx=df.sql_ctx, view=self.view
+                spark_session=df.sparkSession, view=self.view
             ), f"View {self.view} already exists"
             if self.use_single_select:
                 self.keys = []
@@ -529,10 +529,12 @@ class AutoMapper(AutoMapperContainer):
 
         # if view is specified then check if it exists
         destination_df: DataFrame = (
-            df.sql_ctx.table(self.view)
+            df.sparkSession.table(self.view)
             if self.view
             and self.reuse_existing_view
-            and SparkHelpers.spark_table_exists(sql_ctx=df.sql_ctx, view=self.view)
+            and SparkHelpers.spark_table_exists(
+                spark_session=df.sparkSession, view=self.view
+            )
             else source_df.select(self.keys)
         )
 
