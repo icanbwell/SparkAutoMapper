@@ -29,5 +29,10 @@ RUN mkdir -p /.local/share/virtualenvs && chmod 777 /.local/share/virtualenvs
 # USER 1001
 
 # Run as non-root user
+# Change ownership of the directory and its subdirectories
+RUN chown -R 185:185 /sam
+
+# Set permissions to allow writing (read, write, execute for owner)
+RUN chmod -R 755 /sam
 # https://spark.apache.org/docs/latest/running-on-kubernetes.html#user-identity
 USER 185
