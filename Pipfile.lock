@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "513f47c7905de77674086960f54c611f5b841feb2f71b40a9cc977adffd87ca7"
+            "sha256": "2c60bda0742e3d16b3da53214e25eedb8cec23fb9a38848779651fd1bb032b6c"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -109,12 +109,12 @@
         },
         "sparkdataframecomparer": {
             "hashes": [
-                "sha256:31b20fc51d66617523fe766e999036a95de349d09833e9b74323ffb88e2ae528",
-                "sha256:6b819054052243f2acdad3d71f554f35c24f73a8c9bdc11613fb53cb6b2b4387"
+                "sha256:292ca21c6e9758982c68deac5a9e0f33f9838e8bc8c0e2db2599bea6756567c5",
+                "sha256:ebd6167789a04c4e62c00ab0309f359af66e1214f8b072aafb9a33b5e482cf5c"
             ],
             "index": "pypi",
             "markers": "python_version >= '3'",
-            "version": "==2.0.4"
+            "version": "==2.0.6"
         },
         "wrapt": {
             "hashes": [
@@ -515,11 +515,11 @@
         },
         "idna": {
             "hashes": [
-                "sha256:028ff3aadf0609c1fd278d8ea3089299412a7a8b9bd005dd08b9f8285bcb5cfc",
-                "sha256:82fee1fc78add43492d3a1898bfa6d8a904cc97d8427f683ed8e798d07761aa0"
+                "sha256:050b4e5baadcd44d760cedbd2b8e639f2ff89bbc7a5730fcc662954303377aac",
+                "sha256:d838c2c0ed6fced7693d5e8ab8e734d5f8fda53a039c0164afb0b82e771e3603"
             ],
-            "markers": "python_version >= '3.5'",
-            "version": "==3.7"
+            "markers": "python_version >= '3.6'",
+            "version": "==3.8"
         },
         "imagesize": {
             "hashes": [
@@ -1274,11 +1274,11 @@
         },
         "idna": {
             "hashes": [
-                "sha256:028ff3aadf0609c1fd278d8ea3089299412a7a8b9bd005dd08b9f8285bcb5cfc",
-                "sha256:82fee1fc78add43492d3a1898bfa6d8a904cc97d8427f683ed8e798d07761aa0"
+                "sha256:050b4e5baadcd44d760cedbd2b8e639f2ff89bbc7a5730fcc662954303377aac",
+                "sha256:d838c2c0ed6fced7693d5e8ab8e734d5f8fda53a039c0164afb0b82e771e3603"
             ],
-            "markers": "python_version >= '3.5'",
-            "version": "==3.7"
+            "markers": "python_version >= '3.6'",
+            "version": "==3.8"
         },
         "orderedmultidict": {
             "hashes": [
