@@ -8,17 +8,19 @@ name = "pypi"
 py4j="==0.10.9.7" # https://spark.apache.org/docs/latest/api/python/getting_started/install.html#dependencies
 # pyspark is needed for working with Spark
 pyspark="==3.5.1"  # should match the version of spark we use for testing
+# logger is needed for logging
 logger = ">=1.4"
-sparkdataframecomparer = ">=2.0.6"
+# sparkdataframecomparer is needed for comparing Spark DataFrames
+sparkdataframecomparer = ">=2.0.13"
 Deprecated = ">=1.2.12"
 numpy = ">=1.15"
 
 [dev-packages]
 # setuptools is needed for building the package
 setuptools=">=72.1.0"
-packaging=">=24.1"
 # wheel is needed for building the package
 wheel = ">=0.43.0"
+# twine is needed for uploading the package to PyPI
 twine=">=5.1.1"
 # pre-commit is needed for running code quality checks
 pre-commit=">=3.7.1"
@@ -27,21 +29,22 @@ autoflake=">=2.3.1"
 # mypy is needed for type checking
 mypy = ">=1.11.1"
 # pytest is needed for running tests
-pytest = ">=8.2.2"
+pytest = ">=8.3.2"
 # black is needed for formatting code
-black = ">=24.4.2"
-# importlib-metadata is needed for working with metadata
-importlib-metadata = ">=5.2.0"
-pygments = ">=2.18.0" # not directly required, pinned by Snyk to avoid a vulnerability
-types-Deprecated=">=1.2.9.20240311"
+black = ">=24.8.0"
+# pygments is needed for syntax highlighting
+pygments=">=2.18.0" # not directly required, pinned by Snyk to avoid a vulnerability
 # Sphinx is needed for generating documentation
-Sphinx="==4.1.2"
+Sphinx="==7.4.7"
 # sphinx-autoapi is needed for generating API documentation
-sphinx-autoapi="==2.0.0"
+sphinx-autoapi="==3.2.1"
 # sphinx-rtd-theme is needed for the Read the Docs theme
-sphinx-rtd-theme="==1.0.0"
+sphinx-rtd-theme="==2.0.0"
 # myst-parser is needed for parsing Markdown
-myst-parser="==0.17.2"
+myst-parser="==3.0.1"
+# recodoc is needed for generating documentation
+recommonmark="==0.7.1"
+types-Deprecated=">=1.2.9.20240311"
 
 # These dependencies are required for pipenv-setup.  They conflict with ones above, so we install these
 # only when running pipenv-setup

@@ -25,7 +25,7 @@ setup(
         "py4j==0.10.9.7",
         "pyspark==3.5.1",
         "logger>=1.4",
-        "sparkdataframecomparer>=2.0.6",
+        "sparkdataframecomparer>=2.0.13",
         "deprecated>=1.2.12",
         "numpy>=1.15",
     ],
