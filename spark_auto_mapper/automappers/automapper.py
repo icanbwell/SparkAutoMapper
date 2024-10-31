@@ -1,3 +1,4 @@
+import asyncio
 import os
 from logging import Logger, getLogger, StreamHandler, Formatter
 from pathlib import Path
@@ -253,12 +254,6 @@ class AutoMapper(AutoMapperContainer):
             # run all the selects
             df = source_df.alias("b").select(*column_specs)
 
-            if self.log_level and self.log_level == "DEBUG":
-                print(
-                    f"------------  Start Execution Plan for view {self.view} -----------"
-                )
-                df.explain(extended="cost")
-                print("------------  End Execution Plan -----------")
             # write out final checkpoint for this automapper
             if self.checkpoint_path:
                 checkpoint_path = (
@@ -502,6 +497,24 @@ class AutoMapper(AutoMapperContainer):
         return msg
 
     def transform(self, df: DataFrame) -> DataFrame:
+        """
+        Override this method to implement transformation
+
+        :param df: input dataframe
+        :return: transformed dataframe
+        """
+        return asyncio.run(self._transform_async(df))
+
+    async def transform_async(self, df: DataFrame) -> DataFrame:
+        """
+        Override this method to implement transformation
+
+        :param df: input dataframe
+        :return: transformed dataframe
+        """
+        return await self._transform_async(df)
+
+    async def _transform_async(self, df: DataFrame) -> DataFrame:
         """
         Uses this AutoMapper to transform the specified data frame and return the new data frame
 
