@@ -118,7 +118,7 @@ class AutoMapperHelpers:
 
     @staticmethod
     def text(
-        value: Union[AutoMapperNativeSimpleType, AutoMapperTextInputType]
+        value: Union[AutoMapperNativeSimpleType, AutoMapperTextInputType],
     ) -> AutoMapperTextLikeBase:
         """
         Specifies that the value parameter should be used as a literal text
