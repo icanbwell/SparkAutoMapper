@@ -23,9 +23,9 @@ except IOError:
 setup(
     install_requires=[
         "py4j==0.10.9.7",
-        "pyspark==3.5.1",
+        "pyspark==3.5.5",
         "logger>=1.4",
-        "sparkdataframecomparer>=2.0.6",
+        "sparkdataframecomparer>=2.0.14",
         "deprecated>=1.2.12",
         "numpy>=1.15",
     ],
