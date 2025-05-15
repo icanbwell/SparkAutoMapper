@@ -31,7 +31,7 @@ class AutoMapperValueParser:
 
     @staticmethod
     def _parse_value(
-        value: Union[Dict[str, Any], List[Any], AutoMapperAnyDataType]
+        value: Union[Dict[str, Any], List[Any], AutoMapperAnyDataType],
     ) -> AutoMapperDataTypeBase:
         # convert any short syntax to long syntax
         if isinstance(value, str):
