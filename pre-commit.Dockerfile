@@ -7,7 +7,7 @@ RUN apt-get update && \
 COPY ${project_root}/Pipfile* ./
 
 RUN pipenv lock --dev && \
-    pipenv sync --dev --system --verbose
+    pipenv sync --dev --system --categories spark --verbose
 
 WORKDIR /sourcecode
 RUN git config --global --add safe.directory /sourcecode
