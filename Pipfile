@@ -9,21 +9,23 @@ sparkdataframecomparer = "==2.0.15"
 Deprecated = ">=1.2.12"
 numpy = ">=1.15"
 
-[dev-packages]
+[spark]
 # py4j is needed for connecting to the JVM
-py4j="==0.10.9.7" # https://spark.apache.org/docs/latest/api/python/getting_started/install.html#dependencies
+py4j = "==0.10.9.7" # https://spark.apache.org/docs/latest/api/python/getting_started/install.html#dependencies
 # pyspark is needed for working with Spark
-pyspark="==3.5.5"  # should match the version of spark we use for testing
+pyspark = "==3.5.5"  # should match the version of spark we use for testing
+
+[dev-packages]
 # setuptools is needed for building the package
-setuptools=">=72.1.0"
-packaging=">=24.1"
+setuptools = ">=72.1.0"
+packaging = ">=24.1"
 # wheel is needed for building the package
 wheel = ">=0.43.0"
-twine=">=5.1.1"
+twine = ">=5.1.1"
 # pre-commit is needed for running code quality checks
-pre-commit=">=3.7.1"
+pre-commit = ">=3.7.1"
 # autoflake is needed for removing unused imports
-autoflake=">=2.3.1"
+autoflake = ">=2.3.1"
 # mypy is needed for type checking
 mypy = ">=1.11.1"
 # pytest is needed for running tests
@@ -33,21 +35,21 @@ black = ">=24.4.2"
 # importlib-metadata is needed for working with metadata
 importlib-metadata = ">=5.2.0"
 pygments = ">=2.18.0" # not directly required, pinned by Snyk to avoid a vulnerability
-types-Deprecated=">=1.2.9.20240311"
+types-Deprecated = ">=1.2.9.20240311"
 # Sphinx is needed for generating documentation
-Sphinx="==4.1.2"
+Sphinx = "==4.1.2"
 # sphinx-autoapi is needed for generating API documentation
-sphinx-autoapi="==2.0.0"
+sphinx-autoapi = "==2.0.0"
 # sphinx-rtd-theme is needed for the Read the Docs theme
-sphinx-rtd-theme="==1.0.0"
+sphinx-rtd-theme = "==1.0.0"
 # myst-parser is needed for parsing Markdown
-myst-parser="==0.17.2"
+myst-parser = "==0.17.2"
 
 # These dependencies are required for pipenv-setup.  They conflict with ones above, so we install these
 # only when running pipenv-setup
 [pipenvsetup]
 # vistr is needed for visualizing the dependency graph
-vistir=">=0.6.1, <0.7.0" # https://github.com/Madoshakalaka/pipenv-setup/issues/138
+vistir = ">=0.6.1, <0.7.0" # https://github.com/Madoshakalaka/pipenv-setup/issues/138
 # plete is needed for tab completion
 plette = "<1.0.0" # https://github.com/Madoshakalaka/pipenv-setup/issues/138
 # pipenv-setup is needed for updating setup.py with the dependencies for anyone installing this package

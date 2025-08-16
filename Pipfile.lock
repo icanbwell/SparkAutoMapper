@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "9fa17edd7c7e3c0e8102bdf4126d55541461a720915fa8886a232a71a43cd609"
+            "sha256": "04460ac23e33bbd08fa9e8ef4d44cbd2915a57c2308bed572ede68ff437f0202"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -878,14 +878,6 @@
             "markers": "python_version >= '3.9'",
             "version": "==4.3.0"
         },
-        "py4j": {
-            "hashes": [
-                "sha256:0b6e5315bb3ada5cf62ac651d107bb2ebc02def3dee9d9548e3baac644ea8dbb",
-                "sha256:85defdfd2b2376eb3abf5ca6474b51ab7e0de341c75a02f46dc9b5976f5a5c1b"
-            ],
-            "index": "pypi",
-            "version": "==0.10.9.7"
-        },
         "pycparser": {
             "hashes": [
                 "sha256:491c8be9c040f5390f5bf44a5b07752bd07f56edf992381b05c701439eec10f6",
@@ -910,14 +902,6 @@
             "index": "pypi",
             "markers": "python_version >= '3.8'",
             "version": "==2.19.2"
-        },
-        "pyspark": {
-            "hashes": [
-                "sha256:6effc9ce98edf231f4d683fd14f7270629bf8458c628d6a2620ded4bb34f3cb9"
-            ],
-            "index": "pypi",
-            "markers": "python_version >= '3.8'",
-            "version": "==3.5.5"
         },
         "pytest": {
             "hashes": [
@@ -1506,6 +1490,24 @@
             ],
             "markers": "python_version >= '3.8'",
             "version": "==0.45.1"
+        }
+    },
+    "spark": {
+        "py4j": {
+            "hashes": [
+                "sha256:0b6e5315bb3ada5cf62ac651d107bb2ebc02def3dee9d9548e3baac644ea8dbb",
+                "sha256:85defdfd2b2376eb3abf5ca6474b51ab7e0de341c75a02f46dc9b5976f5a5c1b"
+            ],
+            "index": "pypi",
+            "version": "==0.10.9.7"
+        },
+        "pyspark": {
+            "hashes": [
+                "sha256:6effc9ce98edf231f4d683fd14f7270629bf8458c628d6a2620ded4bb34f3cb9"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.8'",
+            "version": "==3.5.5"
         }
     }
 }
