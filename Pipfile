@@ -5,7 +5,7 @@ name = "pypi"
 
 [packages]
 logger = ">=1.4"
-sparkdataframecomparer = "==2.0.14"
+sparkdataframecomparer = "==2.0.15"
 Deprecated = ">=1.2.12"
 numpy = ">=1.15"
 

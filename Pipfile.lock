@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "157985f35dd62daa7a7a563e59fa33f34972d4e1e1f937bb8dccb5472f1e5515"
+            "sha256": "9fa17edd7c7e3c0e8102bdf4126d55541461a720915fa8886a232a71a43cd609"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -113,28 +113,14 @@
             "markers": "python_version >= '3.11'",
             "version": "==2.3.2"
         },
-        "py4j": {
-            "hashes": [
-                "sha256:0b6e5315bb3ada5cf62ac651d107bb2ebc02def3dee9d9548e3baac644ea8dbb",
-                "sha256:85defdfd2b2376eb3abf5ca6474b51ab7e0de341c75a02f46dc9b5976f5a5c1b"
-            ],
-            "version": "==0.10.9.7"
-        },
-        "pyspark": {
-            "hashes": [
-                "sha256:6effc9ce98edf231f4d683fd14f7270629bf8458c628d6a2620ded4bb34f3cb9"
-            ],
-            "markers": "python_version >= '3.8'",
-            "version": "==3.5.5"
-        },
         "sparkdataframecomparer": {
             "hashes": [
-                "sha256:1ab3faf0dacd3882c6130c81eca47c4c9062c97d516d00a7bf0cb14104c4aba2",
-                "sha256:986fc75408b2cbf80c1565481ab5ae12b96552839da265e7ce398c173f41adce"
+                "sha256:80ab1a82a468cb2a44c1f5f7b65773cdf0aa9d5c878d98f598164c88c6105a3d",
+                "sha256:aad878884769bbff35e934cf8ec59df99b442d0ee74ce68ca618800102422fb8"
             ],
             "index": "pypi",
             "markers": "python_version >= '3'",
-            "version": "==2.0.14"
+            "version": "==2.0.15"
         },
         "wrapt": {
             "hashes": [
@@ -897,6 +883,7 @@
                 "sha256:0b6e5315bb3ada5cf62ac651d107bb2ebc02def3dee9d9548e3baac644ea8dbb",
                 "sha256:85defdfd2b2376eb3abf5ca6474b51ab7e0de341c75a02f46dc9b5976f5a5c1b"
             ],
+            "index": "pypi",
             "version": "==0.10.9.7"
         },
         "pycparser": {
@@ -928,6 +915,7 @@
             "hashes": [
                 "sha256:6effc9ce98edf231f4d683fd14f7270629bf8458c628d6a2620ded4bb34f3cb9"
             ],
+            "index": "pypi",
             "markers": "python_version >= '3.8'",
             "version": "==3.5.5"
         },
