@@ -9,7 +9,7 @@ sparkdataframecomparer = "==2.0.15"
 Deprecated = ">=1.2.12"
 numpy = ">=1.15"
 
-[spark]
+[packages.spark]
 # py4j is needed for connecting to the JVM
 py4j = "==0.10.9.7" # https://spark.apache.org/docs/latest/api/python/getting_started/install.html#dependencies
 # pyspark is needed for working with Spark
