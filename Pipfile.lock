@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "c4381b73a659d2f5960cb0b4a810bb5570bac24f85995f62b58289fdc024790e"
+            "sha256": "906e9fad370bfef8735913116ac946d4239abea4c5c203fd5971f9f4997ae68e"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -113,20 +113,30 @@
             "markers": "python_version >= '3.11'",
             "version": "==2.3.2"
         },
-        "spark": {
+        "py4j": {
             "hashes": [
-                "sha256:df499b57d30178c6d32dbda2af188b9833a261a70ccd262126ed7b415d9e36d1"
+                "sha256:0b6e5315bb3ada5cf62ac651d107bb2ebc02def3dee9d9548e3baac644ea8dbb",
+                "sha256:85defdfd2b2376eb3abf5ca6474b51ab7e0de341c75a02f46dc9b5976f5a5c1b"
             ],
-            "version": "==0.2.1"
+            "index": "pypi",
+            "version": "==0.10.9.7"
+        },
+        "pyspark": {
+            "hashes": [
+                "sha256:6effc9ce98edf231f4d683fd14f7270629bf8458c628d6a2620ded4bb34f3cb9"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.8'",
+            "version": "==3.5.5"
         },
         "sparkdataframecomparer": {
             "hashes": [
-                "sha256:80ab1a82a468cb2a44c1f5f7b65773cdf0aa9d5c878d98f598164c88c6105a3d",
-                "sha256:aad878884769bbff35e934cf8ec59df99b442d0ee74ce68ca618800102422fb8"
+                "sha256:6ab998fbb540c007010855c5b07807a11b5025cbdab1684a8aa89c0ad547cd04",
+                "sha256:7fd42da20b8900154912454abc6c0d7efa0c297efcd68b55108e92eb0cd3c2ac"
             ],
             "index": "pypi",
             "markers": "python_version >= '3'",
-            "version": "==2.0.15"
+            "version": "==2.0.16"
         },
         "wrapt": {
             "hashes": [

@@ -23,7 +23,7 @@ except IOError:
 setup(
     install_requires=[
         "logger>=1.4",
-        "sparkdataframecomparer==2.0.15",
+        "sparkdataframecomparer==2.0.16",
         "deprecated>=1.2.12",
         "numpy>=1.15",
     ],
