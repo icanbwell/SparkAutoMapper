@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Any, Dict, Union, TypeVar, cast, Optional, List, Callable
 
 # noinspection PyPackageRequirements
@@ -16,6 +17,9 @@ from spark_auto_mapper.data_types.nested_array_filter import (
 )
 from spark_auto_mapper.data_types.cross_column_filter import (
     AutoMapperCrossColumnFilterDataType,
+)
+from spark_auto_mapper.data_types.positive_date_diff import (
+    AutoMapperPositiveDateDiffDataType,
 )
 from spark_auto_mapper.data_types.array_max import AutoMapperArrayMaxDataType
 from spark_auto_mapper.data_types.array_base import AutoMapperArrayLikeBase
@@ -828,3 +832,26 @@ class AutoMapperHelpers:
         :return: a base64 automapper type
         """
         return AutoMapperBase64DataType(column=column)
+
+    @staticmethod
+    def positive_date_diff(
+        start_date: AutoMapperDateInputType,
+        end_date: Optional[AutoMapperDateInputType] = None,
+    ) -> "AutoMapperPositiveDateDiffDataType":
+        """
+        Calculates the difference between two dates and returns the positive value if the difference is positive,
+        otherwise returns None.
+
+        :param start_date: The start date column or value.
+        :param end_date: The end date column or value. Defaults to the current date if not provided.
+        :return: An AutoMapperDateDiffDataType instance.
+        """
+        if end_date is None:
+            return AutoMapperPositiveDateDiffDataType(
+                start_date=start_date,
+                end_date=AutoMapperDateDataType(datetime.now()),
+            )
+        else:
+            return AutoMapperPositiveDateDiffDataType(
+                start_date=start_date, end_date=end_date
+            )
