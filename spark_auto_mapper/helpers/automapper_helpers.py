@@ -835,8 +835,8 @@ class AutoMapperHelpers:
 
     @staticmethod
     def positive_date_diff(
-        start_date: AutoMapperDateInputType,
-        end_date: Optional[AutoMapperDateInputType] = None,
+        end_date: AutoMapperDateInputType,
+        start_date: Optional[AutoMapperDateInputType] = None,
     ) -> "AutoMapperPositiveDateDiffDataType":
         """
         Calculates the difference between two dates and returns the positive value if the difference is positive,
@@ -846,12 +846,11 @@ class AutoMapperHelpers:
         :param end_date: The end date column or value. Defaults to the current date if not provided.
         :return: An AutoMapperDateDiffDataType instance.
         """
-        if end_date is None:
+        if start_date is None:
             return AutoMapperPositiveDateDiffDataType(
-                start_date=start_date,
-                end_date=AutoMapperDateDataType(datetime.now()),
+                end_date=end_date, start_date=AutoMapperDateDataType(datetime.now())
             )
         else:
             return AutoMapperPositiveDateDiffDataType(
-                start_date=start_date, end_date=end_date
+                end_date=end_date, start_date=start_date
             )

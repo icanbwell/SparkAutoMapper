@@ -5,18 +5,17 @@ from pyspark.sql.functions import datediff, to_date, when
 from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 from spark_auto_mapper.helpers.value_parser import AutoMapperValueParser
 from spark_auto_mapper.type_definitions.defined_types import AutoMapperDateInputType
-from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
 from spark_auto_mapper.data_types.column import AutoMapperDataTypeColumn
 
 
-class AutoMapperPositiveDateDiffDataType(AutoMapperTextLikeBase):
+class AutoMapperPositiveDateDiffDataType(AutoMapperDataTypeBase):
     """
     Calculates the difference between two dates and returns the positive value if the difference is positive,
     otherwise returns None.
 
-    This class ensures that the `start_date` and `end_date` are valid date or timestamp types. If the difference
-    between the two dates is positive, the positive difference is returned. If the difference is zero or negative,
-    the result is `None`.
+    This class ensures that the start_date and end_date are valid date or timestamp types.
+    If the difference between the two dates is positive (end_date > start_date), the positive difference is returned.
+    If the difference is zero or negative, the result is None.
 
     Example:
         If `start_date` is "2025-06-01" and `end_date` is "2025-06-10", the result will be `9`.
@@ -25,8 +24,8 @@ class AutoMapperPositiveDateDiffDataType(AutoMapperTextLikeBase):
 
     def __init__(
         self,
-        start_date: AutoMapperDateInputType,
         end_date: AutoMapperDateInputType,
+        start_date: AutoMapperDateInputType,
     ):
         super().__init__()
         # Parse the input values to ensure they are AutoMapperDataTypeBase
@@ -53,7 +52,7 @@ class AutoMapperPositiveDateDiffDataType(AutoMapperTextLikeBase):
         end_date_spec = self._ensure_date(
             self.end_date, source_df, current_column, parent_columns
         )
-        date_diff_column = datediff(start_date_spec, end_date_spec)
+        date_diff_column = datediff(end_date_spec, start_date_spec)
         return when(date_diff_column > 0, date_diff_column).otherwise(None)
 
     def _ensure_date(
@@ -86,4 +85,4 @@ class AutoMapperPositiveDateDiffDataType(AutoMapperTextLikeBase):
     def children(
         self,
     ) -> List[AutoMapperDataTypeBase]:
-        return [self.start_date, self.end_date]
+        return [self.end_date, self.start_date]
