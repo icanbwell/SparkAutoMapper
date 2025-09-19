@@ -11,9 +11,6 @@ WORKDIR /sam
 RUN df -h # for space monitoring
 RUN pipenv sync --system --dev --extra-pip-args="--prefer-binary"
 
-# COPY ./jars/* /opt/bitnami/spark/jars/
-# COPY ./conf/* /opt/bitnami/spark/conf/
-
 # override entrypoint to remove extra logging
 RUN mv /opt/minimal_entrypoint.sh /opt/entrypoint.sh
 
