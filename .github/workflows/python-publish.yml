@@ -14,6 +14,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      with:
+        persist-credentials: false
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
@@ -28,9 +30,9 @@ jobs:
         pipenv sync --dev --system
     - name: Get Previous tag
       id: previoustag
-      uses: WyriHaximus/github-action-get-previous-tag@master
+      uses: WyriHaximus/github-action-get-previous-tag@2df46c7f3054f28f5cbc9b415c216de80ac1b756 # master (2026-07-12)
     - name: Set release tag in VERSION
-      uses: DamianReeves/write-file-action@master
+      uses: DamianReeves/write-file-action@d4ee8a06aec5db0c57a036b86f2f428e1f8b00e7 # master (2026-06-22)
       with:
         path: VERSION
         contents: |
