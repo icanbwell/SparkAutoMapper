@@ -1,5 +1,9 @@
-FROM imranq2/helix.spark:3.5.5.0-slim
+FROM 856965016623.dkr.ecr.us-east-1.amazonaws.com/helix.spark:3.5.5.0-slim
 # https://github.com/icanbwell/helix.spark
+# Pulled from the private services ECR per CIE-8032. The tag is dictated by the
+# Spark distribution baked into the image, not chosen here -- do not bump it
+# without also moving the pyspark pin in Pipfile (and vice versa).
+# Requires `make ecr-login` (or an ECR login step in CI) before building.
 USER root
 
 ENV PYTHONPATH=/sam

@@ -19,6 +19,28 @@ pip install sparkautomapper
 ## Documentation
 https://icanbwell.github.io/SparkAutoMapper/
 
+## Local development setup
+`spark.Dockerfile` pulls the `helix.spark` base image from b.well's **private**
+services ECR (`856965016623.dkr.ecr.us-east-1.amazonaws.com`), per
+[CIE-8032](https://icanbwell.atlassian.net/browse/CIE-8032). Before running
+`make up`, `make build`, `make devdocker` or `make tests`, authenticate once per
+session:
+
+```shell script
+aws sso login --profile services
+```
+
+The docker targets then run `make ecr-login` automatically. You can also run it
+directly, and override the profile if yours is named differently:
+
+```shell script
+make ecr-login AWS_SERVICES_PROFILE=my-profile
+```
+
+Note that b.well employees with access to the services AWS account are required
+to build the test/dev images. `pip install sparkautomapper` and `make run-pre-commit`
+do **not** require AWS access.
+
 ## SparkAutoMapper input and output
 You can pass either a dataframe to SparkAutoMapper or specify the name of a Spark view to read from.
 
