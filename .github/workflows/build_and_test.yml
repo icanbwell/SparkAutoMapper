@@ -15,6 +15,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          # This workflow only reads the tree; it never pushes back to the repo.
+          persist-credentials: false
       - uses: actions/setup-python@v4
         with:
           python-version: '3.12'
@@ -22,7 +25,6 @@ jobs:
       - name: pre-commit
         run: make run-pre-commit
 
-      # setup and install everything and run tests
       - name: up
         run: make up
       - name: tests

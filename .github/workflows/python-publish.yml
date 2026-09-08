@@ -14,6 +14,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      with:
+        # This workflow publishes to PyPI; it never pushes commits back to the
+        # repo (the VERSION rewrite below is local to the runner only).
+        persist-credentials: false
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
@@ -28,9 +32,11 @@ jobs:
         pipenv sync --dev --system
     - name: Get Previous tag
       id: previoustag
-      uses: WyriHaximus/github-action-get-previous-tag@master
+      # pinned to the commit that `master` pointed at on 2026-09-08
+      uses: WyriHaximus/github-action-get-previous-tag@2df46c7f3054f28f5cbc9b415c216de80ac1b756 # master @ 2026-07-12
     - name: Set release tag in VERSION
-      uses: DamianReeves/write-file-action@master
+      # pinned to the commit that `master` pointed at on 2026-09-08
+      uses: DamianReeves/write-file-action@d4ee8a06aec5db0c57a036b86f2f428e1f8b00e7 # master @ 2026-06-22
       with:
         path: VERSION
         contents: |

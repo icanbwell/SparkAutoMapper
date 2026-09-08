@@ -11,7 +11,7 @@ pyspark = "==3.5.1"  # should match the version of spark we use for testing
 logger = ">=1.4"
 sparkdataframecomparer = "==2.0.16"
 Deprecated = ">=1.2.12"
-numpy = ">=1.15"
+numpy = ">=2.5.2"  # AIKIDO-2026-125890
 
 [dev-packages]
 # setuptools is needed for building the package

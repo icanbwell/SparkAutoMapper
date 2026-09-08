@@ -5,12 +5,13 @@ Framework for simpler Spark Pipelines
 # Publishing package 
 For credentials:
 
-Set up your $HOME/.pypirc file like this (replace password with real one):
+Generate a PyPI API token at https://pypi.org/manage/account/token/ and set up
+your $HOME/.pypirc file like this. Never commit the real token.
 
 ```
 [pypi]
   username = __token__
-  password = pypi-AgEIcHlwaS5vcmcCJDU5YTg1ZDZjLTVhOWItNGZmMi1hMTBhLTgzZjVhMzBlYmJhOAACJXsicGVybWlzc2lvbnMiOiAidXNlciIsICJ2ZXJzaW9uIjogMX0AAAYgUAfdyImgcqvyNbLihu22g4Wp_2SYZvvJDx7iYNJpEUg
+  password = <your-pypi-api-token>
 ```
 
 Then:
