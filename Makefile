@@ -2,37 +2,19 @@ LANG=en_US.utf-8
 
 export LANG
 
-AWS_SERVICES_PROFILE ?= services
-AWS_SERVICES_REGION ?= us-east-1
-AWS_SERVICES_REGISTRY ?= 856965016623.dkr.ecr.us-east-1.amazonaws.com
-
-# Locally, devs authenticate with `aws sso login --profile services`. In CI the
-# runner already holds ambient credentials from configure-aws-credentials, and
-# passing a non-existent profile there would fail, so drop the flag when CI is set.
-ifdef CI
-AWS_PROFILE_FLAG :=
-else
-AWS_PROFILE_FLAG := --profile $(AWS_SERVICES_PROFILE)
-endif
-
-.PHONY: ecr-login
-ecr-login: ## Logs docker in to the private ECR holding the helix.spark base image
-	aws ecr get-login-password --region $(AWS_SERVICES_REGION) $(AWS_PROFILE_FLAG) \
-		| docker login --username AWS --password-stdin $(AWS_SERVICES_REGISTRY)
-
 Pipfile.lock: Pipfile
 	docker compose run --rm --name spark_auto_mapper dev \
 		/bin/bash -lc 'pipenv lock --clear --dev'
 
 .PHONY:devdocker
-devdocker: ecr-login ## Builds the docker for dev
+devdocker: ## Builds the docker for dev
 	docker compose build --no-cache
 
 .PHONY:init
 init: devdocker up setup-pre-commit  ## Initializes the local developer environment
 
 .PHONY: up
-up: ecr-login Pipfile.lock
+up: Pipfile.lock
 	docker compose up --build -d
 
 .PHONY: down
@@ -82,5 +64,5 @@ shell:devdocker ## Brings up the bash shell in dev docker
 	docker compose run --rm --name sam_shell dev /bin/bash
 
 .PHONY:build
-build: ecr-login ## Builds the docker for dev
+build: ## Builds the docker for dev
 	docker compose build --progress=plain --parallel

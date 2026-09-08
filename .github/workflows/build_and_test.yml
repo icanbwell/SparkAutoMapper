@@ -25,27 +25,6 @@ jobs:
       - name: pre-commit
         run: make run-pre-commit
 
-      # The helix.spark base image lives in the private services-account ECR
-      # (CIE-8032), so docker must authenticate before any build. This repo is PUBLIC
-      # and runs on GitHub-hosted runners, so it has no ambient AWS identity the way
-      # helix.pipelines does (that relies on its self-hosted runner's IRSA role).
-      # We therefore use a dedicated read-only IAM user's access key, matching the
-      # pattern helix.pipelines already uses for the dev account.
-      #
-      # PREREQUISITE: the SERVICES_ECR_ACCESS_KEY_ID / SERVICES_ECR_SECRET_ACCESS_KEY
-      # org secrets must be scoped to this repo. Fork pull requests receive no secrets,
-      # so external-contributor PRs cannot build these images.
-      - name: AWS Credentials (services account, for base image pulls)
-        uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4 (2025-08-04)
-        with:
-          aws-region: us-east-1
-          aws-access-key-id: ${{ secrets.SERVICES_ECR_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.SERVICES_ECR_SECRET_ACCESS_KEY }}
-
-      - name: Login to Amazon ECR (services)
-        uses: aws-actions/amazon-ecr-login@03f1aad4c6c7ffd436567f42f9384779290529bd # v2 (2026-08-19)
-
-      # setup and install everything and run tests
       - name: up
         run: make up
       - name: tests

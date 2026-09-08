@@ -1,19 +1,4 @@
 FROM python:3.12-slim
-# NOTE: unlike spark.Dockerfile this image is NOT a helix.spark image, so the
-# CIE-8032 private-ECR migration does not apply to it. It is deliberately left
-# on Docker Hub's python:3.12-slim.
-#
-# CUSTOM-RULE-2300 ("not sourced from root.io ECR mirror") therefore stays OPEN
-# on this line and needs an Aikido exception -- it is not fixable here.
-# The only FROM that clears 2300 would be:
-#   FROM 856965016623.dkr.ecr.us-east-1.amazonaws.com/root-mirror/python:3.12-slim
-# Verified by aikido_full_scan on 2026-09-08: that line clears both
-# CUSTOM-RULE-559 and CUSTOM-RULE-2300 (2576 still fires). It is NOT used
-# because an org-wide search found zero working root-mirror/*-slim consumers
-# (every root-mirror user in the org is on -alpine), so that tag likely does not
-# exist, and there are no AWS credentials available to confirm it. Switching
-# would trade a proven base image for an unverifiable one.
-# Mirroring can be requested via icanbwell/aikido-image-sync if it is ever wanted.
 
 RUN apt-get update && \
     apt-get install -y git && \
