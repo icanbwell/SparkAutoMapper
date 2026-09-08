@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from pyspark.sql import SparkSession, DataFrame
 from pyspark.sql.types import StructType, StructField, IntegerType, StringType
 from pyspark.sql.functions import col, to_date
@@ -72,10 +72,18 @@ def test_positive_date_diff_with_none_end_date(spark_session: SparkSession) -> N
         ]
     )
 
+    # Both dates are derived from today rather than hard-coded, so member 1 is
+    # always in the future (positive diff, kept) and member 2 always in the past
+    # (negative diff, filtered out).  A hard-coded "future" date silently turns
+    # into a past date once it elapses, which breaks the test for everyone.
+    today = datetime.now()
+    future_start_date = (today + timedelta(days=180)).strftime("%Y-%m-%d")
+    past_start_date = (today - timedelta(days=180)).strftime("%Y-%m-%d")
+
     spark_session.createDataFrame(
         [
-            (1, "2026-06-01"),
-            (2, "2025-07-15"),
+            (1, future_start_date),
+            (2, past_start_date),
         ],
         schema=schema,
     ).createOrReplaceTempView("patients")
@@ -101,9 +109,9 @@ def test_positive_date_diff_with_none_end_date(spark_session: SparkSession) -> N
     results = filtered_result_df.collect()
 
     # Dynamically calculate the expected value for the first row
-    current_date = datetime.now().strftime("%Y-%m-%d")
+    current_date = today.strftime("%Y-%m-%d")
     expected_value_row_2 = (
-        datetime.strptime("2026-06-01", "%Y-%m-%d")
+        datetime.strptime(future_start_date, "%Y-%m-%d")
         - datetime.strptime(current_date, "%Y-%m-%d")
     ).days
 
