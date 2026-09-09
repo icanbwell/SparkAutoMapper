@@ -7,7 +7,31 @@ name = "pypi"
 # py4j is needed for connecting to the JVM
 py4j = "==0.10.9.7" # https://spark.apache.org/docs/latest/api/python/getting_started/install.html#dependencies
 # pyspark is needed for working with Spark
-pyspark = "==3.5.1"  # should match the version of spark we use for testing
+# Must match the Spark JVM the tests actually run against: spark.Dockerfile is
+# icanbwell/helix.spark:3.5.5.0-slim, which builds on `spark:3.5.5-java17-python3`
+# and sets SPARK_HOME=/opt/spark. pyspark honours SPARK_HOME over its bundled
+# jars, so CI's Catalyst is Spark 3.5.5 either way -- pinning 3.5.1 here created
+# a Python/JVM skew rather than preventing one. Also closes CVE-2025-55039
+# (patched in 3.5.2).
+#
+# PR #180 (LR-503) set this to 3.5.1 to avoid a helix.pipelines conflict. That
+# is safe to undo because #180 never reached a consumer: it changed only Pipfile
+# and Pipfile.lock, and neither is published (verified absent from the released
+# sdist and wheel). SAM 3.0.6 was published 8 minutes after #180 merged and
+# still declared pyspark==3.5.5. helix.pipelines is exact-pinned to
+# sparkautomapper==3.0.2, an immutable artifact this cannot alter, and it pins
+# pyspark==3.5.1 in its own pyproject.toml anyway.
+#
+# Do NOT justify this by "pyspark is in extras_require so consumers never see
+# it" -- that only became true in 3.0.4 (PR #178). The 3.0.2 wheel that
+# helix.pipelines consumes declares `Requires-Dist: pyspark==3.5.1`
+# unconditionally.
+#
+# WARNING: `make pipenv-setup` (run by `make update`) flattens [packages] into
+# setup.py's install_requires, which WOULD push this version to consumers and
+# undo #178. That is how 3.0.3 shipped an unconditional pyspark==3.5.5. No CI
+# job runs it, so keep setup.py hand-maintained.
+pyspark = "==3.5.5"  # should match the version of spark we use for testing
 logger = ">=1.4"
 sparkdataframecomparer = "==2.0.16"
 Deprecated = ">=1.2.12"
