@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "ad3c856ce083eb9e226ce8300323063c4961ee862468d32cf9e5372742dbe373"
+            "sha256": "a67976abb0fcefe502a03c782483a17a5bce1e0900f31267730d670582c4fc56"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -115,11 +115,11 @@
         },
         "pyspark": {
             "hashes": [
-                "sha256:dd6569e547365eadc4f887bf57f153e4d582a68c4b490de475d55b9981664910"
+                "sha256:6effc9ce98edf231f4d683fd14f7270629bf8458c628d6a2620ded4bb34f3cb9"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.8'",
-            "version": "==3.5.1"
+            "version": "==3.5.5"
         },
         "sparkdataframecomparer": {
             "hashes": [
