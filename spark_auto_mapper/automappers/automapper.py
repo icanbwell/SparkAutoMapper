@@ -228,8 +228,7 @@ class AutoMapper(AutoMapperContainer):
                 self.logger.debug(
                     f"-------- automapper ({self.source_view}) source_df schema ------"
                 )
-                # noinspection PyProtectedMember
-                self.logger.debug(source_df._jdf.schema().treeString())
+                self.logger.debug(source_df.schema.treeString())
                 self.logger.debug(
                     f"-------- end automapper ({self.source_view}) source_df schema ------"
                 )
@@ -280,8 +279,7 @@ class AutoMapper(AutoMapperContainer):
                 self.logger.debug(
                     f"-------- automapper ({self.source_view}) source_df schema ------"
                 )
-                # noinspection PyProtectedMember
-                self.logger.debug(source_df._jdf.schema().treeString())
+                self.logger.debug(source_df.schema.treeString())
                 self.logger.debug(
                     f"-------- end automapper ({self.source_view}) source_df schema ------"
                 )
