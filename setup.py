@@ -29,8 +29,7 @@ setup(
     ],
     extras_require={
         "spark": [
-            "py4j==0.10.9.7",
-            "pyspark==3.5.5",
+            "pyspark==4.2.0",
         ]
     },
     name=package_name,
