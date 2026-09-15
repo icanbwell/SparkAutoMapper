@@ -52,7 +52,7 @@ class AutoMapperWithComplex(AutoMapperContainer):
             column_name: str
             mapper: AutoMapperDataTypeBase
             for column_name, mapper in entity.get_child_mappers().items():
-                if column_name == "extension":
+                if not enable_schema_pruning and column_name == "extension":
                     extension_schema: Union[StructType, DataType, None]
                     # since there is a column called extension then get the schema with extension
                     extension_schema = mapper.get_schema(
