@@ -62,9 +62,10 @@ def _extract_tokens(text: str) -> str:
     structurally equivalent expressions from Spark 3.x and 4.x compare
     equal despite different grouping and CASE/END placement.
     """
-    # Remove parentheses and END keywords — they differ between Spark versions
+    # Remove parentheses, END, and standalone CAST keywords — they differ between Spark versions
     cleaned = text.replace("(", " ").replace(")", " ")
     cleaned = re.sub(r"\bEND\b", " ", cleaned)
+    cleaned = re.sub(r"\bCAST\b", " ", cleaned)
     # Collapse consecutive "AS x AS y" to just "AS y" — Spark 4.x adds explicit
     # struct field aliases that Spark 3.x omits
     cleaned = re.sub(r"(\bAS\s+\w+)\s+(AS\s+)", r"\2", cleaned)
