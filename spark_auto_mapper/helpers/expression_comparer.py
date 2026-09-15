@@ -9,7 +9,11 @@ def fix_generated_lambda_variable_names(
 ) -> str:
     """
     Spark generates "random" names for lambda variables which makes it hard to compare
-    So we replace the postfixes
+    So we replace the postfixes.
+
+    Also normalizes Spark 4.x vs 3.x Column string representation differences:
+    - Spark 4.x quotes string/numeric literals with single quotes in Column.__repr__
+    - Spark 4.x adds a space after CAST keyword: "CAST (" vs "CAST("
 
 
     :param expression_text: text of expression
@@ -18,10 +22,15 @@ def fix_generated_lambda_variable_names(
     :returns cleaned expression text
     """
     replace_lambda_variables = re.sub(r"x_(\d+)", "x", expression_text)
+    # Normalize Spark 4.x quoting: remove single quotes around identifiers/literals
+    # in Column repr (e.g., 'usual' -> usual, '100' -> 100)
+    normalized = re.sub(r"'([^']*)'", r"\1", replace_lambda_variables)
+    # Normalize "CAST (" -> "CAST(" (Spark 4.x adds a space)
+    normalized = normalized.replace("CAST (", "CAST(")
     replace_casts = (
-        re.sub(r"CAST\((.*)\s\w*\s\w*\)", r"\1", replace_lambda_variables)
+        re.sub(r"CAST\((.*)\s\w*\s\w*\)", r"\1", normalized)
         if ignore_casts
-        else replace_lambda_variables
+        else normalized
     )
     return replace_casts
 
