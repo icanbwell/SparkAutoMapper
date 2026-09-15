@@ -13,7 +13,7 @@ if "SPARK_HOME" not in os.environ:
 
 def quiet_py4j() -> None:
     """turn down spark logging for the test context"""
-    logger = logging.getLogger("py4j")
+    logger = logging.getLogger("pyspark")
     logger.setLevel(logging.ERROR)
 
 
@@ -78,6 +78,7 @@ def spark_session(request: Any) -> SparkSession:
         .config("spark.sql.shuffle.partitions", "2")
         .config("spark.default.parallelism", "4")
         .config("spark.sql.broadcastTimeout", "2400")
+        .config("spark.sql.ansi.enabled", "false")
         .enableHiveSupport()
         .getOrCreate()
     )
@@ -104,6 +105,7 @@ def spark_session_per_function(request: Any) -> SparkSession:
         .config("spark.sql.shuffle.partitions", "2")
         .config("spark.default.parallelism", "4")
         .config("spark.sql.broadcastTimeout", "2400")
+        .config("spark.sql.ansi.enabled", "false")
         .enableHiveSupport()
         .getOrCreate()
     )

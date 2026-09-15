@@ -228,8 +228,7 @@ class AutoMapper(AutoMapperContainer):
                 self.logger.debug(
                     f"-------- automapper ({self.source_view}) source_df schema ------"
                 )
-                # noinspection PyProtectedMember
-                self.logger.debug(source_df._jdf.schema().treeString())
+                self.logger.debug(source_df.schema.treeString())
                 self.logger.debug(
                     f"-------- end automapper ({self.source_view}) source_df schema ------"
                 )
@@ -280,8 +279,7 @@ class AutoMapper(AutoMapperContainer):
                 self.logger.debug(
                     f"-------- automapper ({self.source_view}) source_df schema ------"
                 )
-                # noinspection PyProtectedMember
-                self.logger.debug(source_df._jdf.schema().treeString())
+                self.logger.debug(source_df.schema.treeString())
                 self.logger.debug(
                     f"-------- end automapper ({self.source_view}) source_df schema ------"
                 )
@@ -315,7 +313,7 @@ class AutoMapper(AutoMapperContainer):
                         parent_column=None, source_df=source_df
                     )
                     msg: str = ""
-                    if isinstance(e2, AnalysisException) and e2.message.startswith(
+                    if isinstance(e2, AnalysisException) and str(e2).startswith(
                         "cannot resolve 'array"
                     ):
                         msg = (
@@ -419,7 +417,7 @@ class AutoMapper(AutoMapperContainer):
 
             except AnalysisException as e:
                 msg: str = ""
-                if e.message.startswith("cannot resolve 'array"):
+                if str(e).startswith("cannot resolve 'array"):
                     msg = (
                         "Looks like the elements of the array have different structures.  "
                         "All items in an array should have the exact same structure.  "
