@@ -55,16 +55,13 @@ class AutoMapperFirstValidColumnType(
                 # is not valid and should try the next column.
                 continue
 
-            # noinspection Mypy,PyProtectedMember
-            col_name = (
-                column_spec._jc.expr().sql()  # type: ignore[operator]
-            )  # Get spark representation of the column as an expression
             try:
                 # Force spark analyzer to confirm that column/expression is possible. This does not actually compute
                 # anything, just triggers the analyzer to check validity, which is what we want.
-                # If SparkSQL AnalysisException is thrown, continue to next column definition
+                # If SparkSQL AnalysisException is thrown, continue to next column definition.
+                # We use source_df.alias("b").select() so that column refs prefixed with "b." resolve correctly.
                 if source_df:
-                    source_df.selectExpr(col_name.replace("b.", ""))
+                    source_df.alias("b").select(column_spec)
                     break  # Break as soon as the above query doesn't error as we want the FIRST valid column
             except AnalysisException:
                 continue

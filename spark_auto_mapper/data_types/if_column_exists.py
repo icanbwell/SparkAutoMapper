@@ -1,4 +1,3 @@
-import re
 from typing import Generic, List, Optional, TypeVar, Union
 
 from pyspark.sql import Column, DataFrame
@@ -71,20 +70,13 @@ class AutoMapperIfColumnExistsType(
             current_column=current_column,
             parent_columns=parent_columns,
         )
-        # noinspection Mypy,PyProtectedMember
-        col_name: str = (
-            column_spec._jc.toString()  # type: ignore[operator]
-        )  # Get spark representation of the column
         try:
             # Force spark analyzer to confirm that column/expression is possible. This does not actually compute
             # anything, just triggers the analyzer to check validity, which is what we want.
             # If SparkSQL AnalysisException is thrown, fall-back to the default, otherwise we can proceed.
+            # We use source_df.alias("b").select() so that column refs prefixed with "b." resolve correctly.
             if source_df:
-                clean_col_name = col_name.replace("b.", "")
-                # replace properties[foo][bar] with properties.foo.bar
-                # noinspection RegExpRedundantEscape
-                clean_col_name = re.sub(r"\[([^\]]+)\]", r".\1", clean_col_name)
-                source_df.selectExpr(clean_col_name)
+                source_df.alias("b").select(column_spec)
                 # col exists so we use the if_exists
                 if self.if_exists_column:
                     column_spec = self.if_exists_column.get_column_spec(
