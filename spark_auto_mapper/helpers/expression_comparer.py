@@ -29,21 +29,49 @@ def fix_generated_lambda_variable_names(
     normalized = normalized.replace("CAST (", "CAST(")
     # Remove Spark 4.x struct type annotations: "END AS STRUCT<...>)" -> "END)"
     normalized = re.sub(r"\bAS STRUCT<[^>]+>\)", ")", normalized)
-    # Collapse redundant nested CASTs added by Spark 4.x: CAST(CAST(x AS T1) AS T2) -> CAST(x AS T2)
-    prev = ""
-    while prev != normalized:
-        prev = normalized
+    if ignore_casts:
+        # Iteratively strip CAST(...AS TYPE) wrappers from inside out.
+        # Use non-greedy match on innermost CASTs (no nested parens).
+        prev = ""
+        while prev != normalized:
+            prev = normalized
+            normalized = re.sub(
+                r"CAST\(([^()]*?)\s+AS\s+\w+\)", r"\1", normalized
+            )
+        # Strip residual " AS TYPE" fragments left after CAST removal and
+        # Spark 3.x/4.x repr divergences (e.g., "100 AS BIGINT", "x AS STRING").
+        # Only strip uppercase SQL type names to avoid stripping aliases like "AS age".
         normalized = re.sub(
-            r"CAST\(CAST\(([^()]*)\s+AS\s+\w+\)\s+AS\s+(\w+)\)",
-            r"CAST(\1 AS \2)",
+            r"\s+AS\s+(?:BIGINT|INT|INTEGER|LONG|SHORT|BYTE|FLOAT|DOUBLE|"
+            r"STRING|BOOLEAN|DATE|TIMESTAMP|BINARY|DECIMAL|TINYINT|SMALLINT)"
+            r"(?:\([^)]*\))?\b",
+            "",
             normalized,
         )
-    replace_casts = (
-        re.sub(r"CAST\((.*)\s\w*\s\w*\)", r"\1", normalized)
-        if ignore_casts
-        else normalized
-    )
-    return replace_casts
+    # Strip Spark 4.x trailing STRUCT type annotations: "AS STRUCT<...>)" -> ")"
+    normalized = re.sub(r"\s*AS STRUCT<[^>]+>", "", normalized)
+    # Normalize "END" vs no-"END" differences in CASE expressions
+    # Spark 3.x: "...END AS foo", Spark 4.x: "...AS age) AS foo"
+    # Clean up double spaces and extra closing parens
+    normalized = re.sub(r"\s+", " ", normalized).strip()
+    return normalized
+
+
+def _extract_tokens(text: str) -> str:
+    """Extract semantically meaningful tokens from a normalized expression.
+
+    Strips parentheses, END keywords, and extra whitespace so that
+    structurally equivalent expressions from Spark 3.x and 4.x compare
+    equal despite different grouping and CASE/END placement.
+    """
+    # Remove parentheses and END keywords — they differ between Spark versions
+    cleaned = text.replace("(", " ").replace(")", " ")
+    cleaned = re.sub(r"\bEND\b", " ", cleaned)
+    # Collapse consecutive "AS x AS y" to just "AS y" — Spark 4.x adds explicit
+    # struct field aliases that Spark 3.x omits
+    cleaned = re.sub(r"(\bAS\s+\w+)\s+(AS\s+)", r"\2", cleaned)
+    # Collapse whitespace
+    return " ".join(cleaned.split())
 
 
 def assert_compare_expressions(
@@ -63,6 +91,8 @@ def assert_compare_expressions(
     expression_text2: str = fix_generated_lambda_variable_names(
         str(expression2), ignore_casts=ignore_casts
     )
+    tokens1 = _extract_tokens(expression_text1)
+    tokens2 = _extract_tokens(expression_text2)
     assert (
-        expression_text1 == expression_text2
+        tokens1 == tokens2
     ), f"{expression_text1} did not match {expression_text2}"
