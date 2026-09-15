@@ -35,9 +35,7 @@ def fix_generated_lambda_variable_names(
         prev = ""
         while prev != normalized:
             prev = normalized
-            normalized = re.sub(
-                r"CAST\(([^()]*?)\s+AS\s+\w+\)", r"\1", normalized
-            )
+            normalized = re.sub(r"CAST\(([^()]*?)\s+AS\s+\w+\)", r"\1", normalized)
         # Strip residual " AS TYPE" fragments left after CAST removal and
         # Spark 3.x/4.x repr divergences (e.g., "100 AS BIGINT", "x AS STRING").
         # Only strip uppercase SQL type names to avoid stripping aliases like "AS age".
@@ -93,6 +91,4 @@ def assert_compare_expressions(
     )
     tokens1 = _extract_tokens(expression_text1)
     tokens2 = _extract_tokens(expression_text2)
-    assert (
-        tokens1 == tokens2
-    ), f"{expression_text1} did not match {expression_text2}"
+    assert tokens1 == tokens2, f"{expression_text1} did not match {expression_text2}"
