@@ -73,7 +73,7 @@ class AutoMapperIfColumnExistsType(
         )
         # noinspection Mypy,PyProtectedMember
         col_name: str = (
-            column_spec._jc.toString()
+            column_spec._jc.toString()  # type: ignore[operator]
         )  # Get spark representation of the column
         try:
             # Force spark analyzer to confirm that column/expression is possible. This does not actually compute
