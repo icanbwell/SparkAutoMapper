@@ -27,6 +27,17 @@ def fix_generated_lambda_variable_names(
     normalized = re.sub(r"'([^']*)'", r"\1", replace_lambda_variables)
     # Normalize "CAST (" -> "CAST(" (Spark 4.x adds a space)
     normalized = normalized.replace("CAST (", "CAST(")
+    # Remove Spark 4.x struct type annotations: "END AS STRUCT<...>)" -> "END)"
+    normalized = re.sub(r"\bAS STRUCT<[^>]+>\)", ")", normalized)
+    # Collapse redundant nested CASTs added by Spark 4.x: CAST(CAST(x AS T1) AS T2) -> CAST(x AS T2)
+    prev = ""
+    while prev != normalized:
+        prev = normalized
+        normalized = re.sub(
+            r"CAST\(CAST\(([^()]*)\s+AS\s+\w+\)\s+AS\s+(\w+)\)",
+            r"CAST(\1 AS \2)",
+            normalized,
+        )
     replace_casts = (
         re.sub(r"CAST\((.*)\s\w*\s\w*\)", r"\1", normalized)
         if ignore_casts
